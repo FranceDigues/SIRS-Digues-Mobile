@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/platforms/android/CordovaLib/CordovaLib.iml" filepath="$PROJECT_DIR$/platforms/android/CordovaLib/CordovaLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platforms/android/android.iml" filepath="$PROJECT_DIR$/platforms/android/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/com.brodysoft.sqlitePlugin/src/com.brodysoft.sqlitePlugin.iml" filepath="$PROJECT_DIR$/plugins/com.brodysoft.sqlitePlugin/src/com.brodysoft.sqlitePlugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/com.ionic.keyboard/src/com.ionic.keyboard.iml" filepath="$PROJECT_DIR$/plugins/com.ionic.keyboard/src/com.ionic.keyboard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ionic_Map_01.iml" filepath="$PROJECT_DIR$/ionic_Map_01.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/org.apache.cordova.device/src/org.apache.cordova.device.iml" filepath="$PROJECT_DIR$/plugins/org.apache.cordova.device/src/org.apache.cordova.device.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/org.apache.cordova.file/src/org.apache.cordova.file.iml" filepath="$PROJECT_DIR$/plugins/org.apache.cordova.file/src/org.apache.cordova.file.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/org.apache.cordova.file-transfer/src/org.apache.cordova.file-transfer.iml" filepath="$PROJECT_DIR$/plugins/org.apache.cordova.file-transfer/src/org.apache.cordova.file-transfer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/org.apache.cordova.network-information/src/org.apache.cordova.network-information.iml" filepath="$PROJECT_DIR$/plugins/org.apache.cordova.network-information/src/org.apache.cordova.network-information.iml" />
+    </modules>
+  </component>
+</project>

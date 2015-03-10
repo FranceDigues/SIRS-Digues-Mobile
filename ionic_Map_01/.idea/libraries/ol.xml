@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="ol" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/../../LibJs/v3.2.1/build/ol-debug.js" />
+        <item url="file://$PROJECT_DIR$/../../LibJs/v3.2.1/build/ol-deps.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../LibJs/v3.2.1/build/ol-debug.js" />
+      <root url="file://$PROJECT_DIR$/../../LibJs/v3.2.1/build/ol-deps.js" />
+      <root url="file://$PROJECT_DIR$/../../LibJs/v3.2.1/build/ol.js" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

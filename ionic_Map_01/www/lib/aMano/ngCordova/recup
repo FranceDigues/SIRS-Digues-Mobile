@@ -1,0 +1,8 @@
+#!/bin/bash
+rm -f ./ng-cordova.min.js
+wget https://raw.githubusercontent.com/driftyco/ng-cordova/master/dist/ng-cordova.min.js
+
+rm -f ./ng-cordova.js
+wget https://raw.githubusercontent.com/driftyco/ng-cordova/master/dist/ng-cordova.js
+
+
