@@ -116,9 +116,9 @@ angular.module('hybride_0', [
 
 /*
 function getAllTiles(coord1, coord2) {
-    out1 = getTileURL(coord1, 10);
-    out2 = getTileURL(coord2, 10);
+    outBoxMin = getTileURL(coord1, 10);
+    outBoxMax = getTileURL(coord2, 10);
 
-    $("#output").html("zoom ------ " + out1[0] + "<br>from " + out1[1] + " to " + out2[1] + "<br>from " + out1[2] + " to " + out2[2]);
+    $("#output").html("zoom ------ " + outBoxMin[0] + "<br>from " + outBoxMin[1] + " to " + outBoxMax[1] + "<br>from " + outBoxMin[2] + " to " + outBoxMax[2]);
 
 }*/

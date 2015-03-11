@@ -68,15 +68,21 @@
 
 <!--  <h3>Mouse position</h3>
   <pre ng-bind="mouseposition | json"></pre>-->
-  <h3>Mouse click position</h3>
+  <!--<h3>Mouse click position</h3>-->
   <pre ng-bind="mouseclickposition | json"></pre>
 <!--  <h3>tableau de marker</h3>
   <pre ng-bind="markers | json"> </pre>-->
 
-      <progress max="100" value="{{imageLoadingProgress}}"> </progress>
+      <progress max="{{nbTile}}" value="{{imageLoadingProgress}}"> </progress>
 
       <img ng-src="{{imageTmp}}" height="220" width="220"  />
   </div>
+  <!--<button class="button button-block button-positive" ng-click="HL=!HL">-->
+  <button class="button button-block button-positive" ng-click="HL=!HL; switchMode()">
+      <!--on inverse la valeur a chaque click-->
+      Mode Hors Ligne
+  </button>
+  {{HL}}
  <!-- <openlayers ol-center="london" ol-defaults="defaults" height="400"></openlayers>
   <h1>Events defaults example</h1>
   <p>In this example we propagate two events in our map, the mouse position and the mouse click.</p>
