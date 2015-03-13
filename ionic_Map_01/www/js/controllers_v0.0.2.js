@@ -1,5 +1,4 @@
 var mm= new Array();
-var httpd = null;
 
 
 angular.module('controllers', [
@@ -28,104 +27,87 @@ angular.module('controllers', [
                     });
 
 
-
-                onDeviceReady();
-                //demarage du serveur de fichier
-                startServer( "file:///data/data/com.ionic.map01/cache/" );
-
-
-
-
-
             });
 
 
+    angular.extend($scope,
+        {
 
-        $ionicPlatform.ready()
-            //ionic.Platform.ready()
-            .then(function () {
+        centreCarte: {
+            lat: 37.7,
+            lon: -96.67,
+            zoom: 3
+        },
+        layers: [
+            {
+                isCache:false,
+                name: 'OSM',
+                active: true,
+                opacity: 0.3,
+                source: {
+                    type: 'OSM',
+                    url:"http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                }},
+            {
+                isCache:true,
+                name: 'OSM-Cache',
+                active: false,
+                opacity: 1,
+                source: {
+                    type: 'OSM',
+                    url:"file:///data/data/com.ionic.map01/cache/"+"{z}/{x}/{y}.png" //TODO chemin selon plateforme
+                }},
+            {
+                isCache:false,
+                 name:"wms",
+                 active: false,
+                 opacity: 0.5,
+                 source: {
+                    type: 'ImageWMS',
+                        url:'http://demo.opengeo.org/geoserver/wms',
+                        params: {
+                        LAYERS: 'topp:states'
+                }}}],
+                defaults:{
+                events: {
+                    map: [ 'singleclick', 'pointermove' ]
+                }},
 
-                console.log("cordovaFile"+ cordova.file.cacheDirectory);
+            mouseposition: {},
+            mouseclickposition: {},
+            projection: 'EPSG:4326',
+            markers:mm,  //FIXME zoom impossible si marker sur la carte
 
+            switchMode: function() {
 
+                console.log("layers before");
+                console.log($scope.layers)
 
-                angular.extend($scope,
-                    {
+                $scope.layers.forEach(function(layer) {
+                    if(layer.isCache){
+                        layer.active  = $scope.HL;
+                    }else{
+                        layer.active  =! $scope.HL;
+                    }
+                })
 
-                        centreCarte: {
-                            lat: 37.7,
-                            lon: -96.67,
-                            zoom: 3
-                        },
-                        layers: [
-                            {
-                                isCache: false,
-                                name: 'OSM',
-                                active: true,
-                                opacity: 0.5,
-                                source: {
-                                    type: 'OSM',
-                                    url: "http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                }
-                            },
-                            {
-                                isCache: true,
-                                name: 'OSM-Cache',
-                                active: false,
-                                opacity: 0.5,
-                                source: {
-                                    type: 'OSM',
-                                    url: cordova.file.cacheDirectory + "{z}/{x}/{y}.png"
-                                }
-                            },
-                            {
-                                isCache: false,
-                                name: "wms",
-                                active: false,
-                                opacity: 0.5,
-                                source: {
-                                    type: 'ImageWMS',
-                                    url: 'http://demo.opengeo.org/geoserver/wms',
-                                    params: {
-                                        LAYERS: 'topp:states'
-                                    }
-                                }
-                            }],
-                        defaults: {
-                            events: {
-                                map: ['singleclick', 'pointermove']
-                            }
-                        },
-
-                        mouseposition: {},
-                        mouseclickposition: {},
-                        projection: 'EPSG:4326',
-                        markers: mm,  //FIXME zoom impossible si marker sur la carte
-
-                        switchMode: function () {
-
-                            console.log("layers before");
-                            console.log($scope.layers)
-
-                            $scope.layers.forEach(function (layer) {
-                                if (layer.isCache) {
-                                    layer.active = $scope.HL;
-                                } else {
-                                    layer.active = !$scope.HL;
-                                }
-                            })
-
-                            console.log("layers next");
-                            console.log($scope.layers)
+                console.log("layers next");
+                console.log($scope.layers)
 
 
-                            $scope.layers.map(function(l) {
-                             //l.active = (l === layer);
-                             });
-                        }
+                /*$scope.layers.map(function(l) {
+                    //l.active = (l === layer);
 
-                    });
-            });
+
+
+                });*/
+            }
+
+    });
+
+
+        //$scope.map.addControl(new ol.control.ZoomSlider());
+
 
 
 
@@ -157,16 +139,15 @@ angular.module('controllers', [
                         lon: p[0],
                         projection: $scope.projection
                     }
-                };
+                }
 
 
                 $scope.markers.push({
                     name: "t1",
                     lat: $scope.mouseclickposition.lat,
                     lon: $scope.mouseclickposition.lon
-                });
+                })
 
-                console.log($scope.markers);
 
                 /*
                 urlEnd = getTileURL($scope.mouseclickposition.lat, $scope.mouseclickposition.lon, $scope.centreCarte.zoom)
@@ -206,22 +187,8 @@ angular.module('controllers', [
 
 
 
-
-
-
-
             });
         });
-
-
-
-
-
-
-
-
-
-
 
 
         $scope.downloadTile = function(tile){
@@ -298,13 +265,6 @@ angular.module('controllers', [
                 //console.log(outBoxMin.x );
             }
         }
-
-
-
-
-
-
-
 
         //TODO A voir
         //$rootScope.$on('$cordovaNetwork:online', function(event, networkState){ console.log("true")})
