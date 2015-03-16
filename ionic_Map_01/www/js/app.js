@@ -11,6 +11,7 @@
 angular.module('hybride_0', [
                             'ionic',
                             'ngCordova',
+                            'rzModule',
                             //'ol',
                             'openlayers-directive',
                             'controllers'

@@ -14,6 +14,10 @@ angular.module('controllers', [
 
         $scope.HL = false; //Mode Hors Ligne
 
+        $scope.zMin=0;
+        $scope.zMax=0;
+
+
         $ionicPlatform.ready()
         //ionic.Platform.ready()
             .then(function() {
@@ -160,9 +164,9 @@ angular.module('controllers', [
 
                 $scope.imageLoadingProgress = 0;
 
-                //TODO UI de selection
-                zMin = $scope.centreCarte.zoom;
-                zMax = $scope.centreCarte.zoom+2;
+                ////TODO UI de selection
+                //$scope.zMin = $scope.centreCarte.zoom;
+                //$scope.zMax = $scope.centreCarte.zoom+2;
 
                 if ($scope.markers[1]) { //TODO retangle de selection
 
