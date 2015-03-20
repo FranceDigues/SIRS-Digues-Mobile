@@ -1,0 +1,7 @@
+#!/bin/bash
+for D in `find . -type d`
+do
+    $D/recup
+done
+
+

@@ -1,8 +1,44 @@
 <ion-view view-title="Carte Ol3">
   <!--<ion-content class="padding">-->
   <ion-content class="padding">
-    <div id="olMap">
 
-    </div>
+      <div ng-controller="MapCtrl" >
+          <!--gmap="true"-->
+
+          <openlayers ol-center="centreCarte" ol-defaults="defaults" height="400px">
+              <!--<ol-layer ol-layer-properties="wms"></ol-layer>-->
+              <ol-layer ol-layer-properties="layer" ng-repeat="layer in layers|filter:{active:true}"></ol-layer>
+              <ol-marker ng-repeat="marker in markers" lat="marker.lat" lon="marker.lon"></ol-marker>
+          </openlayers>
+
+
+          <div class="button-bar">
+              <a class="button button-calm"  ng-click="">Mode Cache</a>
+              <a class="button button-balanced"  ng-click="">Mode Visu</a>
+              <a class="button button-royal"  ng-click="">Mode Edition</a>
+          </div>
+
+
+          <rzslider rz-slider-model="centreCarte.zoom"    rz-slider-floor="0"  rz-slider-ceil="18"></rzslider>
+          <rzslider rz-slider-model="zMin"  rz-slider-high="zMax"   rz-slider-floor="0"  rz-slider-ceil="18"></rzslider>
+
+          <!--<h3>Mouse click position</h3>-->
+          <pre ng-bind="mouseclickposition | json"></pre>
+          <!--  <h3>tableau de marker</h3>
+            <pre ng-bind="markers | json"> </pre>-->
+          <progress max="{{nbTile}}" value="{{imageLoadingProgress}}"> </progress>
+
+          <img ng-src="{{imageTmp}}" height="220" width="220"  />
+
+
+          <!--<button class="button button-block button-positive" ng-click="HL=!HL">-->
+          <button class="button button-block button-positive" ng-click="HL=!HL; switchMode()">
+              <!--on inverse la valeur a chaque click-->
+              Mode Hors Ligne
+          </button>
+          {{HL}}
+      </div>
+
+
   </ion-content>
 </ion-view>

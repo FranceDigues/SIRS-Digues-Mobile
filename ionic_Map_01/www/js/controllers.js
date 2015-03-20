@@ -5,7 +5,7 @@ var httpd = null;
 angular.module('controllers', [
     'ngCordova'])
 
-.controller('MapCtrl', [ '$scope', '$ionicPlatform','$cordovaFile','$cordovaFileTransfer','$timeout', function($scope,$ionicPlatform,$cordovaFile,$cordovaFileTransfer,$timeout) {
+.controller('MapCtrl', [ '$scope', '$ionicPlatform','$cordovaFile','$cordovaFileTransfer','$timeout','$log', function($scope,$ionicPlatform,$cordovaFile,$cordovaFileTransfer,$timeout,$log) {
         //,$cordovaFile
 // , $cordovaFileTransfer, $cordovaFile
 
@@ -45,7 +45,7 @@ angular.module('controllers', [
             //ionic.Platform.ready()
             .then(function () {
 
-                console.log("cordovaFile"+ cordova.file.cacheDirectory);
+                $log.debug("cordovaFile"+ cordova.file.cacheDirectory);
 
 
 
@@ -104,8 +104,8 @@ angular.module('controllers', [
 
                         switchMode: function () {
 
-                            console.log("layers before");
-                            console.log($scope.layers)
+                             $log.debug("layers before");
+                             $log.debug($scope.layers)
 
                             $scope.layers.forEach(function (layer) {
                                 if (layer.isCache) {
@@ -115,8 +115,8 @@ angular.module('controllers', [
                                 }
                             })
 
-                            console.log("layers next");
-                            console.log($scope.layers)
+                             $log.debug("layers next");
+                             $log.debug($scope.layers)
 
 
                             $scope.layers.map(function(l) {
@@ -126,8 +126,6 @@ angular.module('controllers', [
 
                     });
             });
-
-
 
 
 
@@ -166,11 +164,11 @@ angular.module('controllers', [
                     lon: $scope.mouseclickposition.lon
                 });
 
-                console.log($scope.markers);
+                 $log.debug($scope.markers);
 
                 /*
                 urlEnd = getTileURL($scope.mouseclickposition.lat, $scope.mouseclickposition.lon, $scope.centreCarte.zoom)
-                console.log(urlEnd);
+                 $log.debug(urlEnd);
 */
 
                 /* http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png
@@ -180,8 +178,8 @@ angular.module('controllers', [
                 $scope.imageLoadingProgress = 0;
 
                 //TODO UI de selection
-                zMin = $scope.centreCarte.zoom;
-                zMax = $scope.centreCarte.zoom+2;
+                //zMin = $scope.centreCarte.zoom;
+                //zMax = $scope.centreCarte.zoom+2;
 
                 if ($scope.markers[1]) { //TODO retangle de selection
 
@@ -190,12 +188,10 @@ angular.module('controllers', [
                         //ionic.Platform.ready()
                         .then(function () {
 
-                            for(var i = zMin; i <= zMax ; i++){
+                            for(var i = $scope.zMin; i <= $scope.zMax ; i++){
                                 $scope.getAllTilesFromRectZoomStatic($scope.markers[0], $scope.markers[1], i); //TODO gestion multi lvl
 
                             }
-
-
 
                         });
                 };
@@ -230,23 +226,23 @@ angular.module('controllers', [
             var url = "http://a.tile.openstreetmap.org/"+tile.z+"/"+tile.x+"/"+tile.y+".png";
             var targetPath = cordova.file.cacheDirectory + tile.z + "/" + tile.x + "/" + tile.y +".png"; //TODO gestion des dossier pour z et x
 
-            console.log("FilePath : " + targetPath);
-            console.log("URL : " + url);
+             $log.debug("FilePath : " + targetPath);
+             $log.debug("URL : " + url);
 
             $cordovaFileTransfer.download(url, targetPath)
                 .then(function (result) {
                     // Success!
-                    console.log('Dl done : ');
-                    console.log(result);
+                     $log.debug('Dl done : ');
+                     $log.debug(result);
                     $scope.imageLoadingProgress++; //declaration de la fin du Dl de la tuile
                 }, function (err) {
                     // Error
-                    console.log('Dl fail :');
-                    console.log(err);
+                     $log.debug('Dl fail :');
+                     $log.debug(err);
                 }, function (progress) {
                     $timeout(function () {
                         $scope.imageTmp = targetPath;
-                        console.log($scope.imageTmp);
+                         $log.debug($scope.imageTmp);
                     })
                 });
 
@@ -259,10 +255,10 @@ angular.module('controllers', [
             outBoxMax = getTileURL(p2.lat, p2.lon, zoom);
 
 
-            console.log("max")
-            console.log(outBoxMax)
-            console.log("min")
-            console.log(outBoxMin)
+             $log.debug("max")
+             $log.debug(outBoxMax)
+             $log.debug("min")
+             $log.debug(outBoxMin)
 
             if(outBoxMin.x > outBoxMax.x) { //TODO replace avec un Min-Max
                 outTmp1 = outBoxMin.x;
@@ -278,16 +274,16 @@ angular.module('controllers', [
 
             $scope.nbTile = ( outBoxMax.x - outBoxMin.x ) * ( outBoxMax.y - outBoxMin.y );
 
-            console.log("x : " + ( outBoxMax.x - outBoxMin.x ));
-            console.log("y : " + ( outBoxMax.y - outBoxMin.y ));
-            console.log("nb dl attendu : "+$scope.nbTile);
+             $log.debug("x : " + ( outBoxMax.x - outBoxMin.x ));
+             $log.debug("y : " + ( outBoxMax.y - outBoxMin.y ));
+             $log.debug("nb dl attendu : "+$scope.nbTile);
 
 
             yi = 0;
             while(outBoxMin.x <= outBoxMax.x) { //parcour des tuile x -> y
                 while(outBoxMin.y + yi <= outBoxMax.y) {
-                    console.log("*** tuile en cours *** " + outBoxMin.x + "/" + outBoxMin.y);
-                    //console.log("run id : "+ixi);
+                     $log.debug("*** tuile en cours *** " + outBoxMin.x + "/" + outBoxMin.y);
+                    // $log.debug("run id : "+ixi);
                     //ixi++;
                     //recup de la tuile
                     $scope.downloadTile(outBoxMin);
@@ -295,7 +291,7 @@ angular.module('controllers', [
                 }
                 outBoxMin.x++;
                 yi=0;
-                //console.log(outBoxMin.x );
+                // $log.debug(outBoxMin.x );
             }
         }
 
@@ -307,19 +303,19 @@ angular.module('controllers', [
 
 
         //TODO A voir
-        //$rootScope.$on('$cordovaNetwork:online', function(event, networkState){ console.log("true")})
+        //$rootScope.$on('$cordovaNetwork:online', function(event, networkState){  $log.debug("true")})
 
 } ]);
 
 
 function getTileURL(lat, lon, zoom) {
-    console.log("inputGetURl [lat :"+lat+" lon :"+lon+" zoom : "+zoom+" ]");
+     $log.debug("inputGetURl [lat :"+lat+" lon :"+lon+" zoom : "+zoom+" ]");
 
     var xtile = parseInt(Math.floor( (lon + 180) / 360 * (1<<zoom) ));
     var ytile = parseInt(Math.floor( (1 - Math.log(Math.tan(lat.toRad()) + 1 / Math.cos(lat.toRad())) / Math.PI) / 2 * (1<<zoom) ));
 
 
-    console.log( "" + zoom + "/" + xtile + "/" + ytile);
+     $log.debug( "" + zoom + "/" + xtile + "/" + ytile);
 
 
     tileUrl = { "z":zoom, "x":xtile, "y":ytile }; //objet pour manipuler les coord de tuile z/x/y
@@ -387,7 +383,7 @@ function startServer( wwwroot ) {
         httpd.getURL(function(url){
             if(url.length > 0) {
                 //document.getElementById('url').innerHTML = "server is up: <a href='" + url + "' target='_blank'>" + url + "</a>";
-                console.log("server is up:"+ url );
+                 $log.debug("server is up:"+ url );
             } else {
 
                 /* wwwroot is the root dir of web server, it can be absolute or relative path
@@ -405,11 +401,11 @@ function startServer( wwwroot ) {
                     // if server is up, it will return the url of http://<server ip>:port/
                     // the ip is the active network connection
                     // if no wifi or no cell, "127.0.0.1" will be returned.
-                    console.log("server local url:"+ url );
+                     $log.debug("server local url:"+ url );
 
                     //document.getElementById('url').innerHTML = "server is started: <a href='" + url + "' target='_blank'>" + url + "</a>";
                 }, function( error ){
-                    console.log("server fail"+ error );
+                     $log.debug("server fail"+ error );
 
                     //document.getElementById('url').innerHTML = 'failed to start server: ' + error;
                 });

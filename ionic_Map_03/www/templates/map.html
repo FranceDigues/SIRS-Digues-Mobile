@@ -1,0 +1,45 @@
+
+
+
+<openlayers ol-center="centreCarte"  ol-controls="controls"  ol-defaults="defaults" height="400px">
+    <!--<ol-layer ol-layer-properties="wms"></ol-layer>-->
+
+    <ol-layer ol-layer-properties="tt"></ol-layer>
+    <ol-layer ol-layer-properties="layer" ng-repeat="layer in layers|filter:{active:true}"></ol-layer>
+    <!--<ol-marker ng-repeat="marker in markers" lat="marker.lat" lon="marker.lon"></ol-marker>-->
+
+    <!--quid d'un ng-repeat= direct dans le ol-layer pour forcer le reload?-->
+
+
+    <!--<ol-path message="This is a path" coords="{{pititPath}}"></ol-path>-->
+
+</openlayers>
+{{layers}}
+
+<!--
+          <div class="button-bar">
+              <a class="button button-calm"  ng-click="">Mode Cache</a>
+              <a class="button button-balanced"  ng-click="">Mode Visu</a>
+              <a class="button button-royal"  ng-click="">Mode Edition</a>
+          </div>
+
+
+          <rzslider rz-slider-model="centreCarte.zoom"    rz-slider-floor="0"  rz-slider-ceil="18"></rzslider>
+          <rzslider rz-slider-model="zMin"  rz-slider-high="zMax"   rz-slider-floor="0"  rz-slider-ceil="18"></rzslider>
+
+          &lt;!&ndash;<h3>Mouse click position</h3>&ndash;&gt;
+          <pre ng-bind="mouseclickposition | json"></pre>
+          &lt;!&ndash;  <h3>tableau de marker</h3>
+            <pre ng-bind="markers | json"> </pre>&ndash;&gt;
+          <progress max="{{nbTile}}" value="{{imageLoadingProgress}}"> </progress>
+
+          <img ng-src="{{imageTmp}}" height="220" width="220"  />
+
+
+          &lt;!&ndash;<button class="button button-block button-positive" ng-click="HL=!HL">&ndash;&gt;
+          <button class="button button-block button-positive" ng-click="HL=!HL; switchMode()">
+              &lt;!&ndash;on inverse la valeur a chaque click&ndash;&gt;
+              Mode Hors Ligne
+          </button>
+          {{HL}}-->
+

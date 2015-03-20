@@ -1,19 +1,166 @@
 var mm= new Array();
 
 
-angular.module('controllers', [
-    'ngCordova'])
+angular.module('controllers', ['ngCordova'])
 
-.controller('MapCtrl', [ '$scope', '$ionicPlatform','$cordovaFile','$cordovaFileTransfer','$timeout', function($scope,$ionicPlatform,$cordovaFile,$cordovaFileTransfer,$timeout) {
-        //,$cordovaFile
-// , $cordovaFileTransfer, $cordovaFile
+.controller('MapCtrl', [ '$scope', '$ionicPlatform','$cordovaFile','$cordovaFileTransfer','$timeout','dbService','$log','olData', function($scope,$ionicPlatform,$cordovaFile,$cordovaFileTransfer,$timeout ,dbService, $log, olData) {
+
+
+
+        $scope.tt=tt;
+        $scope.cacheBoxPath = "[[[0,0],[1,1]]]";
+        $log.debug($scope.cacheBoxPath)
+        $scope.pititPath = pititPath;
+
+
+        $scope.mCa =true; //mode Cache
+
+        olData.getMap().then(function(map){
+
+                var dragBox = new ol.interaction.DragBox({
+                    condition: ol.events.condition.always,
+                    style: new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: [0, 0, 255, 1]
+                        })
+                    })
+                });
+
+                map.addInteraction(dragBox);
+
+                $log.debug(map);
+                $log.debug(map.getLayers().getArray());
+                $log.debug(map.getLayers().getArray()[1].getSource());
+
+
+
+
+                polygone = new ol.geom.Polygon([[[-120.313,33.118],[-109.766,20.281],[-87.617,32.823],[-101.504,51.385],[-121.895,51.385],[-129.453,46.784],[-120.313,33.118]]]);
+
+                //var ring = [[-120.313,33.118],[-109.766,20.281],[-87.617,32.823],[-101.504,51.385],[-121.895,51.385],[-129.453,46.784],[-120.313,33.118]];
+                //var polygon = new ol.geom.Polygon([ring]);
+                polygone.transform('EPSG:4326', 'EPSG:3857');
+                var feature = new ol.Feature(polygone);
+
+
+                map.getLayers().getArray()[1].getSource().addFeature(
+                    new ol.Feature({
+                        geometry:polygone
+                    })
+                );
+//brutforce
+                //layer non angular
+                vsPoly = new ol.source.Vector({
+                    //create empty vector
+                });
+                vsPoly.addFeature(feature);
+
+                //creation du calque
+                lPoly = new ol.layer.Vector({
+                    source: vsPoly,
+                    style: new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(255, 255, 255, 0.6)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            color: '#ffcc33',
+                            width: 2
+                        })
+                    })
+                });
+
+
+                map.addLayer(lPoly);
+
+                //vsPoly.addFeature(
+                //    new ol.Feature({
+                //        geometry:polygone
+                //    })
+                //);
+
+                $log.debug(map.getLayers().getArray());
+
+
+//instance ok
+      /*          var wmsSource = new ol.source.ImageWMS({
+                    url: 'http://demo.boundlessgeo.com/geoserver/wms',
+                    params: {'LAYERS': 'ne:ne'},
+                    serverType: 'geoserver',
+                    crossOrigin: '',
+                    opacity: 0.5,
+                });
+
+                var wmsLayer = new ol.layer.Image({
+                    source: wmsSource
+                });
+
+                map.addLayer(wmsLayer);*/
+
+
+
+            }
+
+
+        );
+
+
+
+
+
+
+
+
+/*        $log.debug(olData.getMap().resolve());
+
+        $timeout(function(){
+            var mapOl3 = olData.getMap();
+
+            var dragBox = new ol.interaction.DragBox({
+                condition: $scope.mCa,
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: [0, 0, 255, 1]
+                    })
+                })
+            });
+
+            mapOl3.addInteraction(dragBox);
+
+        } , 5000);*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        dbService.dbEssai.info().then(function (info) {
+            console.log(info);
+        })
+
+
+        dbService.dbEssai.get("prems",function (error, doc) {
+            if (error) {
+                $log.debug(error);
+            } else {
+                $log.debug(doc);
+            }
+        })
+
+
 
         $scope.imageLoadingProgress =0;
         $scope.nbTile =0;
         $scope.imageTmp = null;
-
         $scope.HL = false; //Mode Hors Ligne
-
         $scope.zMin=0;
         $scope.zMax=0;
 
@@ -22,17 +169,17 @@ angular.module('controllers', [
         //ionic.Platform.ready()
             .then(function() {
                 //return $cordovaFile.createDir(directory, false);
-                console.log("test");
+                $log.debug("test");
                 $cordovaFile.getFreeDiskSpace()
                     .then(function (success) {
-                        console.log("free Space : " + success/1024)
+                        $log.debug("free Space : " + success/1024)
                     }, function (error) {
-                        console.log(error);
+                        $log.debug(error);
                     });
-
 
             });
 
+        var interactions = ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false});
 
     angular.extend($scope,
         {
@@ -77,6 +224,13 @@ angular.module('controllers', [
                     map: [ 'singleclick', 'pointermove' ]
                 }},
 
+            controls: [
+                { name: 'zoom', active: false },
+                { name: 'rotate', active: false },
+                { name: 'attribution', active: false }
+            ],
+
+
             mouseposition: {},
             mouseclickposition: {},
             projection: 'EPSG:4326',
@@ -84,8 +238,8 @@ angular.module('controllers', [
 
             switchMode: function() {
 
-                console.log("layers before");
-                console.log($scope.layers)
+                $log.debug("layers before");
+                $log.debug($scope.layers)
 
                 $scope.layers.forEach(function(layer) {
                     if(layer.isCache){
@@ -95,24 +249,56 @@ angular.module('controllers', [
                     }
                 })
 
-                console.log("layers next");
-                console.log($scope.layers)
+                $log.debug("layers next");
+                $log.debug($scope.layers);
 
-
-                /*$scope.layers.map(function(l) {
-                    //l.active = (l === layer);
-
-
-
-                });*/
             }
 
     });
 
 
-        //$scope.map.addControl(new ol.control.ZoomSlider());
 
 
+        $scope.refreshCB = function(poly){
+
+            $log.debug(poly);
+
+            var gjsonPoly = gjsonCbStart;
+
+            poly.forEach(function(p){
+
+                gjsonPoly = gjsonPoly+'['+ p.lon+','+ p.lat+'],';
+            })
+
+            gjsonPoly= gjsonPoly+'['+ poly[0].lon+','+ poly[0].lat+']';
+
+
+            gjsonPoly= gjsonPoly+gjsonCbEnd;
+
+            $log.debug(gjsonPoly);
+            $log.debug(JSON.parse(gjsonPoly));
+
+           return {
+                source: {
+                    type: 'GeoJSON',
+                        geojson: {
+                        object: JSON.parse(gjsonPoly),
+                            projection: 'EPSG:3857'
+                    }
+                },
+                style: {
+                    fill: {
+                        color: 'rgba(255, 0, 0, 0.6)'
+                    },
+                    stroke: {
+                        color: 'white',
+                            width: 3
+                    }
+                }};
+        };
+
+
+        $scope.cacheBox = JSON.parse(gjsonCbStart+gjsonCbEnd);
 
 
 
@@ -139,8 +325,8 @@ angular.module('controllers', [
                 } else {
                     var p = ol.proj.transform([coord.lon, coord.lat], coord.projection, $scope.projection);
                     $scope.mouseclickposition = {
-                        lat: p[1],
-                        lon: p[0],
+                        lat: Math.round(p[1]*1000)/1000,
+                        lon: Math.round(p[0]*1000)/1000,
                         projection: $scope.projection
                     }
                 }
@@ -153,43 +339,40 @@ angular.module('controllers', [
                 })
 
 
-                /*
-                urlEnd = getTileURL($scope.mouseclickposition.lat, $scope.mouseclickposition.lon, $scope.centreCarte.zoom)
-                console.log(urlEnd);
-*/
-
-                /* http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png
-                 download(url, filePath, options, trustHosts)*/
-
-
                 $scope.imageLoadingProgress = 0;
 
                 ////TODO UI de selection
-                //$scope.zMin = $scope.centreCarte.zoom;
-                //$scope.zMax = $scope.centreCarte.zoom+2;
-
-                if ($scope.markers[1]) { //TODO retangle de selection
-
+                //    dl tuile
+       /*         if ($scope.markers[1]) { //TODO retangle de selection
 
                     $ionicPlatform.ready()
                         //ionic.Platform.ready()
                         .then(function () {
 
-                            for(var i = zMin; i <= zMax ; i++){
+                            for(var i = $scope.zMin; i <= $scope.zMax ; i++){
                                 $scope.getAllTilesFromRectZoomStatic($scope.markers[0], $scope.markers[1], i); //TODO gestion multi lvl
-
                             }
-
-
-
                         });
-                };
+                };*/
+
+                //cachebox layer angular
+              //  $scope.cacheBox = $scope.refreshCB($scope.markers);
 
 
+                //layer non angular
+               vsPoly.clear();
+                var cbox =  new ol.geom.Polygon(asPolygon($scope.markers));
+                cbox.transform('EPSG:4326', 'EPSG:3857');
 
 
+                vsPoly.addFeature(
+                    new ol.Feature({
+                        geometry: cbox
+                    })
+                );
 
-
+                $log.debug( JSON.stringify(asPolygon($scope.markers)));
+                $scope.cacheBoxPath =  cbox ;
 
             });
         });
@@ -201,23 +384,23 @@ angular.module('controllers', [
             var url = "http://a.tile.openstreetmap.org/"+tile.z+"/"+tile.x+"/"+tile.y+".png";
             var targetPath = cordova.file.cacheDirectory + tile.z + "/" + tile.x + "/" + tile.y +".png"; //TODO gestion des dossier pour z et x
 
-            console.log("FilePath : " + targetPath);
-            console.log("URL : " + url);
+            $log.debug("FilePath : " + targetPath);
+            $log.debug("URL : " + url);
 
             $cordovaFileTransfer.download(url, targetPath)
                 .then(function (result) {
                     // Success!
-                    console.log('Dl done : ');
-                    console.log(result);
+                    $log.debug('Dl done : ');
+                    $log.debug(result);
                     $scope.imageLoadingProgress++; //declaration de la fin du Dl de la tuile
                 }, function (err) {
                     // Error
-                    console.log('Dl fail :');
-                    console.log(err);
+                    $log.debug('Dl fail :');
+                    $log.debug(err);
                 }, function (progress) {
                     $timeout(function () {
                         $scope.imageTmp = targetPath;
-                        console.log($scope.imageTmp);
+                        $log.debug($scope.imageTmp);
                     })
                 });
 
@@ -229,11 +412,10 @@ angular.module('controllers', [
             outBoxMin = getTileURL(p1.lat, p1.lon, zoom);
             outBoxMax = getTileURL(p2.lat, p2.lon, zoom);
 
-
-            console.log("max")
-            console.log(outBoxMax)
-            console.log("min")
-            console.log(outBoxMin)
+            $log.debug("max")
+            $log.debug(outBoxMax)
+            $log.debug("min")
+            $log.debug(outBoxMin)
 
             if(outBoxMin.x > outBoxMax.x) { //TODO replace avec un Min-Max
                 outTmp1 = outBoxMin.x;
@@ -249,16 +431,16 @@ angular.module('controllers', [
 
             $scope.nbTile = ( outBoxMax.x - outBoxMin.x ) * ( outBoxMax.y - outBoxMin.y );
 
-            console.log("x : " + ( outBoxMax.x - outBoxMin.x ));
-            console.log("y : " + ( outBoxMax.y - outBoxMin.y ));
-            console.log("nb dl attendu : "+$scope.nbTile);
+            $log.debug("x : " + ( outBoxMax.x - outBoxMin.x ));
+            $log.debug("y : " + ( outBoxMax.y - outBoxMin.y ));
+            $log.debug("nb dl attendu : "+$scope.nbTile);
 
 
             yi = 0;
             while(outBoxMin.x <= outBoxMax.x) { //parcour des tuile x -> y
                 while(outBoxMin.y + yi <= outBoxMax.y) {
-                    console.log("*** tuile en cours *** " + outBoxMin.x + "/" + outBoxMin.y);
-                    //console.log("run id : "+ixi);
+                    $log.debug("*** tuile en cours *** " + outBoxMin.x + "/" + outBoxMin.y);
+                    //$log.debug("run id : "+ixi);
                     //ixi++;
                     //recup de la tuile
                     $scope.downloadTile(outBoxMin);
@@ -266,24 +448,24 @@ angular.module('controllers', [
                 }
                 outBoxMin.x++;
                 yi=0;
-                //console.log(outBoxMin.x );
+                //$log.debug(outBoxMin.x );
             }
         }
 
         //TODO A voir
-        //$rootScope.$on('$cordovaNetwork:online', function(event, networkState){ console.log("true")})
+        //$rootScope.$on('$cordovaNetwork:online', function(event, networkState){ $log.debug("true")})
 
 } ]);
 
 
 function getTileURL(lat, lon, zoom) {
-    console.log("inputGetURl [lat :"+lat+" lon :"+lon+" zoom : "+zoom+" ]");
+    //$log.debug("inputGetURl [lat :"+lat+" lon :"+lon+" zoom : "+zoom+" ]");
 
     var xtile = parseInt(Math.floor( (lon + 180) / 360 * (1<<zoom) ));
     var ytile = parseInt(Math.floor( (1 - Math.log(Math.tan(lat.toRad()) + 1 / Math.cos(lat.toRad())) / Math.PI) / 2 * (1<<zoom) ));
 
 
-    console.log( "" + zoom + "/" + xtile + "/" + ytile);
+    //$log.debug( "" + zoom + "/" + xtile + "/" + ytile);
 
 
     tileUrl = { "z":zoom, "x":xtile, "y":ytile }; //objet pour manipuler les coord de tuile z/x/y
@@ -301,6 +483,19 @@ if (typeof(Number.prototype.toRad) === "undefined") {
 
 
 
+function asPolygon(pArray){
+
+    var coordArray = new Array();
+
+    pArray.forEach(function(p){
+        coordArray.push(new Array(p.lon, p.lat));
+    });
+
+
+    coordArray.push( new Array(pArray[0].lon, pArray[0].lat) ); //TODO methode de classe ou abandon du point.
+
+    return new Array(coordArray);
+}
 
 
 
@@ -351,7 +546,7 @@ function startServer( wwwroot ) {
         httpd.getURL(function(url){
             if(url.length > 0) {
                 //document.getElementById('url').innerHTML = "server is up: <a href='" + url + "' target='_blank'>" + url + "</a>";
-                console.log("server is up:"+ url );
+                $log.debug("server is up:"+ url );
             } else {
 
                 /* wwwroot is the root dir of web server, it can be absolute or relative path
@@ -369,11 +564,11 @@ function startServer( wwwroot ) {
                     // if server is up, it will return the url of http://<server ip>:port/
                     // the ip is the active network connection
                     // if no wifi or no cell, "127.0.0.1" will be returned.
-                    console.log("server local url:"+ url );
+                    $log.debug("server local url:"+ url );
 
                     //document.getElementById('url').innerHTML = "server is started: <a href='" + url + "' target='_blank'>" + url + "</a>";
                 }, function( error ){
-                    console.log("server fail"+ error );
+                    $log.debug("server fail"+ error );
 
                     //document.getElementById('url').innerHTML = 'failed to start server: ' + error;
                 });
