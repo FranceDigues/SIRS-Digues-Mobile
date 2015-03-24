@@ -25,6 +25,20 @@ app.run(function($ionicPlatform) {
         $ionicConfigProvider.tabs.position('bottom'); //other values: top
 
     $stateProvider
+        .state('signin', {
+            url: '/sign-in',
+            templateUrl: 'templates/sign-in.html',
+            controller: 'SignInCtrl'
+        })
+        .state('forgotpassword', {
+            url: '/forgot-password',
+            templateUrl: 'templates/forgot-password.html'
+        })
+        .state('home', {
+            url: '/home',
+            controller :"HomeCtrl",
+            templateUrl: 'templates/home.html'
+        })
         .state('tabs', {
             url: '/tab',
             controller: 'TabsCtrl',
@@ -53,7 +67,8 @@ app.run(function($ionicPlatform) {
             templateUrl: 'templates/cache.html'
         });
 
-    $urlRouterProvider.otherwise('/tab');
+    //$urlRouterProvider.otherwise('/tab');
+        $urlRouterProvider.otherwise('/sign-in');
 });
 
 app.controller('TabsCtrl', function($scope, $ionicSideMenuDelegate,sLayer,$log) {
@@ -87,8 +102,35 @@ app.controller('HomeTabCtrl', function($scope, $ionicSideMenuDelegate) {
 
 });
 
-app.controller('AboutCtrl', function($scope, $ionicSideMenuDelegate) {
-    $scope.openMenu = function () {
-        $ionicSideMenuDelegate.toggleLeft();
-    }
+//app.controller('AboutCtrl', function($scope, $ionicSideMenuDelegate) {
+//    $scope.openMenu = function () {
+//        $ionicSideMenuDelegate.toggleLeft();
+//    }
+//});
+
+
+app.controller('HomeCtrl', function($scope,$state) {
+
+    $scope.visu = function() {
+        $state.go('tabs.map');
+    };
+
 });
+
+app.controller('SignInCtrl', function($scope, $state) {
+
+    $scope.signIn = function(user) {
+        console.log('Sign-In', user);
+        $state.go('home');
+    };
+
+
+    $scope.logout = function() {
+        $state.go('signin');
+    };
+
+    $scope.home = function() {
+        $state.go('home');
+    };
+
+})

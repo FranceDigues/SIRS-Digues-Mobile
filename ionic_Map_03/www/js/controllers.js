@@ -11,7 +11,7 @@ angular.module('controllers', [])
         $scope.layers = sLayer.list
         $scope.mode = sMap.mode;
 
-        $scope.drawType = {active:null};
+        $scope.drawType = {active:"Point"};
         $scope.typeEdition = [
             { label: 'Point', type: "Point" },
             { label: 'Ligne', type: "LineString" },
@@ -29,7 +29,7 @@ angular.module('controllers', [])
                 //layers:  sLayer.json,
                 defaults:{
                     events: {
-                        map: [ 'singleclick', 'pointermove' ]
+                        //map: [ 'drawend' ]
                     }},
 
                 controls: [
@@ -96,6 +96,9 @@ angular.module('controllers', [])
 
             var draw; // global so we can remove it later
             function addInteraction() {
+                //clear feature
+                featureOverlay.getFeatures().clear();
+
                 draw = new ol.interaction.Draw({
                     features: featureOverlay.getFeatures(),
                     //type: ol.geom.GeometryType.POLYGON
@@ -103,6 +106,7 @@ angular.module('controllers', [])
                 });
                 map.addInteraction(draw);
             }
+
 
 
 
@@ -119,6 +123,15 @@ angular.module('controllers', [])
 
 
             addInteraction();
+        });
+
+
+        $scope.$on('openlayers.DrawEvent.drawend', function(F) {
+            $log.debug(F);
+
+            featureOverlay.getFeatures().clear();
+            featureOverlay.addFeature(F);
+
         });
 
 

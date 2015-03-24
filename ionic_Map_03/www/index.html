@@ -56,11 +56,27 @@
   <body ng-app="cartoMobile">
 
 
+
+
+
+
+  <ion-header-bar align-title="left" class="bar-positive" ng-controller="SignInCtrl">
+      <div class="buttons">
+          <button class="button button-icon button-clear ion-home"ng-click="home()"></button>
+      </div>
+      <h1 class="title">Title!</h1>
+      <div class="buttons" >
+          <button class="button button-icon button-clear ion-power" ng-click="logout()"></button>
+      </div>
+  </ion-header-bar>
+
+
   <ion-side-menus ng-controller="sideMenu">
 
       <ion-pane ion-side-menu-content   drag-content="sEventSuperviseur.event.sideMenu">
           <ion-nav-bar class="bar-positive nav-title-slide-ios7">
               <ion-nav-back-button class="button-icon"><span class="icon ion-ios7-arrow-left"></span></ion-nav-back-button>
+
           </ion-nav-bar>
           <ion-nav-view></ion-nav-view>
       </ion-pane>
@@ -82,6 +98,39 @@
       </ion-side-menu>
 
   </ion-side-menus>
+
+
+
+
+
+
+
+
+
+
+
+  <!--<script id="templates/sign-in.html" type="text/ng-template">-->
+      <!---->
+  <!--</script>-->
+
+  <script id="templates/forgot-password.html" type="text/ng-template">
+      <ion-view view-title="Forgot Password">
+          <ion-content padding="true">
+              <p>
+                  Yeah this is just a demo showing how views can be shown without tabs, then you can navigate
+                  to views within tabs. Additionally, only one set of tabs needs to be written for all of the different views that should go inside the tabs. (Compared to written the same tab links in the footer of every view that's in a tab.)
+              </p>
+              <p>
+                  There's no username/password, just click
+                  the Sign-In button back a the sign-in view.
+              </p>
+              <p>
+                  Return to <a href="#/sign-in">Sign-In</a>.
+              </p>
+          </ion-content>
+      </ion-view>
+  </script>
+
 
 
 
