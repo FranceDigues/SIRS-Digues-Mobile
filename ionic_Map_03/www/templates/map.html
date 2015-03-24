@@ -1,7 +1,7 @@
 
 
 
-<openlayers ol-center="centreCarte"  ol-controls="controls"  ol-defaults="defaults" height="400px">
+<openlayers id="map" ol-center="centreCarte"  ol-controls="controls"  ol-defaults="defaults" height="400px">
     <!--<ol-layer ol-layer-properties="wms"></ol-layer>-->
 
     <ol-layer ol-layer-properties="tt"></ol-layer>
@@ -14,7 +14,15 @@
     <!--<ol-path message="This is a path" coords="{{pititPath}}"></ol-path>-->
 
 </openlayers>
-{{layers}}
+
+<select ng-model="drawType.active" ng-change="updateType()"
+        ng-options="opt.type as opt.label for opt in typeEdition">
+</select>
+
+{{drawType.type}}
+
+
+<!--{{layers}}-->
 
 <!--
           <div class="button-bar">

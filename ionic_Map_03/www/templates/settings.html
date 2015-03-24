@@ -1,4 +1,4 @@
-<ion-view title="About">
+<ion-view title="Gestion Des Modes">
     <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
     </ion-nav-buttons>
@@ -8,9 +8,18 @@
 
 
 
-        <ion-toggle ng-model="map.ctrl.mode.edition">
+        <ion-toggle ng-model="sEventSuperviseur.event.mapDraw">
             Mode edition
         </ion-toggle>
+        <ion-toggle ng-model="sEventSuperviseur.event.sideMenu">
+            Option de carte
+        </ion-toggle>
+
+
+        <!--<ion-radio ng-model="sEventSuperviseur.event.sideMenu" ng-value="'A'">Mode Visu</ion-radio>-->
+        <!--<ion-radio ng-model="choice" ng-value="'B'">Mode Edition</ion-radio>-->
+        <!--<ion-radio ng-model="choice" ng-value="'C'"></ion-radio>-->
+
 
 
 

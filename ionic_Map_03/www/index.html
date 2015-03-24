@@ -47,6 +47,7 @@
 
 
     <!-- your app's js -->
+    <script src="js/utils.js"></script>
     <script src="js/const.js"></script>
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
@@ -57,7 +58,7 @@
 
   <ion-side-menus ng-controller="sideMenu">
 
-      <ion-pane ion-side-menu-content>
+      <ion-pane ion-side-menu-content   drag-content="sEventSuperviseur.event.sideMenu">
           <ion-nav-bar class="bar-positive nav-title-slide-ios7">
               <ion-nav-back-button class="button-icon"><span class="icon ion-ios7-arrow-left"></span></ion-nav-back-button>
           </ion-nav-bar>

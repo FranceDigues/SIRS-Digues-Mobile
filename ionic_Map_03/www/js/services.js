@@ -59,7 +59,18 @@ angular.module('data.services', [])
                 visu:true
 
         }
-    });
+    })
+    .service('sEventSuperviseur', function() {
+
+        //choper les calque dans un json
+        this.event = {
+
+            sideMenu:true,
+            mapMove:false,
+            mapDraw:false
+
+        }
+    });;
     //.service('dlService', function(pouchDB) {
     //
     //    this.stackDownload = new Array();

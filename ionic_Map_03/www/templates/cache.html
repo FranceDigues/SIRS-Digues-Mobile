@@ -11,7 +11,18 @@
         <ion-checkbox ng-repeat="layer in layers|filter:{isCache:false}" ng-model="isChecked"> Recup {{layer.name}}  ? </ion-checkbox>
 
 
-        <div ng-include="'templates/map.html'"></div>
+        <openlayers id="mapCache" ol-center="centreCarte"  ol-controls="controls"  ol-defaults="defaults" height="400px">
+            <!--<ol-layer ol-layer-properties="wms"></ol-layer>-->
+
+            <ol-layer ol-layer-properties="tt"></ol-layer>
+            <ol-layer ol-layer-properties="layer" ng-repeat="layer in layers|filter:{active:true}"></ol-layer>
+            <!--<ol-marker ol-marker-properties="gripStyle" ng-repeat="marker in markers" lat="marker.lat" lon="marker.lon"></ol-marker>-->
+            <!--<ol-marker ng-repeat="marker in markers" lat="marker.lat" lon="marker.lon"></ol-marker>-->
+
+
+        </openlayers>
+        {{layers}}
+
 
 
         <button class="button button-block button-positive" href="#/" ng-click="">Cach Me Baby</button>

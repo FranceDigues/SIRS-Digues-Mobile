@@ -49,7 +49,7 @@ app.run(function($ionicPlatform) {
         })
         .state('cache', {
             url: '/cache',
-            controller: 'AboutCtrl',
+            controller: 'CacheCtrl',
             templateUrl: 'templates/cache.html'
         });
 
@@ -63,19 +63,21 @@ app.controller('TabsCtrl', function($scope, $ionicSideMenuDelegate,sLayer,$log) 
     $log.debug(sLayer.json);
 
     $scope.openMenu = function () {
-        $ionicSideMenuDelegate.toggleLeft();
+         $ionicSideMenuDelegate.toggleLeft();
+
     }
 
 });
 
-app.controller('sideMenu', function($scope, $ionicSideMenuDelegate,sLayer,$log) { //kifkif un global controler non?
+app.controller('sideMenu', function($scope, $ionicSideMenuDelegate,sLayer,$log,sEventSuperviseur) { //kifkif un global controler non?
 
     $scope.layers = sLayer.list;
+    $scope.sEventSuperviseur = sEventSuperviseur;
 
-    $log.debug(sLayer.json);
+    //$log.debug( $scope.sEventSuperviseur);
 
     $scope.openMenu = function () {
-        $ionicSideMenuDelegate.toggleLeft();
+          $ionicSideMenuDelegate.toggleLeft();
     }
 
 });
