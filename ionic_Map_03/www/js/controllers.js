@@ -2,7 +2,7 @@ var mm =new Array();
 
 angular.module('controllers', [])
 
-.controller('MapCtrl', function($scope, sLayer,$log,sMap,olData) {
+.controller('MapCtrl', function($scope, sLayer,$log,sMap,olData, sEventSuperviseur) {
 
         //var myMap =null
         $scope.tt=tt;
@@ -10,6 +10,7 @@ angular.module('controllers', [])
 
         $scope.layers = sLayer.list
         $scope.mode = sMap.mode;
+
 
         $scope.drawType = {active:"Point"};
         $scope.typeEdition = [
@@ -104,10 +105,61 @@ angular.module('controllers', [])
                     //type: ol.geom.GeometryType.POLYGON
                     type: /** @type {ol.geom.GeometryType} */ ($scope.drawType.active)
                 });
+
+                //draw.setActive(false);
+                $log.debug(draw.getActive());
+                sEventSuperviseur.draw = draw;
+
                 map.addInteraction(draw);
             }
 
 
+
+            ///************************************ deport gestion des interacton ol3 ************************************/
+            ////todo deport direct dans le service?
+            ////copy copy copy
+            //angular.copy($scope.master)
+            //
+            //
+            //idrawP = new ol.interaction.Draw({
+            //    features: featureOverlay.getFeatures(),
+            //    //type: ol.geom.GeometryType.POLYGON
+            //    type: ol.geom.GeometryType.POINT
+            //});
+            //$log.debug(idrawP);
+            //
+            ////idrawL = new ol.interaction.Draw({
+            ////    features: featureOverlay.getFeatures(),
+            ////    //type: ol.geom.GeometryType.POLYGON
+            ////    type: ol.geom.GeometryType.LineString
+            ////});
+            ////$log.debug(idrawL);
+            //
+            //idrawA = new ol.interaction.Draw({
+            //    features: featureOverlay.getFeatures(),
+            //    //type: ol.geom.GeometryType.POLYGON
+            //    type: ol.geom.GeometryType.Polygon
+            //});
+            //$log.debug(idrawA);
+            //
+            //
+            ////desactivation initiale
+            ////idrawP
+            //idrawL.setActive(false);
+            //idrawA.setActive(false);
+            //
+            ////ajout a la carte
+            //map.addInteraction(idrawP);
+            //map.addInteraction(idrawL);
+            //map.addInteraction(idrawA);
+            //
+            ////ajout au service
+            //sEventSuperviseur.olInteract.draw.point = idrawP;
+            //sEventSuperviseur.olInteract.draw.line = idrawL;
+            //sEventSuperviseur.olInteract.draw.area= idrawA;
+            //
+            //
+            ///************************************ end ************************************/
 
 
             $scope.updateType = function (dt) {

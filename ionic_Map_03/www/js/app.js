@@ -117,11 +117,28 @@ app.controller('HomeCtrl', function($scope,$state) {
 
 });
 
-app.controller('SignInCtrl', function($scope, $state) {
+app.controller('SignInCtrl', function($scope, $state, sPouch,$log) {
+//app.controller('SignInCtrl', function($scope, $state) {
+
+
+    //var usr = sPouch.usr.allDocs;
+
+
 
     $scope.signIn = function(user) {
         console.log('Sign-In', user);
-        $state.go('home');
+
+        //sPouch.usr.query('name_index', {key: 'mok-sensei'}).then(function(result) {
+        sPouch.usr.query('name_index', {key: user.username}).then(function(result) {
+            // do something with result
+            $log.debug(result);
+
+            $log.debug(result.rows[0].value);
+            $log.debug(parseInt( user.password));
+
+            if(result.rows[0].value == parseInt( user.password) )   $state.go('home');
+
+        });
     };
 
 

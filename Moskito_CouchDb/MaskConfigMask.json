@@ -1,0 +1,29 @@
+{
+  "type":"cfg",
+  "idf":"cMask",
+  "cat":[
+      {
+      "nom":"Signalement",
+      "msk":[
+            {"nom":"Enquêtes entomologiques"},
+            {"nom":"Traitement anti-larvaire"},
+            {"nom":"Préparation de traitement"},
+            {"nom":"Traitement anti-adulte"}
+          ]
+
+      },
+      {
+      "nom":"Surveillance",
+        "msk":[
+          {"nom":"Identification"},
+          {"nom":"Pose et relevé de pièges"}
+        ]
+      },
+      {
+      "nom":"Communication",
+        "msk":[
+          {"nom":"Communication"}
+        ]
+      }
+  ]
+}

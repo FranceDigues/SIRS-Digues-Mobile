@@ -70,7 +70,80 @@ angular.module('data.services', [])
             mapDraw:false
 
         }
-    });;
+
+        this.draw = null;
+        this.toggleDraw = function(){
+            if(this.draw.getActive()) this.draw.setActive(false);
+            if(!this.draw.getActive()) this.draw.setActive(true);
+        }
+
+        this.olInteract={
+            draw:{
+                point:null,
+                line:null,
+                area:null
+            },
+            mesur :{
+                line:null,
+                area:null
+            }
+            //todo hyperviseur Control ol3
+
+        }
+
+    })
+    .service('sPouch', function(pouchDB,$log,$ionicPlatform) {
+
+
+                this.cfg = new pouchDB('moskito_config');
+                this.usr = new pouchDB('moskito_user');
+
+                PouchDB.replicate('http://178.32.34.74:5984/moskito_config','moskito_config');
+                PouchDB.replicate('http://178.32.34.74:5984/moskito_user','moskito_user');
+
+
+
+
+
+        this.cfg.allDocs().then(function (result) {
+             console.log(result);
+        }).catch(function (err) {
+            console.log(err);
+        });
+
+        this.usr.allDocs().then(function (result) {
+                 console.log(result);
+            }).catch(function (err) {
+                console.log(err);
+            });
+
+
+
+        var designDoc = {
+            _id: '_design/name_index',
+            views: {
+                'name_index': {
+                    map: function(doc) {
+                        emit(doc.name, doc.psw);
+                    }.toString()
+                }
+            }
+        };
+
+
+        this.usr.put(designDoc).then(function (info) {
+            // design doc created
+            $log.debug(info);
+        }).catch(function (err) {
+            // if err.name === 'conflict', then
+            // design doc already exists
+            $log.debug(err);
+        });
+
+
+
+    });
+
     //.service('dlService', function(pouchDB) {
     //
     //    this.stackDownload = new Array();
