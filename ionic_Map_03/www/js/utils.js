@@ -1,5 +1,5 @@
 /**
- * Created by harksin on 23/03/15.
+ * Created by roch Dardie on 23/03/15.
  */
 function asPolygon(pArray){
 

@@ -1,3 +1,8 @@
+/**
+ * Created by Roch Dardie on 15/03/15.
+ */
+
+
 var mm =new Array();
 
 angular.module('controllers', [])
@@ -386,4 +391,34 @@ angular.module('controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
 
+})
+
+
+.controller('MskCtrl', function($scope,sPouch,$log) {
+
+    $log.debug("mskCtrl");
+    $log.debug(cMaskId);
+
+    sPouch.cfg.get(cMaskId).then(function (doc) {
+        $scope.masks = doc.cat;
+        $log.debug( $scope.masks);
+    }).catch(function (err) {
+        $log.debug(err);
+    });
+
+
+    /*
+     * if given group is the selected group, deselect it
+     * else, select the given group
+     */
+    $scope.toggleGroup = function(group) {
+        if ($scope.isGroupShown(group)) {
+            $scope.shownGroup = null;
+        } else {
+            $scope.shownGroup = group;
+        }
+    };
+    $scope.isGroupShown = function(group) {
+        return $scope.shownGroup === group;
+    };
 });

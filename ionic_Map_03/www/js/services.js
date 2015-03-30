@@ -1,3 +1,8 @@
+/**
+ * Created by Roch Dardie on 15/03/15.
+ */
+
+
 angular.module('data.services', [])
 
     .service('sDb', function(pouchDB) {
@@ -92,6 +97,20 @@ angular.module('data.services', [])
         }
 
     })
+    //.service('sCfg', function($log,$http) {
+    //
+    //    //$.getJSON( "data/cfg.json", function( data ) {
+    //    //   this.cMaskId = data.cMaskId
+    //    //    $log.debug(data.cMaskId);
+    //    //});
+    //
+    //
+    //    $http.get('data/cfg.json').success(function(response) {
+    //        this.cMaskId = response.cMaskId;
+    //        $log.debug(response.cMaskId);
+    //    });
+    //
+    //})
     .service('sPouch', function(pouchDB,$log,$ionicPlatform) {
 
 

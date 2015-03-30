@@ -1,3 +1,7 @@
+/**
+ * Created by Roch Dardie on 15/03/15.
+ */
+
 var app = angular.module('cartoMobile', [
     'ionic',
     'ngCordova',
@@ -65,7 +69,13 @@ app.run(function($ionicPlatform) {
             url: '/cache',
             controller: 'CacheCtrl',
             templateUrl: 'templates/cache.html'
+        })
+        .state('mask', {
+            url: '/mask',
+            controller: 'MskCtrl',
+            templateUrl: 'templates/mask.html'
         });
+
 
     //$urlRouterProvider.otherwise('/tab');
         $urlRouterProvider.otherwise('/sign-in');
@@ -102,17 +112,14 @@ app.controller('HomeTabCtrl', function($scope, $ionicSideMenuDelegate) {
 
 });
 
-//app.controller('AboutCtrl', function($scope, $ionicSideMenuDelegate) {
-//    $scope.openMenu = function () {
-//        $ionicSideMenuDelegate.toggleLeft();
-//    }
-//});
-
-
 app.controller('HomeCtrl', function($scope,$state) {
 
     $scope.visu = function() {
         $state.go('tabs.map');
+    };
+
+    $scope.mask = function() {
+        $state.go('mask');
     };
 
 });
