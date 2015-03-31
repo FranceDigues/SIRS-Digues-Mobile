@@ -196,7 +196,7 @@ angular.module('controllers', [])
 
 
 
-.controller('CacheCtrl', function($scope,sLayer,sMap,olData,$log,$timeout) {
+.controller('CacheCtrl', function($scope,sLayer,sMap,olData,$log,$timeout,sCacheMap) {
         $scope.layers=sLayer.list;
         $scope.mode = sMap.mode;
         $scope.vsCacheBox= null;
@@ -327,25 +327,7 @@ angular.module('controllers', [])
 
 
                 map.addLayer(lPoly);
-                //$log.debug(map.getLayers().getArray());
-
-
-                //$scope.vsCacheBox = vsPoly;
-                //$scope.lCacheBox = lPoly;
-
-                $log.debug("control");
-                //$log.debug(vsPoly);
-                //$log.debug(lPoly);
-
-
-
-
-
-
-
             }
-
-
         );
 
 
@@ -355,7 +337,7 @@ angular.module('controllers', [])
                 $scope.$apply(function () {
 
                     //recup jeux de coordonnée
-                        CoordList =  $scope.dragBox.getGeometry().getCoordinates();
+                    $scope.CoordList =  $scope.dragBox.getGeometry().getCoordinates();
 
                         /* netoyage de la couche */
                     $scope.vsPoly.clear();
@@ -368,6 +350,12 @@ angular.module('controllers', [])
                             }));
                 });
             });
+
+
+        $scope.cachMe=function(){
+            //TODO recup LayerName et OSM automatiquement
+            sCacheMap.cache("http://a.tile.openstreetmap.org/",$scope.CoordList,"essai","OSM",$scope.zMin,$scope.zMax);
+        }
 
 })
 
