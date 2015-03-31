@@ -10,7 +10,7 @@ angular.module('controllers', [])
 .controller('MapCtrl', function($scope, sLayer,$log,sMap,olData, sEventSuperviseur) {
 
         //var myMap =null
-        $scope.tt=tt;
+        //$scope.tt=tt;
         $log.debug(sLayer.json);
 
         $scope.layers = sLayer.list
@@ -196,11 +196,24 @@ angular.module('controllers', [])
 
 
 
-.controller('CacheCtrl', function($scope,sLayer,sMap,olData,$log) {
+.controller('CacheCtrl', function($scope,sLayer,sMap,olData,$log,$timeout) {
         $scope.layers=sLayer.list;
         $scope.mode = sMap.mode;
         $scope.vsCacheBox= null;
         $scope.lCacheBox= null;
+
+        $scope.polyOrnotPoly = false;
+
+
+
+
+        //todo faire le trie :
+        $scope.imageLoadingProgress =0;
+        $scope.nbTile =0;
+        $scope.imageTmp = null;
+        $scope.HL = false; //Mode Hors Ligne
+        $scope.zMin=0;
+        $scope.zMax=0;
 
 
           $scope.settings = {
@@ -221,30 +234,19 @@ angular.module('controllers', [])
                 //layers:  sLayer.json,
                 defaults:{
                     events: {
-                        map: [ 'singleclick', 'pointermove' ]
-                    }
-                    ,
-                    styles: {
-                        marker: {
-                            image: new ol.style.Icon({
-                                anchor: [0.5, 0.5],
-                                anchorXUnits: 'fraction',
-                                anchorYUnits: 'fraction',
-                                opacity: 0.90,
-                                src: 'img/gbb_20x20.png'
-                            })
-                        }
+                        map: [ 'singleclick', 'pointermove','boxend' ]
+                    },
+                    iinteractions: {
+                        mouseWheelZoom: false,
+                        doubleClickZoom: false,
+                        keyboardPan: false,
+                        dragPan: false
                     }
 
                 },
 
 
 
-                controls: [
-                    { name: 'zoom', active: false },
-                    { name: 'rotate', active: false },
-                    { name: 'attribution', active: false }
-                ],
 
                 mouseposition: {},
                 mouseclickposition: {},
@@ -256,12 +258,18 @@ angular.module('controllers', [])
 
 
 
-        olData.getMap("mapCache").then(function(map){
 
+
+        olData.getMap("mapCache").then(function(map){
                 $log.debug("Cache Control getMap :")
-/*
-                var dragBox = new ol.interaction.DragBox({
-                    condition: ol.events.condition.always,
+
+
+
+
+
+
+                $scope.dragBox = new ol.interaction.DragBoxTouch({
+                    //condition: ol.events.condition.always,
                     style: new ol.style.Style({
                         stroke: new ol.style.Stroke({
                             color: [0, 0, 255, 1]
@@ -270,15 +278,15 @@ angular.module('controllers', [])
                 });
 
 
-                map.addInteraction(dragBox);*/
+
+                map.getInteractions().clear();
+                map.addInteraction($scope.dragBox);
 
 
-                $log.debug(map);
-                $log.debug(map.getLayers().getArray());
 
-//brutforce
+
                 //layer non angular
-                vsPoly = new ol.source.Vector({
+                $scope.vsPoly = new ol.source.Vector({
                     //create empty vector
                 });
                 //vsPoly.addFeature(feature);
@@ -312,22 +320,26 @@ angular.module('controllers', [])
                 ];
 
                 //creation du calque
-                lPoly = new ol.layer.Vector({
-                    source: vsPoly,
+                var lPoly = new ol.layer.Vector({
+                    source:  $scope.vsPoly,
                     style: styles
                 });
 
 
                 map.addLayer(lPoly);
-                $log.debug(map.getLayers().getArray());
+                //$log.debug(map.getLayers().getArray());
 
 
-                $scope.vsCacheBox = vsPoly;
-                $scope.lCacheBox = lPoly;
+                //$scope.vsCacheBox = vsPoly;
+                //$scope.lCacheBox = lPoly;
 
                 $log.debug("control");
-                $log.debug(vsPoly);
-                $log.debug(lPoly);
+                //$log.debug(vsPoly);
+                //$log.debug(lPoly);
+
+
+
+
 
 
 
@@ -337,55 +349,25 @@ angular.module('controllers', [])
         );
 
 
+            //maintien de la zonne a l'ecran dans un calque temporaire
+            $scope.$on('openlayers.map.pointermove', function(e, coord) {
 
+                $scope.$apply(function () {
 
+                    //recup jeux de coordonnée
+                        CoordList =  $scope.dragBox.getGeometry().getCoordinates();
 
+                        /* netoyage de la couche */
+                    $scope.vsPoly.clear();
 
+                        /* ajout du rectangle*/
+                    $scope.vsPoly.addFeature(
+                            new ol.Feature({
+                                geometry: $scope.dragBox.getGeometry()
 
-
-        $scope.$on('openlayers.map.singleclick', function(e, coord) {
-            $scope.$apply(function() {
-                if ($scope.projection === coord.projection) {
-                    $scope.mouseclickposition = coord;
-                } else {
-                    var p = ol.proj.transform([coord.lon, coord.lat], coord.projection, $scope.projection);
-                    $scope.mouseclickposition = {
-                        lat: Math.round(p[1]*1000)/1000,
-                        lon: Math.round(p[0]*1000)/1000,
-                        projection: $scope.projection
-                    }
-                }
-
-
-                $scope.markers.push({
-                    name: "t1",
-                    lat: $scope.mouseclickposition.lat,
-                    lon: $scope.mouseclickposition.lon
-                })
-
-
-                $scope.imageLoadingProgress = 0;
-
-
-                //layer non angular
-                $scope.vsCacheBox.clear();
-                var cbox =  new ol.geom.Polygon(asPolygon($scope.markers));
-                cbox.transform('EPSG:4326', 'EPSG:3857');
-
-
-                $scope.vsCacheBox.addFeature(
-                    new ol.Feature({
-                        geometry: cbox
-                    })
-                );
-
-
+                            }));
+                });
             });
-        });
-
-
-
-
 
 })
 
@@ -421,4 +403,127 @@ angular.module('controllers', [])
     $scope.isGroupShown = function(group) {
         return $scope.shownGroup === group;
     };
-});
+})
+.controller('FormListCtrl', ['$scope','$ionicPopup','$ionicPopover','$timeout',
+    function ($scope,$ionicPopup,$ionicPopover, $timeout) {
+        $scope.form1 = [
+            {
+                label: 'username',
+                id: 'forminput1',
+                type: 'text',
+                value: '',
+                placeholder: 'Enter your username here..'
+            },
+            {
+                label: 'date',
+                id: 'forminput2',
+                type: 'date',
+                value: new Date('01/01/1970'),
+                placeholder: 'Enter your date here ..',
+                hide: 'form1[0].value=="test"'
+            },
+            {
+                label: 'select1',
+                id: 'select1',
+                type: 'select',
+                values: [
+                    {
+                        'text': 'toto',
+                        'value': 'testValue'
+                    },
+                    {
+                        'text': 'titi',
+                        'value': 'titiValue'
+                    }
+                ],
+                change: 'if (form1[2].value=="testValue"){form1[3].values = [{"text": "test","value":"blbl"}]}'
+            },
+            {
+                label: 'select2',
+                id: 'select2',
+                type: 'select',
+                values: [
+                    {
+                        'text': 'tata',
+                        'value': 'tataValue'
+                    },
+                    {
+                        'text': 'tutu',
+                        'value': 'tutuValue'
+                    }
+                ]
+            }
+
+        ];
+
+        $scope.evalAngular = function (string) {
+            return $scope.$eval(string);
+        };
+
+
+        $scope.showPopup = function() {
+            // An elaborate, custom popup
+            var myPopup = $ionicPopup.show({
+                templateUrl: 'templates/formGenerator.html',
+                title: 'Form',
+                //subTitle: 'Please use normal things',
+                scope: $scope,
+                buttons: [
+                    {text: 'Cancel'},
+                    {
+                        text: '<b>Ok</b>',
+                        type: 'button-positive',
+                        onTap: function (e) {
+
+                        }
+                    }
+                ]
+            });
+            myPopup.then(function (res) {
+                console.log('Tapped!', res);
+            });
+            $timeout(function () {
+                myPopup.close(); //close the popup after 3 seconds for some reason
+            }, 3000);
+        };
+
+
+
+
+
+
+
+
+
+        $ionicPopover.fromTemplateUrl('my-popover.html', {
+            scope: $scope
+        }).then(function(popover) {
+            $scope.popover = popover;
+        });
+
+
+        $scope.openPopover = function($event) {
+            $scope.popover.show($event);
+        };
+        $scope.closePopover = function() {
+            $scope.popover.hide();
+        };
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function() {
+            $scope.popover.remove();
+        });
+        // Execute action on hide popover
+        $scope.$on('popover.hidden', function() {
+            // Execute action
+        });
+        // Execute action on remove popover
+        $scope.$on('popover.removed', function() {
+            // Execute action
+        });
+
+
+
+
+
+
+    }]);
