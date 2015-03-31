@@ -70,6 +70,11 @@ app.run(function($ionicPlatform) {
             controller: 'CacheCtrl',
             templateUrl: 'templates/cache.html'
         })
+        .state('formGenerator', {
+            url: '/formGenerator',
+            controller: 'FormListCtrl',
+            templateUrl: 'templates/formGenerator.html'
+        })
         .state('mask', {
             url: '/mask',
             controller: 'MskCtrl',
@@ -94,7 +99,7 @@ app.controller('TabsCtrl', function($scope, $ionicSideMenuDelegate,sLayer,$log) 
 
 });
 
-app.controller('sideMenu', function($scope, $ionicSideMenuDelegate,sLayer,$log,sEventSuperviseur) { //kifkif un global controler non?
+app.controller('sideMenu', function($scope,$state, $ionicSideMenuDelegate,sLayer,$log,sEventSuperviseur) { //kifkif un global controler non?
 
     $scope.layers = sLayer.list;
     $scope.sEventSuperviseur = sEventSuperviseur;
@@ -105,6 +110,12 @@ app.controller('sideMenu', function($scope, $ionicSideMenuDelegate,sLayer,$log,s
           $ionicSideMenuDelegate.toggleLeft();
     }
 
+    $scope.newCache = function() {
+
+        sEventSuperviseur.event.sideMenu=false;
+        $state.go('cache');
+    };
+
 });
 
 
@@ -112,7 +123,7 @@ app.controller('HomeTabCtrl', function($scope, $ionicSideMenuDelegate) {
 
 });
 
-app.controller('HomeCtrl', function($scope,$state) {
+app.controller('HomeCtrl', function($scope,$state,$cordovaFileOpener2,$log) {
 
     $scope.visu = function() {
         $state.go('tabs.map');
@@ -122,15 +133,32 @@ app.controller('HomeCtrl', function($scope,$state) {
         $state.go('mask');
     };
 
+    $scope.form = function() {
+        $state.go('formGenerator');
+    };
+
+
+
+    $scope.openPdf = function(){
+
+        $cordovaFileOpener2.open(
+            '/sdcard/Download/cv.pdf',
+            'application/pdf'
+        ).then(function(res) {
+                $log.debug(res)
+            }, function(err) {
+                $log.debug(err)
+            });
+
+    }
+
+
 });
 
 app.controller('SignInCtrl', function($scope, $state, sPouch,$log) {
 //app.controller('SignInCtrl', function($scope, $state) {
 
-
     //var usr = sPouch.usr.allDocs;
-
-
 
     $scope.signIn = function(user) {
         console.log('Sign-In', user);

@@ -65,7 +65,7 @@ angular.module('data.services', [])
 
         }
     })
-    .service('sEventSuperviseur', function() {
+    .service('sEventSuperviseur', function($log) {
 
         //choper les calque dans un json
         this.event = {
@@ -76,10 +76,20 @@ angular.module('data.services', [])
 
         }
 
+
         this.draw = null;
+        ;
         this.toggleDraw = function(){
-            if(this.draw.getActive()) this.draw.setActive(false);
-            if(!this.draw.getActive()) this.draw.setActive(true);
+            if(this.draw.getActive()){
+                $log.debug("desactivation");
+                this.draw.setActive(false);
+                this.event.sideMenu = true;
+            }
+            else if(!this.draw.getActive()){
+                $log.debug("activation");
+                this.draw.setActive(true);
+                this.event.sideMenu = false;
+            }
         }
 
         this.olInteract={

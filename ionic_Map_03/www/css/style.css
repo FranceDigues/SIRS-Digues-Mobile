@@ -30,3 +30,11 @@
 .list .item.item-accordion.ng-hide-remove {
     display: block !important;
 }
+
+
+
+/*//popup*/
+.popup {
+    width: 400px;
+    height: 350px;
+}

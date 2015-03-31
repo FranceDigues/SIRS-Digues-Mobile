@@ -15,6 +15,31 @@ function asPolygon(pArray){
     return new Array(coordArray);
 }
 
+function ringBuilder(p1,p2){
+
+    var coordArray = new Array();
+
+//verif sens
+    coordArray.push(new Array(p1.lon, p1.lat));
+    coordArray.push(new Array(p1.lon, p2.lat));
+    coordArray.push(new Array(p2.lon, p2.lat));
+    coordArray.push(new Array(p2.lon, p1.lat));
+    coordArray.push(new Array(p1.lon, p1.lat));
+
+
+
+    return new Array(coordArray);
+}
+
+function geomBuilder(pa,pb){
+    console.log("ringBuilder")
+    console.log([[[pa,[pa[0],pb[1]],pb,[pb[0],pa[1]],pa]]]);
+    console.log(new ol.geom.Polygon([[[pa,[pa[0],pb[1]],pb,[pb[0],pa[1]],pa]]]));
+
+    //return new ol.geom.Polygon([[[pa,[pa[0],pb[1]],pb,[pb[0],pa[1]],pa]]]);
+    return new ol.geom.Polygon(pOktmp);
+
+};
 
 
 function getEG(vertexList){
