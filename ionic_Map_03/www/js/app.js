@@ -12,7 +12,12 @@ var app = angular.module('cartoMobile', [
     'data.services']);
 
 app.run(function($ionicPlatform) {
+    //sLayer
     $ionicPlatform.ready(function() {
+
+
+
+        //sLayer.list;
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -34,21 +39,40 @@ app.run(function($ionicPlatform) {
             templateUrl: 'templates/sign-in.html',
             controller: 'SignInCtrl'
         })
+        .state('menu', {
+            url: '/menu',
+            abstract: true,
+            templateUrl: 'templates/menu.html',
+            controller: 'sideMenu'
+        })
+        .state('loading', {
+            url: '/loading',
+            templateUrl: 'templates/loading.html',
+            controller: 'loader'
+            //resolve:
+            //controllerAs:'c'
+        })
         .state('forgotpassword', {
             url: '/forgot-password',
             templateUrl: 'templates/forgot-password.html'
         })
-        .state('home', {
+        .state('menu.home', {
             url: '/home',
-            controller :"HomeCtrl",
-            templateUrl: 'templates/home.html'
+            views: {
+                'menuContent' : {
+                    controller: "HomeCtrl",
+                    templateUrl: 'templates/home.html'
+                }}
         })
-        .state('tabs', {
+        .state('menu.tabs', {
             url: '/tab',
-            controller: 'TabsCtrl',
-            templateUrl: 'templates/tabs.html'
+            views: {
+                'menuContent' : {
+                    controller: 'TabsCtrl',
+                    templateUrl: 'templates/tabs.html'
+                }}
         })
-        .state('tabs.map', {
+        .state('menu.tabs.map', {
             url: '/map',
             views: {
                 'home-tab': {
@@ -57,7 +81,7 @@ app.run(function($ionicPlatform) {
                 }
             }
         })
-        .state('tabs.settings', {
+        .state('menu.tabs.settings', {
             url: '/settings',
             views: {
                 'settings-tab': {
@@ -75,10 +99,13 @@ app.run(function($ionicPlatform) {
             controller: 'FormListCtrl',
             templateUrl: 'templates/formGenerator.html'
         })
-        .state('mask', {
+        .state('menu.mask', {
             url: '/mask',
-            controller: 'MskCtrl',
-            templateUrl: 'templates/mask.html'
+            views: {
+                'menuContent' : {
+                controller: 'MskCtrl',
+                templateUrl: 'templates/mask.html'
+            }}
         });
 
 
@@ -99,24 +126,7 @@ app.controller('TabsCtrl', function($scope, $ionicSideMenuDelegate,sLayer,$log) 
 
 });
 
-app.controller('sideMenu', function($scope,$state, $ionicSideMenuDelegate,sLayer,$log,sEventSuperviseur) { //kifkif un global controler non?
 
-    $scope.layers = sLayer.list;
-    $scope.sEventSuperviseur = sEventSuperviseur;
-
-    //$log.debug( $scope.sEventSuperviseur);
-
-    $scope.openMenu = function () {
-          $ionicSideMenuDelegate.toggleLeft();
-    }
-
-    $scope.newCache = function() {
-
-        sEventSuperviseur.event.sideMenu=false;
-        $state.go('cache');
-    };
-
-});
 
 
 app.controller('HomeTabCtrl', function($scope, $ionicSideMenuDelegate) {
@@ -126,11 +136,11 @@ app.controller('HomeTabCtrl', function($scope, $ionicSideMenuDelegate) {
 app.controller('HomeCtrl', function($scope,$state,$cordovaFileOpener2,$log) {
 
     $scope.visu = function() {
-        $state.go('tabs.map');
+        $state.go('menu.tabs.map');
     };
 
     $scope.mask = function() {
-        $state.go('mask');
+        $state.go('menu.mask');
     };
 
     $scope.form = function() {
@@ -163,17 +173,22 @@ app.controller('SignInCtrl', function($scope, $state, sPouch,$log) {
     $scope.signIn = function(user) {
         console.log('Sign-In', user);
 
-        //sPouch.usr.query('name_index', {key: 'mok-sensei'}).then(function(result) {
-        sPouch.usr.query('name_index', {key: user.username}).then(function(result) {
-            // do something with result
-            $log.debug(result);
+        //TODO DEMO Comment
+        $state.go('loading')
 
-            $log.debug(result.rows[0].value);
-            $log.debug(parseInt( user.password));
+        //TODO DEMO unComment
+        ////sPouch.usr.query('name_index', {key: 'mok-sensei'}).then(function(result) {
+        //sPouch.usr.query('name_index', {key: user.username}).then(function(result) {
+        //    // do something with result
+        //    $log.debug(result);
+        //
+        //    $log.debug(result.rows[0].value);
+        //    $log.debug(parseInt( user.password));
+        //
+        //    if(result.rows[0].value == parseInt( user.password) )   $state.go('home');
+        //
+        //});
 
-            if(result.rows[0].value == parseInt( user.password) )   $state.go('home');
-
-        });
     };
 
 
@@ -182,7 +197,7 @@ app.controller('SignInCtrl', function($scope, $state, sPouch,$log) {
     };
 
     $scope.home = function() {
-        $state.go('home');
+        $state.go('menu.home');
     };
 
 })

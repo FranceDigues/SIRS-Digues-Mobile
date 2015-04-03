@@ -7,13 +7,18 @@ var mm =new Array();
 
 angular.module('controllers', [])
 
-.controller('MapCtrl', function($scope, sLayer,$log,sMap,olData, sEventSuperviseur) {
+/***************************************************************** --------- *****************************************************/
+/*****************************************************************  MAP    *****************************************************/
+/***************************************************************** --------- *****************************************************/
+
+
+    .controller('MapCtrl', function($scope, sLayer,$log,sMap,olData, sEventSuperviseur) {
 
         //var myMap =null
         //$scope.tt=tt;
-        $log.debug(sLayer.json);
+        $log.debug(sLayer.list);
 
-        $scope.layers = sLayer.list
+        $scope.layers = sLayer.list;
         $scope.mode = sMap.mode;
 
 
@@ -194,9 +199,15 @@ angular.module('controllers', [])
 
     })
 
+/***************************************************************** --------- *****************************************************/
+/***************************************************************** CACHE     *****************************************************/
+/***************************************************************** --------- *****************************************************/
 
 
 .controller('CacheCtrl', function($scope,sLayer,sMap,olData,$log,$timeout,sCacheMap) {
+        $scope.var={CoordList : null};
+
+
         $scope.layers=sLayer.list;
         $scope.mode = sMap.mode;
         $scope.vsCacheBox= null;
@@ -208,12 +219,12 @@ angular.module('controllers', [])
 
 
         //todo faire le trie :
-        $scope.imageLoadingProgress =0;
-        $scope.nbTile =0;
+        $scope.nbTileDownloaded = sCacheMap.nbTileDownloaded;
+        $scope.nbTile =sCacheMap.nbTile;
         $scope.imageTmp = null;
         $scope.HL = false; //Mode Hors Ligne
-        $scope.zMin=0;
-        $scope.zMax=0;
+        $scope.z={zmin :1, zMax :3};
+        //$scope.zMax=3;
 
 
           $scope.settings = {
@@ -337,8 +348,9 @@ angular.module('controllers', [])
                 $scope.$apply(function () {
 
                     //recup jeux de coordonnée
-                    $scope.CoordList =  $scope.dragBox.getGeometry().getCoordinates();
-
+                    var tGeom = $scope.dragBox.getGeometry().clone(); // comportement etrange
+                    $scope.var.CoordList =  tGeom.transform('EPSG:3857','EPSG:4326').getCoordinates();
+                    $log.debug( $scope.var.CoordList);
                         /* netoyage de la couche */
                     $scope.vsPoly.clear();
 
@@ -354,15 +366,23 @@ angular.module('controllers', [])
 
         $scope.cachMe=function(){
             //TODO recup LayerName et OSM automatiquement
-            sCacheMap.cache("http://a.tile.openstreetmap.org/",$scope.CoordList,"essai","OSM",$scope.zMin,$scope.zMax);
-        }
+            $log.debug($scope.var.CoordList);
+            sCacheMap.cache("http://a.tile.openstreetmap.org/",$scope.var.CoordList,"essai","OSM",$scope.z.zMin,$scope.z.zMax);
+        };
 
 })
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+/***************************************************************** --------- *****************************************************/
+/***************************************************************** ????????? *****************************************************/
+/***************************************************************** --------- *****************************************************/
+
+    .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
 
 })
 
+/***************************************************************** --------- *****************************************************/
+/***************************************************************** Masque *****************************************************/
+/***************************************************************** --------- *****************************************************/
 
 .controller('MskCtrl', function($scope,sPouch,$log) {
 
@@ -392,7 +412,13 @@ angular.module('controllers', [])
         return $scope.shownGroup === group;
     };
 })
-.controller('FormListCtrl', ['$scope','$ionicPopup','$ionicPopover','$timeout',
+
+/***************************************************************** --------- *****************************************************/
+/***************************************************************** Form List *****************************************************/
+/***************************************************************** --------- *****************************************************/
+
+
+    .controller('FormListCtrl', ['$scope','$ionicPopup','$ionicPopover','$timeout',
     function ($scope,$ionicPopup,$ionicPopover, $timeout) {
         $scope.form1 = [
             {
@@ -514,4 +540,78 @@ angular.module('controllers', [])
 
 
 
-    }]);
+    }])
+
+    /***************************************************************** --------- *****************************************************/
+    /***************************************************************** SIDE MENU *****************************************************/
+    /***************************************************************** --------- *****************************************************/
+
+    .controller('sideMenu', function($scope,$state, $ionicSideMenuDelegate,sLayer,$log,sEventSuperviseur,$ionicPlatform) { //kifkif un global controler non?
+
+
+            $log.debug("sideMenu");
+            //$log.debug(doc.layers);
+            $scope.layers = sLayer.list;
+
+
+            $scope.sEventSuperviseur = sEventSuperviseur;
+
+            //$log.debug( $scope.sEventSuperviseur);
+
+            $scope.openMenu = function () {
+                $ionicSideMenuDelegate.toggleLeft();
+            }
+
+            $scope.newCache = function () {
+
+                sEventSuperviseur.event.sideMenu = false;
+                $state.go('cache');
+            };
+
+
+
+})
+
+/***************************************************************** --------- *****************************************************/
+/***************************************************************** LOADER     *****************************************************/
+/***************************************************************** --------- *****************************************************/
+
+
+    .controller('loader', function($scope,$state,sPouch,sLayer,$timeout,$log) {
+
+       var n = sLayer.list;
+       //var u =  sLayer.usr;
+       //var l = sLayer.cfg;
+        $log.debug("loader");
+        $log.debug(n);
+        //$log.debug(u);
+        //$log.debug(l);
+        $log.debug("/ loader");
+
+        $scope.loadingPercent= 0;
+
+
+        //Bouchon de vase
+            $timeout(function(){
+                $scope.loadingPercent=$scope.loadingPercent+25;
+
+                $timeout(function(){
+                    $scope.loadingPercent=$scope.loadingPercent+25;
+                    $timeout(function(){
+                        $scope.loadingPercent=$scope.loadingPercent+25;
+                        $timeout(function(){
+                            $scope.loadingPercent=$scope.loadingPercent+25;
+                            $state.go("menu.home");
+                        },600);
+                        },600);
+                },600);
+
+
+            },600);
+
+
+
+
+
+
+    });

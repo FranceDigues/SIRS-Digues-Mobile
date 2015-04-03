@@ -1,0 +1,26 @@
+{
+  "type":"cfg",
+  "idf":"cBaseLayer",
+  "layers":[
+    {
+      "isCache":false,
+      "name": "OSM",
+      "active": true,
+      "opacity": 0.6,
+      "source": {
+        "type": "OSM",
+        "url":"http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      }},
+    {
+      "isCache":false,
+      "name":"wms",
+      "active": false,
+      "opacity": 0.5,
+      "source": {
+        "type": "ImageWMS",
+        "url":"http://demo.opengeo.org/geoserver/wms",
+        "params": {
+          "LAYERS": "topp:states"
+    }}}
+  ]
+}

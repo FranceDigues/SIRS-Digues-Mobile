@@ -42,20 +42,48 @@ function geomBuilder(pa,pb){
 };
 
 
-function getEG(vertexList){
 
-    var minMAx =[[0,0],[0,0]];
 
-    vertexList.forEach(function(v){
-        if(v[0] < minMAx[0][0] ) minMAx[0][0] = v[0];
-        if(v[0] > minMAx[1][0] ) minMAx[1][0] = v[0];
-        if(v[1] < minMAx[0][1] ) minMAx[0][1] = v[0];
-        if(v[1] > minMAx[1][1] ) minMAx[1][1] = v[0];
-    });
+function getTileURL(lon, lat, zoom) {
+    //$log.debug("inputGetURl [lat :"+lat+" lon :"+lon+" zoom : "+zoom+" ]");
 
-    return miniMax;
+    var xtile = parseInt(Math.floor( (lon + 180) / 360 * (1<<zoom) ));
+    var ytile = parseInt(Math.floor( (1 - Math.log(Math.tan(lat.toRad()) + 1 / Math.cos(lat.toRad())) / Math.PI) / 2 * (1<<zoom) ));
+
+
+    //$log.debug( "" + zoom + "/" + xtile + "/" + ytile);
+
+
+    tileUrl = { "z":zoom, "x":xtile, "y":ytile }; //objet pour manipuler les coord de tuile z/x/y
+    //TODO faire un vrai objet avec de proto compare
+    //TODO etudier les objets  JS
+    return tileUrl;
 }
 
-function getEC(){ //gift paper algo
 
+/** Converts numeric degrees to radians */
+if (typeof(Number.prototype.toRad) === "undefined") {
+    Number.prototype.toRad = function() {
+        return this * Math.PI / 180;
+    }
 }
+
+
+
+//function getEG(vertexList){
+//
+//    var minMAx =[[0,0],[0,0]];
+//
+//    vertexList.forEach(function(v){
+//        if(v[0] < minMAx[0][0] ) minMAx[0][0] = v[0];
+//        if(v[0] > minMAx[1][0] ) minMAx[1][0] = v[0];
+//        if(v[1] < minMAx[0][1] ) minMAx[0][1] = v[0];
+//        if(v[1] > minMAx[1][1] ) minMAx[1][1] = v[0];
+//    });
+//
+//    return miniMax;
+//}
+//
+//function getEC(){ //gift paper algo
+//
+//}

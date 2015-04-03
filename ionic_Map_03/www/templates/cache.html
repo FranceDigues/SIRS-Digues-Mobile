@@ -24,14 +24,17 @@
         <!--{{layers}}-->
 
         <rzslider rz-slider-model="centreCarte.zoom"    rz-slider-floor="0"  rz-slider-ceil="18"></rzslider>
-        <rzslider rz-slider-model="zMin"  rz-slider-high="zMax"   rz-slider-floor="0"  rz-slider-ceil="18"></rzslider>
-
+        <rzslider rz-slider-model="z.zMin"  rz-slider-high="z.zMax"   rz-slider-floor="0"  rz-slider-ceil="18"></rzslider>
+        <!--{{z.zMin}}-->
+        <!--{{z.zMax}}-->
         <!--&lt;!&ndash;<h3>Mouse click position</h3>&ndash;&gt;-->
         <!--<pre ng-bind="mouseclickposition | json"></pre>-->
-
-        <progress max="{{nbTile}}" value="{{imageLoadingProgress}}"> </progress>
+        {{nbTile}}
+        {{nbTileDownloaded}}
+        <progress max="{{nbTile}}" value="{{nbTileDownloaded}}"> </progress>
 
         <button class="button button-block button-positive" href="#/" ng-click="cachMe()">Cach Me Baby</button>
     </ion-list>
+      {{var.CoordList}}
   </ion-content>
 </ion-view>
