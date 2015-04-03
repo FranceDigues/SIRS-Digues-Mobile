@@ -58,7 +58,7 @@ angular.module('controllers', [])
 
 
 
-
+        var featureOverlay = null;
 
 
 
@@ -70,7 +70,7 @@ angular.module('controllers', [])
 
             //myMap = map;
 
-            var featureOverlay = new ol.FeatureOverlay({
+             featureOverlay = new ol.FeatureOverlay({
                 style: new ol.style.Style({
                     fill: new ol.style.Fill({
                         color: 'rgba(255, 255, 255, 0.2)'
@@ -188,14 +188,37 @@ angular.module('controllers', [])
         });
 
 
-        $scope.$on('openlayers.DrawEvent.drawend', function(F) {
+        $scope.publie = function(){
+            $log.debug(featureOverlay);
+            $log.debug(toGeoJson());
+        }
+
+        $scope.$on('openlayers.drawend', function(F) {
             $log.debug(F);
+
+            $log.debug(featureOverlay);
 
             featureOverlay.getFeatures().clear();
             featureOverlay.addFeature(F);
 
         });
 
+
+
+
+        function toGeoJson(){
+
+            //TODO iteration sur la colection
+           var geom =  featureOverlay.getFeature(0).geometry();
+           return [{
+                "type": "Feature",
+                "properties": {"form": "a definir"},
+                "geometry": {
+                    "type": $scope.drawType.active,
+                    "coordinates":geom.getCoordinates()
+                }
+            }];
+        }
 
     })
 
