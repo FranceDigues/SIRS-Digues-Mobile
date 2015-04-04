@@ -1,4 +1,3 @@
-<!--<div ng-include="'templates/sidemenu.html'"></div>-->
 <ion-view title="Masque">
 <ion-content class="has-header">
     <ion-list>
@@ -12,7 +11,8 @@
             </ion-item>
             <ion-item class="item-accordion"
                       ng-repeat="item in cat.msk"
-                      ng-show="isGroupShown(cat)">
+                      ng-show="isGroupShown(cat)"
+                    ng-click="landingOnEarth(item.idf)">
                     {{item.nom}}
             </ion-item>
 

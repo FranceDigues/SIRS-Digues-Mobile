@@ -2,21 +2,16 @@
 <ion-view title="Visu">
 <ion-content>
 
-    <button class="button button-block button-positive" ng-click="mask()">
+    <button class="button button-block button-positive"  ng-click="warpJump('create')">
         Saisie de données
     </button>
-    <button class="button button-block button-positive"  ng-click="visu()">
+    <button class="button button-block button-positive"  ng-click="warpJump('see')">
         Consultation des données
     </button>
- <button class="button button-block button-positive"  >
+ <button class="button button-block button-positive"     ng-click="warpJump('edit')">
      Modification/Suppression des données
     </button>
- <button class="button button-block button-positive"  >
-        Consultation des données
-    </button>
- <button class="button button-block button-positive"  >
-        Consultation des données
-    </button>
+
 
     <button class="button button-block button-positive" ng-click="form()" >
         Form Test

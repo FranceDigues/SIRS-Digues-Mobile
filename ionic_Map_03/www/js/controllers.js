@@ -189,8 +189,8 @@ angular.module('controllers', [])
 
 
         $scope.publie = function(){
-            $log.debug(featureOverlay);
-            $log.debug(toGeoJson());
+            $log.debug(featureOverlay.getFeatures());
+            $log.debug(toGeoJson(featureOverlay));
         }
 
         $scope.$on('openlayers.drawend', function(F) {
@@ -203,22 +203,6 @@ angular.module('controllers', [])
 
         });
 
-
-
-
-        function toGeoJson(){
-
-            //TODO iteration sur la colection
-           var geom =  featureOverlay.getFeature(0).geometry();
-           return [{
-                "type": "Feature",
-                "properties": {"form": "a definir"},
-                "geometry": {
-                    "type": $scope.drawType.active,
-                    "coordinates":geom.getCoordinates()
-                }
-            }];
-        }
 
     })
 
@@ -407,7 +391,7 @@ angular.module('controllers', [])
 /***************************************************************** Masque *****************************************************/
 /***************************************************************** --------- *****************************************************/
 
-.controller('MskCtrl', function($scope,sPouch,$log) {
+.controller('MskCtrl', function($scope,sPouch,$log,sContext,$state) {
 
     $log.debug("mskCtrl");
     $log.debug(cMaskId);
@@ -434,6 +418,32 @@ angular.module('controllers', [])
     $scope.isGroupShown = function(group) {
         return $scope.shownGroup === group;
     };
+
+
+
+        //on se rend sur la carte avec le bon masque en contexte
+        $scope.landingOnEarth = function(mskIdf){
+
+            //mise a jour du contexte
+            sContext.param.mskIdf=mskIdf;
+
+            //de-orbitation
+            $state.go('menu.tabs.map');
+
+            //switch(mskIdf) {
+            //    case 1:
+            //        code block
+            //        break;
+            //    case 2:
+            //        code block
+            //        break;
+            //    default:
+            //    default code block
+            //}
+
+        }
+
+
 })
 
 /***************************************************************** --------- *****************************************************/
@@ -441,57 +451,70 @@ angular.module('controllers', [])
 /***************************************************************** --------- *****************************************************/
 
 
-    .controller('FormListCtrl', ['$scope','$ionicPopup','$ionicPopover','$timeout',
-    function ($scope,$ionicPopup,$ionicPopover, $timeout) {
-        $scope.form1 = [
-            {
-                label: 'username',
-                id: 'forminput1',
-                type: 'text',
-                value: '',
-                placeholder: 'Enter your username here..'
-            },
-            {
-                label: 'date',
-                id: 'forminput2',
-                type: 'date',
-                value: new Date('01/01/1970'),
-                placeholder: 'Enter your date here ..',
-                hide: 'form1[0].value=="test"'
-            },
-            {
-                label: 'select1',
-                id: 'select1',
-                type: 'select',
-                values: [
-                    {
-                        'text': 'toto',
-                        'value': 'testValue'
-                    },
-                    {
-                        'text': 'titi',
-                        'value': 'titiValue'
-                    }
-                ],
-                change: 'if (form1[2].value=="testValue"){form1[3].values = [{"text": "test","value":"blbl"}]}'
-            },
-            {
-                label: 'select2',
-                id: 'select2',
-                type: 'select',
-                values: [
-                    {
-                        'text': 'tata',
-                        'value': 'tataValue'
-                    },
-                    {
-                        'text': 'tutu',
-                        'value': 'tutuValue'
-                    }
-                ]
-            }
+    .controller('FormListCtrl', ['$scope','$ionicPopup','$ionicPopover','$timeout','sPouch','$log',
+    function ($scope,$ionicPopup,$ionicPopover, $timeout,sPouch,$log) {
+        $scope.form1 = null;
 
-        ];
+        sPouch.form.get(cFormTest).then(function (doc) {
+                $log.debug("slayer init")
+                $log.debug(doc)
+
+                //me.list = doc.layers;
+                $scope.form1 = doc.param;
+                $log.debug( $scope.form1);
+                //$log.debug("slayer end")
+            }).catch(function (err) {
+                $log.debug(err);
+            });
+        //    [
+        //    {
+        //        label: 'username',
+        //        id: 'forminput1',
+        //        type: 'text',
+        //        value: '',
+        //        placeholder: 'Enter your username here..'
+        //    },
+        //    {
+        //        label: 'date',
+        //        id: 'forminput2',
+        //        type: 'date',
+        //        value: new Date('01/01/1970'),
+        //        placeholder: 'Enter your date here ..',
+        //        hide: 'form1[0].value=="test"'
+        //    },
+        //    {
+        //        label: 'select1',
+        //        id: 'select1',
+        //        type: 'select',
+        //        values: [
+        //            {
+        //                'text': 'toto',
+        //                'value': 'testValue'
+        //            },
+        //            {
+        //                'text': 'titi',
+        //                'value': 'titiValue'
+        //            }
+        //        ],
+        //        change: 'if (form1[2].value=="testValue"){form1[3].values = [{"text": "test","value":"blbl"}]}'
+        //    },
+        //    {
+        //        label: 'select2',
+        //        id: 'select2',
+        //        type: 'select',
+        //        values: [
+        //            {
+        //                'text': 'tata',
+        //                'value': 'tataValue'
+        //            },
+        //            {
+        //                'text': 'tutu',
+        //                'value': 'tutuValue'
+        //            }
+        //        ]
+        //    }
+        //
+        //];
 
         $scope.evalAngular = function (string) {
             return $scope.$eval(string);
@@ -569,12 +592,17 @@ angular.module('controllers', [])
     /***************************************************************** SIDE MENU *****************************************************/
     /***************************************************************** --------- *****************************************************/
 
-    .controller('sideMenu', function($scope,$state, $ionicSideMenuDelegate,sLayer,$log,sEventSuperviseur,$ionicPlatform) { //kifkif un global controler non?
+    .controller('sideMenu', function($scope,$state, $ionicSideMenuDelegate,sLayer,$log,sEventSuperviseur,$rootScope) { //kifkif un global controler non?
 
 
             $log.debug("sideMenu");
             //$log.debug(doc.layers);
             $scope.layers = sLayer.list;
+
+        $rootScope.$on("layersListUpdated",  function(){
+            $log.debug("event layers recus");
+            $scope.layers = sLayer.list;
+        });
 
 
             $scope.sEventSuperviseur = sEventSuperviseur;

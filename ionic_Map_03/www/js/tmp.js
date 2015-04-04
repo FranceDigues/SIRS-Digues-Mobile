@@ -118,3 +118,38 @@ $scope.ringBuilder= function(pa,pb){
 
 
 
+
+/**
+ * sync
+ * */
+
+// var sync = PouchDB.sync('essai_sync', 'http://178.32.34.74:5984/essai_sync', {
+//    live: true,
+//    retry: true
+//}).on('change', function (info) {
+//    // handle change
+//    $log.debug('change');
+//    $log.debug(info);
+//    $rootScope.$broadcast("esyChanged");
+//}).on('paused', function () {
+//    // replication paused (e.g. user went offline)
+//     $log.debug('paused');
+//}).on('active', function () {
+//    // replicate resumed (e.g. user went back online)
+//     $log.debug('active');
+//}).on('denied', function (info) {
+//    // a document failed to replicate, e.g. due to permissions
+//     $log.debug('denied');
+//    $log.debug(info);
+//}).on('complete', function (info) {
+//    // handle complete
+//     $log.debug('complete');
+//    $log.debug(info);
+//}).on('error', function (err) {
+//    // handle error
+//     $log.debug('error');
+//    $log.debug(error);
+//});
+
+
+
