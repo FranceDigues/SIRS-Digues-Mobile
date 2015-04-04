@@ -65,7 +65,7 @@ angular.module('controllers.menus', [])
 
 })
 
-.controller('SignInCtrl', function($scope, $state, sPouch,$log) {
+.controller('SignInCtrl', function($scope, $state, sPouch,sMask,$log) {
 //app.controller('SignInCtrl', function($scope, $state) {
 
     //var usr = sPouch.usr.allDocs;

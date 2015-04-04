@@ -12,11 +12,14 @@ angular.module('controllers', [])
 /***************************************************************** --------- *****************************************************/
 
 
-    .controller('MapCtrl', function($scope, sLayer,$log,sMap,olData, sEventSuperviseur) {
+    .controller('MapCtrl', function($scope, sLayer,$log,sMap,olData, sEventSuperviseur,sMask,sContext) {
 
         //var myMap =null
         //$scope.tt=tt;
         $log.debug(sLayer.list);
+
+        //$scope.msk = sMask.doc;
+        //$log.debug($scope.msk)
 
         $scope.layers = sLayer.list;
         $scope.mode = sMap.mode;
@@ -191,6 +194,12 @@ angular.module('controllers', [])
         $scope.publie = function(){
             $log.debug(featureOverlay.getFeatures());
             $log.debug(toGeoJson(featureOverlay));
+            $log.debug(sContext.param);
+            //$log.debug($scope.msk);
+            $log.debug(sMask.doc);
+
+            sMask.doc.GeoJson=toGeoJson(featureOverlay);
+            sMask.writeDocOnDb();
         }
 
         $scope.$on('openlayers.drawend', function(F) {
@@ -391,7 +400,7 @@ angular.module('controllers', [])
 /***************************************************************** Masque *****************************************************/
 /***************************************************************** --------- *****************************************************/
 
-.controller('MskCtrl', function($scope,sPouch,$log,sContext,$state) {
+.controller('MskCtrl', function($scope,sPouch,$log,sContext,$state,$rootScope) {
 
     $log.debug("mskCtrl");
     $log.debug(cMaskId);
@@ -425,8 +434,8 @@ angular.module('controllers', [])
         $scope.landingOnEarth = function(mskIdf){
 
             //mise a jour du contexte
-            sContext.param.mskIdf=mskIdf;
-
+            sContext.param.mskUUID=mskIdf;
+            $rootScope.$broadcast("msk_change"); //TODO faire des type d'event specifique pour les notification de contexte
             //de-orbitation
             $state.go('menu.tabs.map');
 

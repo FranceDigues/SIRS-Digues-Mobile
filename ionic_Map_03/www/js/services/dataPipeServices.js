@@ -6,7 +6,7 @@
 angular.module('data.services.pipe', [])
 
     .service('sContext', function(pouchDB) {
-        this.param = {action:null,mskIdf:null}
+        this.param = {action:null,mskUUID:null}
     })
     .service('sLayer', function(sPouch,$log,$rootScope) {
         //carcan
@@ -72,5 +72,74 @@ angular.module('data.services.pipe', [])
 
 
 
+
+    })
+
+
+
+
+    .service('sMask', function(sPouch,$log,$rootScope,sContext) {
+        //carcan
+        var me = this;
+
+        //attribut
+        //me.GeoJson = null;
+        me.doc = null;
+        var rscpMsk = $rootScope.$new(); //FIXME le $on est focement dans un scope? pk route scope de la catch pas?
+
+
+        /**
+         *  FIXME les calque sorte direct de la db, du coup les variable de contexte ne doivent plus etre porter par ces objet
+         *  TODO créer un json UUID - Layer Context Value
+         *
+         */
+
+
+
+            //methode de mise a jour de l'objet layers
+        me.update = function(){
+            $log.debug("update")
+            $log.debug(sContext.param.mskUUID)
+            $log.debug(sContext.param.mskUUID.toString())
+            sPouch.layer.get(sContext.param.mskUUID.toString()).then(function (doc) {
+                $log.debug("reloadMsk");
+                $log.debug(doc);
+
+                //me.GeoJson = doc.GeoJson;
+                me.doc = doc;
+                $log.debug(me.data);
+                $rootScope.$broadcast("maskGeoJsonUpdate");
+            }).catch(function (err) {
+                $log.debug(err);
+            });
+
+        }
+
+        me.writeDocOnDb=function(){
+
+
+
+            sPouch.layer.put(me.doc)
+                .then(function (response) {
+                // handle response
+                    //propagation pour remise a jour du layer
+                    $rootScope.$broadcast("msk_change"); //TODO faire des type d'event specifique pour les notification de contexte
+
+                }).catch(function (err) {
+                $log.debug(err);
+            });
+
+        };
+
+        //recepteur d'evenement
+        rscpMsk.$on("moskito_layer_change",  function(){
+            $log.debug("event recus");
+            me.update();
+        });
+
+        rscpMsk.$on("msk_change",  function(){
+            $log.debug("event recus");
+            me.update();
+        });
 
     })

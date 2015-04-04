@@ -12,7 +12,8 @@
             <ion-item class="item-accordion"
                       ng-repeat="item in cat.msk"
                       ng-show="isGroupShown(cat)"
-                    ng-click="landingOnEarth(item.idf)">
+                    ng-click="landingOnEarth(item.UUID_msk)">
+                <!--ng-click="landingOnEarth(item.idf)">-->
                     {{item.nom}}
             </ion-item>
 
