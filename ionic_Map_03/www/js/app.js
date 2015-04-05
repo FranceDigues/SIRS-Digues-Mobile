@@ -12,6 +12,7 @@ var app = angular.module('cartoMobile', [
     'controllers.menus',
     'data.services.pipe',
     'data.services.source',
+    'device.services',
     'data.services']);
 
 app.run(function($ionicPlatform) {
@@ -88,8 +89,8 @@ app.run(function($ionicPlatform) {
             url: '/settings',
             views: {
                 'settings-tab': {
-                    templateUrl: 'templates/settings.html'
-                    //controller: 'MapCtrl'
+                    templateUrl: 'templates/settings.html',
+                    controller: 'SettingsCtrl'
                 }
             }
         })

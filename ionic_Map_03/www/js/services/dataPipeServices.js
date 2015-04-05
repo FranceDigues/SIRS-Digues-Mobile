@@ -114,9 +114,6 @@ angular.module('data.services.pipe', [])
         }
 
         me.writeDocOnDb=function(){
-
-
-
             sPouch.layer.put(me.doc)
                 .then(function (response) {
                 // handle response
@@ -145,3 +142,4 @@ angular.module('data.services.pipe', [])
         //me.update();
 
     })
+

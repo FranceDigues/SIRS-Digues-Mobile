@@ -5,7 +5,7 @@
 
 angular.module('data.services', [])
 
-    .service('sMap', function() {
+        .service('sMap', function() {
 
         //choper les calque dans un json
         this.mode = {
@@ -16,50 +16,7 @@ angular.module('data.services', [])
 
         }
     })
-    .service('sEventSuperviseur', function($log) {
 
-        var me = this;
-
-        //choper les calque dans un json
-        me.event = {
-
-            sideMenu:true,
-            mapMove:false,
-            mapDraw:false
-
-        }
-
-
-        me.draw = null;
-        ;
-        me.toggleDraw = function(){
-            if(this.draw.getActive()){
-                $log.debug("desactivation");
-                this.draw.setActive(false);
-                this.event.sideMenu = true;
-            }
-            else if(!this.draw.getActive()){
-                $log.debug("activation");
-                this.draw.setActive(true);
-                this.event.sideMenu = false;
-            }
-        }
-
-        me.olInteract={
-            draw:{
-                point:null,
-                line:null,
-                area:null
-            },
-            mesur :{
-                line:null,
-                area:null
-            }
-            //todo hyperviseur Control ol3
-
-        }
-
-    })
 
 
     .service('sCacheMap', function(pouchDB,$cordovaFileTransfer,$cordovaFile,$log,$timeout) {

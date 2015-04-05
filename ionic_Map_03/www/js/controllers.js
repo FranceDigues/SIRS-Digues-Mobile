@@ -12,7 +12,7 @@ angular.module('controllers', [])
 /***************************************************************** --------- *****************************************************/
 
 
-    .controller('MapCtrl', function($scope, sLayer,$log,sMap,olData, sEventSuperviseur,sMask,sContext,$rootScope) {
+    .controller('MapCtrl', function($scope, sLayer,$log,sMap,olData, sEventSuperviseur,sMask,sContext,$rootScope,$cordovaGeolocation) {
 
         //var myMap =null
         //$scope.tt=tt;
@@ -232,6 +232,35 @@ angular.module('controllers', [])
             $log.debug(featureOverlay.getFeatures());
 
         });
+
+
+        //GeoLoc
+        var sneakHolow = null;//TODO Service or not service??
+
+        $rootScope.$on("enableGeoLoc",  function(){
+            $log.debug("event enableGeoLoc");
+            sneakHolow = $cordovaGeolocation.watchPosition( { maximumAge: 15000, timeout: 120000, enableHighAccuracy: true });
+            sneakHolow.then(
+                null,
+                function(err) {
+                    $log.debug(err);
+                },
+                function(position) {
+                    $log.debug(position);
+                    $scope.centreCarte.lat = position.coords.latitude;
+                    $scope.centreCarte.lon = position.coords.longitude;
+                });
+
+        });
+
+        $rootScope.$on("disableGeoLoc",  function(){
+            $log.debug("event disableGeoLoc");
+            sneakHolow.clearWatch();
+
+        });
+
+
+
 
     })
 

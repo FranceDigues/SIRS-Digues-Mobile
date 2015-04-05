@@ -9,9 +9,24 @@
 
 
 
-        <ion-toggle ng-model="this.mode.drawing" ng-click="sEventSuperviseur.toggleDraw()">
+        <ion-toggle ng-model="sEventSuperviseur.event.sidemenu" ng-click="sEventSuperviseur.toggleDraw()">
             Mode edition
         </ion-toggle>
+
+
+
+        <p>Controle Materiel</p>
+        <ion-toggle ng-model="sEventSuperviseur.hardware.GPS" ng-click="sEventSuperviseur.toggleGPS()">
+            GPS
+        </ion-toggle>
+        {{sEventSuperviseur.hardware.GPS}}
+   <ion-toggle ng-model="sEventSuperviseur.hardware.camera" ng-click="sEventSuperviseur.toggleCamera()">
+            Camera
+        </ion-toggle>
+   <ion-toggle ng-model="sEventSuperviseur.hardware.accel" ng-click="sEventSuperviseur.toggleAccel()">
+            Accelerometre
+        </ion-toggle>
+
         <!--<ion-toggle ng-model="sEventSuperviseur.event.sideMenu">-->
             <!--Option de carte-->
         <!--</ion-toggle>-->

@@ -74,7 +74,7 @@ angular.module('controllers.menus', [])
         console.log('Sign-In', user);
 
         //TODO DEMO Comment
-        $state.go('loading')
+        $state.go('loading');
 
         //TODO DEMO unComment
         ////sPouch.usr.query('name_index', {key: 'mok-sensei'}).then(function(result) {
@@ -99,5 +99,10 @@ angular.module('controllers.menus', [])
     $scope.home = function() {
         $state.go('menu.home');
     };
+
+})
+
+.controller('SettingsCtrl', function($scope, $state,$log,sEventSuperviseur) {
+
 
 })
