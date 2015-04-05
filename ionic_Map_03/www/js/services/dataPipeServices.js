@@ -100,19 +100,17 @@ angular.module('data.services.pipe', [])
         me.update = function(){
             $log.debug("update")
             $log.debug(sContext.param.mskUUID)
-            $log.debug(sContext.param.mskUUID.toString())
-            sPouch.layer.get(sContext.param.mskUUID.toString()).then(function (doc) {
+            sPouch.layer.get(sContext.param.mskUUID).then(function (doc) {
                 $log.debug("reloadMsk");
                 $log.debug(doc);
 
                 //me.GeoJson = doc.GeoJson;
                 me.doc = doc;
-                $log.debug(me.data);
+                $log.debug(me.doc);
                 $rootScope.$broadcast("maskGeoJsonUpdate");
             }).catch(function (err) {
                 $log.debug(err);
             });
-
         }
 
         me.writeDocOnDb=function(){
@@ -141,5 +139,9 @@ angular.module('data.services.pipe', [])
             $log.debug("event recus");
             me.update();
         });
+
+
+        //initialisation
+        //me.update();
 
     })

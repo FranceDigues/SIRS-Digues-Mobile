@@ -12,7 +12,7 @@ angular.module('controllers', [])
 /***************************************************************** --------- *****************************************************/
 
 
-    .controller('MapCtrl', function($scope, sLayer,$log,sMap,olData, sEventSuperviseur,sMask,sContext) {
+    .controller('MapCtrl', function($scope, sLayer,$log,sMap,olData, sEventSuperviseur,sMask,sContext,$rootScope) {
 
         //var myMap =null
         //$scope.tt=tt;
@@ -191,11 +191,19 @@ angular.module('controllers', [])
         });
 
 
+//FIXME pb d'init du mask, resolve?
+/*        //init juste pour test
+       var gjson =  new ol.format.GeoJSON(sMask.doc.GeoJson);
+         var aFeature = gjson.readFeatures();
+        featureOverlay.addFeature(aFeature);
+
+        //end essai de rechargement*/
+
+
         $scope.publie = function(){
             $log.debug(featureOverlay.getFeatures());
             $log.debug(toGeoJson(featureOverlay));
             $log.debug(sContext.param);
-            //$log.debug($scope.msk);
             $log.debug(sMask.doc);
 
             sMask.doc.GeoJson=toGeoJson(featureOverlay);
@@ -212,6 +220,18 @@ angular.module('controllers', [])
 
         });
 
+
+        $rootScope.$on("maskGeoJsonUpdate",  function(){
+            $log.debug("event maskGeoJsonUpdate");
+            $log.debug(sMask.doc.GeoJson);
+            var gjson =  new ol.format.GeoJSON();
+            $log.debug(gjson);
+            var olcFeatures = new ol.Collection(gjson.readFeatures(sMask.doc.GeoJson));
+            $log.debug(olcFeatures);
+            featureOverlay.setFeatures(olcFeatures);
+            $log.debug(featureOverlay.getFeatures());
+
+        });
 
     })
 

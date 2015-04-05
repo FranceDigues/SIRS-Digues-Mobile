@@ -47,7 +47,9 @@ angular.module('data.services.source', [])
                 // handle change
                 $log.debug(database+'_change');
                 $log.debug(info);
-                $rootScope.$broadcast(database+"_change"); //FIXME envent lancer deux fois, au pull et au push de la sync
+                if(info.direction == "pull" ) {
+                    $rootScope.$broadcast(database + "_change"); //FIXME  ne pas declacher l'event lorsque la modification vien du local.
+                }
             }).on('paused', function () {
                 // replication paused (e.g. user went offline)
                 $log.debug(database+'_paused');
