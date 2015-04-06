@@ -73,6 +73,10 @@ function toGeoJson(f){
     return new ol.format.GeoJSON().writeFeatures(f.getFeatures().getArray());
 }
 
+function atoGeoJson(s){
+    return new ol.format.GeoJSON().writeFeatures(s.getFeatures());
+}
+
 //function getEG(vertexList){
 //
 //    var minMAx =[[0,0],[0,0]];

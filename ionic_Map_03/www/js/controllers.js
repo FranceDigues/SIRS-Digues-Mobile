@@ -269,7 +269,7 @@ angular.module('controllers', [])
 /***************************************************************** --------- *****************************************************/
 
 
-.controller('CacheCtrl', function($scope,sLayer,sMap,olData,$log,$timeout,sCacheMap) {
+.controller('CacheCtrl', function($scope,sLayer,sMap,olData,$log,$timeout,sCacheMap,sContext,$rootScope) {
         $scope.var={CoordList : null};
 
 
@@ -279,6 +279,12 @@ angular.module('controllers', [])
         $scope.lCacheBox= null;
 
         $scope.polyOrnotPoly = false;
+
+
+        //TODO faire un objet cache param.
+
+        $scope.CacheName = "";
+        $scope.user = sContext.auth.user;
 
 
 
@@ -341,7 +347,12 @@ angular.module('controllers', [])
 
 
 
-
+                var myZoomSlider = new ol.control.ZoomSlider();
+                map.addControl(myZoomSlider);
+                var myScaleLine = new ol.control.ScaleLine();
+                map.addControl(myScaleLine);
+                var test =  new ol.control.FullScreen();
+                map.addControl(test);
 
 
                 $scope.dragBox = new ol.interaction.DragBoxTouch({
@@ -363,6 +374,9 @@ angular.module('controllers', [])
 
                 //layer non angular
                 $scope.vsPoly = new ol.source.Vector({
+                    //create empty vector
+                });
+                $scope.ExistingCacheSource = new ol.source.Vector({
                     //create empty vector
                 });
                 //vsPoly.addFeature(feature);
@@ -401,8 +415,46 @@ angular.module('controllers', [])
                     style: styles
                 });
 
+                var existingCacheLayer = new ol.layer.Vector({
+                    source:  $scope.ExistingCacheSource,
+                    style: new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(220, 175, 175, 0.6)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            color: 'red',
+                            width: 2
+                        })
+                    })
+                });
+
 
                 map.addLayer(lPoly);
+                map.addLayer(existingCacheLayer);
+
+
+
+
+
+
+
+
+
+                //init
+                if(sContext.auth.user.cacheGeom != ""){
+                    var gjson =  new ol.format.GeoJSON();
+                    var aFeatures = gjson.readFeatures(sContext.auth.user.cacheGeom);
+                    $log.debug(aFeatures);
+
+                    $scope.ExistingCacheSource.addFeatures(aFeatures);
+                    $log.debug($scope.ExistingCacheSource.getFeatures());
+
+                };
+
+
+
+
+
             }
         );
 
@@ -415,7 +467,7 @@ angular.module('controllers', [])
                     //recup jeux de coordonnée
                     var tGeom = $scope.dragBox.getGeometry().clone(); // comportement etrange
                     $scope.var.CoordList =  tGeom.transform('EPSG:3857','EPSG:4326').getCoordinates();
-                    $log.debug( $scope.var.CoordList);
+                    //$log.debug( $scope.var.CoordList);
                         /* netoyage de la couche */
                     $scope.vsPoly.clear();
 
@@ -431,9 +483,47 @@ angular.module('controllers', [])
 
         $scope.cachMe=function(){
             //TODO recup LayerName et OSM automatiquement
+            var cacheName="essai";
+           var  LayerSourceName="OSM";
+
             $log.debug($scope.var.CoordList);
-            sCacheMap.cache("http://a.tile.openstreetmap.org/",$scope.var.CoordList,"essai","OSM",$scope.z.zMin,$scope.z.zMax);
+            sCacheMap.cache("http://a.tile.openstreetmap.org/",$scope.var.CoordList,cacheName,LayerSourceName,$scope.z.zMin,$scope.z.zMax );
+
+
+
+
+            var tmp = $scope.dragBox.getGeometry().clone();
+            $log.debug(tmp)
+            //affichage de l'emprise
+            $scope.ExistingCacheSource.addFeature(
+                new ol.Feature({
+                    geometry:tmp,
+                    nom:cacheName,
+                    origine:LayerSourceName
+
+                }));
+
+            $log.debug($scope.ExistingCacheSource.getFeatures());
+
+
+            //eregistrement ds l'objet utilisater
+            //TODO user dans le context!
+            sContext.auth.user.cacheGeom = atoGeoJson($scope.ExistingCacheSource);
+            sContext.auth.user.cache.layers.push({nom:cacheName,origine:LayerSourceName});
+
+            $log.debug(sContext.auth.user);
+            //TODO event ionic ou acceau context??
+
+             //$rootScope.$broadcast("userChange"); //mise a jour de l'user dans la base
+            sContext.saveUser();
+
         };
+
+
+
+
+
+
 
 })
 

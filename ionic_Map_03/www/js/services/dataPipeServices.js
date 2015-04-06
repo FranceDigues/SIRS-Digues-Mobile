@@ -5,8 +5,41 @@
  */
 angular.module('data.services.pipe', [])
 
-    .service('sContext', function(pouchDB) {
+    .service('sContext', function(sPouch,pouchDB,$rootScope,$log) {
+        var rscptt = $rootScope.$new();
+
+
         this.param = {action:null,mskUUID:null}
+        this.auth = {user:null}
+
+
+
+        this.saveUser = function(){
+            $log.debug("reception event UptateUser")
+            sPouch.usr.put(this.auth.user)
+                .then(function (response) {
+                    //propagation pour remise a jour de l'user
+                    $rootScope.$broadcast("userChange"); //TODO faire des type d'event specifique pour les notification de contexte
+
+                }).catch(function (err) {
+                    $log.debug(err);
+                });
+        }
+
+
+        ////mise a jour de l'utilisateur via un event.'
+        //rscptt.$on("updateUser",  function() {
+        //    $log.debug("reception event UptateUser")
+        //    sPouch.usr.put(this.auth.user)
+        //        .then(function (response) {
+        //            //propagation pour remise a jour de l'user
+        //            $rootScope.$broadcast("userChange"); //TODO faire des type d'event specifique pour les notification de contexte
+        //
+        //        }).catch(function (err) {
+        //            $log.debug(err);
+        //        });
+        //
+        //});
     })
     .service('sLayer', function(sPouch,$log,$rootScope) {
         //carcan
@@ -49,7 +82,6 @@ angular.module('data.services.pipe', [])
             me.update();
         });
         //rscp.$on("esyChanged", function(event, args){ $log.debug("event recus")});
-
 
 
 

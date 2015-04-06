@@ -79,7 +79,7 @@ angular.module('data.services.source', [])
         //objet pour couper la syncro
         //me.syncEsy
         //TODO fonction en gise de constructeur ol School.
-        var syncEsy =   me.initiateSync("essai_sync");
+        //var syncEsy =   me.initiateSync("essai_sync");
         var syncCfg =   me.initiateSync("moskito_config");
         var syncUsr =   me.initiateSync("moskito_user");
         var syncLayer =   me.initiateSync("moskito_layer");
@@ -126,7 +126,7 @@ angular.module('data.services.source', [])
             views: {
                 'name_index': {
                     map: function(doc) {
-                        emit(doc.name, doc.psw);
+                        emit(doc.name, doc);
                     }.toString()
                 }
             }

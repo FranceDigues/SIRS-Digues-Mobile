@@ -19,7 +19,7 @@ angular.module('data.services', [])
 
 
 
-    .service('sCacheMap', function(pouchDB,$cordovaFileTransfer,$cordovaFile,$log,$timeout) {
+    .service('sCacheMap', function(pouchDB,$cordovaFileTransfer,$cordovaFile,$log,$timeout,$rootScope,sContext) {
 
         var me = this;
 
@@ -57,7 +57,7 @@ angular.module('data.services', [])
         $log.debug(mM);
 
         //generation de la liste de tuile
-        aTileUrlForDownload = new Array();
+        var aTileUrlForDownload = new Array();
 
         for(var i=zMax;i>=zMin;i--){
             $log.debug("runTileUrl : "+i);
@@ -74,10 +74,69 @@ angular.module('data.services', [])
         angular.forEach( aTileUrlForDownload,function(zoomLvl){
             angular.forEach( zoomLvl, function(tile){
                 downloadTile(tile,cacheName,LayerSourceName,url)
+                if(tile.z == zMin){
+                    //buildMetaData(aTileUrlForDownload,layerSource,cacheName,LayerSourceName,zMin);
+                }
             })
         })
 
+
+
+
     };
+
+
+        function buildMetaData(aTileUrlForDownload,cacheLayerSource,cacheName,LayerSourceName,zMin){
+            //creation de l'envelope des tuile cacheé
+
+            //TODO enmprise reelle
+            //lonEmprise = 360/(2*zMin);
+            //latEmprise = 170.1022/(2*zMin);
+            //
+            //var aHlTile = aTileUrlForDownload[(aTileUrlForDownload.length-1)];
+            //tileMin =aHlTile[0];
+            //tilemax = aHlTile[aHlTile.length-1];
+            //
+            //pointEveloppeBasGauche = [tileMin.x*lonEmprise,tileMin.y*latEmprise];
+            //pointEveloppeHautDroite = [tileMin.x*(lonEmprise+1),tileMin.y*(latEmprise+1)];
+            //
+            //var ev =[[[pointEveloppeBasGauche[0],pointEveloppeBasGauche[1]],[pointEveloppeBasGauche[0],pointEveloppeHautDroite[1]],[pointEveloppeHautDroite[0],pointEveloppeHautDroite[1]],[pointEveloppeHautDroite[0],pointEveloppeBasGauche[1]],[pointEveloppeBasGauche[0],pointEveloppeBasGauche[1]]  ]];
+            //
+            //$log.error(tileMin);
+            //$log.error(tilemax);
+            //$log.error(pointEveloppeBasGauche);
+            //$log.error(pointEveloppeHautDroite);
+            //$log.error(ev);
+
+            //creation du texte
+                //nb de tuile
+                //nom
+                //emprise zoom
+                //
+
+
+            //affichage de l'emprise
+            cacheLayerSource.addFeature(
+                new ol.Feature({
+                    geometry: new ol.geom.Polygon(ev),
+                    nom:cacheName,
+                    origine:LayerSourceName
+
+                }));
+
+            $log.debug(cacheLayerSource.getFeatures());
+
+
+            //eregistrement ds l'objet utilisater
+            //TODO user dans le context!
+            sContext.auth.user.cacheGeom = atoGeoJson(cacheLayerSource);
+            sContext.auth.user.cache.layers.push({nom:cacheName,origine:LayerSourceName});
+
+            $log.debug(sContext.auth.user);
+            //TODO event ionic ou acceau context??
+
+
+        };
 
         //cacul de l'envelope
         function miniMaxEV(aPoint){
@@ -122,21 +181,21 @@ angular.module('data.services', [])
             var url = baseUrl+"/"+tile.z+"/"+tile.x+"/"+tile.y+".png";
             var targetPath = cordova.file.cacheDirectory +LayerSourceName+"/"+cacheName+"/"+ tile.z + "/" + tile.x + "/" + tile.y +".png"; //TODO gestion des dossier pour z et x
 
-            $log.debug("FilePath : " + targetPath);
-            $log.debug("URL : " + url);
+            //$log.debug("FilePath : " + targetPath);
+            //$log.debug("URL : " + url);
 
             $cordovaFileTransfer.download(url, targetPath)
                 .then(function (result) {
                     // Success!
-                    $log.debug('Dl done : ');
-                    $log.debug(result);
+                    //$log.debug('Dl done : ');
+                    //$log.debug(result);
                     //TODO implementer un retour
                     me.nbTileDownloaded++; //declaration de la fin du Dl de la tuile
-                    $log.debug( me.nbTileDownloaded)
+                    //$log.debug( me.nbTileDownloaded)
                 }, function (err) {
                     // Error
                     $log.debug('Dl fail :');
-                    $log.debug(err);
+                    $log.error(err);
                 }, function (progress) {
                     $timeout(function () {
                         //$scope.imageTmp = targetPath;
@@ -151,10 +210,10 @@ angular.module('data.services', [])
             outBoxMin = getTileURL(p1[0], p1[1], zoom);
             outBoxMax = getTileURL(p2[0], p2[1], zoom);
 
-            $log.debug("max")
-            $log.debug(outBoxMax)
-            $log.debug("min")
-            $log.debug(outBoxMin)
+            //$log.debug("max old")
+            //$log.debug(outBoxMax)
+            //$log.debug("min old")
+            //$log.debug(outBoxMin)
 
             if(outBoxMin.x > outBoxMax.x) { //TODO replace avec un Min-Max
                 outTmp1 = outBoxMin.x;
@@ -174,19 +233,22 @@ angular.module('data.services', [])
             //$log.debug("y : " + ( outBoxMax.y - outBoxMin.y ));
             //$log.debug("nb dl attendu : "+$scope.nbTile);
 
+            //$log.debug("max "+outBoxMax)
+            //$log.debug(outBoxMax)
+            //$log.debug("min ")
+            //$log.debug(outBoxMin)
 
             aTileUrl = new Array();
 
-            yi = 0;
+            yi = outBoxMin.y;//SAVE INDICE
             while(outBoxMin.x <= outBoxMax.x) { //parcour des tuile x -> y
-                while(outBoxMin.y + yi <= outBoxMax.y) {
+                while(outBoxMin.y <= outBoxMax.y) {
                     //$log.debug("*** tuile en cours *** " + outBoxMin.x + "/" + outBoxMin.y);
-
-                    aTileUrl.push(outBoxMin)
-                    yi++;
+                    aTileUrl.push(outBoxMin);//creation de la liste de tuile
+                    outBoxMin.y++;
                 }
                 outBoxMin.x++;
-                yi=0;
+                outBoxMin.y= yi;//RAZ
             }
 
             me.nbTile=  me.nbTile + aTileUrl.length;

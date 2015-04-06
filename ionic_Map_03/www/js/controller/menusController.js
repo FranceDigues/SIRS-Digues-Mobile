@@ -22,7 +22,7 @@ angular.module('controllers.menus', [])
 
 })
 
-.controller('HomeCtrl', function($scope,$state,$cordovaFileOpener2,$log,sContext) {
+.controller('HomeCtrl', function($scope,$state,$cordovaFileOpener2,$log,sContext,sEventSuperviseur) {
 
     //$scope.visu = function() {
     //    $state.go('menu.tabs.map');
@@ -62,10 +62,16 @@ angular.module('controllers.menus', [])
 
     }
 
+        $scope.newCache = function () {
+
+            sEventSuperviseur.event.sideMenu = false;
+            $state.go('cache');
+        };
+
 
 })
 
-.controller('SignInCtrl', function($scope, $state, sPouch,sMask,$log) {
+.controller('SignInCtrl', function($scope, $state, sPouch,sMask,$log,sContext) {
 //app.controller('SignInCtrl', function($scope, $state) {
 
     //var usr = sPouch.usr.allDocs;
@@ -74,20 +80,23 @@ angular.module('controllers.menus', [])
         console.log('Sign-In', user);
 
         //TODO DEMO Comment
-        $state.go('loading');
+        //$state.go('loading');
 
         //TODO DEMO unComment
-        ////sPouch.usr.query('name_index', {key: 'mok-sensei'}).then(function(result) {
-        //sPouch.usr.query('name_index', {key: user.username}).then(function(result) {
-        //    // do something with result
-        //    $log.debug(result);
-        //
-        //    $log.debug(result.rows[0].value);
-        //    $log.debug(parseInt( user.password));
-        //
-        //    if(result.rows[0].value == parseInt( user.password) )   $state.go('home');
-        //
-        //});
+        //sPouch.usr.query('name_index', {key: 'mok-sensei'}).then(function(result) {
+        sPouch.usr.query('name_index', {key: user.username}).then(function(result) {
+            // do something with result
+            $log.debug(result);
+
+            $log.debug(result.rows[0].value);
+            $log.debug(parseInt( user.password)); //TODO not int only
+
+            if(result.rows[0].value.psw == parseInt( user.password) )   {
+                sContext.auth.user= result.rows[0].value;
+                $state.go('loading');
+            }
+
+        });
 
     };
 
