@@ -5,16 +5,15 @@
  */
 angular.module('data.services.pipe', [])
 
-    .service('sContext', function(sPouch,pouchDB,$rootScope,$log) {
+    .service('sContext', function (sPouch, pouchDB, $rootScope, $log) {
         var rscptt = $rootScope.$new();
 
 
-        this.param = {action:null,mskUUID:null}
-        this.auth = {user:null}
+        this.param = {action: null, mskUUID: null}
+        this.auth = {user: null}
 
 
-
-        this.saveUser = function(){
+        this.saveUser = function () {
             $log.debug("reception event UptateUser")
             sPouch.usr.put(this.auth.user)
                 .then(function (response) {
@@ -41,7 +40,7 @@ angular.module('data.services.pipe', [])
         //
         //});
     })
-    .service('sLayer', function(sPouch,$log,$rootScope) {
+    .service('sLayer', function (sPouch, $log, $rootScope) {
         //carcan
         var me = this;
 
@@ -58,8 +57,8 @@ angular.module('data.services.pipe', [])
 
 
 
-        //methode de mise a jour de l'objet layers
-        me.update = function(){
+            //methode de mise a jour de l'objet layers
+        me.update = function () {
             $log.debug("update")
             sPouch.layer.get(cLayerBase).then(function (doc) {
                 $log.debug("slayer init");
@@ -77,40 +76,22 @@ angular.module('data.services.pipe', [])
 
         //recepteur d'evenement
         //
-        rscp.$on("moskito_layer_change",  function(){
+        rscp.$on("moskito_layer_change", function () {
             $log.debug("event recus");
             me.update();
         });
         //rscp.$on("esyChanged", function(event, args){ $log.debug("event recus")});
 
 
-
-
         //initialisation
         me.update();
-
-
-//pour test sync:
-//        {
-//            "isCache": false,
-//            "name": "OSM_syncTest",
-//            "active": true,
-//            "opacity": 0.6,
-//            "source": {
-//            "type": "OSM",
-//                "url": "http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-//        }
-//        },
-
 
 
 
     })
 
 
-
-
-    .service('sMask', function(sPouch,$log,$rootScope,sContext) {
+    .service('sMask', function (sPouch, $log, $rootScope, sContext) {
         //carcan
         var me = this;
 
@@ -129,7 +110,7 @@ angular.module('data.services.pipe', [])
 
 
             //methode de mise a jour de l'objet layers
-        me.update = function(){
+        me.update = function () {
             $log.debug("update")
             $log.debug(sContext.param.mskUUID)
             sPouch.layer.get(sContext.param.mskUUID).then(function (doc) {
@@ -145,26 +126,26 @@ angular.module('data.services.pipe', [])
             });
         }
 
-        me.writeDocOnDb=function(){
+        me.writeDocOnDb = function () {
             sPouch.layer.put(me.doc)
                 .then(function (response) {
-                // handle response
+                    // handle response
                     //propagation pour remise a jour du layer
                     $rootScope.$broadcast("msk_change"); //TODO faire des type d'event specifique pour les notification de contexte
 
                 }).catch(function (err) {
-                $log.debug(err);
-            });
+                    $log.debug(err);
+                });
 
         };
 
         //recepteur d'evenement
-        rscpMsk.$on("moskito_layer_change",  function(){
+        rscpMsk.$on("moskito_layer_change", function () {
             $log.debug("event recus");
             me.update();
         });
 
-        rscpMsk.$on("msk_change",  function(){
+        rscpMsk.$on("msk_change", function () {
             $log.debug("event recus");
             me.update();
         });

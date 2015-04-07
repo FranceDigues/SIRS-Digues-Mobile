@@ -3,7 +3,7 @@
  */
 
 
-var mm =new Array();
+var mm = new Array();
 
 angular.module('controllers', [])
 
@@ -12,7 +12,7 @@ angular.module('controllers', [])
 /***************************************************************** --------- *****************************************************/
 
 
-    .controller('MapCtrl', function($scope, sLayer,$log,sMap,olData, sEventSuperviseur,sMask,sContext,$rootScope,$cordovaGeolocation) {
+    .controller('MapCtrl', function ($scope, sLayer, $log, sMap, olData, sEventSuperviseur, sMask, sContext, $rootScope, $cordovaGeolocation) {
 
         //var myMap =null
         //$scope.tt=tt;
@@ -23,14 +23,14 @@ angular.module('controllers', [])
 
         $scope.layers = sLayer.list;
         $scope.mode = sMap.mode;
-        $scope.Ploting =  [];
+        $scope.Ploting = [];
 
 
-        $scope.drawType = {active:"Point"};
+        $scope.drawType = {active: "Point"};
         $scope.typeEdition = [
-            { label: 'Point', type: "Point" },
-            { label: 'Ligne', type: "LineString" },
-            { label: 'Polygone', type: "Polygon" }
+            {label: 'Point', type: "Point"},
+            {label: 'Ligne', type: "LineString"},
+            {label: 'Polygone', type: "Polygon"}
         ];
 
 
@@ -42,24 +42,24 @@ angular.module('controllers', [])
                     zoom: 3
                 },
                 //layers:  sLayer.json,
-                defaults:{
+                defaults: {
                     events: {
                         //map: [ 'drawend' ]
-                    }},
+                    }
+                },
 
                 controls: [
-                    { name: 'zoom', active: false },
-                    { name: 'rotate', active: false },
-                    { name: 'attribution', active: false }
+                    {name: 'zoom', active: false},
+                    {name: 'rotate', active: false},
+                    {name: 'attribution', active: false}
                 ],
 
                 mouseposition: {},
                 mouseclickposition: {},
                 projection: 'EPSG:4326',
-                markers:new Array()  //FIXME zoom impossible si marker sur la carte
+                markers: new Array()  //FIXME zoom impossible si marker sur la carte
 
             });
-
 
 
         var featureOverlay = null;
@@ -68,13 +68,13 @@ angular.module('controllers', [])
 
         //essai d'edition via feature overlay
 
-        olData.getMap("map").then(function(map) {
+        olData.getMap("map").then(function (map) {
 
             $log.debug(map);
 
             //myMap = map;
 
-             featureOverlay = new ol.FeatureOverlay({
+            featureOverlay = new ol.FeatureOverlay({
                 style: new ol.style.Style({
                     fill: new ol.style.Fill({
                         color: 'rgba(255, 255, 255, 0.2)'
@@ -124,14 +124,13 @@ angular.module('controllers', [])
                 $log.debug(draw.getActive());
                 sEventSuperviseur.draw = draw;
 
-                draw.on('drawend',function(f){
+                draw.on('drawend', function (f) {
                     //elPropagator
-                    $rootScope.$broadcast('drawend',f);
+                    $rootScope.$broadcast('drawend', f);
                 })
 
                 map.addInteraction(draw);
             }
-
 
 
             ///************************************ deport gestion des interacton ol3 ************************************/
@@ -198,37 +197,34 @@ angular.module('controllers', [])
 
 
 //FIXME pb d'init du mask, resolve?
-/*        //init juste pour test
-       var gjson =  new ol.format.GeoJSON(sMask.doc.GeoJson);
+        /*        //init juste pour test
+         var gjson =  new ol.format.GeoJSON(sMask.doc.GeoJson);
          var aFeature = gjson.readFeatures();
-        featureOverlay.addFeature(aFeature);
+         featureOverlay.addFeature(aFeature);
 
-        //end essai de rechargement*/
+         //end essai de rechargement*/
 
 
-        $scope.publie = function(){
+        $scope.publie = function () {
             $log.debug(featureOverlay.getFeatures());
             $log.debug(toGeoJson(featureOverlay));
             $log.debug(sContext.param);
             $log.debug(sMask.doc);
 
-            sMask.doc.GeoJson=toGeoJson(featureOverlay);
+            sMask.doc.GeoJson = toGeoJson(featureOverlay);
             sMask.writeDocOnDb();
         }
-
-
-
 
 
 //todo clear avant dessin
         //todo
         var ixix = 0;
-        $scope.plot = function(){
+        $scope.plot = function () {
 
 
 
             //zoom quand on plote
-            $scope.centreCarte.zoom=18;
+            $scope.centreCarte.zoom = 18;
 
 
             //$scope.Ploting.push(ol.transform.('EPSG:3857','EPSG:4326',[$scope.centreCarte.lon+ixix,$scope.centreCarte.lat+ixix]));
@@ -250,16 +246,15 @@ angular.module('controllers', [])
         };
 
         //TODO garde Fous
-        $scope.Clore = function(){
+        $scope.Clore = function () {
 
             featureOverlay.getFeatures().clear();
 
             featureOverlay.addFeature(
                 new ol.Feature({
-                    geometry: new ol.geom.Polygon(  ArrayasPolygon($scope.Ploting))
+                    geometry: new ol.geom.Polygon(ArrayasPolygon($scope.Ploting))
 
                 }));
-
 
 
             //SI asyncrone use event?
@@ -269,28 +264,17 @@ angular.module('controllers', [])
 
 
         //biutifule
-        $scope.$on('drawend', function(F) {
+        $scope.$on('drawend', function (F) {
             $scope.publie();
 
         });
 
 
 
-        //$scope.$on('openlayers.drawend', function(F) {
-        //    $log.debug(F);
-        //
-        //    $log.debug(featureOverlay);
-        //
-        //    featureOverlay.getFeatures().clear();
-        //    featureOverlay.addFeature(F);
-        //
-        //});
-
-
-        $scope.$on("maskGeoJsonUpdate",  function(){
+        $scope.$on("maskGeoJsonUpdate", function () {
             $log.debug("event maskGeoJsonUpdate");
             $log.debug(sMask.doc.GeoJson);
-            var gjson =  new ol.format.GeoJSON();
+            var gjson = new ol.format.GeoJSON();
             $log.debug(gjson);
             var olcFeatures = new ol.Collection(gjson.readFeatures(sMask.doc.GeoJson));
             $log.debug(olcFeatures);
@@ -303,15 +287,19 @@ angular.module('controllers', [])
         //GeoLoc
         var sneakHolow = null;//TODO Service or not service??
 
-        $scope.$on("enableGeoLoc",  function(){
+        $scope.$on("enableGeoLoc", function () {
             $log.debug("event enableGeoLoc");
-            sneakHolow = $cordovaGeolocation.watchPosition( { maximumAge: 15000, timeout: 120000, enableHighAccuracy: true });
+            sneakHolow = $cordovaGeolocation.watchPosition({
+                maximumAge: 15000,
+                timeout: 120000,
+                enableHighAccuracy: true
+            });
             sneakHolow.then(
                 null,
-                function(err) {
+                function (err) {
                     $log.debug(err);
                 },
-                function(position) {
+                function (position) {
                     $log.debug(position);
                     $scope.centreCarte.lat = position.coords.latitude;
                     $scope.centreCarte.lon = position.coords.longitude;
@@ -319,13 +307,11 @@ angular.module('controllers', [])
 
         });
 
-        $scope.$on("disableGeoLoc",  function(){
+        $scope.$on("disableGeoLoc", function () {
             $log.debug("event disableGeoLoc");
             sneakHolow.clearWatch();
 
         });
-
-
 
 
     })
@@ -335,14 +321,14 @@ angular.module('controllers', [])
 /***************************************************************** --------- *****************************************************/
 
 
-.controller('CacheCtrl', function($scope,sLayer,sMap,olData,$log,$timeout,sCacheMap,sContext,$rootScope) {
-        $scope.var={CoordList : null};
+    .controller('CacheCtrl', function ($scope, sLayer, sMap, olData, $log, $timeout, sCacheMap, sContext, $rootScope) {
+        $scope.var = {CoordList: null};
 
 
-        $scope.layers=sLayer.list;
+        $scope.layers = sLayer.list;
         $scope.mode = sMap.mode;
-        $scope.vsCacheBox= null;
-        $scope.lCacheBox= null;
+        $scope.vsCacheBox = null;
+        $scope.lCacheBox = null;
 
         $scope.polyOrnotPoly = false;
 
@@ -353,22 +339,18 @@ angular.module('controllers', [])
         $scope.user = sContext.auth.user;
 
 
-
-
         //todo faire le trie :
         $scope.nbTileDownloaded = sCacheMap.nbTileDownloaded;
-        $scope.nbTile =sCacheMap.nbTile;
+        $scope.nbTile = sCacheMap.nbTile;
         $scope.imageTmp = null;
         $scope.HL = false; //Mode Hors Ligne
-        $scope.z={zmin :1, zMax :3};
+        $scope.z = {zmin: 1, zMax: 3};
         //$scope.zMax=3;
 
 
-          $scope.settings = {
+        $scope.settings = {
             enableFriends: true
-          };
-
-
+        };
 
 
         angular.extend($scope,
@@ -380,9 +362,9 @@ angular.module('controllers', [])
                 },
 
                 //layers:  sLayer.json,
-                defaults:{
+                defaults: {
                     events: {
-                        map: [ 'singleclick', 'pointermove','boxend' ]
+                        map: ['singleclick', 'pointermove', 'boxend']
                     },
                     iinteractions: {
                         mouseWheelZoom: false,
@@ -394,30 +376,23 @@ angular.module('controllers', [])
                 },
 
 
-
-
                 mouseposition: {},
                 mouseclickposition: {},
                 projection: 'EPSG:4326',
-                markers:new Array()  //FIXME zoom impossible si marker sur la carte
+                markers: new Array()  //FIXME zoom impossible si marker sur la carte
 
             });
 
 
-
-
-
-
-        olData.getMap("mapCache").then(function(map){
+        olData.getMap("mapCache").then(function (map) {
                 $log.debug("Cache Control getMap :")
-
 
 
                 var myZoomSlider = new ol.control.ZoomSlider();
                 map.addControl(myZoomSlider);
                 var myScaleLine = new ol.control.ScaleLine();
                 map.addControl(myScaleLine);
-                var test =  new ol.control.FullScreen();
+                var test = new ol.control.FullScreen();
                 map.addControl(test);
 
 
@@ -431,11 +406,8 @@ angular.module('controllers', [])
                 });
 
 
-
                 map.getInteractions().clear();
                 map.addInteraction($scope.dragBox);
-
-
 
 
                 //layer non angular
@@ -446,7 +418,6 @@ angular.module('controllers', [])
                     //create empty vector
                 });
                 //vsPoly.addFeature(feature);
-
 
 
                 var styles = [
@@ -467,7 +438,7 @@ angular.module('controllers', [])
                                 color: 'orange'
                             })
                         }),
-                        geometry: function(feature) {
+                        geometry: function (feature) {
                             // return the coordinates of the first ring of the polygon
                             var coordinates = feature.getGeometry().getCoordinates()[0];
                             return new ol.geom.MultiPoint(coordinates);
@@ -477,12 +448,12 @@ angular.module('controllers', [])
 
                 //creation du calque
                 var lPoly = new ol.layer.Vector({
-                    source:  $scope.vsPoly,
+                    source: $scope.vsPoly,
                     style: styles
                 });
 
                 var existingCacheLayer = new ol.layer.Vector({
-                    source:  $scope.ExistingCacheSource,
+                    source: $scope.ExistingCacheSource,
                     style: new ol.style.Style({
                         fill: new ol.style.Fill({
                             color: 'rgba(220, 175, 175, 0.6)'
@@ -499,63 +470,51 @@ angular.module('controllers', [])
                 map.addLayer(existingCacheLayer);
 
 
-
-
-
-
-
-
-
                 //init
-                if(sContext.auth.user.cacheGeom != ""){
-                    var gjson =  new ol.format.GeoJSON();
+                if (sContext.auth.user.cacheGeom != "") {
+                    var gjson = new ol.format.GeoJSON();
                     var aFeatures = gjson.readFeatures(sContext.auth.user.cacheGeom);
                     $log.debug(aFeatures);
 
                     $scope.ExistingCacheSource.addFeatures(aFeatures);
                     $log.debug($scope.ExistingCacheSource.getFeatures());
 
-                };
-
-
-
+                }
+                ;
 
 
             }
         );
 
 
-            //maintien de la zonne a l'ecran dans un calque temporaire
-            $scope.$on('openlayers.map.pointermove', function(e, coord) {
+        //maintien de la zonne a l'ecran dans un calque temporaire
+        $scope.$on('openlayers.map.pointermove', function (e, coord) {
 
-                $scope.$apply(function () {
+            $scope.$apply(function () {
 
-                    //recup jeux de coordonnée
-                    var tGeom = $scope.dragBox.getGeometry().clone(); // comportement etrange
-                    $scope.var.CoordList =  tGeom.transform('EPSG:3857','EPSG:4326').getCoordinates();
-                    //$log.debug( $scope.var.CoordList);
-                        /* netoyage de la couche */
-                    $scope.vsPoly.clear();
+                //recup jeux de coordonnée
+                var tGeom = $scope.dragBox.getGeometry().clone(); // comportement etrange
+                $scope.var.CoordList = tGeom.transform('EPSG:3857', 'EPSG:4326').getCoordinates();
+                /* netoyage de la couche */
+                $scope.vsPoly.clear();
 
-                        /* ajout du rectangle*/
-                    $scope.vsPoly.addFeature(
-                            new ol.Feature({
-                                geometry: $scope.dragBox.getGeometry()
+                /* ajout du rectangle*/
+                $scope.vsPoly.addFeature(
+                    new ol.Feature({
+                        geometry: $scope.dragBox.getGeometry()
 
-                            }));
-                });
+                    }));
             });
+        });
 
 
-        $scope.cachMe=function(){
+        $scope.cachMe = function () {
             //TODO recup LayerName et OSM automatiquement
-            var cacheName="essai";
-           var  LayerSourceName="OSM";
+            var cacheName = "essai";
+            var LayerSourceName = "OSM";
 
             $log.debug($scope.var.CoordList);
-            sCacheMap.cache("http://a.tile.openstreetmap.org/",$scope.var.CoordList,cacheName,LayerSourceName,$scope.z.zMin,$scope.z.zMax );
-
-
+            sCacheMap.cache("http://a.tile.openstreetmap.org/", $scope.var.CoordList, cacheName, LayerSourceName, $scope.z.zMin, $scope.z.zMax);
 
 
             var tmp = $scope.dragBox.getGeometry().clone();
@@ -563,9 +522,9 @@ angular.module('controllers', [])
             //affichage de l'emprise
             $scope.ExistingCacheSource.addFeature(
                 new ol.Feature({
-                    geometry:tmp,
-                    nom:cacheName,
-                    origine:LayerSourceName
+                    geometry: tmp,
+                    nom: cacheName,
+                    origine: LayerSourceName
 
                 }));
 
@@ -575,308 +534,227 @@ angular.module('controllers', [])
             //eregistrement ds l'objet utilisater
             //TODO user dans le context!
             sContext.auth.user.cacheGeom = atoGeoJson($scope.ExistingCacheSource);
-            sContext.auth.user.cache.layers.push({nom:cacheName,origine:LayerSourceName});
+            sContext.auth.user.cache.layers.push({nom: cacheName, origine: LayerSourceName});
 
             $log.debug(sContext.auth.user);
             //TODO stoker la liste des tuile pour controle au chargement
 
-             //$rootScope.$broadcast("userChange"); //mise a jour de l'user dans la base
+            //$rootScope.$broadcast("userChange"); //mise a jour de l'user dans la base
             sContext.saveUser();
 
         };
 
 
-
-
-
-
-
-})
+    })
 
 /***************************************************************** --------- *****************************************************/
 /***************************************************************** ????????? *****************************************************/
 /***************************************************************** --------- *****************************************************/
 
-    .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+    .controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
 
-})
+    })
 
 /***************************************************************** --------- *****************************************************/
 /***************************************************************** Masque *****************************************************/
 /***************************************************************** --------- *****************************************************/
 
-.controller('MskCtrl', function($scope,sPouch,$log,sContext,$state,$rootScope) {
+    .controller('MskCtrl', function ($scope, sPouch, $log, sContext, $state, $rootScope) {
 
-    $log.debug("mskCtrl");
-    $log.debug(cMaskId);
+        $log.debug("mskCtrl");
+        $log.debug(cMaskId);
 
-    sPouch.cfg.get(cMaskId).then(function (doc) {
-        $scope.masks = doc.cat;
-        $log.debug( $scope.masks);
-    }).catch(function (err) {
-        $log.debug(err);
-    });
+        sPouch.cfg.get(cMaskId).then(function (doc) {
+            $scope.masks = doc.cat;
+            $log.debug($scope.masks);
+        }).catch(function (err) {
+            $log.debug(err);
+        });
 
 
-    /*
-     * if given group is the selected group, deselect it
-     * else, select the given group
-     */
-    $scope.toggleGroup = function(group) {
-        if ($scope.isGroupShown(group)) {
-            $scope.shownGroup = null;
-        } else {
-            $scope.shownGroup = group;
-        }
-    };
-    $scope.isGroupShown = function(group) {
-        return $scope.shownGroup === group;
-    };
-
+        /*
+         * if given group is the selected group, deselect it
+         * else, select the given group
+         */
+        $scope.toggleGroup = function (group) {
+            if ($scope.isGroupShown(group)) {
+                $scope.shownGroup = null;
+            } else {
+                $scope.shownGroup = group;
+            }
+        };
+        $scope.isGroupShown = function (group) {
+            return $scope.shownGroup === group;
+        };
 
 
         //on se rend sur la carte avec le bon masque en contexte
-        $scope.landingOnEarth = function(mskIdf){
+        $scope.landingOnEarth = function (mskIdf) {
 
             //mise a jour du contexte
-            sContext.param.mskUUID=mskIdf;
+            sContext.param.mskUUID = mskIdf;
             $rootScope.$broadcast("msk_change"); //TODO faire des type d'event specifique pour les notification de contexte
             //de-orbitation
             $state.go('menu.tabs.map');
 
-            //switch(mskIdf) {
-            //    case 1:
-            //        code block
-            //        break;
-            //    case 2:
-            //        code block
-            //        break;
-            //    default:
-            //    default code block
-            //}
 
         }
 
 
-})
+    })
 
 /***************************************************************** --------- *****************************************************/
 /***************************************************************** Form List *****************************************************/
 /***************************************************************** --------- *****************************************************/
 
 
-    .controller('FormListCtrl', ['$scope','$ionicPopup','$ionicPopover','$timeout','sPouch','$log',
-    function ($scope,$ionicPopup,$ionicPopover, $timeout,sPouch,$log) {
-        $scope.form1 = null;
+    .controller('FormListCtrl', ['$scope', '$ionicPopup', '$ionicPopover', '$timeout', 'sPouch', '$log',
+        function ($scope, $ionicPopup, $ionicPopover, $timeout, sPouch, $log) {
+            $scope.form1 = null;
 
-        sPouch.form.get(cFormTest).then(function (doc) {
+            sPouch.form.get(cFormTest).then(function (doc) {
                 $log.debug("slayer init")
                 $log.debug(doc)
 
                 //me.list = doc.layers;
                 $scope.form1 = doc.param;
-                $log.debug( $scope.form1);
+                $log.debug($scope.form1);
                 //$log.debug("slayer end")
             }).catch(function (err) {
                 $log.debug(err);
             });
-        //    [
-        //    {
-        //        label: 'username',
-        //        id: 'forminput1',
-        //        type: 'text',
-        //        value: '',
-        //        placeholder: 'Enter your username here..'
-        //    },
-        //    {
-        //        label: 'date',
-        //        id: 'forminput2',
-        //        type: 'date',
-        //        value: new Date('01/01/1970'),
-        //        placeholder: 'Enter your date here ..',
-        //        hide: 'form1[0].value=="test"'
-        //    },
-        //    {
-        //        label: 'select1',
-        //        id: 'select1',
-        //        type: 'select',
-        //        values: [
-        //            {
-        //                'text': 'toto',
-        //                'value': 'testValue'
-        //            },
-        //            {
-        //                'text': 'titi',
-        //                'value': 'titiValue'
-        //            }
-        //        ],
-        //        change: 'if (form1[2].value=="testValue"){form1[3].values = [{"text": "test","value":"blbl"}]}'
-        //    },
-        //    {
-        //        label: 'select2',
-        //        id: 'select2',
-        //        type: 'select',
-        //        values: [
-        //            {
-        //                'text': 'tata',
-        //                'value': 'tataValue'
-        //            },
-        //            {
-        //                'text': 'tutu',
-        //                'value': 'tutuValue'
-        //            }
-        //        ]
-        //    }
-        //
-        //];
 
-        $scope.evalAngular = function (string) {
-            return $scope.$eval(string);
-        };
+            $scope.evalAngular = function (string) {
+                return $scope.$eval(string);
+            };
 
 
-        $scope.showPopup = function() {
-            // An elaborate, custom popup
-            var myPopup = $ionicPopup.show({
-                templateUrl: 'templates/formGenerator.html',
-                title: 'Form',
-                //subTitle: 'Please use normal things',
-                scope: $scope,
-                buttons: [
-                    {text: 'Cancel'},
-                    {
-                        text: '<b>Ok</b>',
-                        type: 'button-positive',
-                        onTap: function (e) {
+            $scope.showPopup = function () {
+                // An elaborate, custom popup
+                var myPopup = $ionicPopup.show({
+                    templateUrl: 'templates/formGenerator.html',
+                    title: 'Form',
+                    //subTitle: 'Please use normal things',
+                    scope: $scope,
+                    buttons: [
+                        {text: 'Cancel'},
+                        {
+                            text: '<b>Ok</b>',
+                            type: 'button-positive',
+                            onTap: function (e) {
 
+                            }
                         }
-                    }
-                ]
+                    ]
+                });
+                myPopup.then(function (res) {
+                    console.log('Tapped!', res);
+                });
+                $timeout(function () {
+                    myPopup.close(); //close the popup after 3 seconds for some reason
+                }, 3000);
+            };
+
+
+            $ionicPopover.fromTemplateUrl('my-popover.html', {
+                scope: $scope
+            }).then(function (popover) {
+                $scope.popover = popover;
             });
-            myPopup.then(function (res) {
-                console.log('Tapped!', res);
+
+
+            $scope.openPopover = function ($event) {
+                $scope.popover.show($event);
+            };
+            $scope.closePopover = function () {
+                $scope.popover.hide();
+            };
+            //Cleanup the popover when we're done with it!
+            $scope.$on('$destroy', function () {
+                $scope.popover.remove();
             });
-            $timeout(function () {
-                myPopup.close(); //close the popup after 3 seconds for some reason
-            }, 3000);
-        };
+            // Execute action on hide popover
+            $scope.$on('popover.hidden', function () {
+                // Execute action
+            });
+            // Execute action on remove popover
+            $scope.$on('popover.removed', function () {
+                // Execute action
+            });
 
 
+        }])
+
+/***************************************************************** --------- *****************************************************/
+/***************************************************************** SIDE MENU *****************************************************/
+/***************************************************************** --------- *****************************************************/
+
+    .controller('sideMenu', function ($scope, $state, $ionicSideMenuDelegate, sLayer, $log, sEventSuperviseur, $rootScope) { //kifkif un global controler non?
 
 
+        $log.debug("sideMenu");
+        //$log.debug(doc.layers);
+        $scope.layers = sLayer.list;
 
-
-
-
-
-        $ionicPopover.fromTemplateUrl('my-popover.html', {
-            scope: $scope
-        }).then(function(popover) {
-            $scope.popover = popover;
-        });
-
-
-        $scope.openPopover = function($event) {
-            $scope.popover.show($event);
-        };
-        $scope.closePopover = function() {
-            $scope.popover.hide();
-        };
-        //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function() {
-            $scope.popover.remove();
-        });
-        // Execute action on hide popover
-        $scope.$on('popover.hidden', function() {
-            // Execute action
-        });
-        // Execute action on remove popover
-        $scope.$on('popover.removed', function() {
-            // Execute action
-        });
-
-
-
-
-
-
-    }])
-
-    /***************************************************************** --------- *****************************************************/
-    /***************************************************************** SIDE MENU *****************************************************/
-    /***************************************************************** --------- *****************************************************/
-
-    .controller('sideMenu', function($scope,$state, $ionicSideMenuDelegate,sLayer,$log,sEventSuperviseur,$rootScope) { //kifkif un global controler non?
-
-
-            $log.debug("sideMenu");
-            //$log.debug(doc.layers);
-            $scope.layers = sLayer.list;
-
-        $rootScope.$on("layersListUpdated",  function(){
+        $rootScope.$on("layersListUpdated", function () {
             $log.debug("event layers recus");
             $scope.layers = sLayer.list;
         });
 
 
-            $scope.sEventSuperviseur = sEventSuperviseur;
+        $scope.sEventSuperviseur = sEventSuperviseur;
 
-            //$log.debug( $scope.sEventSuperviseur);
+        //$log.debug( $scope.sEventSuperviseur);
 
-            $scope.openMenu = function () {
-                $ionicSideMenuDelegate.toggleLeft();
-            }
+        $scope.openMenu = function () {
+            $ionicSideMenuDelegate.toggleLeft();
+        }
 
-            $scope.newCache = function () {
+        $scope.newCache = function () {
 
-                sEventSuperviseur.event.sideMenu = false;
-                $state.go('cache');
-            };
+            sEventSuperviseur.event.sideMenu = false;
+            $state.go('cache');
+        };
 
 
-
-})
+    })
 
 /***************************************************************** --------- *****************************************************/
 /***************************************************************** LOADER     *****************************************************/
 /***************************************************************** --------- *****************************************************/
 
 
-    .controller('loader', function($scope,$state,sPouch,sLayer,$timeout,$log) {
+    .controller('loader', function ($scope, $state, sPouch, sLayer, $timeout, $log) {
 
-       var n = sLayer.list;
-       //var u =  sLayer.usr;
-       //var l = sLayer.cfg;
+        var n = sLayer.list;
+        //var u =  sLayer.usr;
+        //var l = sLayer.cfg;
         $log.debug("loader");
         $log.debug(n);
         //$log.debug(u);
         //$log.debug(l);
         $log.debug("/ loader");
 
-        $scope.loadingPercent= 0;
+        $scope.loadingPercent = 0;
 
 
         //Bouchon de vase
-            $timeout(function(){
-                $scope.loadingPercent=$scope.loadingPercent+25;
+        $timeout(function () {
+            $scope.loadingPercent = $scope.loadingPercent + 25;
 
-                $timeout(function(){
-                    $scope.loadingPercent=$scope.loadingPercent+25;
-                    $timeout(function(){
-                        $scope.loadingPercent=$scope.loadingPercent+25;
-                        $timeout(function(){
-                            $scope.loadingPercent=$scope.loadingPercent+25;
-                            $state.go("menu.home");
-                        },600);
-                        },600);
-                },600);
-
-
-            },600);
+            $timeout(function () {
+                $scope.loadingPercent = $scope.loadingPercent + 25;
+                $timeout(function () {
+                    $scope.loadingPercent = $scope.loadingPercent + 25;
+                    $timeout(function () {
+                        $scope.loadingPercent = $scope.loadingPercent + 25;
+                        $state.go("menu.home");
+                    }, 600);
+                }, 600);
+            }, 600);
 
 
-
-
+        }, 600);
 
 
     });

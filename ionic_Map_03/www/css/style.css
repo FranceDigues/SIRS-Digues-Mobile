@@ -4,70 +4,78 @@
     background-position: 50%;
     height: 100%;
     background-image: url('../img/ol.png');
-    background-size:contain;
+    background-size: contain;
 }
-
 
 .base {
     background-color: #190707;
-    color:#FFFFFF;
+    color: #FFFFFF;
 }
 
 /* header */
-.bar.bar-header.bar-positive{
+.bar.bar-header.bar-positive {
     border-color: #0098A8;
     background-color: #0098A8;
 }
 
 /* Loading page */
-.loading-view{
+.loading-view {
     background-color: #00BCD0;
 }
-.loading-view .scroll-content{
+
+.loading-view .scroll-content {
     position: initial;
 }
 
 /* Sign in page */
-.signin-view{
+.signin-view {
     background-color: #00BCD0;
 }
-.signin-view .list{
+
+.signin-view .list {
     margin-bottom: 10px;
 }
-.signin-form{
+
+.signin-form {
     background-color: #fff;
     padding: 30px;
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.33);
     border-radius: 2px;
     margin-top: 10%;
 }
-.signin-form .signin-item{
+
+.signin-form .signin-item {
     border: 2px solid #AEAEAE;
     border-top: none;
     border-left: none;
     border-right: none;
     margin-top: 5px;
 }
-.signin-title{
+
+.signin-title {
     font-family: Arial, sans-serif;
     font-weight: bold;
     font-size: 20px;
     color: #666;
 }
-.signin-valid-button button{
+
+.signin-valid-button button {
     text-align: right;
     padding: 0;
     border: none;
     background-color: transparent;
     color: #00BCD0;
 }
-.signin-valid-button{
+
+.signin-valid-button {
     text-align: right;
 }
-.signin-valid-button p{
-    margin-bottom:0;
+
+.signin-valid-button p {
+    margin-bottom: 0;
 }
-.signin-valid-button p a{
+
+.signin-valid-button p a {
     color: #AEAEAE;
     font-style: italic;
 }
@@ -79,20 +87,22 @@
     padding-bottom: 0;
     transition: 0.09s all linear;
 }
+
 .list .item.item-accordion.ng-hide {
     line-height: 0px;
 }
+
 .list .item.item-accordion.ng-hide-add,
 .list .item.item-accordion.ng-hide-remove {
     display: block !important;
 }
 
-
 /* home page */
-.home-view{
+.home-view {
     background-color: #00BCD0;
 }
-.button.button-positive.home-button{
+
+.button.button-positive.home-button {
     border-color: #FFFFFF;
     background-color: #FFFFFF;
     text-align: left;
@@ -101,145 +111,162 @@
     margin-bottom: 15px;
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.33);
 }
-.button.button-positive.home-button.home-map-button{
+
+.button.button-positive.home-button.home-map-button {
     border-color: #FFEB3B;
     background-color: #FFEB3B;
 }
-.button.button-positive.home-button span.icon{
+
+.button.button-positive.home-button span.icon {
     margin-right: 10px;
 }
 
-
 /* mask list page */
-.mask-view-list .list{
+.mask-view-list .list {
     border-radius: 2px;
     background: white;
     box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.25);
     padding: 15px 20px;
 }
 
-.mask-view-list .item.item-stable{
+.mask-view-list .item.item-stable {
     background-color: transparent;
-    border:none;
+    border: none;
 }
-.mask-view-list .item.item-stable.active{
+
+.mask-view-list .item.item-stable.active {
     border-color: #ddd;
     background-color: #FFEB3B;
     border-radius: 3px 3px 0 0;
     border-bottom: solid 2px rgba(102, 102, 102, 0.1);
 }
 
-.mask-view-list .list .item-accordion{
+.mask-view-list .list .item-accordion {
     border: none;
     background-color: #FFF176;
     padding: 3px 25px;
 }
 
 /* map */
-.tabs-map-view.tabs-striped.tabs-positive .tabs{
+.tabs-map-view.tabs-striped.tabs-positive .tabs {
     background-color: #00BCD0;
 }
-.tab-map-map, .tab-map-set{
+
+.tab-map-map, .tab-map-set {
     padding-top: 8px;
 }
-.tab-map-map i.icon{
+
+.tab-map-map i.icon {
     float: left;
     margin-left: 27px;
 }
-.tab-map-map span.tab-title{
+
+.tab-map-map span.tab-title {
     font-size: 15px;
     margin-top: 8px;
     float: left;
     margin-left: 13px;
 }
-.tab-map-set i.icon{
+
+.tab-map-set i.icon {
     float: left;
     margin-left: 8px;
     font-size: 28px;
     height: 28px;
 }
-.tab-map-set  span.tab-title{
+
+.tab-map-set span.tab-title {
     font-size: 15px;
     margin-top: 8px;
     float: left;
     margin-left: 13px;
 }
 
-.draw-mode-div{
+.draw-mode-div {
     position: absolute;
     bottom: 10px;
     left: 10px;
 }
-.draw-mode-div .input-label{
+
+.draw-mode-div .input-label {
     width: 25px;
 }
-.draw-mode-div .item.item-input{
+
+.draw-mode-div .item.item-input {
     padding-left: 15px;
     width: 155px;
     float: left;
 }
-.draw-mode-div select{
-    max-width:100%;
+
+.draw-mode-div select {
+    max-width: 100%;
 }
-.draw-mode-div .draw-mode-text{
+
+.draw-mode-div .draw-mode-text {
     float: left;
     margin-top: 12px;
     margin-left: 10px;
     font-family: Arial, sans-serif;
-    color:#333;
+    color: #333;
 }
-
 
 /* Settings */
-.settings-view-title{
+.settings-view-title {
     color: #666;
     text-align: center;
-    font-size:25px;
-    margin-bottom:15px;
+    font-size: 25px;
+    margin-bottom: 15px;
 }
 
-.settings-view .item-toggle{
+.settings-view .item-toggle {
     border-radius: 2px;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
     margin-top: 15px;
 }
-.settings-view-controle-title{
-    font-size:18px;
+
+.settings-view-controle-title {
+    font-size: 18px;
     margin-top: 25px;
-    color:#0098A8;
+    color: #0098A8;
 }
 
 /*form */
-.form-view-block{
+.form-view-block {
     margin-top: 10px;
 }
-.form-view-block .label-form{
+
+.form-view-block .label-form {
     color: #666;
-    text-transform:uppercase;
+    text-transform: uppercase;
 }
-.form-view-block .list .item.item-input input{
-    padding-top:0;
+
+.form-view-block .list .item.item-input input {
+    padding-top: 0;
 }
-.form-view-block .list .item.item-input{
+
+.form-view-block .list .item.item-input {
     width: 99%;
     margin-left: 1px;
     background: white;
 }
-.form-view-block.form-view-popover .list{
+
+.form-view-block.form-view-popover .list {
     border: solid 1px #ddd;
 }
-.form-view-block.form-view-popover{
+
+.form-view-block.form-view-popover {
     padding: 5px 20px;
 }
-.button.button-positive.button-form{
+
+.button.button-positive.button-form {
     border-color: #FFEB3B;
     background-color: #FFEB3B;
-    color:#666;
+    color: #666;
 }
 
 /*//popup*/
 .popup {
     width: 400px;
     height: 350px;
-    padding:0;
+    padding: 0;
 }

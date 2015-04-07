@@ -7,7 +7,7 @@ exports.ADAPTER_VERSION = 5;
 // The object stores created for each database
 // DOC_STORE stores the document meta data, its revision history and state
 // Keyed by document id
-exports. DOC_STORE = 'document-store';
+exports.DOC_STORE = 'document-store';
 // BY_SEQ_STORE stores a particular version of a document, keyed by its
 // sequence id
 exports.BY_SEQ_STORE = 'by-sequence';

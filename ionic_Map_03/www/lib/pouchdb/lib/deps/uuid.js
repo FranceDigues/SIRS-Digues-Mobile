@@ -3,13 +3,13 @@
 // BEGIN Math.uuid.js
 
 /*!
-Math.uuid.js (v1.4)
-http://www.broofa.com
-mailto:robert@broofa.com
+ Math.uuid.js (v1.4)
+ http://www.broofa.com
+ mailto:robert@broofa.com
 
-Copyright (c) 2010 Robert Kieffer
-Dual licensed under the MIT and GPL licenses.
-*/
+ Copyright (c) 2010 Robert Kieffer
+ Dual licensed under the MIT and GPL licenses.
+ */
 
 /*
  * Generate a random uuid.
@@ -37,46 +37,45 @@ Dual licensed under the MIT and GPL licenses.
  *   "098F4D35"
  */
 var chars = (
-  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-  'abcdefghijklmnopqrstuvwxyz'
+'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+'abcdefghijklmnopqrstuvwxyz'
 ).split('');
 function getValue(radix) {
-  return 0 | Math.random() * radix;
+    return 0 | Math.random() * radix;
 }
 function uuid(len, radix) {
-  radix = radix || chars.length;
-  var out = '';
-  var i = -1;
+    radix = radix || chars.length;
+    var out = '';
+    var i = -1;
 
-  if (len) {
-    // Compact form
-    while (++i < len) {
-      out += chars[getValue(radix)];
+    if (len) {
+        // Compact form
+        while (++i < len) {
+            out += chars[getValue(radix)];
+        }
+        return out;
     }
-    return out;
-  }
     // rfc4122, version 4 form
     // Fill in random data.  At i==19 set the high bits of clock sequence as
     // per rfc4122, sec. 4.1.5
-  while (++i < 36) {
-    switch (i) {
-      case 8:
-      case 13:
-      case 18:
-      case 23:
-        out += '-';
-        break;
-      case 19:
-        out += chars[(getValue(16) & 0x3) | 0x8];
-        break;
-      default:
-        out += chars[getValue(16)];
+    while (++i < 36) {
+        switch (i) {
+            case 8:
+            case 13:
+            case 18:
+            case 23:
+                out += '-';
+                break;
+            case 19:
+                out += chars[(getValue(16) & 0x3) | 0x8];
+                break;
+            default:
+                out += chars[getValue(16)];
+        }
     }
-  }
 
-  return out;
+    return out;
 }
-
 
 
 module.exports = uuid;

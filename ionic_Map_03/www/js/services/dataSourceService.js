@@ -3,7 +3,7 @@
  */
 angular.module('data.services.source', [])
 
-    .service('sPouch', function(pouchDB,$log,$rootScope) {
+    .service('sPouch', function (pouchDB, $log, $rootScope) {
 
         var me = this;
 
@@ -17,76 +17,50 @@ angular.module('data.services.source', [])
         me.form = new pouchDB('moskito_form');
 
 
-
-
-        /**
-         * replication initiale
-         */
-        //PouchDB.replicate('http://178.32.34.74:5984/moskito_config','moskito_config');
-        //PouchDB.replicate('http://178.32.34.74:5984/moskito_user','moskito_user');
-        //PouchDB.replicate('http://178.32.34.74:5984/moskito_layer','moskito_layer');
-        //PouchDB.replicate('http://178.32.34.74:5984/moskito_form','moskito_form');
-
-
-
-
-
-
-
-
-
-
-
-        //instancie une syncro bi-directionelle avec support de l'interuption, et propagation des evenement change
-        //les evenements sont nomer comme la database
-        me.initiateSync = function(database){
-            return PouchDB.sync(""+database, 'http://178.32.34.74:5984/'+database, {
+            //instancie une syncro bi-directionelle avec support de l'interuption, et propagation des evenement change
+            //les evenements sont nomer comme la database
+        me.initiateSync = function (database) {
+            return PouchDB.sync("" + database, 'http://178.32.34.74:5984/' + database, {
                 live: true,
                 retry: true
             }).on('change', function (info) {
                 // handle change
-                $log.debug(database+'_change');
+                $log.debug(database + '_change');
                 $log.debug(info);
-                if(info.direction == "pull" ) {
+                if (info.direction == "pull") {
                     $rootScope.$broadcast(database + "_change"); //FIXME  ne pas declacher l'event lorsque la modification vien du local.
                 }
             }).on('paused', function () {
                 // replication paused (e.g. user went offline)
-                $log.debug(database+'_paused');
+                $log.debug(database + '_paused');
             }).on('active', function () {
                 // replicate resumed (e.g. user went back online)
-                $log.debug(database+'_active');
+                $log.debug(database + '_active');
             }).on('denied', function (info) {
                 // a document failed to replicate, e.g. due to permissions
-                $log.debug(database+'_denied');
+                $log.debug(database + '_denied');
                 $log.debug(info);
             }).on('complete', function (info) {
                 // handle complete
-                $log.debug(database+'_complete');
+                $log.debug(database + '_complete');
                 $log.debug(info);
             }).on('error', function (err) {
                 // handle error
-                $log.debug(database+'_error');
+                $log.debug(database + '_error');
                 $log.debug(error);
             });
         };
-
 
 
 //essai syncro + propagation
         me.esy = new pouchDB('essai_sync');
 
         //objet pour couper la syncro
-        //me.syncEsy
         //TODO fonction en gise de constructeur ol School.
-        //var syncEsy =   me.initiateSync("essai_sync");
-        var syncCfg =   me.initiateSync("moskito_config");
-        var syncUsr =   me.initiateSync("moskito_user");
-        var syncLayer =   me.initiateSync("moskito_layer");
-        var syncForm=   me.initiateSync("moskito_form");
-
-
-
+        var syncCfg = me.initiateSync("moskito_config");
+        var syncUsr = me.initiateSync("moskito_user");
+        var syncLayer = me.initiateSync("moskito_layer");
+        var syncForm = me.initiateSync("moskito_form");
 
 
         //me.cfg.allDocs().then(function (result) {
@@ -125,7 +99,7 @@ angular.module('data.services.source', [])
             _id: '_design/name_index',
             views: {
                 'name_index': {
-                    map: function(doc) {
+                    map: function (doc) {
                         emit(doc.name, doc);
                     }.toString()
                 }
@@ -137,7 +111,6 @@ angular.module('data.services.source', [])
             // design doc created
             $log.debug(info);
         }).catch(function (err) {
-            // if err.name === 'conflict', then
             // design doc already exists
             $log.debug(err);
         });

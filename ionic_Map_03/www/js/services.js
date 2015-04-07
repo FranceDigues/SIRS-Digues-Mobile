@@ -5,88 +5,72 @@
 
 angular.module('data.services', [])
 
-        .service('sMap', function() {
+    .service('sMap', function () {
 
         //choper les calque dans un json
         this.mode = {
 
-                cache:false,
-                edit:false,
-                visu:true
+            cache: false,
+            edit: false,
+            visu: true
 
         }
     })
 
 
-
-    .service('sCacheMap', function(pouchDB,$cordovaFileTransfer,$cordovaFile,$log,$timeout,$rootScope,sContext) {
+    .service('sCacheMap', function (pouchDB, $cordovaFileTransfer, $cordovaFile, $log, $timeout, $rootScope, sContext) {
 
         var me = this;
-
-        //this.stackDownload = new Array();
-        //
-        //
-        //
-        //         if ($scope.markers[1]) { //TODO retangle de selection
-        //
-        //$ionicPlatform.ready()
-        //    .then(function () {
-        //
-        //    });
-        //};
-
 
 
         me.nbTile = 0;
         me.nbTileDownloaded = 0;
 
 
-    me.cache=function(url,geom,cacheName,LayerSourceName,zMin ,zMax){
+        me.cache = function (url, geom, cacheName, LayerSourceName, zMin, zMax) {
 
 
-        for(var i = 0; i< geom[0].length;i++){
-            geom[0][i][0]= Math.round( geom[0][i][0]*1000)/1000
-            geom[0][i][1]= Math.round( geom[0][i][1]*1000)/1000
-        }
+            for (var i = 0; i < geom[0].length; i++) {
+                geom[0][i][0] = Math.round(geom[0][i][0] * 1000) / 1000
+                geom[0][i][1] = Math.round(geom[0][i][1] * 1000) / 1000
+            }
 
-        $log.debug("zmin : "+zMin+" zMax : "+zMax);
+            $log.debug("zmin : " + zMin + " zMax : " + zMax);
 
-        //calcul de l'enveloppe
-        mM = miniMaxEV(geom[0]);
-        $log.debug("minMaxEv");
-        $log.debug(mM);
+            //calcul de l'enveloppe
+            mM = miniMaxEV(geom[0]);
+            $log.debug("minMaxEv");
+            $log.debug(mM);
 
-        //generation de la liste de tuile
-        var aTileUrlForDownload = new Array();
+            //generation de la liste de tuile
+            var aTileUrlForDownload = new Array();
 
-        for(var i=zMax;i>=zMin;i--){
-            $log.debug("runTileUrl : "+i);
-
-
-            aTileUrlForDownload.push(this.getTileUrlArray(mM[0],mM[1],i));
-
-        }
-
-        $log.debug(aTileUrlForDownload);
+            for (var i = zMax; i >= zMin; i--) {
+                $log.debug("runTileUrl : " + i);
 
 
-        //recuperation des tuile
-        angular.forEach( aTileUrlForDownload,function(zoomLvl){
-            angular.forEach( zoomLvl, function(tile){
-                downloadTile(tile,cacheName,LayerSourceName,url)
-                if(tile.z == zMin){
-                    //buildMetaData(aTileUrlForDownload,layerSource,cacheName,LayerSourceName,zMin);
-                }
+                aTileUrlForDownload.push(this.getTileUrlArray(mM[0], mM[1], i));
+
+            }
+
+            $log.debug(aTileUrlForDownload);
+
+
+            //recuperation des tuile
+            angular.forEach(aTileUrlForDownload, function (zoomLvl) {
+                angular.forEach(zoomLvl, function (tile) {
+                    downloadTile(tile, cacheName, LayerSourceName, url)
+                    if (tile.z == zMin) {
+                        //buildMetaData(aTileUrlForDownload,layerSource,cacheName,LayerSourceName,zMin);
+                    }
+                })
             })
-        })
 
 
+        };
 
 
-    };
-
-
-        function buildMetaData(aTileUrlForDownload,cacheLayerSource,cacheName,LayerSourceName,zMin){
+        function buildMetaData(aTileUrlForDownload, cacheLayerSource, cacheName, LayerSourceName, zMin) {
             //creation de l'envelope des tuile cacheé
 
             //TODO enmprise reelle
@@ -109,18 +93,18 @@ angular.module('data.services', [])
             //$log.error(ev);
 
             //creation du texte
-                //nb de tuile
-                //nom
-                //emprise zoom
-                //
+            //nb de tuile
+            //nom
+            //emprise zoom
+            //
 
 
             //affichage de l'emprise
             cacheLayerSource.addFeature(
                 new ol.Feature({
                     geometry: new ol.geom.Polygon(ev),
-                    nom:cacheName,
-                    origine:LayerSourceName
+                    nom: cacheName,
+                    origine: LayerSourceName
 
                 }));
 
@@ -130,7 +114,7 @@ angular.module('data.services', [])
             //eregistrement ds l'objet utilisater
             //TODO user dans le context!
             sContext.auth.user.cacheGeom = atoGeoJson(cacheLayerSource);
-            sContext.auth.user.cache.layers.push({nom:cacheName,origine:LayerSourceName});
+            sContext.auth.user.cache.layers.push({nom: cacheName, origine: LayerSourceName});
 
             $log.debug(sContext.auth.user);
             //TODO event ionic ou acceau context??
@@ -139,32 +123,33 @@ angular.module('data.services', [])
         };
 
         //cacul de l'envelope
-        function miniMaxEV(aPoint){
+        function miniMaxEV(aPoint) {
             //$log.debug("EV s");
             //$log.debug(aPoint);
             //$log.debug(aPoint[0]);
             ////
             //TODO metre au propre
-            mM =new Array();
-            t1 =new Array();
+            mM = new Array();
+            t1 = new Array();
             t1.push(aPoint[0][0]);
             t1.push(aPoint[0][1]);
             mM.push(t1);
 
-            t2 =new Array();
+            t2 = new Array();
             t2.push(aPoint[0][0]);
             t2.push(aPoint[0][1]);
             mM.push(t2);
-                //[ [aPoint[0][0],aPoint[0][1]] , [aPoint[0][0],aPoint[0][1]] ];
+            //[ [aPoint[0][0],aPoint[0][1]] , [aPoint[0][0],aPoint[0][1]] ];
             $log.debug(mM);
 
 
-            for(var i = 1 ; i<aPoint.length;i++) {
+            for (var i = 1; i < aPoint.length; i++) {
                 mM[0][0] = Math.min(mM[0][0], aPoint[i][0]);
                 mM[0][1] = Math.min(mM[0][1], aPoint[i][1]);
                 mM[1][0] = Math.max(mM[1][0], aPoint[i][0]);
                 mM[1][1] = Math.max(mM[1][1], aPoint[i][1]);
-            };
+            }
+            ;
 
 
             //$log.debug(mM);
@@ -175,11 +160,11 @@ angular.module('data.services', [])
         };
 
 
-        function downloadTile( tile ,cacheName,LayerSourceName,baseUrl){
+        function downloadTile(tile, cacheName, LayerSourceName, baseUrl) {
 
 
-            var url = baseUrl+"/"+tile.z+"/"+tile.x+"/"+tile.y+".png";
-            var targetPath = cordova.file.cacheDirectory +LayerSourceName+"/"+cacheName+"/"+ tile.z + "/" + tile.x + "/" + tile.y +".png"; //TODO gestion des dossier pour z et x
+            var url = baseUrl + "/" + tile.z + "/" + tile.x + "/" + tile.y + ".png";
+            var targetPath = cordova.file.cacheDirectory + LayerSourceName + "/" + cacheName + "/" + tile.z + "/" + tile.x + "/" + tile.y + ".png"; //TODO gestion des dossier pour z et x
 
             //$log.debug("FilePath : " + targetPath);
             //$log.debug("URL : " + url);
@@ -205,7 +190,7 @@ angular.module('data.services', [])
         };
 
 
-        me.getTileUrlArray = function(p1,p2, zoom) {
+        me.getTileUrlArray = function (p1, p2, zoom) {
 
             outBoxMin = getTileURL(p1[0], p1[1], zoom);
             outBoxMax = getTileURL(p2[0], p2[1], zoom);
@@ -215,43 +200,33 @@ angular.module('data.services', [])
             //$log.debug("min old")
             //$log.debug(outBoxMin)
 
-            if(outBoxMin.x > outBoxMax.x) { //TODO replace avec un Min-Max
+            if (outBoxMin.x > outBoxMax.x) { //TODO replace avec un Min-Max
                 outTmp1 = outBoxMin.x;
                 outBoxMin.x = outBoxMax.x;
                 outBoxMax.x = outTmp1;
             }
-            if(outBoxMin.y > outBoxMax.y) {
+            if (outBoxMin.y > outBoxMax.y) {
                 outTmp1 = outBoxMin.y;
                 outBoxMin.y = outBoxMax.y;
                 outBoxMax.y = outTmp1;
             }
 
 
-            //$scope.nbTile = ( outBoxMax.x - outBoxMin.x ) * ( outBoxMax.y - outBoxMin.y );
-
-            //$log.debug("x : " + ( outBoxMax.x - outBoxMin.x ));
-            //$log.debug("y : " + ( outBoxMax.y - outBoxMin.y ));
-            //$log.debug("nb dl attendu : "+$scope.nbTile);
-
-            //$log.debug("max "+outBoxMax)
-            //$log.debug(outBoxMax)
-            //$log.debug("min ")
-            //$log.debug(outBoxMin)
 
             aTileUrl = new Array();
 
             yi = outBoxMin.y;//SAVE INDICE
-            while(outBoxMin.x <= outBoxMax.x) { //parcour des tuile x -> y
-                while(outBoxMin.y <= outBoxMax.y) {
+            while (outBoxMin.x <= outBoxMax.x) { //parcour des tuile x -> y
+                while (outBoxMin.y <= outBoxMax.y) {
                     //$log.debug("*** tuile en cours *** " + outBoxMin.x + "/" + outBoxMin.y);
                     aTileUrl.push(outBoxMin);//creation de la liste de tuile
                     outBoxMin.y++;
                 }
                 outBoxMin.x++;
-                outBoxMin.y= yi;//RAZ
+                outBoxMin.y = yi;//RAZ
             }
 
-            me.nbTile=  me.nbTile + aTileUrl.length;
+            me.nbTile = me.nbTile + aTileUrl.length;
             return aTileUrl;
         }
 

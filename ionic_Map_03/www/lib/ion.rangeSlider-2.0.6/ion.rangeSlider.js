@@ -10,7 +10,8 @@
 // http://ionden.com/a/plugins/licence-en.html
 // =====================================================================================================================
 
-;(function ($, document, window, navigator, undefined) {
+;
+(function ($, document, window, navigator, undefined) {
     "use strict";
 
     // =================================================================================================================
@@ -31,7 +32,7 @@
             }
         }
         return false;
-    } ());
+    }());
 
     // IE8 fix
     if (!Function.prototype.bind) {
@@ -49,7 +50,8 @@
 
                     if (this instanceof bound) {
 
-                        var F = function(){};
+                        var F = function () {
+                        };
                         F.prototype = target.prototype;
                         var self = new F();
 
@@ -77,7 +79,7 @@
         };
     }
     if (!Array.prototype.indexOf) {
-        Array.prototype.indexOf = function(searchElement, fromIndex) {
+        Array.prototype.indexOf = function (searchElement, fromIndex) {
             var k;
             if (this == null) {
                 throw new TypeError('"this" is null or not defined');
@@ -106,7 +108,6 @@
     }
 
 
-
     // =================================================================================================================
     // Template
 
@@ -132,7 +133,6 @@
 
     var disable_html =
         '<span class="irs-disable-mask"></span>';
-
 
 
     // =================================================================================================================
@@ -717,7 +717,6 @@
         },
 
 
-
         // =============================================================================================================
         // Calculations
 
@@ -873,7 +872,7 @@
                 return;
             }
 
-            if (this.coords.x_pointer < 0 || isNaN(this.coords.x_pointer)  ) {
+            if (this.coords.x_pointer < 0 || isNaN(this.coords.x_pointer)) {
                 this.coords.x_pointer = 0;
             } else if (this.coords.x_pointer > this.coords.w_rs) {
                 this.coords.x_pointer = this.coords.w_rs;
@@ -938,7 +937,6 @@
 
             }
         },
-
 
 
         // =============================================================================================================
@@ -1232,7 +1230,6 @@
                 }
             }
         },
-
 
 
         // =============================================================================================================
@@ -1631,7 +1628,6 @@
                 html = '';
 
 
-
             this.calcGridMargin();
 
             if (o.grid_snap) {
@@ -1692,7 +1688,6 @@
                 html += '<span class="irs-grid-text js-grid-text-' + i + '" style="left: ' + big_w + '%">' + result + '</span>';
             }
             this.coords.big_num = Math.ceil(big_num + 1);
-
 
 
             this.$cache.cont.addClass("irs-with-grid");
@@ -1787,13 +1782,12 @@
             } else {
                 this.coords.w_handle = this.$cache.s_from.outerWidth(false);
             }
-            this.coords.p_handle = this.toFixed(this.coords.w_handle  / this.coords.w_rs * 100);
+            this.coords.p_handle = this.toFixed(this.coords.w_handle / this.coords.w_rs * 100);
             this.coords.grid_gap = this.toFixed((this.coords.p_handle / 2) - 0.1);
 
             this.$cache.grid[0].style.width = this.toFixed(100 - this.coords.p_handle) + "%";
             this.$cache.grid[0].style.left = this.coords.grid_gap + "%";
         },
-
 
 
         // =============================================================================================================
@@ -1843,13 +1837,12 @@
     };
 
     $.fn.ionRangeSlider = function (options) {
-        return this.each(function() {
+        return this.each(function () {
             if (!$.data(this, "ionRangeSlider")) {
                 $.data(this, "ionRangeSlider", new IonRangeSlider(this, options, plugin_count++));
             }
         });
     };
-
 
 
     // =================================================================================================================
@@ -1860,29 +1853,31 @@
 
     // MIT license
 
-    (function() {
+    (function () {
         var lastTime = 0;
         var vendors = ['ms', 'moz', 'webkit', 'o'];
-        for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-            window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-            window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-                || window[vendors[x]+'CancelRequestAnimationFrame'];
+        for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+            window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame']
+            || window[vendors[x] + 'CancelRequestAnimationFrame'];
         }
 
         if (!window.requestAnimationFrame)
-            window.requestAnimationFrame = function(callback, element) {
+            window.requestAnimationFrame = function (callback, element) {
                 var currTime = new Date().getTime();
                 var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-                var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+                var id = window.setTimeout(function () {
+                        callback(currTime + timeToCall);
+                    },
                     timeToCall);
                 lastTime = currTime + timeToCall;
                 return id;
             };
 
         if (!window.cancelAnimationFrame)
-            window.cancelAnimationFrame = function(id) {
+            window.cancelAnimationFrame = function (id) {
                 clearTimeout(id);
             };
     }());
 
-} (jQuery, document, window, navigator));
+}(jQuery, document, window, navigator));

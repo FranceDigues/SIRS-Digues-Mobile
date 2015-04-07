@@ -12,14 +12,14 @@
 //
 
 function decodeUtf8(str) {
-  return decodeURIComponent(window.escape(str));
+    return decodeURIComponent(window.escape(str));
 }
 
 function hexToInt(charCode) {
-  // '0'-'9' is 48-57
-  // 'A'-'F' is 65-70
-  // SQLite will only give us uppercase hex
-  return charCode < 65 ? (charCode - 48) : (charCode - 55);
+    // '0'-'9' is 48-57
+    // 'A'-'F' is 65-70
+    // SQLite will only give us uppercase hex
+    return charCode < 65 ? (charCode - 48) : (charCode - 55);
 }
 
 
@@ -28,13 +28,13 @@ function hexToInt(charCode) {
 // select hex('A');
 // returns '41'
 function parseHexUtf8(str, start, end) {
-  var result = '';
-  while (start < end) {
-    result += String.fromCharCode(
-      (hexToInt(str.charCodeAt(start++)) << 4) |
-        hexToInt(str.charCodeAt(start++)));
-  }
-  return result;
+    var result = '';
+    while (start < end) {
+        result += String.fromCharCode(
+            (hexToInt(str.charCodeAt(start++)) << 4) |
+            hexToInt(str.charCodeAt(start++)));
+    }
+    return result;
 }
 
 // Example:
@@ -43,25 +43,25 @@ function parseHexUtf8(str, start, end) {
 // returns '4100'
 // notice that the 00 comes after the 41 (i.e. it's swizzled)
 function parseHexUtf16(str, start, end) {
-  var result = '';
-  while (start < end) {
-    // UTF-16, so swizzle the bytes
-    result += String.fromCharCode(
-      (hexToInt(str.charCodeAt(start + 2)) << 12) |
-        (hexToInt(str.charCodeAt(start + 3)) << 8) |
-        (hexToInt(str.charCodeAt(start)) << 4) |
-        hexToInt(str.charCodeAt(start + 1)));
-    start += 4;
-  }
-  return result;
+    var result = '';
+    while (start < end) {
+        // UTF-16, so swizzle the bytes
+        result += String.fromCharCode(
+            (hexToInt(str.charCodeAt(start + 2)) << 12) |
+            (hexToInt(str.charCodeAt(start + 3)) << 8) |
+            (hexToInt(str.charCodeAt(start)) << 4) |
+            hexToInt(str.charCodeAt(start + 1)));
+        start += 4;
+    }
+    return result;
 }
 
 function parseHexString(str, encoding) {
-  if (encoding === 'UTF-8') {
-    return decodeUtf8(parseHexUtf8(str, 0, str.length));
-  } else {
-    return parseHexUtf16(str, 0, str.length);
-  }
+    if (encoding === 'UTF-8') {
+        return decodeUtf8(parseHexUtf8(str, 0, str.length));
+    } else {
+        return parseHexUtf16(str, 0, str.length);
+    }
 }
 
 module.exports = parseHexString;

@@ -1,20 +1,14 @@
-var p1=null;
+var p1 = null;
 var p2 = null;
 
 
-$scope.$on('openlayers.map.singleclick', function(e, coord) {
-    $scope.$apply(function() {
-        if(p1 == null) {
+$scope.$on('openlayers.map.singleclick', function (e, coord) {
+    $scope.$apply(function () {
+        if (p1 == null) {
             p1 = coord;
         }
 
-        p2=coord;
-
-
-
-
-
-
+        p2 = coord;
 
 
         $scope.imageLoadingProgress = 0;
@@ -28,22 +22,23 @@ $scope.$on('openlayers.map.singleclick', function(e, coord) {
 
         $scope.vsCacheBox.addFeature(
             new ol.Feature({
-                geometry:  $scope.ringBuilder(p1,p2);
+                geometry: $scope.ringBuilder(p1, p2);
     })
-    );
+    )
+    ;
 
 
 });
-});
+})
+;
 
 
+$scope.ringBuilder = function (pa, pb) {
 
+    return new ol.geom.Polygon([[[pa, [pa[0], pb[1]], pb, [pb[0], pa[1]], pa]]]);
 
-$scope.ringBuilder= function(pa,pb){
-
-    return new ol.geom.Polygon([[[pa,[pa[0],pb[1]],pb,[pb[0],pa[1]],pa]]]);
-
-};/**
+};
+/**
  * Created by harksin on 31/03/15.
  */
 
@@ -114,9 +109,6 @@ $scope.ringBuilder= function(pa,pb){
 //
 //        });
 //    });
-
-
-
 
 
 /**

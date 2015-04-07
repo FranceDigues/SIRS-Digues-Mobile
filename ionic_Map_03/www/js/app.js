@@ -15,9 +15,9 @@ var app = angular.module('cartoMobile', [
     'device.services',
     'data.services']);
 
-app.run(function($ionicPlatform) {
+app.run(function ($ionicPlatform) {
     //sLayer
-    $ionicPlatform.ready(function() {
+    $ionicPlatform.ready(function () {
 
 
 
@@ -33,96 +33,100 @@ app.run(function($ionicPlatform) {
         }
     });
 })
-    .config(function($stateProvider, $urlRouterProvider,$ionicConfigProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
         $ionicConfigProvider.tabs.position('bottom'); //other values: top
 
-    $stateProvider
-        .state('signin', {
-            url: '/sign-in',
-            templateUrl: 'templates/sign-in.html',
-            controller: 'SignInCtrl'
-        })
-        .state('menu', {
-            url: '/menu',
-            abstract: true,
-            templateUrl: 'templates/menu.html',
-            controller: 'sideMenu'
-        })
-        .state('loading', {
-            url: '/loading',
-            templateUrl: 'templates/loading.html',
-            controller: 'loader'
-            //resolve:
-            //controllerAs:'c'
-        })
-        .state('forgotpassword', {
-            url: '/forgot-password',
-            templateUrl: 'templates/forgot-password.html'
-        })
-        .state('menu.home', {
-            url: '/home',
-            views: {
-                'menuContent' : {
-                    controller: "HomeCtrl",
-                    templateUrl: 'templates/home.html'
-                }}
-        })
-        .state('menu.doc', {
-            url: '/doc',
-            views: {
-                'menuContent' : {
-                    controller: "DocCtrl",
-                    templateUrl: 'templates/doc.html'
-                }}
-        })
-        .state('menu.tabs', {
-            url: '/tab',
-            views: {
-                'menuContent' : {
-                    controller: 'TabsCtrl',
-                    templateUrl: 'templates/tabs.html'
-                }}
-        })
-        .state('menu.tabs.map', {
-            url: '/map',
-            views: {
-                'home-tab': {
-                    templateUrl: 'templates/tab-map.html',
-                    controller: 'MapCtrl'
+        $stateProvider
+            .state('signin', {
+                url: '/sign-in',
+                templateUrl: 'templates/sign-in.html',
+                controller: 'SignInCtrl'
+            })
+            .state('menu', {
+                url: '/menu',
+                abstract: true,
+                templateUrl: 'templates/menu.html',
+                controller: 'sideMenu'
+            })
+            .state('loading', {
+                url: '/loading',
+                templateUrl: 'templates/loading.html',
+                controller: 'loader'
+                //resolve:
+                //controllerAs:'c'
+            })
+            .state('forgotpassword', {
+                url: '/forgot-password',
+                templateUrl: 'templates/forgot-password.html'
+            })
+            .state('menu.home', {
+                url: '/home',
+                views: {
+                    'menuContent': {
+                        controller: "HomeCtrl",
+                        templateUrl: 'templates/home.html'
+                    }
                 }
-            }
-        })
-        .state('menu.tabs.settings', {
-            url: '/settings',
-            views: {
-                'settings-tab': {
-                    templateUrl: 'templates/settings.html',
-                    controller: 'SettingsCtrl'
+            })
+            .state('menu.doc', {
+                url: '/doc',
+                views: {
+                    'menuContent': {
+                        controller: "DocCtrl",
+                        templateUrl: 'templates/doc.html'
+                    }
                 }
-            }
-        })
-        .state('cache', {
-            url: '/cache',
-            controller: 'CacheCtrl',
-            templateUrl: 'templates/cache.html'
-        })
-        .state('formGenerator', {
-            url: '/formGenerator',
-            controller: 'FormListCtrl',
-            templateUrl: 'templates/formGenerator.html'
-        })
-        .state('menu.mask', {
-            url: '/mask',
-            views: {
-                'menuContent' : {
-                controller: 'MskCtrl',
-                templateUrl: 'templates/mask.html'
-            }}
-        });
+            })
+            .state('menu.tabs', {
+                url: '/tab',
+                views: {
+                    'menuContent': {
+                        controller: 'TabsCtrl',
+                        templateUrl: 'templates/tabs.html'
+                    }
+                }
+            })
+            .state('menu.tabs.map', {
+                url: '/map',
+                views: {
+                    'home-tab': {
+                        templateUrl: 'templates/tab-map.html',
+                        controller: 'MapCtrl'
+                    }
+                }
+            })
+            .state('menu.tabs.settings', {
+                url: '/settings',
+                views: {
+                    'settings-tab': {
+                        templateUrl: 'templates/settings.html',
+                        controller: 'SettingsCtrl'
+                    }
+                }
+            })
+            .state('cache', {
+                url: '/cache',
+                controller: 'CacheCtrl',
+                templateUrl: 'templates/cache.html'
+            })
+            .state('formGenerator', {
+                url: '/formGenerator',
+                controller: 'FormListCtrl',
+                templateUrl: 'templates/formGenerator.html'
+            })
+            .state('menu.mask', {
+                url: '/mask',
+                views: {
+                    'menuContent': {
+                        controller: 'MskCtrl',
+                        templateUrl: 'templates/mask.html'
+                    }
+                }
+            });
 
 
-    //$urlRouterProvider.otherwise('/tab');
+        //$urlRouterProvider.otherwise('/tab');
         $urlRouterProvider.otherwise('/sign-in');
-});
+    });
 

@@ -1,7 +1,7 @@
 'use strict';
 
 function quote(str) {
-  return "'" + str + "'";
+    return "'" + str + "'";
 }
 
 exports.ADAPTER_VERSION = 7; // used to manage migrations
