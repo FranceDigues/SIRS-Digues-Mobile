@@ -10,11 +10,9 @@ angular.module('device.services', [])
 
         //choper les calque dans un json
         me.event = {
-
-            sideMenu:true,
+            sideMenu:false,
             mapMove:false,
-            mapDraw:false
-
+            mapDraw:true
         }
 
         //interaction Ol3
@@ -32,11 +30,13 @@ angular.module('device.services', [])
                 $log.debug("desactivation");
                 this.draw.setActive(false);
                 this.event.sideMenu = true;
+                this.event.mapDraw = false;
             }
             else if(!this.draw.getActive()){
                 $log.debug("activation");
                 this.draw.setActive(true);
                 this.event.sideMenu = false;
+                this.event.mapDraw = true;
             }
         }
 

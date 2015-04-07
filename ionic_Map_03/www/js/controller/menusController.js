@@ -22,7 +22,77 @@ angular.module('controllers.menus', [])
 
 })
 
-.controller('HomeCtrl', function($scope,$state,$cordovaFileOpener2,$log,sContext,sEventSuperviseur) {
+.controller('DocCtrl', function($scope, $ionicSideMenuDelegate,$cordovaMedia,$ionicLoading,$cordovaFileOpener2,$log,$cordovaFileTransfer) {
+
+        $log.debug(cordova.file.externalDataDirectory)
+        $log.debug(cordova.file.externalRootDirectory)
+
+    $scope.play = function(src) {
+
+        src = cordova.file.externalDataDirectory+'doc/'+src;
+        $log.debug(src);
+        var media = new Media(src, null, null, mediaStatusCallback);
+        $log.error($cordovaMedia);
+        $cordovaMedia.play(media);
+    }
+
+    var mediaStatusCallback = function(status) {
+        if(status == 1) {
+            $ionicLoading.show({template: 'Loading...'});
+        } else {
+            $ionicLoading.hide();
+        }
+    };
+
+
+
+
+        $scope.openPdf = function(){
+$log.debug(cordova.file.externalDataDirectory+'doc/cv.pdf');
+            $cordovaFileOpener2.open(
+                //'/sdcard/Download/cv.pdf',
+                //cordova.file.externalDataDirectory+'doc/cv.pdf',
+                'Removable/MicroSD/Android/data/com.ionic.Map03/files/'+'doc/cv.pdf',
+                'application/pdf'
+            ).then(function(res) {
+                    $log.debug(res)
+                }, function(err) {
+                    $log.debug(err)
+                });
+
+
+//essai ecriture
+//            $cordovaFileTransfer.download('http://www.vuelaviajes.com/wp-content/2009/03/espejo-salar-uyuni-3.jpg',  cordova.file.externalDataDirectory+'doc/salar.jpg')
+            $cordovaFileTransfer.download('http://www.vuelaviajes.com/wp-content/2009/03/espejo-salar-uyuni-3.jpg',  'Removable/MicroSD/Android/data/com.ionic.Map03/files/'+'doc/salar.jpg')
+                .then(function (result) {
+                    // Success!
+                    //$log.debug('Dl done : ');
+                    $log.debug(result);
+                    //TODO implementer un retour
+                    //me.nbTileDownloaded++; //declaration de la fin du Dl de la tuile
+                    //$log.debug( me.nbTileDownloaded)
+                }, function (err) {
+                    // Error
+                    $log.debug('Dl fail :');
+                    $log.error(err);
+                }, function (progress) {
+                    //$timeout(function () {
+                    //    //$scope.imageTmp = targetPath;
+                    //    //$log.debug($scope.imageTmp);
+                    //})
+                });
+
+        };
+
+
+
+
+
+
+
+})
+
+.controller('HomeCtrl', function($scope,$state,$log,sContext,sEventSuperviseur) {
 
     //$scope.visu = function() {
     //    $state.go('menu.tabs.map');
@@ -49,23 +119,20 @@ angular.module('controllers.menus', [])
         $state.go('formGenerator');
     };
 
-    $scope.openPdf = function(){
 
-        $cordovaFileOpener2.open(
-            '/sdcard/Download/cv.pdf',
-            'application/pdf'
-        ).then(function(res) {
-                $log.debug(res)
-            }, function(err) {
-                $log.debug(err)
-            });
-
-    }
 
         $scope.newCache = function () {
 
             sEventSuperviseur.event.sideMenu = false;
             $state.go('cache');
+        };
+
+
+
+        $scope.openDoc = function () {
+
+            //sEventSuperviseur.event.sideMenu = false;
+            $state.go('menu.doc');
         };
 
 

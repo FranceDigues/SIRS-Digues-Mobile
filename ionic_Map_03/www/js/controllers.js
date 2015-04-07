@@ -23,6 +23,7 @@ angular.module('controllers', [])
 
         $scope.layers = sLayer.list;
         $scope.mode = sMap.mode;
+        $scope.Ploting =  [];
 
 
         $scope.drawType = {active:"Point"};
@@ -62,7 +63,7 @@ angular.module('controllers', [])
 
 
         var featureOverlay = null;
-
+        //var myMap=null;
 
 
         //essai d'edition via feature overlay
@@ -122,6 +123,11 @@ angular.module('controllers', [])
                 //draw.setActive(false);
                 $log.debug(draw.getActive());
                 sEventSuperviseur.draw = draw;
+
+                draw.on('drawend',function(f){
+                    //elPropagator
+                    $rootScope.$broadcast('drawend',f);
+                })
 
                 map.addInteraction(draw);
             }
@@ -210,18 +216,78 @@ angular.module('controllers', [])
             sMask.writeDocOnDb();
         }
 
-        $scope.$on('openlayers.drawend', function(F) {
-            $log.debug(F);
 
-            $log.debug(featureOverlay);
+
+
+
+//todo clear avant dessin
+        //todo
+        var ixix = 0;
+        $scope.plot = function(){
+
+
+
+            //zoom quand on plote
+            $scope.centreCarte.zoom=18;
+
+
+            //$scope.Ploting.push(ol.transform.('EPSG:3857','EPSG:4326',[$scope.centreCarte.lon+ixix,$scope.centreCarte.lat+ixix]));
+            ixix++;
 
             featureOverlay.getFeatures().clear();
-            featureOverlay.addFeature(F);
+
+            featureOverlay.addFeature(
+                new ol.Feature({
+                    geometry: new ol.geom.LineString(
+                        $scope.Ploting
+                    )
+
+                }));
+
+            $log.debug($scope.Ploting);
+            $log.debug(featureOverlay.getFeatures());
+
+        };
+
+        //TODO garde Fous
+        $scope.Clore = function(){
+
+            featureOverlay.getFeatures().clear();
+
+            featureOverlay.addFeature(
+                new ol.Feature({
+                    geometry: new ol.geom.Polygon(  ArrayasPolygon($scope.Ploting))
+
+                }));
+
+
+
+            //SI asyncrone use event?
+            $scope.Ploting = null;
+            ixix = 0;
+        };
+
+
+        //biutifule
+        $scope.$on('drawend', function(F) {
+            $scope.publie();
 
         });
 
 
-        $rootScope.$on("maskGeoJsonUpdate",  function(){
+
+        //$scope.$on('openlayers.drawend', function(F) {
+        //    $log.debug(F);
+        //
+        //    $log.debug(featureOverlay);
+        //
+        //    featureOverlay.getFeatures().clear();
+        //    featureOverlay.addFeature(F);
+        //
+        //});
+
+
+        $scope.$on("maskGeoJsonUpdate",  function(){
             $log.debug("event maskGeoJsonUpdate");
             $log.debug(sMask.doc.GeoJson);
             var gjson =  new ol.format.GeoJSON();
@@ -237,7 +303,7 @@ angular.module('controllers', [])
         //GeoLoc
         var sneakHolow = null;//TODO Service or not service??
 
-        $rootScope.$on("enableGeoLoc",  function(){
+        $scope.$on("enableGeoLoc",  function(){
             $log.debug("event enableGeoLoc");
             sneakHolow = $cordovaGeolocation.watchPosition( { maximumAge: 15000, timeout: 120000, enableHighAccuracy: true });
             sneakHolow.then(
@@ -253,7 +319,7 @@ angular.module('controllers', [])
 
         });
 
-        $rootScope.$on("disableGeoLoc",  function(){
+        $scope.$on("disableGeoLoc",  function(){
             $log.debug("event disableGeoLoc");
             sneakHolow.clearWatch();
 
@@ -512,7 +578,7 @@ angular.module('controllers', [])
             sContext.auth.user.cache.layers.push({nom:cacheName,origine:LayerSourceName});
 
             $log.debug(sContext.auth.user);
-            //TODO event ionic ou acceau context??
+            //TODO stoker la liste des tuile pour controle au chargement
 
              //$rootScope.$broadcast("userChange"); //mise a jour de l'user dans la base
             sContext.saveUser();

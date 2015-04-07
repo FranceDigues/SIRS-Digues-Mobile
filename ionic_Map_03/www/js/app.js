@@ -68,6 +68,14 @@ app.run(function($ionicPlatform) {
                     templateUrl: 'templates/home.html'
                 }}
         })
+        .state('menu.doc', {
+            url: '/doc',
+            views: {
+                'menuContent' : {
+                    controller: "DocCtrl",
+                    templateUrl: 'templates/doc.html'
+                }}
+        })
         .state('menu.tabs', {
             url: '/tab',
             views: {

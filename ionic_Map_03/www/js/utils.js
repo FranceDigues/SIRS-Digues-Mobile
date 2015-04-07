@@ -15,6 +15,24 @@ function asPolygon(pArray){
     return new Array(coordArray);
 }
 
+function ArrayasPolygon(pArray){
+
+    var coordArray = new Array();
+
+    //TODO clone
+    pArray.forEach(function(p){
+        coordArray.push(p);
+    });
+
+    coordArray.push(pArray[0]);
+
+
+
+    //coordArray.push( new Array(pArray[0].lon, pArray[0].lat) ); //TODO methode de classe ou abandon du point.
+
+    return new Array(coordArray);
+}
+
 function ringBuilder(p1,p2){
 
     var coordArray = new Array();

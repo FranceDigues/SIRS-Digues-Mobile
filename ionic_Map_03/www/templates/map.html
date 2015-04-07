@@ -27,39 +27,15 @@
         {{drawType.type}}
         this.mode.drawing
     </div>
+    <div class="row">
+        <div class="col col-75 ">
+        </div>
+        <div class="col col-25 ">
+            <button class="button button-block button-positive"  ng-click="plot()">Plot</button>
+            <button class="button button-block button-positive"  ng-click="Clore()">Clore</button>
+        </div>
+    </div>
+
 </div>
-<!--div>
-
-    <button class="button button-block button-positive" href="#/" ng-click="publie()">publie featureOverlay en console</button>
-{{layers}}
-</div-->
-
-<!--{{layers}}-->
-
-<!--
-          <div class="button-bar">
-              <a class="button button-calm"  ng-click="">Mode Cache</a>
-              <a class="button button-balanced"  ng-click="">Mode Visu</a>
-              <a class="button button-royal"  ng-click="">Mode Edition</a>
-          </div>
-
-
-          <rzslider rz-slider-model="centreCarte.zoom"    rz-slider-floor="0"  rz-slider-ceil="18"></rzslider>
-          <rzslider rz-slider-model="zMin"  rz-slider-high="zMax"   rz-slider-floor="0"  rz-slider-ceil="18"></rzslider>
-
-          &lt;!&ndash;<h3>Mouse click position</h3>&ndash;&gt;
-          <pre ng-bind="mouseclickposition | json"></pre>
-          &lt;!&ndash;  <h3>tableau de marker</h3>
-            <pre ng-bind="markers | json"> </pre>&ndash;&gt;
-          <progress max="{{nbTile}}" value="{{imageLoadingProgress}}"> </progress>
-
-          <img ng-src="{{imageTmp}}" height="220" width="220"  />
-
-
-          &lt;!&ndash;<button class="button button-block button-positive" ng-click="HL=!HL">&ndash;&gt;
-          <button class="button button-block button-positive" ng-click="HL=!HL; switchMode()">
-              &lt;!&ndash;on inverse la valeur a chaque click&ndash;&gt;
-              Mode Hors Ligne
-          </button>
-          {{HL}}-->
+<button class="button button-block button-positive" href="#/" ng-click="publie()">publie featureOverlay en console</button>
 

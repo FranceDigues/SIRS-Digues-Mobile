@@ -1,13 +1,49 @@
-<!--<div ng-include="'templates/sidemenu.html'"></div>-->
 <ion-view title="Documentation">
 
-    <ion-content padding="true">
+    <ion-content padding="true"  overflow-scroll="true">
+        overflow-scroll="true" ==> pour permetre la detection du click dans la balise video
 
 
-<!--ng reapeat sur la doc-->
-        <button class="button button-block button-positive" ng-click="doc()" >
+        <!--ng reapeat sur la doc-->
+        <button class="button button-block button-positive" ng-click="openPdf()">
+            openPdf
         </button>
 
+
+        <!--//only for audio??-->
+        <button class="button" ng-click="play('video-cstl-ndvi.mp4')">Play from file system</button>
+        <!--<button class="button" onclick="playPause()">Play/Pause</button>-->
+
+        <video width="320" height="240" controls>
+            <source src="/Removable/MicroSD/Android/data/com.ionic.Map03/files/doc/video-cstl-ndvi.mp4" type="video/mp4">
+            <!--<source src="movie.ogg" type="video/ogg">-->
+            Your browser does not support the video tag.
+        </video>
+
+
+
+        <!--<script>-->
+        <!--var myVideo = document.getElementById("video1");-->
+
+        <!--function playPause() {-->
+        <!--if (myVideo.paused)-->
+        <!--myVideo.play();-->
+        <!--else-->
+        <!--myVideo.pause();-->
+        <!--}-->
+
+        <!--function makeBig() {-->
+        <!--myVideo.width = 560;-->
+        <!--}-->
+
+        <!--function makeSmall() {-->
+        <!--myVideo.width = 320;-->
+        <!--}-->
+
+        <!--function makeNormal() {-->
+        <!--myVideo.width = 420;-->
+        <!--}-->
+        <!--</script>-->
 
 
 
