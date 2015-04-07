@@ -1,7 +1,7 @@
 
 
 
-<openlayers id="map" ol-center="centreCarte"  ol-controls="controls"  ol-defaults="defaults" height="400px">
+<openlayers id="map" ol-center="centreCarte"  ol-controls="controls"  ol-defaults="defaults" height="507px">
     <!--<ol-layer ol-layer-properties="wms"></ol-layer>-->
 
     <!--<ol-layer ol-layer-properties="tt"></ol-layer>-->
@@ -14,18 +14,26 @@
     <!--<ol-path message="This is a path" coords="{{pititPath}}"></ol-path>-->
 
 </openlayers>
-
-<select ng-model="drawType.active" ng-change="updateType()"
-        ng-options="opt.type as opt.label for opt in typeEdition">
-</select>
-
-{{drawType.type}}
-this.mode.drawing
-<div>
+<div class="draw-mode-div">
+    <label class="item item-input item-select">
+        <div class="input-label">
+            <span class="icon ion-edit"></span>
+        </div>
+        <select ng-model="drawType.active" ng-change="updateType()"
+                ng-options="opt.type as opt.label for opt in typeEdition">
+        </select>
+    </label>
+    <div class="draw-mode-text">
+        {{drawType.type}}
+        this.mode.drawing
+    </div>
+</div>
+<!--div>
 
     <button class="button button-block button-positive" href="#/" ng-click="publie()">publie featureOverlay en console</button>
 {{layers}}
-</div>
+</div-->
+
 <!--{{layers}}-->
 
 <!--
