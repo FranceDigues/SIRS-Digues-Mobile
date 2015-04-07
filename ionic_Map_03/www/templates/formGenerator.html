@@ -1,9 +1,9 @@
 <!--<div ng-include="'templates/sidemenu.html'"></div>-->
-<ion-view title="fromGen" ng-controller="FormListCtrl">
+<ion-view title="fromGen" ng-controller="FormListCtrl" class="signin-view">
     <div class="row">
-        <div class="col col-50 col-offset-25" style="margin-top:20px;">
+        <div class="col col-50 col-offset-25  signin-form" style="margin-top:5%;">
             <div ng-repeat="formElement in form1">
-                <div class="form-view-block" ng-if="formElement.type == 'text' "  ng-hide="evalAngular(formElement.hide)">
+                <div class="form-view-block" style="margin-top:0;" ng-if="formElement.type == 'text' "  ng-hide="evalAngular(formElement.hide)">
                     <span class="label-form">{{formElement.label}}</span>
                     <div class="list">
                         <label class="item item-input">
@@ -38,12 +38,12 @@
             </div>
 
 
-            <button class="button button-block button-positive" ng-click="showPopup()" >
+            <button class="button button-block button-positive button-form" ng-click="showPopup()" >
                 PopUp
             </button>
 
             <p>
-                <button class="button button-block button-positive" ng-click="openPopover($event)">Open Popover</button>
+                <button class="button button-block button-positive button-form" ng-click="openPopover($event)">Open Popover</button>
             </p>
         </div>
     </div>
