@@ -1,6 +1,0 @@
-#!/bin/bash
-rm -f ./angular-openlayers-directive.min.js
-wget https://raw.githubusercontent.com/tombatossals/angular-openlayers-directive/master/dist/angular-openlayers-directive.min.js
-
-rm -f ./angular-openlayers-directive.js
-wget https://raw.githubusercontent.com/tombatossals/angular-openlayers-directive/master/dist/angular-openlayers-directive.js
