@@ -14,7 +14,50 @@
 }
 
 
-
+/* Sign in page */
+.signin-view{
+    background-color: #00BCD0;
+}
+.signin-view .list{
+    margin-bottom: 10px;
+}
+.signin-form{
+    background-color: #fff;
+    padding: 30px;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.33);
+    border-radius: 2px;
+    margin-top: 10%;
+}
+.signin-form .signin-item{
+    border: 2px solid #AEAEAE;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    margin-top: 5px;
+}
+.signin-title{
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    color: #666;
+}
+.signin-valid-button button{
+    text-align: right;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: #00BCD0;
+}
+.signin-valid-button{
+    text-align: right;
+}
+.signin-valid-button p{
+    margin-bottom:0;
+}
+.signin-valid-button p a{
+    color: #AEAEAE;
+    font-style: italic;
+}
 
 /*expandable list*/
 .list .item.item-accordion {
