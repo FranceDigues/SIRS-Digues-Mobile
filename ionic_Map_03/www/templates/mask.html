@@ -1,23 +1,27 @@
-<ion-view title="Masque">
-<ion-content class="has-header">
-    <ion-list>
-        <div ng-repeat="cat in masks">
-            <ion-item class="item-stable"
-                      ng-click="toggleGroup(cat)"
-                      ng-class="{active: isGroupShown(cat)}">
-                <i class="icon" ng-class="isGroupShown(cat) ? 'ion-minus' : 'ion-plus'"></i>
-                &nbsp;
-                {{cat.nom }}
-            </ion-item>
-            <ion-item class="item-accordion"
-                      ng-repeat="item in cat.msk"
-                      ng-show="isGroupShown(cat)"
-                    ng-click="landingOnEarth(item.UUID_msk)">
-                <!--ng-click="landingOnEarth(item.idf)">-->
-                    {{item.nom}}
-            </ion-item>
+<ion-view title="Masque" class="home-view">
+    <ion-content class="has-header">
+        <div class="row">
+            <div class="col col-50 col-offset-25 mask-view-list" style="margin-top:6%;">
+                <ion-list>
+                    <div ng-repeat="cat in masks">
+                        <ion-item class="item-stable"
+                                  ng-click="toggleGroup(cat)"
+                                  ng-class="{active: isGroupShown(cat)}">
+                            <i class="icon" ng-class="isGroupShown(cat) ? 'ion-minus' : 'ion-plus'"></i>
+                            &nbsp;
+                            {{cat.nom }}
+                        </ion-item>
+                        <ion-item class="item-accordion"
+                                  ng-repeat="item in cat.msk"
+                                  ng-show="isGroupShown(cat)"
+                                  ng-click="landingOnEarth(item.UUID_msk)">
+                            <!--ng-click="landingOnEarth(item.idf)">-->
+                            {{item.nom}}
+                        </ion-item>
 
+                    </div>
+                </ion-list>
+            </div>
         </div>
-    </ion-list>
-</ion-content>
+    </ion-content>
 </ion-view>
