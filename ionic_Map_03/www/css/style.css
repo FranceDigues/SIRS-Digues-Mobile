@@ -189,8 +189,52 @@
     color:#333;
 }
 
+
+/* Settings */
+.settings-view-title{
+    color: #666;
+    text-align: center;
+    font-size:25px;
+    margin-bottom:15px;
+}
+
+.settings-view .item-toggle{
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
+}
+.settings-view-controle-title{
+    font-size:18px;
+    margin-top: 25px;
+    color:#0098A8;
+}
+
+/*form */
+.form-view-block{
+    margin-top: 10px;
+}
+.form-view-block .label-form{
+    color: #666;
+    text-transform:uppercase;
+}
+.form-view-block .list .item.item-input input{
+    padding-top:0;
+}
+.form-view-block .list .item.item-input{
+    width: 99%;
+    margin-left: 1px;
+    background: white;
+}
+.form-view-block.form-view-popover .list{
+    border: solid 1px #ddd;
+}
+.form-view-block.form-view-popover{
+    padding: 5px 20px;
+}
+
 /*//popup*/
 .popup {
     width: 400px;
     height: 350px;
+    padding:0;
 }
