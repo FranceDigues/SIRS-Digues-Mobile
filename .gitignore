@@ -1,0 +1,18 @@
+*.log
+.classpath
+.project
+.settings/
+
+.DS_Store
+
+# Maven files
+target/
+dependency-reduced-pom.xml
+
+# Netbeans files
+nbactions.xml$
+nbproject/
+
+# IntelliJ files
+.idea/
+*.iml
