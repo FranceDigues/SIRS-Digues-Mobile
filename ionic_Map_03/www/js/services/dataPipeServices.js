@@ -140,8 +140,8 @@ angular.module('data.services.pipe', [])
                     $log.debug(err);
 
                 });
-            });
-        }
+            };
+
 
         me.writeObsOnDB = function (obs) {
             sPouch.obs.post({
@@ -152,8 +152,8 @@ angular.module('data.services.pipe', [])
                 }).catch(function (err) {
                     console.error(err);
                 });
-            })
-        }
+            };
+
 
 
         me.writeDocOnDb = function () {
@@ -171,12 +171,15 @@ angular.module('data.services.pipe', [])
 
 
         me.searchFormByLayerUUID = function (layerUUID) {
-            $log.debug('searchFormByLayerUUID: ' + layerUUID);
+            $log.debug('searchFormByLayerUUID: _' + layerUUID+"_");
 
-            sPouch.layer.get(layerUUID).then(function (layer) {
+
+            sPouch.layer.get(""+layerUUID).then(function (layer) {
                 var formUUID = layer.formUUID;
-                sPouch.form.get(formUUID).then(function (formDoc) {
+                $log.debug('formUUID: '+layer.formUUID)
+                sPouch.form.get(""+formUUID).then(function (formDoc) {
                         me.form = formDoc;
+                    $log.debug(formDoc);
                         $rootScope.$broadcast("formUpdate");
                     }).catch(function (err) {
                         $log.debug(err);
@@ -184,7 +187,23 @@ angular.module('data.services.pipe', [])
             }).catch(function (err) {
                 $log.debug(err);
             });
+
+
+
         };
+
+        //me.searchFormByLayerUUID = function (formUUID) {
+        //    $log.debug('FORM UUID: _' + formUUID+"_");
+        //
+        //    sPouch.form.get(""+formUUID).then(function (formDoc) {
+        //        me.form = formDoc;
+        //        $rootScope.$broadcast("formUpdate");
+        //        $log.debug(formDoc);
+        //    }).catch(function (err) {
+        //        $log.debug(err);
+        //    });
+        //
+        //};
 
 
         //recepteur d'evenement

@@ -55,7 +55,7 @@
 </div>
 
 <div>
-    <div ng-repeat="obs in sMask.currentObs" class="md-whiteframe-z1" ng-mouseenter="displayGeom(obs.featurePos)" ng-mouseleave="hideGeom(obs.featurePos)">
+    <div ng-repeat="obs in sMask.currentObs" class="md-whiteframe-z1" ng-click="lightInteruptor(obs.featurePos)">
         {{obs.featurePos}}
         <div ng-repeat="observation in obs.doc.obs">
             {{observation.label}} : {{observation.value}}

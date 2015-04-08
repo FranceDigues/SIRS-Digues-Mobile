@@ -12,8 +12,9 @@ angular.module('controllers', [])
 /***************************************************************** --------- *****************************************************/
 
 
-    .controller('MapCtrl', function ($scope, sLayer, $log, sMap, olData, sEventSuperviseur, sMask, sContext, $rootScope, $cordovaGeolocation) {
+    .controller('MapCtrl', function ($scope, sLayer, $log, sMap, olData, sEventSuperviseur, sMask, sContext, $rootScope, $cordovaGeolocation,$timeout) {
 
+        var me = this;
         //var myMap =null
         //$scope.tt=tt;
         $log.debug(sLayer.list);
@@ -30,6 +31,7 @@ angular.module('controllers', [])
 
 
         $scope.$on("formUpdate", function (data) {
+            $log.debug("reception event formUpdate")
             $timeout(function () {
                 me.newObs = sMask.form;
             });
@@ -145,7 +147,7 @@ angular.module('controllers', [])
             var draw; // global so we can remove it later
             function addInteraction() {
                 //clear feature
-                featureOverlay.getFeatures().clear();
+                //featureOverlay.getFeatures().clear();
 
                 draw = new ol.interaction.Draw({
                     features: featureOverlay.getFeatures(),
@@ -365,6 +367,24 @@ angular.module('controllers', [])
             sMask.searchFormByLayerUUID(sContext.param.mskUUID);
         });
 
+
+
+$scope.lightInteruptor=function(f){
+    $scope(f.OnAir);
+    if(f.OnAir==true){
+        $scope.hideGeom(f);
+        f.OnAir=false;
+    }else{
+
+        $scope.displayGeom(f);
+        f.OnAir=true;
+    }
+
+
+};
+
+
+
         $scope.displayGeom = function (featureIndex) {
             console.log("enter in displayGeom " + featureIndex);
             $scope.featureOverlaySelected = new ol.FeatureOverlay({
@@ -390,14 +410,19 @@ angular.module('controllers', [])
             var col = new ol.Collection();
             col.push(feature);
             $scope.featureOverlaySelected.setFeatures(col);
-            $scope.currentMap.addOverlay(self.featureOverlaySelected);
+
+            $log.debug($scope.currentMap);
+            $log.debug($scope.featureOverlaySelected);
+            $scope.currentMap.addOverlay($scope.featureOverlaySelected);
             console.log("leave in displayGeom" + featureIndex);
-        }
+        };
+
+
         $scope.hideGeom = function (featureIndex) {
             console.log("enter in hideGeom" + featureIndex);
             $scope.currentMap.getOverlays().pop();
             console.log("leave in hideGeom" + featureIndex);
-        }
+        };
 
         
 
