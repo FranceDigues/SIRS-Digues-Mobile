@@ -1,7 +1,7 @@
-<ion-view>
+<ion-view class="cache-view">
     <ion-content scroll="false">
         <div class="row">
-            <div class="col col-25 ">
+            <div class="col col-25 cache-form">
                 <ion-list>
                     <!--FIXME  validation de form-->
                     <label class="item item-input">
@@ -22,7 +22,7 @@
                     {{nbTileDownloaded}}
                     <progress max="{{nbTile}}" value="{{nbTileDownloaded}}"></progress>
 
-                    <button class="button button-block button-positive" href="#/" ng-click="cachMe()">Cach Me Baby
+                    <button class="button button-block button-positive" href="#/" ng-click="cachMe()">Lancer la recherche
                     </button>
                 </ion-list>
             </div>
