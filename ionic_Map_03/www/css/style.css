@@ -182,6 +182,9 @@
     margin-left: 13px;
 }
 
+.map-div{
+    position:relative;
+}
 .draw-mode-div {
     position: absolute;
     bottom: 10px;
@@ -208,6 +211,21 @@
     margin-left: 10px;
     font-family: Arial, sans-serif;
     color: #333;
+}
+.action-buttons{
+    position: absolute;
+    right:10px;
+    top:10px;
+}
+.button.button-positive.button-yellow{
+    border-color: #FFEB3B;
+    background-color: #FFEB3B;
+    color:#666;
+}
+.button.button-positive.button-yellow.activated{
+    border-color: #FFF176;
+    background-color: #FFF176;
+    color:#666;
 }
 
 /* Settings */
