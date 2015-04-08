@@ -344,7 +344,7 @@ angular.module('controllers', [])
         $scope.nbTile = sCacheMap.nbTile;
         $scope.imageTmp = null;
         $scope.HL = false; //Mode Hors Ligne
-        $scope.z = {zmin: 1, zMax: 3};
+        $scope.z = {zMin: 1, zMax: 3};
         //$scope.zMax=3;
 
 
