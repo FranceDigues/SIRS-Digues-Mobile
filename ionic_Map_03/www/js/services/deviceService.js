@@ -39,9 +39,9 @@ angular.module('device.services', [])
                 this.event.mapDraw = true;
             }
         }
-
+//FIXME inverse car on bool av la reception de l'event
         me.toggleGPS = function () {
-            if (this.hardware.GPS) {
+            if (!this.hardware.GPS) {
                 $log.debug("desactivation GPS");
                 $log.debug(this.hardware.GPS);
                 $rootScope.$broadcast("disableGeoLoc");

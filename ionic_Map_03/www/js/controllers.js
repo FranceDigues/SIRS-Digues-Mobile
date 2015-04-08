@@ -221,45 +221,87 @@ angular.module('controllers', [])
         var ixix = 0;
         $scope.plot = function () {
 
-
-
             //zoom quand on plote
             $scope.centreCarte.zoom = 18;
 
 
-            //$scope.Ploting.push(ol.transform.('EPSG:3857','EPSG:4326',[$scope.centreCarte.lon+ixix,$scope.centreCarte.lat+ixix]));
+
+            //EMULATE MOVE MODE
+            var cTemp =  [($scope.centreCarte.lat+ixix),($scope.centreCarte.lon+(ixix*2))];
+            //NORMAL MODE
+            //var cTemp =  [$scope.centreCarte.lat,$scope.centreCarte.lon];
+
+
+            $log.debug(cTemp);
+            var cTemp1 = ol.proj.transform(cTemp.reverse(),'EPSG:4326', 'EPSG:3857');
+            $log.debug(cTemp1);
+
+            $scope.Ploting.push(cTemp1);
+            //ol.proj.transform.(
+            //    cTemp,
+            //'EPSG:3857','EPSG:4326'));
             ixix++;
 
-            featureOverlay.getFeatures().clear();
 
-            featureOverlay.addFeature(
-                new ol.Feature({
-                    geometry: new ol.geom.LineString(
-                        $scope.Ploting
-                    )
+            if(($scope.drawType.active=="Polygon") || ($scope.drawType.active=="LineString") ){
 
-                }));
+//FIXME stoque la feature active ou alors avoir un calque special dessin??
+                featureOverlay.getFeatures().clear();
 
-            $log.debug($scope.Ploting);
-            $log.debug(featureOverlay.getFeatures());
+                featureOverlay.addFeature(
+                    new ol.Feature({
+                        geometry: new ol.geom.LineString(
+                            $scope.Ploting
+                        )
+                    }));
+
+                $log.debug($scope.Ploting);
+                $log.debug(featureOverlay.getFeatures());
+
+            }
+            if($scope.drawType.active=="Point"){ $scope.Clore()}
+
 
         };
 
         //TODO garde Fous
         $scope.Clore = function () {
 
-            featureOverlay.getFeatures().clear();
-
-            featureOverlay.addFeature(
-                new ol.Feature({
-                    geometry: new ol.geom.Polygon(ArrayasPolygon($scope.Ploting))
-
-                }));
 
 
-            //SI asyncrone use event?
-            $scope.Ploting = null;
-            ixix = 0;
+            if(($scope.drawType.active=="Polygon") ){
+                featureOverlay.getFeatures().clear();
+
+                featureOverlay.addFeature(
+                    new ol.Feature({
+                        geometry: new ol.geom.Polygon(ArrayasPolygon($scope.Ploting))
+
+                    }));
+
+                ixix = 0;
+
+            };
+            if($scope.drawType.active=="LineString"){
+                //do nothing
+                ixix = 0;
+            }
+            if($scope.drawType.active=="Point"){
+
+                featureOverlay.addFeature(
+                    new ol.Feature({
+                        geometry: new ol.geom.Point(
+                            $scope.Ploting[0]
+                        )
+                    }));
+
+            }
+
+            //eraseTempVar
+            $scope.Ploting = [];
+
+
+
+            //launch edition de formulaire
         };
 
 
@@ -301,8 +343,8 @@ angular.module('controllers', [])
                 },
                 function (position) {
                     $log.debug(position);
-                    $scope.centreCarte.lat = position.coords.latitude;
-                    $scope.centreCarte.lon = position.coords.longitude;
+                    $scope.centreCarte.lat =  Math.round(position.coords.latitude * 1000) / 1000 ;
+                    $scope.centreCarte.lon = Math.round(position.coords.longitude * 1000) / 1000;
                 });
 
         });
@@ -344,7 +386,7 @@ angular.module('controllers', [])
         $scope.nbTile = sCacheMap.nbTile;
         $scope.imageTmp = null;
         $scope.HL = false; //Mode Hors Ligne
-        $scope.z = {zMin: 1, zMax: 3};
+        $scope.z = {zMin: 8, zMax: 13};
         //$scope.zMax=3;
 
 
@@ -356,9 +398,9 @@ angular.module('controllers', [])
         angular.extend($scope,
             {
                 centreCarte: {
-                    lat: 37.7,
-                    lon: -96.67,
-                    zoom: 3
+                    lat: 43.5,
+                    lon: 3.5,
+                    zoom: 7
                 },
 
                 //layers:  sLayer.json,
@@ -510,10 +552,12 @@ angular.module('controllers', [])
 
         $scope.cachMe = function () {
             //TODO recup LayerName et OSM automatiquement
+            //var cacheName = $scope.CacheName;
             var cacheName = "essai";
             var LayerSourceName = "OSM";
 
             $log.debug($scope.var.CoordList);
+            //sCacheMap.cache("http://a.tile.openstreetmap.org/", $scope.var.CoordList, $scope.CacheName, LayerSourceName, $scope.z.zMin, $scope.z.zMax);
             sCacheMap.cache("http://a.tile.openstreetmap.org/", $scope.var.CoordList, cacheName, LayerSourceName, $scope.z.zMin, $scope.z.zMax);
 
 
