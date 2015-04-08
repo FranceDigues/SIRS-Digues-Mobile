@@ -24,6 +24,39 @@ angular.module('controllers', [])
         $scope.layers = sLayer.list;
         $scope.mode = sMap.mode;
         $scope.Ploting = [];
+        $scope.newObs = null;
+        $scope.sMask = sMask;
+
+
+
+        $scope.$on("formUpdate", function (data) {
+            $timeout(function () {
+                me.newObs = sMask.form;
+            });
+        });
+
+        $scope.evalAngular = function (string) {
+            return $scope.$eval(string);
+        };
+
+        $scope.publishForm = function () {
+            $log.debug($scope.newObs.feature);
+            sMask.writeObsOnDB($scope.newObs.param);
+        };
+
+        $scope.$on("ObsCreated", function () {
+            //publish feature in layer
+            self.newObs.feature.set('ObsUUID', sMask.obsUUID);
+            sMask.doc.GeoJson = $scope.toGeoJson(featureOverlay);
+            $timeout(function () {
+                sMask.writeDocOnDb();
+            })
+        });
+
+        $scope.toGeoJson = function (f) {
+            return new ol.format.GeoJSON().writeFeatures(f.getFeatures().getArray());
+        }
+
 
 
         $scope.drawType = {active: "Point"};
@@ -72,7 +105,7 @@ angular.module('controllers', [])
 
             $log.debug(map);
 
-            //myMap = map;
+            $scope.currentMap = map;
 
             featureOverlay = new ol.FeatureOverlay({
                 style: new ol.style.Style({
@@ -126,6 +159,7 @@ angular.module('controllers', [])
 
                 draw.on('drawend', function (f) {
                     //elPropagator
+                    me.newObs.feature = f.feature
                     $rootScope.$broadcast('drawend', f);
                 })
 
@@ -307,7 +341,8 @@ angular.module('controllers', [])
 
         //biutifule
         $scope.$on('drawend', function (F) {
-            $scope.publie();
+            //on pluble quand on enregistre le form
+            //$scope.publie();
 
         });
 
@@ -318,13 +353,53 @@ angular.module('controllers', [])
             $log.debug(sMask.doc.GeoJson);
             var gjson = new ol.format.GeoJSON();
             $log.debug(gjson);
-            var olcFeatures = new ol.Collection(gjson.readFeatures(sMask.doc.GeoJson));
+            var currentGeoJson = gjson.readFeatures(sMask.doc.GeoJson);
+            angular.forEach(currentGeoJson, function (feature, key) {
+                    $log.debug('feature.ObsUUID: ' + feature.get('ObsUUID'));
+                    sMask.getObs(key, feature.get('ObsUUID'));
+                })
+            var olcFeatures = new ol.Collection(currentGeoJson);
             $log.debug(olcFeatures);
             featureOverlay.setFeatures(olcFeatures);
             $log.debug(featureOverlay.getFeatures());
-
+            sMask.searchFormByLayerUUID(sContext.param.mskUUID);
         });
 
+        $scope.displayGeom = function (featureIndex) {
+            console.log("enter in displayGeom " + featureIndex);
+            $scope.featureOverlaySelected = new ol.FeatureOverlay({
+                style: new ol.style.Style({
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: '#77cc99',
+                        width: 2
+                    }),
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        fill: new ol.style.Fill({
+                            color: '#77cc99'
+                        })
+                    })
+                })
+            });
+            var feature = new ol.Feature({
+                geometry: featureOverlay.getFeatures().item(featureIndex).getGeometry().clone()
+            });
+            var col = new ol.Collection();
+            col.push(feature);
+            $scope.featureOverlaySelected.setFeatures(col);
+            $scope.currentMap.addOverlay(self.featureOverlaySelected);
+            console.log("leave in displayGeom" + featureIndex);
+        }
+        $scope.hideGeom = function (featureIndex) {
+            console.log("enter in hideGeom" + featureIndex);
+            $scope.currentMap.getOverlays().pop();
+            console.log("leave in hideGeom" + featureIndex);
+        }
+
+        
 
         //GeoLoc
         var sneakHolow = null;//TODO Service or not service??

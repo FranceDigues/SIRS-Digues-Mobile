@@ -15,6 +15,7 @@ angular.module('data.services.source', [])
         me.usr = new pouchDB('moskito_user');
         me.layer = new pouchDB('moskito_layer');
         me.form = new pouchDB('moskito_form');
+        me.obs = new pouchDB('moskito_obs');
 
 
             //instancie une syncro bi-directionelle avec support de l'interuption, et propagation des evenement change
@@ -61,6 +62,7 @@ angular.module('data.services.source', [])
         var syncUsr = me.initiateSync("moskito_user");
         var syncLayer = me.initiateSync("moskito_layer");
         var syncForm = me.initiateSync("moskito_form");
+        var syncObs = me.initiateSync("moskito_obs");
 
 
         //me.cfg.allDocs().then(function (result) {

@@ -34,6 +34,35 @@
         </div>
     </div>
 </div>
-<button class="button button-block button-positive" href="#/" ng-click="publie()">publie featureOverlay en console
+<div>
+    <div ng-repeat="formElement in newObs.param">
+            <div ng-if="formElement.type == 'text' " ng-hide="evalAngular(formElement.hide)">
+                {{formElement.label}} :
+                <input type="{{formElement.type}}" id="{{formElement.id}}" ng-model="formElement.value" placeholder="{{formElement.placeholder}}">
+            </div>
+
+            <div ng-if="formElement.type == 'date' " ng-hide="ctrl.evalAngular(formElement.hide)">
+                {{formElement.label}} :
+                <input type="{{formElement.type}}" id="{{formElement.id}}" ng-model="formElement.value" placeholder="{{formElement.placeholder}}">
+            </div>
+
+            <div ng-if="formElement.type == 'select' " ng-hide="ctrl.evalAngular(formElement.hide)">
+                {{formElement.label}} :
+                <select id="{{formElement.id}}" ng-model="formElement.value" ng-options="item.value as item.text for item in formElement.values" ng-change="evalAngular(formElement.change)">
+                </select>
+            </div>
+    </div>
+</div>
+
+<div>
+    <div ng-repeat="obs in sMask.currentObs" class="md-whiteframe-z1" ng-mouseenter="displayGeom(obs.featurePos)" ng-mouseleave="hideGeom(obs.featurePos)">
+        {{obs.featurePos}}
+        <div ng-repeat="observation in obs.doc.obs">
+            {{observation.label}} : {{observation.value}}
+        </div>
+      
+    </div>
+</div>
+<button class="button button-block button-positive" href="#/" ng-click="publishForm()">publie featureOverlay en console
 </button>
 

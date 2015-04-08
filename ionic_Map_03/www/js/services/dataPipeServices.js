@@ -98,6 +98,9 @@ angular.module('data.services.pipe', [])
         //attribut
         //me.GeoJson = null;
         me.doc = null;
+        me.currentObs = [];
+        me.obsUUID = '';
+        me.form = null;
         var rscpMsk = $rootScope.$new(); //FIXME le $on est focement dans un scope? pk route scope de la catch pas?
 
 
@@ -119,12 +122,39 @@ angular.module('data.services.pipe', [])
 
                 //me.GeoJson = doc.GeoJson;
                 me.doc = doc;
+                me.currentObs = [];
                 $log.debug(me.doc);
                 $rootScope.$broadcast("maskGeoJsonUpdate");
             }).catch(function (err) {
                 $log.debug(err);
             });
         }
+
+        me.getObs = function (featurePos, ObsUUID) {
+            sPouch.obs.get(ObsUUID).then(function (doc) {
+                    me.currentObs.push({
+                        'featurePos': featurePos,
+                        'doc': doc
+                    });
+                }).catch(function (err) {
+                    $log.debug(err);
+
+                });
+            });
+        }
+
+        me.writeObsOnDB = function (obs) {
+            sPouch.obs.post({
+                    'obs': obs
+                }).then(function (response) {
+                    me.obsUUID = response.id;
+                    $rootScope.$broadcast("ObsCreated");
+                }).catch(function (err) {
+                    console.error(err);
+                });
+            })
+        }
+
 
         me.writeDocOnDb = function () {
             sPouch.layer.put(me.doc)
@@ -138,6 +168,24 @@ angular.module('data.services.pipe', [])
                 });
 
         };
+
+
+        me.searchFormByLayerUUID = function (layerUUID) {
+            $log.debug('searchFormByLayerUUID: ' + layerUUID);
+
+            sPouch.layer.get(layerUUID).then(function (layer) {
+                var formUUID = layer.formUUID;
+                sPouch.form.get(formUUID).then(function (formDoc) {
+                        me.form = formDoc;
+                        $rootScope.$broadcast("formUpdate");
+                    }).catch(function (err) {
+                        $log.debug(err);
+                    });
+            }).catch(function (err) {
+                $log.debug(err);
+            });
+        };
+
 
         //recepteur d'evenement
         rscpMsk.$on("moskito_layer_change", function () {
