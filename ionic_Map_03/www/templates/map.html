@@ -1,39 +1,38 @@
-<openlayers id="map" ol-center="centreCarte" ol-controls="controls" ol-defaults="defaults" height="507px">
-    <!--<ol-layer ol-layer-properties="wms"></ol-layer>-->
+<div class="map-div">
+    <openlayers id="map" ol-center="centreCarte" ol-controls="controls" ol-defaults="defaults" height="660px">
+        <!--<ol-layer ol-layer-properties="wms"></ol-layer>-->
 
-    <!--<ol-layer ol-layer-properties="tt"></ol-layer>-->
-    <ol-layer ol-layer-properties="layer" ng-repeat="layer in layers|filter:{active:true}"></ol-layer>
-    <!--<ol-marker ng-repeat="marker in markers" lat="marker.lat" lon="marker.lon"></ol-marker>-->
+        <!--<ol-layer ol-layer-properties="tt"></ol-layer>-->
+        <ol-layer ol-layer-properties="layer" ng-repeat="layer in layers|filter:{active:true}"></ol-layer>
+        <!--<ol-marker ng-repeat="marker in markers" lat="marker.lat" lon="marker.lon"></ol-marker>-->
 
-    <!--quid d'un ng-repeat= direct dans le ol-layer pour forcer le reload?-->
+        <!--quid d'un ng-repeat= direct dans le ol-layer pour forcer le reload?-->
 
 
-    <!--<ol-path message="This is a path" coords="{{pititPath}}"></ol-path>-->
+        <!--<ol-path message="This is a path" coords="{{pititPath}}"></ol-path>-->
 
-</openlayers>
-<div class="draw-mode-div">
-    <label class="item item-input item-select">
-        <div class="input-label">
-            <span class="icon ion-edit"></span>
-        </div>
-        <select ng-model="drawType.active" ng-change="updateType()"
-                ng-options="opt.type as opt.label for opt in typeEdition">
-        </select>
-    </label>
-
-    <div class="draw-mode-text">
-        {{drawType.type}}
-        this.mode.drawing
-    </div>
-    <div class="row">
-        <div class="col col-75 ">
-        </div>
-        <div class="col col-25 ">
-            <button class="button button-block button-positive" ng-click="plot()">Plot</button>
-            <button class="button button-block button-positive" ng-click="Clore()">Clore</button>
+    </openlayers>
+    <div class="action-buttons">
+        <div>
+            <button class="button button-block button-positive button-yellow" ng-click="plot()">Plot</button>
+            <button class="button button-block button-positive button-yellow" ng-click="Clore()">Clore</button>
         </div>
     </div>
+    <div class="draw-mode-div">
+        <label class="item item-input item-select">
+            <div class="input-label">
+                <span class="icon ion-edit"></span>
+            </div>
+            <select ng-model="drawType.active" ng-change="updateType()"
+                    ng-options="opt.type as opt.label for opt in typeEdition">
+            </select>
+        </label>
 
+        <div class="draw-mode-text">
+            {{drawType.type}}
+            this.mode.drawing
+        </div>
+    </div>
 </div>
 <button class="button button-block button-positive" href="#/" ng-click="publie()">publie featureOverlay en console
 </button>
