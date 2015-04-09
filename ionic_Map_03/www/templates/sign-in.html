@@ -3,23 +3,23 @@
     <ion-content>
         <div class="row">
             <div class="col col-50 col-offset-25 signin-form">
-                <h1 class="signin-title">SIGN IN</h1>
+                <h1 class="signin-title">CONNEXION</h1>
 
                 <div class="list">
                     <label class="item item-input signin-item">
-                        <input type="text" placeholder="Username" ng-model="user.username">
+                        <input type="text" placeholder="Identifiant" ng-model="user.username">
                     </label>
                     <label class="item item-input signin-item">
-                        <input type="password" placeholder="Password" ng-model="user.password">
+                        <input type="password" placeholder="Mot de passe" ng-model="user.password">
                     </label>
                 </div>
                 <div class="signin-valid-button">
                     <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
                             ng-click="signIn(user)">
-                        SIGN IN
+                        CONNEXION
                     </button>
                     <p class="text-right">
-                        <a href="#/forgot-password">Forgot password</a>
+                        <a href="#/forgot-password">Mot de passe oublié</a>
                     </p>
                 </div>
             </div>
