@@ -33,7 +33,7 @@ angular.module('controllers', [])
         $scope.$on("formUpdate", function (data) {
             $log.debug("reception event formUpdate")
             $timeout(function () {
-                me.newObs = sMask.form;
+                $scope.newObs = sMask.form;
             });
         });
 
@@ -370,14 +370,14 @@ angular.module('controllers', [])
 
 
 $scope.lightInteruptor=function(f){
-    $scope(f.OnAir);
-    if(f.OnAir==true){
+    $log.debug(f.OnAir);
+    if(f.get('OnAir')==true){
         $scope.hideGeom(f);
-        f.OnAir=false;
+        f.set('OnAir', false);
     }else{
 
         $scope.displayGeom(f);
-        f.OnAir=true;
+        f.set('OnAir', false);
     }
 
 
