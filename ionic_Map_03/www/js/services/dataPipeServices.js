@@ -144,13 +144,16 @@ angular.module('data.services.pipe', [])
 
 
         me.writeObsOnDB = function (obs) {
+            $log.debug("=============ECRITURE OBS ==============")
             sPouch.obs.post({
                     'obs': obs
                 }).then(function (response) {
+                $log.debug("=============result ECRITURE OBS ==============")
                     me.obsUUID = response.id;
                     $rootScope.$broadcast("ObsCreated");
                 }).catch(function (err) {
-                    console.error(err);
+                $log.debug("============= errorECRITURE OBS ==============")
+                    $log.error(err);
                 });
             };
 
@@ -211,6 +214,11 @@ angular.module('data.services.pipe', [])
             $log.debug("event recus");
             me.update();
         });
+
+        //rscpMsk.$on("moskito_layer_change", function () {
+        //    $log.debug("event recus");
+        //    me.updateObs();
+        //});
 
         rscpMsk.$on("msk_change", function () {
             $log.debug("event recus");

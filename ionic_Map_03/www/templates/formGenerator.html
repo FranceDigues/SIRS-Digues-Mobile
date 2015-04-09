@@ -46,9 +46,9 @@
             </div>
 
 
-            <button class="button button-block button-positive button-form" ng-click="showPopup()">
-                PopUp
-            </button>
+            <!--<button class="button button-block button-positive button-form" ng-click="showPopup()">-->
+                <!--PopUp-->
+            <!--</button>-->
 
             <p>
                 <button class="button button-block button-positive button-form" ng-click="openPopover($event)">Open
@@ -60,52 +60,6 @@
 </ion-view>
 
 
-<script id="my-popover.html" type="text/ng-template">
-    <ion-popover-view>
-        <ion-header-bar style="background-color:#00BCD0;">
-            <h1 class="title" style="color:#fff;"> Popover Form</h1>
-        </ion-header-bar>
-        <ion-content>
-            <div ng-repeat="formElement in form1">
-                <div class="form-view-block form-view-popover" ng-if="formElement.type == 'text' "
-                     ng-hide="evalAngular(formElement.hide)">
-                    <span class="label-form">{{formElement.label}}</span>
+<!--<script id="my-popover.html" type="text/ng-template">-->
 
-                    <div class="list">
-                        <label class="item item-input">
-                            <input type="{{formElement.type}}" id="{{formElement.id}}" ng-model="formElement.value"
-                                   placeholder="{{formElement.placeholder}}">
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-view-block form-view-popover" ng-if="formElement.type == 'date' "
-                     ng-hide="evalAngular(formElement.hide)">
-                    <span class="label-form">{{formElement.label}}</span>
-
-                    <div class="list">
-                        <label class="item item-input">
-                            <input type="{{formElement.type}}" id="{{formElement.id}}" ng-model="formElement.value"
-                                   placeholder="{{formElement.placeholder}}">
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-view-block form-view-popover" ng-if="formElement.type == 'select' "
-                     ng-hide="evalAngular(formElement.hide)">
-                    <div class="list">
-                        <label class="item item-input item-select">
-                            <div class="input-label">
-                                {{formElement.label}}
-                            </div>
-                            <select id="{{formElement.id}}" ng-model="formElement.value"
-                                    ng-options="item.value as item.text for item in formElement.values"
-                                    ng-change="evalAngular(formElement.change)">
-                            </select>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </ion-content>
-    </ion-popover-view>
-</script>
+<!--</script>-->

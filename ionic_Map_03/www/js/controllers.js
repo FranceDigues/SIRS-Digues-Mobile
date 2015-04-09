@@ -43,6 +43,7 @@ angular.module('controllers', [])
 
         $scope.publishForm = function () {
             $log.debug($scope.newObs.feature);
+            $log.debug($scope.newObs.param);
             sMask.writeObsOnDB($scope.newObs.param);
         };
 
@@ -108,6 +109,28 @@ angular.module('controllers', [])
             $log.debug(map);
 
             $scope.currentMap = map;
+
+
+
+
+//INIT du feature de selection
+            $scope.featureOverlaySelected = new ol.FeatureOverlay({
+                style: new ol.style.Style({
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: '#77cc99',
+                        width: 2
+                    }),
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        fill: new ol.style.Fill({
+                            color: '#77cc99'
+                        })
+                    })
+                })
+            });
 
             featureOverlay = new ol.FeatureOverlay({
                 style: new ol.style.Style({
@@ -353,16 +376,21 @@ angular.module('controllers', [])
         $scope.$on("maskGeoJsonUpdate", function () {
             $log.debug("event maskGeoJsonUpdate");
             $log.debug(sMask.doc.GeoJson);
-            var gjson = new ol.format.GeoJSON();
-            $log.debug(gjson);
-            var currentGeoJson = gjson.readFeatures(sMask.doc.GeoJson);
-            angular.forEach(currentGeoJson, function (feature, key) {
-                    $log.debug('feature.ObsUUID: ' + feature.get('ObsUUID'));
-                    sMask.getObs(key, feature.get('ObsUUID'));
-                })
-            var olcFeatures = new ol.Collection(currentGeoJson);
-            $log.debug(olcFeatures);
-            featureOverlay.setFeatures(olcFeatures);
+            featureOverlay.getFeatures().clear();
+
+            if(sMask.doc.GeoJson != "") {
+                    var gjson = new ol.format.GeoJSON();
+                    $log.debug(gjson);
+                    var currentGeoJson = gjson.readFeatures(sMask.doc.GeoJson);
+                    //angular.forEach(currentGeoJson, function (feature, key) {
+                    //    $log.debug('feature.ObsUUID: ' + feature.get('ObsUUID'));
+                    //    sMask.getObs(key, feature.get('ObsUUID'));
+                    //})
+                    var olcFeatures = new ol.Collection(currentGeoJson);
+                    $log.debug(olcFeatures);
+                    featureOverlay.setFeatures(olcFeatures);
+                $rootScope.$broadcast('msk_Geom_Updated');
+            }
             $log.debug(featureOverlay.getFeatures());
             sMask.searchFormByLayerUUID(sContext.param.mskUUID);
         });
@@ -371,14 +399,20 @@ angular.module('controllers', [])
 
 $scope.lightInteruptor=function(f){
 
-    $log.debug(featureOverlay.getFeatures().item(f).OnAir);
-    if(featureOverlay.getFeatures().item(f).get('OnAir')==true){
-        $scope.hideGeom(f);
-        featureOverlay.getFeatures().item(f).set('OnAir', false);
+
+
+    fp=f.featurePos;
+
+    $log.debug(featureOverlay.getFeatures().item(fp).OnAir);
+    if(featureOverlay.getFeatures().item(fp).get('OnAir')==true){
+        $scope.hideGeom(fp);
+        featureOverlay.getFeatures().item(fp).set('OnAir', false);
+        f.set('obsStyle', "white");
     }else{
 
-        $scope.displayGeom(f);
-        featureOverlay.getFeatures().item(f).set('OnAir', false);
+        $scope.displayGeom(fp);
+        featureOverlay.getFeatures().item(fp).set('OnAir', true);
+        f.set('obsStyle', "");
     }
 
 
@@ -388,23 +422,10 @@ $scope.lightInteruptor=function(f){
 
         $scope.displayGeom = function (featureIndex) {
             console.log("enter in displayGeom " + featureIndex);
-            $scope.featureOverlaySelected = new ol.FeatureOverlay({
-                style: new ol.style.Style({
-                    fill: new ol.style.Fill({
-                        color: 'rgba(255, 255, 255, 0.2)'
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: '#77cc99',
-                        width: 2
-                    }),
-                    image: new ol.style.Circle({
-                        radius: 7,
-                        fill: new ol.style.Fill({
-                            color: '#77cc99'
-                        })
-                    })
-                })
-            });
+
+            //netoyage du calque de selection
+            $scope.featureOverlaySelected.getFeatures().clear();
+
             var feature = new ol.Feature({
                 geometry: featureOverlay.getFeatures().item(featureIndex).getGeometry().clone()
             });
@@ -421,7 +442,8 @@ $scope.lightInteruptor=function(f){
 
         $scope.hideGeom = function (featureIndex) {
             console.log("enter in hideGeom" + featureIndex);
-            $scope.currentMap.getOverlays().pop();
+            //$scope.currentMap.getOverlays().pop();
+            $scope.featureOverlaySelected.getFeatures().clear();
             console.log("leave in hideGeom" + featureIndex);
         };
 
@@ -456,6 +478,23 @@ $scope.lightInteruptor=function(f){
 
         });
 
+
+
+
+
+
+
+        $rootScope.$on("msk_Geom_Updated", function () {
+            $log.debug("event msk geom Updated recive");
+            var gjson = new ol.format.GeoJSON();
+            $log.debug(gjson);
+            var currentGeoJson = gjson.readFeatures(sMask.doc.GeoJson);
+            angular.forEach(currentGeoJson, function (feature, key) {
+                $log.debug('feature.ObsUUID: ' + feature.get('ObsUUID'));
+                sMask.getObs(key, feature.get('ObsUUID'));
+
+            });
+        });
 
     })
 
@@ -774,34 +813,73 @@ $scope.lightInteruptor=function(f){
             };
 
 
-            $scope.showPopup = function () {
-                // An elaborate, custom popup
-                var myPopup = $ionicPopup.show({
-                    templateUrl: 'templates/formGenerator.html',
-                    title: 'Form',
-                    //subTitle: 'Please use normal things',
-                    scope: $scope,
-                    buttons: [
-                        {text: 'Cancel'},
-                        {
-                            text: '<b>Ok</b>',
-                            type: 'button-positive',
-                            onTap: function (e) {
+            //POPOVER
 
-                            }
-                        }
-                    ]
-                });
-                myPopup.then(function (res) {
-                    console.log('Tapped!', res);
-                });
-                $timeout(function () {
-                    myPopup.close(); //close the popup after 3 seconds for some reason
-                }, 3000);
+            $ionicPopover.fromTemplateUrl('templates/dynFormPopOver.html', {
+                scope: $scope
+            }).then(function (popover) {
+                $scope.popover = popover;
+            });
+
+
+            $scope.openPopover = function ($event) {
+                $scope.popover.show($event);
             };
+            $scope.closePopover = function () {
+                $scope.popover.hide();
+            };
+            //Cleanup the popover when we're done with it!
+            $scope.$on('$destroy', function () {
+                $scope.popover.remove();
+            });
+            // Execute action on hide popover
+            $scope.$on('popover.hidden', function () {
+                // Execute action
+            });
+            // Execute action on remove popover
+            $scope.$on('popover.removed', function () {
+                // Execute action
+            });
 
 
-            $ionicPopover.fromTemplateUrl('my-popover.html', {
+
+
+
+
+
+
+
+
+
+
+            //$scope.showPopup = function () {
+            //    // An elaborate, custom popup
+            //    var myPopup = $ionicPopup.show({
+            //        templateUrl: 'templates/formGenerator.html',
+            //        title: 'Form',
+            //        //subTitle: 'Please use normal things',
+            //        scope: $scope,
+            //        buttons: [
+            //            {text: 'Cancel'},
+            //            {
+            //                text: '<b>Ok</b>',
+            //                type: 'button-positive',
+            //                onTap: function (e) {
+            //
+            //                }
+            //            }
+            //        ]
+            //    });
+            //    myPopup.then(function (res) {
+            //        console.log('Tapped!', res);
+            //    });
+            //    $timeout(function () {
+            //        myPopup.close(); //close the popup after 3 seconds for some reason
+            //    }, 3000);
+            //};
+
+
+            $ionicPopover.fromTemplateUrl('templates/dynFormPopOver.html', {
                 scope: $scope
             }).then(function (popover) {
                 $scope.popover = popover;
@@ -845,6 +923,8 @@ $scope.lightInteruptor=function(f){
             $log.debug("event layers recus");
             $scope.layers = sLayer.list;
         });
+
+
 
 
         $scope.sEventSuperviseur = sEventSuperviseur;

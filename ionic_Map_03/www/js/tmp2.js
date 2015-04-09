@@ -50,3 +50,8 @@
 /**
  * Created by harksin on 03/04/15.
  */
+
+<button class="button button-block button-positive button-form" href="#/" ng-click="publishForm()">Valider
+</button>
+
+<button class="button button-block button-positive button-yellow" ng-click="openPopover()">Clore</button>
