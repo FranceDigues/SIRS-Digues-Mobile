@@ -260,6 +260,16 @@
 .map-features .div-feature.selected{
     background: #FFF176;
 }
+.map-features .button.button-positive.button-form{
+    background-color:#888;
+    border-color:#808080;
+    color:white;
+}
+.map-features .button.button-positive.button-form.activated{
+    background-color:#666;
+    border-color:#606060;
+    color:white;
+}
 
 /* Settings */
 .settings-view-title {
