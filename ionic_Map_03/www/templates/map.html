@@ -1,5 +1,5 @@
 <div class="map-div">
-    <openlayers id="map" ol-center="centreCarte" ol-controls="controls" ol-defaults="defaults" height="660px">
+    <openlayers id="map" ol-center="centreCarte" ol-controls="controls" ol-defaults="defaults" height="634px">
         <!--<ol-layer ol-layer-properties="wms"></ol-layer>-->
 
         <!--<ol-layer ol-layer-properties="tt"></ol-layer>-->
@@ -36,21 +36,36 @@
 </div>
 <div class="map-features">
     <div class="form">
-        <div ng-repeat="formElement in newObs.param">
+        <div ng-repeat="formElement in newObs.param" >
             <div ng-if="formElement.type == 'text' " ng-hide="evalAngular(formElement.hide)">
-                {{formElement.label}} :
-                <input type="{{formElement.type}}" id="{{formElement.id}}" ng-model="formElement.value" placeholder="{{formElement.placeholder}}">
+                <div class="list">
+                    <label class="item item-input">
+                        <span class="input-label">{{formElement.label}}</span>
+                        <input type="{{formElement.type}}" id="{{formElement.id}}" ng-model="formElement.value" placeholder="{{formElement.placeholder}}">
+                    </label>
+                </div>
             </div>
 
             <div ng-if="formElement.type == 'date' " ng-hide="ctrl.evalAngular(formElement.hide)">
-                {{formElement.label}} :
-                <input type="{{formElement.type}}" id="{{formElement.id}}" ng-model="formElement.value" placeholder="{{formElement.placeholder}}">
+                <div class="list">
+                    <label class="item item-input">
+                        <span class="input-label">{{formElement.label}}</span>
+                        <input type="{{formElement.type}}" id="{{formElement.id}}" ng-model="formElement.value" placeholder="{{formElement.placeholder}}">
+                    </label>
+                </div>
             </div>
 
             <div ng-if="formElement.type == 'select' " ng-hide="ctrl.evalAngular(formElement.hide)">
-                {{formElement.label}} :
-                <select id="{{formElement.id}}" ng-model="formElement.value" ng-options="item.value as item.text for item in formElement.values" ng-change="evalAngular(formElement.change)">
-                </select>
+
+                <div class="list">
+                    <label class="item item-input item-select">
+                        <div class="input-label">
+                            {{formElement.label}}
+                        </div>
+                        <select id="{{formElement.id}}" ng-model="formElement.value" ng-options="item.value as item.text for item in formElement.values" ng-change="evalAngular(formElement.change)">
+                        </select>
+                    </label>
+                </div>
             </div>
         </div>
         <button class="button button-block button-positive" href="#/" ng-click="publishForm()">Valider
@@ -58,166 +73,17 @@
     </div>
 
     <div>
-        <div ng-repeat="obs in sMask.currentObs" class="md-whiteframe-z1" ng-click="lightInteruptor(obs.featurePos)">
-            {{obs.featurePos}}
-            <div ng-repeat="observation in obs.doc.obs">
-                {{observation.label}} : {{observation.value}}
+        <div ng-repeat="obs in sMask.currentObs" class="md-whiteframe-z1 div-feature" ng-class="{'selected':toto}" ng-click="lightInteruptor(obs.featurePos)">
+            <!--{{obs.featurePos}}-->
+            <div class="feature-info" ng-repeat="observation in obs.doc.obs|limitTo:limitList">
+                <b>{{observation.label}}</b> <span style="margin-left : 5px">{{observation.value}}</span>
             </div>
-
+            <div ng-show="limitList==2"><span class="link-info" ng-click="limitList=obs.doc.obs.length"><i class="icon ion-arrow-down-b"></i>Afficher plus d'informations</span></div>
+            <div ng-show="limitList==obs.doc.obs.length" class="link-info"><span ng-click="limitList=2"><i class="icon ion-arrow-up-b"></i>Afficher moins d'informations</span></div>
         </div>
     </div>
 </div>
 
-
-<!--div class="map-features">
-    <div class="form">
-        <div class="ng-repeat">
-            <div>
-                toto text :
-                <input type="text" id="text" ng-model="formElement.value" placeholder="toto text">
-            </div>
-
-            <div>
-                toto date :
-                <input type="date" id="date" ng-model="formElement.value" placeholder="toto date">
-            </div>
-
-            <div >
-                toto select :
-                <select id="select" ng-model="formElement.value">
-                </select>
-            </div>
-            <div >
-                toto select :
-                <select id="select" ng-model="formElement.value">
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <div>
-        <div class="md-whiteframe-z1">
-            1
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-        </div>
-        <div class="md-whiteframe-z1">
-            1
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-        </div>
-        <div class="md-whiteframe-z1">
-            1
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-        </div>
-        <div class="md-whiteframe-z1">
-            1
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-        </div>
-        <div class="md-whiteframe-z1">
-            1
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-        </div>
-        <div class="md-whiteframe-z1">
-            1
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-        </div>
-        <div class="md-whiteframe-z1">
-            1
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-        </div>
-        <div class="md-whiteframe-z1">
-            1
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-            <div>
-                tototext : valuetext
-            </div>
-        </div>
-    </div>
-</div-->
 <!--button class="button button-block button-positive" href="#/" ng-click="publishForm()">publie featureOverlay en console
 </button-->
 

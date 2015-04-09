@@ -27,7 +27,7 @@ angular.module('controllers', [])
         $scope.Ploting = [];
         $scope.newObs = null;
         $scope.sMask = sMask;
-
+        $scope.limitList = 2;
 
 
         $scope.$on("formUpdate", function (data) {
