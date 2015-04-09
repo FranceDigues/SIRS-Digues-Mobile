@@ -184,6 +184,8 @@
 
 .map-div{
     position:relative;
+    width: 65%;
+    float: right;
 }
 .draw-mode-div {
     position: absolute;
@@ -226,6 +228,19 @@
     border-color: #FFF176;
     background-color: #FFF176;
     color:#666;
+}
+.map-features{
+    height: 660px;
+    width: 35%;
+    overflow-y: scroll;
+    overflow-scrolling: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.map-features .form{
+    background: rgb(255, 235, 59);
+    padding: 10px;
+    box-shadow: 1px 1px 10px rgba(0,0,0,0.25);
+    color: #666;
 }
 
 /* Settings */
