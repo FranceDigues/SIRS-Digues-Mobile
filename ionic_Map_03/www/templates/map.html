@@ -46,6 +46,15 @@
                 </div>
             </div>
 
+            <div ng-if="formElement.type == 'textarea' " ng-hide="evalAngular(formElement.hide)">
+                <div class="list">
+                    <label class="item item-input">
+                        <span class="input-label">{{formElement.label}}</span>
+                        <textarea id="{{formElement.id}}" ng-model="formElement.value" placeholder="{{formElement.placeholder}}"></textarea>
+                    </label>
+                </div>
+            </div>
+
             <div ng-if="formElement.type == 'date' " ng-hide="ctrl.evalAngular(formElement.hide)">
                 <div class="list">
                     <label class="item item-input">
