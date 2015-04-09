@@ -48,7 +48,7 @@ angular.module('controllers', [])
 
         $scope.$on("ObsCreated", function () {
             //publish feature in layer
-            self.newObs.feature.set('ObsUUID', sMask.obsUUID);
+            $scope.newObs.feature.set('ObsUUID', sMask.obsUUID);
             sMask.doc.GeoJson = $scope.toGeoJson(featureOverlay);
             $timeout(function () {
                 sMask.writeDocOnDb();
@@ -72,9 +72,9 @@ angular.module('controllers', [])
         angular.extend($scope,
             {
                 centreCarte: {
-                    lat: 37.7,
-                    lon: -96.67,
-                    zoom: 3
+                    lat: 43.5,
+                    lon: 3.5,
+                    zoom: 8
                 },
                 //layers:  sLayer.json,
                 defaults: {
@@ -161,7 +161,7 @@ angular.module('controllers', [])
 
                 draw.on('drawend', function (f) {
                     //elPropagator
-                    me.newObs.feature = f.feature
+                    $scope.newObs.feature = f.feature
                     $rootScope.$broadcast('drawend', f);
                 })
 
@@ -370,20 +370,21 @@ angular.module('controllers', [])
 
 
 $scope.lightInteruptor=function(f){
-    $log.debug(f.OnAir);
-    if(f.get('OnAir')==true){
+
+    $log.debug(featureOverlay.getFeatures().item(f).OnAir);
+    if(featureOverlay.getFeatures().item(f).get('OnAir')==true){
         $scope.hideGeom(f);
-        f.set('OnAir', false);
+        featureOverlay.getFeatures().item(f).set('OnAir', false);
     }else{
 
         $scope.displayGeom(f);
-        f.set('OnAir', false);
+        featureOverlay.getFeatures().item(f).set('OnAir', false);
     }
 
 
 };
 
-
+//FIXME non multi  calque
 
         $scope.displayGeom = function (featureIndex) {
             console.log("enter in displayGeom " + featureIndex);
