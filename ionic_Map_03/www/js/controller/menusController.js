@@ -23,32 +23,33 @@ angular.module('controllers.menus', [])
 
     .controller('DocCtrl', function ($scope, $ionicSideMenuDelegate, $cordovaMedia, $ionicLoading, $cordovaFileOpener2, $log, $cordovaFileTransfer) {
 
-        $log.debug(cordova.file.externalDataDirectory)
-        $log.debug(cordova.file.externalRootDirectory)
+        //$log.debug(cordova.file.externalDataDirectory)
+        //$log.debug(cordova.file.externalRootDirectory)
+        //
+        ////$scope.play = function (src) {
+        //
+        //    src = cordova.file.externalDataDirectory + 'doc/' + src;
+        //    $log.debug(src);
+        //    var media = new Media(src, null, null, mediaStatusCallback);
+        //    $log.error($cordovaMedia);
+        //    $cordovaMedia.play(media);
+        //}
+        //
+        //var mediaStatusCallback = function (status) {
+        //    if (status == 1) {
+        //        $ionicLoading.show({template: 'Loading...'});
+        //    } else {
+        //        $ionicLoading.hide();
+        //    }
+        //};
 
-        $scope.play = function (src) {
 
-            src = cordova.file.externalDataDirectory + 'doc/' + src;
-            $log.debug(src);
-            var media = new Media(src, null, null, mediaStatusCallback);
-            $log.error($cordovaMedia);
-            $cordovaMedia.play(media);
-        }
-
-        var mediaStatusCallback = function (status) {
-            if (status == 1) {
-                $ionicLoading.show({template: 'Loading...'});
-            } else {
-                $ionicLoading.hide();
-            }
-        };
-
-
-        $scope.openPdf = function () {
-            $log.debug(cordova.file.externalDataDirectory + 'doc/cv.pdf');
+        $scope.openPdf = function (pdf) {
+            //$log.debug(cordova.file.externalDataDirectory + 'doc/cv.pdf');
             $cordovaFileOpener2.open(
                 //cordova.file.externalDataDirectory+'doc/cv.pdf',
-                'Removable/MicroSD/Android/data/com.ionic.Map03/files/' + 'doc/cv.pdf',
+                //'Removable/MicroSD/Android/data/com.ionic.Map03/files/' + 'doc/cv.pdf',
+                'Removable/MicroSD/Android/data/com.ionic.Map03/files/' + pdf,
                 'application/pdf'
             ).then(function (res) {
                     $log.debug(res)
@@ -59,24 +60,24 @@ angular.module('controllers.menus', [])
 
 //essai ecriture
 //            $cordovaFileTransfer.download('http://www.vuelaviajes.com/wp-content/2009/03/espejo-salar-uyuni-3.jpg',  cordova.file.externalDataDirectory+'doc/salar.jpg')
-            $cordovaFileTransfer.download('http://www.vuelaviajes.com/wp-content/2009/03/espejo-salar-uyuni-3.jpg', 'Removable/MicroSD/Android/data/com.ionic.Map03/files/' + 'doc/salar.jpg')
-                .then(function (result) {
-                    // Success!
-                    //$log.debug('Dl done : ');
-                    $log.debug(result);
-                    //TODO implementer un retour
-                    //me.nbTileDownloaded++; //declaration de la fin du Dl de la tuile
-                    //$log.debug( me.nbTileDownloaded)
-                }, function (err) {
-                    // Error
-                    $log.debug('Dl fail :');
-                    $log.error(err);
-                }, function (progress) {
-                    //$timeout(function () {
-                    //    //$scope.imageTmp = targetPath;
-                    //    //$log.debug($scope.imageTmp);
-                    //})
-                });
+//            $cordovaFileTransfer.download('http://www.vuelaviajes.com/wp-content/2009/03/espejo-salar-uyuni-3.jpg', 'Removable/MicroSD/Android/data/com.ionic.Map03/files/' + 'doc/salar.jpg')
+//                .then(function (result) {
+//                    // Success!
+//                    //$log.debug('Dl done : ');
+//                    $log.debug(result);
+//                    //TODO implementer un retour
+//                    //me.nbTileDownloaded++; //declaration de la fin du Dl de la tuile
+//                    //$log.debug( me.nbTileDownloaded)
+//                }, function (err) {
+//                    // Error
+//                    $log.debug('Dl fail :');
+//                    $log.error(err);
+//                }, function (progress) {
+//                    //$timeout(function () {
+//                    //    //$scope.imageTmp = targetPath;
+//                    //    //$log.debug($scope.imageTmp);
+//                    //})
+//                });
 
         };
 

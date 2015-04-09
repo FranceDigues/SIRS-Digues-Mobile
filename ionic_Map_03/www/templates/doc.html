@@ -1,50 +1,85 @@
-<ion-view title="Documentation">
+<!--<ion-view title="Documentation">-->
 
+    <!--<ion-content padding="true" overflow-scroll="true">-->
+        <!--overflow-scroll="true" ==> pour permetre la detection du click dans la balise video-->
+
+
+        <!--&lt;!&ndash;ng reapeat sur la doc&ndash;&gt;-->
+        <!--<button class="button button-block button-positive" ng-click="openPdf()">-->
+            <!--openPdf-->
+        <!--</button>-->
+
+
+        <!--&lt;!&ndash;//only for audio??&ndash;&gt;-->
+        <!--<button class="button" ng-click="play('video-cstl-ndvi.mp4')">Play from file system</button>-->
+        <!--&lt;!&ndash;<button class="button" onclick="playPause()">Play/Pause</button>&ndash;&gt;-->
+
+        <!--<video width="320" height="240" controls>-->
+            <!--<source src="/Removable/MicroSD/Android/data/com.ionic.Map03/files/doc/video-cstl-ndvi.mp4"-->
+                    <!--type="video/mp4">-->
+            <!--&lt;!&ndash;<source src="movie.ogg" type="video/ogg">&ndash;&gt;-->
+            <!--Your browser does not support the video tag.-->
+        <!--</video>-->
+
+
+        <!--&lt;!&ndash;<script>&ndash;&gt;-->
+        <!--&lt;!&ndash;var myVideo = document.getElementById("video1");&ndash;&gt;-->
+
+        <!--&lt;!&ndash;function playPause() {&ndash;&gt;-->
+        <!--&lt;!&ndash;if (myVideo.paused)&ndash;&gt;-->
+        <!--&lt;!&ndash;myVideo.play();&ndash;&gt;-->
+        <!--&lt;!&ndash;else&ndash;&gt;-->
+        <!--&lt;!&ndash;myVideo.pause();&ndash;&gt;-->
+        <!--&lt;!&ndash;}&ndash;&gt;-->
+
+        <!--&lt;!&ndash;function makeBig() {&ndash;&gt;-->
+        <!--&lt;!&ndash;myVideo.width = 560;&ndash;&gt;-->
+        <!--&lt;!&ndash;}&ndash;&gt;-->
+
+        <!--&lt;!&ndash;function makeSmall() {&ndash;&gt;-->
+        <!--&lt;!&ndash;myVideo.width = 320;&ndash;&gt;-->
+        <!--&lt;!&ndash;}&ndash;&gt;-->
+
+        <!--&lt;!&ndash;function makeNormal() {&ndash;&gt;-->
+        <!--&lt;!&ndash;myVideo.width = 420;&ndash;&gt;-->
+        <!--&lt;!&ndash;}&ndash;&gt;-->
+        <!--&lt;!&ndash;</script>&ndash;&gt;-->
+
+
+    <!--</ion-content>-->
+<!--</ion-view>-->
+
+
+
+<ion-view title="Documentation" class="home-view">
     <ion-content padding="true" overflow-scroll="true">
-        overflow-scroll="true" ==> pour permetre la detection du click dans la balise video
+        <div class="row">
+            <div class="col col-50 col-offset-25" style="margin-top:6%;">
+                <button class="button button-block button-positive home-button" ng-click="openPdf('courrier_mme_la_ministre_sante.pdf')">
+                    <span class="icon ion-search"> </span> courrier mme la ministre sante.
+                </button>
+                <button class="button button-block button-positive home-button" ng-click="openPdf('gbp_gestion_de_l_eau.pdf')">
+                    <span class="icon ion-search"> </span> gestion de l'eau
+                </button>
+                <button class="button button-block button-positive home-button" ng-click="openPdf('stats_indigo_2014.pdf')">
+                    <span class="icon ion-search"> </span> stats indigo 2014
+                </button>
+                <button class="button button-block button-positive home-button" ng-click="openPdf('tableaux_de_bord_fevrier_mars_2015.pdf')">
+                    <span class="icon ion-search"> </span> tableaux de bord fevrier mars 2015
+                </button>
+
+                <video width="320" height="240" controls>
+                    <source src="/Removable/MicroSD/Android/data/com.ionic.Map03/files/video-cstl-ndvi.mp4"
+                            type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
 
 
-        <!--ng reapeat sur la doc-->
-        <button class="button button-block button-positive" ng-click="openPdf()">
-            openPdf
-        </button>
 
 
-        <!--//only for audio??-->
-        <button class="button" ng-click="play('video-cstl-ndvi.mp4')">Play from file system</button>
-        <!--<button class="button" onclick="playPause()">Play/Pause</button>-->
 
-        <video width="320" height="240" controls>
-            <source src="/Removable/MicroSD/Android/data/com.ionic.Map03/files/doc/video-cstl-ndvi.mp4"
-                    type="video/mp4">
-            <!--<source src="movie.ogg" type="video/ogg">-->
-            Your browser does not support the video tag.
-        </video>
-
-
-        <!--<script>-->
-        <!--var myVideo = document.getElementById("video1");-->
-
-        <!--function playPause() {-->
-        <!--if (myVideo.paused)-->
-        <!--myVideo.play();-->
-        <!--else-->
-        <!--myVideo.pause();-->
-        <!--}-->
-
-        <!--function makeBig() {-->
-        <!--myVideo.width = 560;-->
-        <!--}-->
-
-        <!--function makeSmall() {-->
-        <!--myVideo.width = 320;-->
-        <!--}-->
-
-        <!--function makeNormal() {-->
-        <!--myVideo.width = 420;-->
-        <!--}-->
-        <!--</script>-->
-
+            </div>
+        </div>
 
     </ion-content>
 </ion-view>

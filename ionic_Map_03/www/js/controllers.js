@@ -12,7 +12,7 @@ angular.module('controllers', [])
 /***************************************************************** --------- *****************************************************/
 
 
-    .controller('MapCtrl', function ($scope, sLayer, $log, sMap, olData, sEventSuperviseur, sMask, sContext, $rootScope, $cordovaGeolocation,$timeout) {
+    .controller('MapCtrl', function ($scope, sLayer, $log, sMap, olData, sEventSuperviseur, sMask, sContext, $rootScope, $cordovaGeolocation,$timeout,$ionicPopover) {
 
         var me = this;
         //var myMap =null
@@ -376,7 +376,10 @@ angular.module('controllers', [])
         $scope.$on("maskGeoJsonUpdate", function () {
             $log.debug("event maskGeoJsonUpdate");
             $log.debug(sMask.doc.GeoJson);
-            featureOverlay.getFeatures().clear();
+            if(featureOverlay != null){
+                featureOverlay.getFeatures().clear();
+            }
+
 
             if(sMask.doc.GeoJson != "") {
                     var gjson = new ol.format.GeoJSON();
@@ -391,7 +394,11 @@ angular.module('controllers', [])
                     featureOverlay.setFeatures(olcFeatures);
                 $rootScope.$broadcast('msk_Geom_Updated');
             }
-            $log.debug(featureOverlay.getFeatures());
+
+            if(featureOverlay != null) {
+                $log.debug(featureOverlay.getFeatures());
+            }
+
             sMask.searchFormByLayerUUID(sContext.param.mskUUID);
         });
 
@@ -495,6 +502,66 @@ $scope.lightInteruptor=function(f){
 
             });
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //POPOVER
+
+        $ionicPopover.fromTemplateUrl('templates/dynFormPopOver.html', {
+            scope: $scope
+        }).then(function (popover) {
+            $scope.popover = popover;
+        });
+
+
+        $scope.openPopover = function ($event) {
+            $scope.popover.show($event);
+        };
+        $scope.closePopover = function () {
+            $scope.popover.hide();
+        };
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.popover.remove();
+        });
+        // Execute action on hide popover
+        $scope.$on('popover.hidden', function () {
+            // Execute action
+        });
+        // Execute action on remove popover
+        $scope.$on('popover.removed', function () {
+            // Execute action
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     })
 
@@ -811,42 +878,6 @@ $scope.lightInteruptor=function(f){
             $scope.evalAngular = function (string) {
                 return $scope.$eval(string);
             };
-
-
-            //POPOVER
-
-            $ionicPopover.fromTemplateUrl('templates/dynFormPopOver.html', {
-                scope: $scope
-            }).then(function (popover) {
-                $scope.popover = popover;
-            });
-
-
-            $scope.openPopover = function ($event) {
-                $scope.popover.show($event);
-            };
-            $scope.closePopover = function () {
-                $scope.popover.hide();
-            };
-            //Cleanup the popover when we're done with it!
-            $scope.$on('$destroy', function () {
-                $scope.popover.remove();
-            });
-            // Execute action on hide popover
-            $scope.$on('popover.hidden', function () {
-                // Execute action
-            });
-            // Execute action on remove popover
-            $scope.$on('popover.removed', function () {
-                // Execute action
-            });
-
-
-
-
-
-
-
 
 
 
