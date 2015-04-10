@@ -372,6 +372,11 @@ angular.module('controllers', [])
         });
 
 
+        $scope.$on('layersListUpdated', function () {
+            $scope.layers = sLayer.list();
+        });
+
+
 
         $scope.$on("maskGeoJsonUpdate", function () {
             $log.debug("event maskGeoJsonUpdate");
@@ -405,9 +410,6 @@ angular.module('controllers', [])
 
 
 $scope.lightInteruptor=function(f){
-
-
-
     fp=f.featurePos;
 
     $log.debug(featureOverlay.getFeatures().item(fp).OnAir);
@@ -503,51 +505,33 @@ $scope.lightInteruptor=function(f){
             });
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         //POPOVER
 
-        $ionicPopover.fromTemplateUrl('templates/dynFormPopOver.html', {
-            scope: $scope
-        }).then(function (popover) {
-            $scope.popover = popover;
-        });
-
-
-        $scope.openPopover = function ($event) {
-            $scope.popover.show($event);
-        };
-        $scope.closePopover = function () {
-            $scope.popover.hide();
-        };
-        //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function () {
-            $scope.popover.remove();
-        });
-        // Execute action on hide popover
-        $scope.$on('popover.hidden', function () {
-            // Execute action
-        });
-        // Execute action on remove popover
-        $scope.$on('popover.removed', function () {
-            // Execute action
-        });
+        //$ionicPopover.fromTemplateUrl('templates/dynFormPopOver.html', {
+        //    scope: $scope
+        //}).then(function (popover) {
+        //    $scope.popover = popover;
+        //});
+        //
+        //
+        //$scope.openPopover = function ($event) {
+        //    $scope.popover.show($event);
+        //};
+        //$scope.closePopover = function () {
+        //    $scope.popover.hide();
+        //};
+        ////Cleanup the popover when we're done with it!
+        //$scope.$on('$destroy', function () {
+        //    $scope.popover.remove();
+        //});
+        //// Execute action on hide popover
+        //$scope.$on('popover.hidden', function () {
+        //    // Execute action
+        //});
+        //// Execute action on remove popover
+        //$scope.$on('popover.removed', function () {
+        //    // Execute action
+        //});
 
 
 
