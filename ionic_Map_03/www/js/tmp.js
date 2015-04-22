@@ -1,3 +1,5 @@
+//TODO supr apres control
+
 var p1 = null;
 var p2 = null;
 

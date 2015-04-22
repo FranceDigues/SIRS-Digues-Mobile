@@ -4,6 +4,11 @@
 
         <!--<ol-layer ol-layer-properties="tt"></ol-layer>-->
         <ol-layer ol-layer-properties="layer" ng-repeat="layer in layers|filter:{active:true}"></ol-layer>
+
+        <ol-marker  ol-marker-properties="centreCarte"></ol-marker>
+
+
+
         <!--<ol-marker ng-repeat="marker in markers" lat="marker.lat" lon="marker.lon"></ol-marker>-->
 
         <!--quid d'un ng-repeat= direct dans le ol-layer pour forcer le reload?-->

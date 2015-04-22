@@ -44,6 +44,14 @@ angular.module('controllers.menus', [])
         //};
 
 
+        $scope.plugTestUpdate = function(){
+            CacheMapPlugin.updateCache();
+        };
+
+        $scope.plugTestInit = function(){
+            CacheMapPlugin.initUserData();
+        };
+
         $scope.openPdf = function (pdf) {
             //$log.debug(cordova.file.externalDataDirectory + 'doc/cv.pdf');
             $cordovaFileOpener2.open(
@@ -157,3 +165,221 @@ angular.module('controllers.menus', [])
 
 
     })
+
+
+/***************************************************************** --------- *****************************************************/
+/***************************************************************** ????????? *****************************************************/
+/***************************************************************** --------- *****************************************************/
+
+    .controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
+
+    })
+
+/***************************************************************** --------- *****************************************************/
+/***************************************************************** Masque *****************************************************/
+/***************************************************************** --------- *****************************************************/
+
+    .controller('MskCtrl', function ($scope, sPouch, $log, sContext, $state, $rootScope) {
+
+        $log.debug("mskCtrl");
+        $log.debug(cMaskId);
+
+        sPouch.cfg.get(cMaskId).then(function (doc) {
+            $scope.masks = doc.cat;
+            $log.debug($scope.masks);
+        }).catch(function (err) {
+            $log.debug(err);
+        });
+
+
+        /*
+         * if given group is the selected group, deselect it
+         * else, select the given group
+         */
+        $scope.toggleGroup = function (group) {
+            if ($scope.isGroupShown(group)) {
+                $scope.shownGroup = null;
+            } else {
+                $scope.shownGroup = group;
+            }
+        };
+        $scope.isGroupShown = function (group) {
+            return $scope.shownGroup === group;
+        };
+
+
+        //on se rend sur la carte avec le bon masque en contexte
+        $scope.landingOnEarth = function (mskIdf) {
+
+            //mise a jour du contexte
+            sContext.param.mskUUID = mskIdf;
+            $rootScope.$broadcast("msk_change"); //TODO faire des type d'event specifique pour les notification de contexte
+            //de-orbitation
+            $state.go('menu.tabs.map');
+
+
+        }
+
+
+    })
+
+/***************************************************************** --------- *****************************************************/
+/***************************************************************** Form List *****************************************************/
+/***************************************************************** --------- *****************************************************/
+
+
+    .controller('FormListCtrl', ['$scope', '$ionicPopup', '$ionicPopover', '$timeout', 'sPouch', '$log',
+        function ($scope, $ionicPopup, $ionicPopover, $timeout, sPouch, $log) {
+            $scope.form1 = null;
+
+            sPouch.form.get(cFormTest).then(function (doc) {
+                $log.debug("slayer init")
+                $log.debug(doc)
+
+                //me.list = doc.layers;
+                $scope.form1 = doc.param;
+                $log.debug($scope.form1);
+                //$log.debug("slayer end")
+            }).catch(function (err) {
+                $log.debug(err);
+            });
+
+            $scope.evalAngular = function (string) {
+                return $scope.$eval(string);
+            };
+
+
+
+
+
+            //$scope.showPopup = function () {
+            //    // An elaborate, custom popup
+            //    var myPopup = $ionicPopup.show({
+            //        templateUrl: 'templates/formGenerator.html',
+            //        title: 'Form',
+            //        //subTitle: 'Please use normal things',
+            //        scope: $scope,
+            //        buttons: [
+            //            {text: 'Cancel'},
+            //            {
+            //                text: '<b>Ok</b>',
+            //                type: 'button-positive',
+            //                onTap: function (e) {
+            //
+            //                }
+            //            }
+            //        ]
+            //    });
+            //    myPopup.then(function (res) {
+            //        console.log('Tapped!', res);
+            //    });
+            //    $timeout(function () {
+            //        myPopup.close(); //close the popup after 3 seconds for some reason
+            //    }, 3000);
+            //};
+
+
+            $ionicPopover.fromTemplateUrl('templates/dynFormPopOver.html', {
+                scope: $scope
+            }).then(function (popover) {
+                $scope.popover = popover;
+            });
+
+
+            $scope.openPopover = function ($event) {
+                $scope.popover.show($event);
+            };
+            $scope.closePopover = function () {
+                $scope.popover.hide();
+            };
+            //Cleanup the popover when we're done with it!
+            $scope.$on('$destroy', function () {
+                $scope.popover.remove();
+            });
+            // Execute action on hide popover
+            $scope.$on('popover.hidden', function () {
+                // Execute action
+            });
+            // Execute action on remove popover
+            $scope.$on('popover.removed', function () {
+                // Execute action
+            });
+
+
+        }])
+
+/***************************************************************** --------- *****************************************************/
+/***************************************************************** SIDE MENU *****************************************************/
+/***************************************************************** --------- *****************************************************/
+
+    .controller('sideMenu', function ($scope, $state, $ionicSideMenuDelegate, sLayer, $log, sEventSuperviseur, $rootScope) { //kifkif un global controler non?
+
+
+        $log.debug("sideMenu");
+        //$log.debug(doc.layers);
+        $scope.layers = sLayer.list;
+
+        $rootScope.$on("layersListUpdated", function () {
+            $log.debug("event layers recus");
+            $scope.layers = sLayer.list;
+        });
+
+
+
+
+        $scope.sEventSuperviseur = sEventSuperviseur;
+
+        //$log.debug( $scope.sEventSuperviseur);
+
+        $scope.openMenu = function () {
+            $ionicSideMenuDelegate.toggleLeft();
+        }
+
+        $scope.newCache = function () {
+
+            sEventSuperviseur.event.sideMenu = false;
+            $state.go('cache');
+        };
+
+
+    })
+
+/***************************************************************** --------- *****************************************************/
+/***************************************************************** LOADER     *****************************************************/
+/***************************************************************** --------- *****************************************************/
+
+
+    .controller('loader', function ($scope, $state, sPouch, sLayer, $timeout, $log) {
+
+        var n = sLayer.list;
+        //var u =  sLayer.usr;
+        //var l = sLayer.cfg;
+        $log.debug("loader");
+        $log.debug(n);
+        //$log.debug(u);
+        //$log.debug(l);
+        $log.debug("/ loader");
+
+        $scope.loadingPercent = 0;
+
+
+        //Bouchon de vase
+        $timeout(function () {
+            $scope.loadingPercent = $scope.loadingPercent + 25;
+
+            $timeout(function () {
+                $scope.loadingPercent = $scope.loadingPercent + 25;
+                $timeout(function () {
+                    $scope.loadingPercent = $scope.loadingPercent + 25;
+                    $timeout(function () {
+                        $scope.loadingPercent = $scope.loadingPercent + 25;
+                        $state.go("menu.home");
+                    }, 600);
+                }, 600);
+            }, 600);
+
+
+        }, 600);
+
+
+    });

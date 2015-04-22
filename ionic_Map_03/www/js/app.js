@@ -9,6 +9,8 @@ var app = angular.module('cartoMobile', [
     'pouchdb',
     'openlayers-directive',
     'controllers',
+    'controllers.map',
+    'controllers.mapCache',
     'controllers.menus',
     'data.services.pipe',
     'data.services.source',
