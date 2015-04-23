@@ -38,9 +38,17 @@ public class GeoPoint {
         this.proj = proj;
     }
 
+    @Override
+    public String toString() {
+        return "GeoPoint{" +
+                "lat=" + lat +
+                ", lon=" + lon +
+                ", proj='" + proj + '\'' +
+                '}';
+    }
 
 
-    //methode
+//methode
 
     //getlatLong array
     //getlongLat array
@@ -56,7 +64,7 @@ public class GeoPoint {
         this.setLon(lonmin);
 
         p.setLat(latmax);
-        p.setLon(lonmin);
+        p.setLon(lonmax);
 
     }
 

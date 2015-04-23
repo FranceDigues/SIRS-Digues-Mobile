@@ -1,3 +1,5 @@
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -43,24 +45,31 @@ public class Tile {
         this.z = z;
     }
 
+    @Override
+    public String toString() {
+        return "Tile{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 
 
-
-
-
-    //methode
+//methode
 
     public ArrayList<Tile> subServientTile_TMS(){
         ArrayList<Tile> aTile = new ArrayList<Tile>();
-        final int Z = this.getZ();
-        final int X = (this.getZ())*Z;
-        final int Y = (this.getZ())*Z;
+        final int Z = this.getZ()+1;
+        final int X = (this.getX())*2;
+        final int Y = (this.getY())*2;
 
-        aTile.add(new Tile(Z+1,X,Y));
-        aTile.add(new Tile(Z+1,X+1,Y));
-        aTile.add(new Tile(Z+1,X+1,Y+1));
-        aTile.add(new Tile(Z+1,X+1,Y+1));
+        aTile.add(new Tile(Z,X,Y));
+        aTile.add(new Tile(Z,X+1,Y));
+        aTile.add(new Tile(Z,X+1,Y+1));
+        aTile.add(new Tile(Z,X,Y+1));
 
+
+        Log.d("PluginRDE_debug_DL", "sous Arbre : " + aTile.toString());
         return aTile;
 
 

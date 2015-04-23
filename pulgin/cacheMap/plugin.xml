@@ -20,5 +20,14 @@
             </feature>
         </config-file>
         <source-file src="src/android/CacheMapPlugin.java" target-dir="src/" />
+        <source-file src="src/android/AsyncCacheBuilder.java" target-dir="src/" />
+        <source-file src="src/android/AsyncClear.java" target-dir="src/" />
+        <source-file src="src/android/CacheDescriptor.java" target-dir="src/" />
+        <source-file src="src/android/GeoPoint.java" target-dir="src/" />
+        <source-file src="src/android/GeoUtils.java" target-dir="src/" />
+        <source-file src="src/android/Tile.java" target-dir="src/" />
+
+
+        <source-file src="libs/gson-2.2.4.jar" target-dir="libs/" />
     </platform>
 </plugin>

@@ -7,6 +7,10 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+
+import com.google.gson.Gson;
+
+
 /**
  * Created by harksin on 22/04/15.
  */
@@ -18,6 +22,7 @@ public class AsyncCacheBuilder extends AsyncTask {
     //constructeur
     public AsyncCacheBuilder(Context context, CacheDescriptor c,DownloadManager d)
     {
+
         this.myContext = context ;
         this.caDe=c;
         this.dm =d;
@@ -54,6 +59,12 @@ public class AsyncCacheBuilder extends AsyncTask {
     @Override
     protected Object doInBackground(Object... params) {
 
+        Log.d("PluginRDE_RUN","asyncTask");
+
+
+        Log.d("PluginRDE","descripteur de cache actif : "+this.caDe.toString());
+
+
         this.onProgressUpdate(0);
 
         /***
@@ -67,14 +78,17 @@ public class AsyncCacheBuilder extends AsyncTask {
 
 
 
+
+
         //chargement des tuiles
 
         if(this.caDe.getTypeSource().equals("TMS")){
 
-                ArrayList<Tile> aTile = this.caDe.firstLvlTileFromBb_TMS();
+
+//                ArrayList<Tile> aTile = this.caDe.firstLvlTileFromBb_TMS();
 
 
-
+                this.aTileDownload( this.caDe.firstLvlTileFromBb_TMS());
 
 
 
@@ -91,6 +105,13 @@ public class AsyncCacheBuilder extends AsyncTask {
          *
          */
 
+
+        Gson gson = new Gson();
+
+        // convert java object to JSON format,
+        // and returned as JSON formatted string
+        String json = gson.toJson(this.caDe);
+        Log.d("PluginRDE_Json",json);
 
 
         this.onProgressUpdate(100);
@@ -129,15 +150,16 @@ public class AsyncCacheBuilder extends AsyncTask {
 
     private void aTileDownload(ArrayList<Tile> aTile){
 
-        boolean borne = false;
-        if(aTile.get(0).getZ()>= caDe.getzMax()) borne = true;
+
+        if(aTile.get(0).getZ()<= caDe.getzMax())
 
         for(Tile t  :aTile){
+            Log.d("PluginRDE_debug_DL", "tile en cours de DL : "+t.toString());
 
             this.launchTileDl(t);
 
             //recur : sur la sous tuile
-            if(! borne){
+            if(t.getZ()< caDe.getzMax()) {
                 aTileDownload(t.subServientTile_TMS());
             }
 

@@ -33,6 +33,7 @@ import org.json.JSONObject;
 
 
 
+
 /**
  *
  * TODO :  test unitaire.,?
@@ -94,7 +95,8 @@ public class CacheMapPlugin extends CordovaPlugin {
 
         if( action.equals("updateCache") )
         {
-            Log.d("PluginRDE","updateCache");
+            Log.d("PluginRDE_RUN","updateCacheWay");
+            Log.d("PluginRDE","parametre 0 : "+args.getJSONObject(0).toString());
             this.runToast("updateCache :");
 
             /**
@@ -109,13 +111,23 @@ public class CacheMapPlugin extends CordovaPlugin {
 
             this.buildCache(args.getJSONObject(0));
 
-            this.downloadTile("testUUID", "TestNom", 0,0, 0);
+//            this.downloadTile("testUUID", "TestNom", 0,0, 0);
 
         }
-        if( action.equals("initUserData") )
+        if( action.equals("clearWay") )
         {
             Log.d("PluginRDE","initUserData");
-            this.runToast("initUserData :");
+            //TODO clear juste le cache en parametre
+            this.runToast("clearAllCache :");
+
+
+            AsyncClear asyncCbuilder = new AsyncClear(this.cordova.getActivity(),"/Tile");
+
+            asyncCbuilder.execute();
+
+
+
+
         }
 
 
@@ -131,6 +143,7 @@ public class CacheMapPlugin extends CordovaPlugin {
 
     //Methode
     private void runToast(final String a ){
+        Log.d("PluginRDE_RUN","toast");
         final int duration = Toast.LENGTH_SHORT;
 // Shows a toast
 //        Log.v(TAG,"CacheMapPlugin received:"+ action);
@@ -176,9 +189,12 @@ public class CacheMapPlugin extends CordovaPlugin {
 
 
     private boolean buildCache(JSONObject jsonCache){
+        Log.d("PluginRDE_RUN","buildCache");
 
 //construction de l'objet java depuis le json
          CacheDescriptor caDes = new CacheDescriptor();
+
+        //TODO methode qui retourne un array de descriptor depuis le parametre, sinon dans les async direct?
 
         try {
             caDes.setNom(jsonCache.getString("nom"));
@@ -231,6 +247,7 @@ return true;
 
 
     private void initDlReceiver(){
+        Log.d("PluginRDE_RUN","dlReceiver");
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

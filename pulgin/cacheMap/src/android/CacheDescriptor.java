@@ -1,3 +1,5 @@
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -90,21 +92,42 @@ public class CacheDescriptor {
         this.zMax = zMax;
     }
 
+    @Override
+    public String toString() {
+        return "CacheDescriptor{" +
+                "nom='" + nom + '\'' +
+                ", Source='" + Source + '\'' +
+                ", typeSource='" + typeSource + '\'' +
+                ", urlSource='" + urlSource + '\'' +
+                ", zMin=" + zMin +
+                ", zMax=" + zMax +
+                ", pBg=" + pBg +
+                ", pHd=" + pHd +
+                ", path='" + path + '\'' +
+                '}';
+    }
 
-
-
-    //methode
+//methode
 
     public ArrayList<Tile> firstLvlTileFromBb_TMS(){
 
+
         ArrayList<Tile> aTile = new ArrayList<Tile>();
 
+        Log.d("PluginRDE_debug", "geoPoint Bg : "+this.getpBg().toString());
+        Log.d("PluginRDE_debug", "geoPoint Hd : "+this.getpHd().toString());
+
         Tile tBg = this.getpBg().toTileTMS(this.getzMin());
-        Tile tHd = this.getpHd().toTileTMS(this.getzMax());
+        Tile tHd = this.getpHd().toTileTMS(this.getzMin());
+
+        Log.d("PluginRDE_debug", "tile Bg : "+tBg.toString());
+        Log.d("PluginRDE_debug", "tile Hd : "+tHd.toString());
 
         for (int x = tBg.getX();x<=tHd.getX();x++ ){
-            for (int y = tBg.getY();x<=tHd.getY();y++ ) {
-                aTile.add(new Tile(this.getzMin(),x,y));
+            for (int y = tBg.getY();y<=tHd.getY();y++ ) {
+                Tile tmp = new Tile(this.getzMin(),x,y);
+                Log.d("PluginRDE_debug", "tile en cours : "+tmp.toString());
+                aTile.add(tmp);
             }
 
         }
@@ -116,9 +139,11 @@ public class CacheDescriptor {
 
 
     public String getDirPath(){
+        Log.d("PluginRDE_debug", this.path);
         if (this.path ==""){
             this.path = "Tile/"+this.getSource() + "/" + this.getNom() + "/";
         }
+        Log.d("PluginRDE_debug", this.path);
         return this.path ;
     }
 }

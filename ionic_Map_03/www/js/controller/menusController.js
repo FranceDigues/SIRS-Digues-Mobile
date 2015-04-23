@@ -45,11 +45,21 @@ angular.module('controllers.menus', [])
 
 
         $scope.plugTestUpdate = function(){
-            CacheMapPlugin.updateCache();
+            CacheMapPlugin.updateCache([{
+                "nom":"essai",
+                "source":"OSM",
+                "type":"TMS",
+                "zMin":"8",
+                "zMax":"12",
+                "url":"http://a.tile.openstreetmap.org",
+                "bbox":[[3.0,43.0],[4.0,44.0]]
+
+
+            }]);
         };
 
-        $scope.plugTestInit = function(){
-            CacheMapPlugin.initUserData();
+        $scope.plugTestClear = function(){
+            CacheMapPlugin.clearCache();
         };
 
         $scope.openPdf = function (pdf) {

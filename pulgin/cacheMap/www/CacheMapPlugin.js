@@ -7,18 +7,18 @@ function CacheMapPlugin() {
     console.log("CacheMapPlugin.js: is created");
 }
 
-CacheMapPlugin.prototype.updateCache = function () {
+CacheMapPlugin.prototype.updateCache = function (cacheArray) {
     console.log("CacheMapPlugin.js: updateCache");
     exec(function (result) {/*alert("OK" + reply);*/
     }, function (result) {/*alert("Error" + reply);*/
-    }, "CacheMapPlugin", "updateCache", []);
+    }, "CacheMapPlugin", "updateCache", cacheArray);
 };
 
-CacheMapPlugin.prototype.initUserData = function () {
+CacheMapPlugin.prototype.clearCache = function () {
     console.log("CacheMapPlugin.js: initUserData");
     exec(function (result) {/*alert("OK" + reply);*/
     }, function (result) {/*alert("Error" + reply);*/
-    }, "CacheMapPlugin", "initUserData", []);
+    }, "CacheMapPlugin", "clearWay", []);
 };
 
 
