@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="com.rde.cachemap"
-        version="0.0.1">
+        version="0.0.2">
     <name>CacheMapPlugin</name>
     <description> Autonomous Cache Map Slave</description>
     <license>Roch Dardie</license>
@@ -26,6 +26,7 @@
         <source-file src="src/android/GeoPoint.java" target-dir="src/" />
         <source-file src="src/android/GeoUtils.java" target-dir="src/" />
         <source-file src="src/android/Tile.java" target-dir="src/" />
+        <source-file src="src/android/BBox.java" target-dir="src/" />
 
 
         <source-file src="libs/gson-2.2.4.jar" target-dir="libs/" />

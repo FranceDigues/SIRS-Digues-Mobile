@@ -1,5 +1,8 @@
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
@@ -23,6 +26,33 @@ public class CacheDescriptor {
 
     public CacheDescriptor(){
         this.path="";
+
+    }
+
+    public CacheDescriptor(JSONObject jsonCache){
+        this.path="";
+try{
+        this.setNom(jsonCache.getString("nom"));
+        this.setSource(jsonCache.getString("source"));
+        this.setTypeSource(jsonCache.getString("type"));
+        this.setUrlSource(jsonCache.getString("url"));
+        this.setzMin(jsonCache.getInt("zMin"));
+        this.setzMax(jsonCache.getInt("zMax"));
+
+        JSONArray aBbox= jsonCache.getJSONArray("bbox");
+
+        GeoPoint tmpMin = new GeoPoint(aBbox.getJSONArray(0).getDouble(0), aBbox.getJSONArray(0).getDouble(1) );
+        GeoPoint tmpMax = new GeoPoint(aBbox.getJSONArray(1).getDouble(0), aBbox.getJSONArray(1).getDouble(1) );
+
+
+        tmpMin.maxwell(tmpMax);
+
+        this.setpBg(tmpMin);
+        this.setpHd(tmpMax);
+
+    } catch (JSONException e) {
+        e.printStackTrace();
+    }
 
     }
 
@@ -146,4 +176,82 @@ public class CacheDescriptor {
         Log.d("PluginRDE_debug", this.path);
         return this.path ;
     }
+
+
+    //TODO filtre sur les revision uniqement?
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CacheDescriptor that = (CacheDescriptor) o;
+
+        if (zMax != that.zMax) return false;
+        if (zMin != that.zMin) return false;
+        if (Source != null ? !Source.equals(that.Source) : that.Source != null) return false;
+        if (nom != null ? !nom.equals(that.nom) : that.nom != null) return false;
+        if (pBg != null ? !pBg.equals(that.pBg) : that.pBg != null) return false;
+        if (pHd != null ? !pHd.equals(that.pHd) : that.pHd != null) return false;
+        if (typeSource != null ? !typeSource.equals(that.typeSource) : that.typeSource != null)
+            return false;
+        if (urlSource != null ? !urlSource.equals(that.urlSource) : that.urlSource != null)
+            return false;
+
+        return true;
+    }
+
+//
+//    @Override
+//    public boolean equals(CacheDescriptor that) {
+//        if (this == that) return true;
+//
+//        if (zMax != that.zMax) return false;
+//        if (zMin != that.zMin) return false;
+//        if (Source != null ? !Source.equals(that.Source) : that.Source != null) return false;
+//        if (nom != null ? !nom.equals(that.nom) : that.nom != null) return false;
+//        if (pBg != null ? !pBg.equals(that.pBg) : that.pBg != null) return false;
+//        if (pHd != null ? !pHd.equals(that.pHd) : that.pHd != null) return false;
+//        if (typeSource != null ? !typeSource.equals(that.typeSource) : that.typeSource != null)
+//            return false;
+//        if (urlSource != null ? !urlSource.equals(that.urlSource) : that.urlSource != null)
+//            return false;
+//
+//        return true;
+//    }
+
+    @Override
+    public int hashCode() {
+        int result = nom != null ? nom.hashCode() : 0;
+        result = 31 * result + (Source != null ? Source.hashCode() : 0);
+        result = 31 * result + (typeSource != null ? typeSource.hashCode() : 0);
+        result = 31 * result + (urlSource != null ? urlSource.hashCode() : 0);
+        result = 31 * result + zMin;
+        result = 31 * result + zMax;
+        result = 31 * result + (pBg != null ? pBg.hashCode() : 0);
+        result = 31 * result + (pHd != null ? pHd.hashCode() : 0);
+        return result;
+    }
+
+
+    public ArrayList<Tile> getDiff(CacheDescriptor caDeNew){
+        //FIXME include?
+        ArrayList<Tile> resultante = new ArrayList<Tile>();
+        ArrayList<Tile> baseZone = this.firstLvlTileFromBb_TMS();
+        ArrayList<Tile> novelZone = caDeNew.firstLvlTileFromBb_TMS();
+
+        for(Tile t : novelZone){
+
+            if(! baseZone.contains(t)) resultante.add(t);
+        }
+
+         return resultante;
+    }
+
+    //todo controle de la présence de tout les fichier
+    public boolean checkIntegrity(){
+      return true;
+    };
+
 }

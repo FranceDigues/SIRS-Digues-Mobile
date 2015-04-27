@@ -15,9 +15,9 @@ public class Tile {
 
 
     public Tile(int z,int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.setX(x);
+        this.setY(y);
+        this.setZ(z);
     }
 
 
@@ -54,8 +54,29 @@ public class Tile {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-//methode
+        Tile tile = (Tile) o;
+
+        if (x != tile.x) return false;
+        if (y != tile.y) return false;
+        if (z != tile.z) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        result = 31 * result + z;
+        return result;
+    }
+
+    //methode
 
     public ArrayList<Tile> subServientTile_TMS(){
         ArrayList<Tile> aTile = new ArrayList<Tile>();
@@ -76,6 +97,32 @@ public class Tile {
     }
 
 
+    public String getTMSsampleReq(){ //Todo Final?
+
+       return this.getZ() + "/" + this.getX() + "/" + this.getY() + ".png";
+    }
+
+
+
+
+
+    public BBox tile2boundingBox() {
+        BBox bb = new BBox();
+        bb.north = tile2lat(this.getY(), this.getZ());
+        bb.south = tile2lat(this.getY() + 1, this.getZ());
+        bb.west = tile2lon(this.getX(), this.getZ());
+        bb.east = tile2lon(this.getX() + 1, this.getZ());
+        return bb;
+    }
+
+    static double tile2lon(int x, int z) {
+        return x / Math.pow(2.0, z) * 360.0 - 180;
+    }
+
+    static double tile2lat(int y, int z) {
+        double n = Math.PI - (2.0 * Math.PI * y) / Math.pow(2.0, z);
+        return Math.toDegrees(Math.atan(Math.sinh(n)));
+    }
 
 
 }

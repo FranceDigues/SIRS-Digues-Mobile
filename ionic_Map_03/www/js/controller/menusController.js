@@ -45,16 +45,15 @@ angular.module('controllers.menus', [])
 
 
         $scope.plugTestUpdate = function(){
+            //$log.debug("test");
             CacheMapPlugin.updateCache([{
                 "nom":"essai",
                 "source":"OSM",
                 "type":"TMS",
                 "zMin":"8",
-                "zMax":"12",
+                "zMax":"11",
                 "url":"http://a.tile.openstreetmap.org",
                 "bbox":[[3.0,43.0],[4.0,44.0]]
-
-
             }]);
         };
 
