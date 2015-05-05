@@ -102,11 +102,21 @@ public class Tile {
        return this.getZ() + "/" + this.getX() + "/" + this.getY() + ".png";
     }
 
+    public String getWMSsampleReq(){ //Todo gestion de autre que utm
+
+        BBox projected = this.getBoundingBox("unUse").toESPG3857();
+
+//        return "&CRS=EPSG%3A3857&STYLES=&WIDTH=1249&HEIGHT=951&BBOX=7738.824463716999%2C5097622.817222515%2C771497.6110891982%2C5679155.728416136";
+        return "&CRS=EPSG%3A3857&STYLES=&WIDTH=256&HEIGHT=256&BBOX="+projected.west+"%2C"+projected.south+"%2C"+projected.east+"%2C"+projected.north;
+
+
+    }
 
 
 
 
-    public BBox tile2boundingBox() {
+
+    public BBox getBoundingBox(String CRS) {
         BBox bb = new BBox();
         bb.north = tile2lat(this.getY(), this.getZ());
         bb.south = tile2lat(this.getY() + 1, this.getZ());

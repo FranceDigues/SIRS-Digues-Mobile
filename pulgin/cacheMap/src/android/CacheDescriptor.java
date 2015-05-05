@@ -8,36 +8,45 @@ import java.util.ArrayList;
 /**
  * Created by roch DARDIE on 22/04/15.
  */
+
+//TODO ! pHd, pBg == > MIN MAX
 public class CacheDescriptor {
 
     private String nom;
     private String Source;
-    private String typeSource;
+    private sourceType typeSource;
     private String urlSource;
+
+    private ArrayList<String> layers;
 
     private int zMin;
     private int zMax;
 
-    private GeoPoint pBg;
-    private GeoPoint pHd;
+    private GeoPoint pHg;
+    private GeoPoint pBd;
 
     private String path;
 
 
     public CacheDescriptor(){
         this.path="";
+        this.layers = new ArrayList<String>();
 
     }
 
     public CacheDescriptor(JSONObject jsonCache){
         this.path="";
+        this.layers = new ArrayList<String>();
+
 try{
         this.setNom(jsonCache.getString("nom"));
         this.setSource(jsonCache.getString("source"));
-        this.setTypeSource(jsonCache.getString("type"));
+        this.setTypeSource(sourceType.valueOf(jsonCache.getString("type")));
         this.setUrlSource(jsonCache.getString("url"));
         this.setzMin(jsonCache.getInt("zMin"));
         this.setzMax(jsonCache.getInt("zMax"));
+
+
 
         JSONArray aBbox= jsonCache.getJSONArray("bbox");
 
@@ -47,8 +56,19 @@ try{
 
         tmpMin.maxwell(tmpMax);
 
-        this.setpBg(tmpMin);
-        this.setpHd(tmpMax);
+        this.setpHg(tmpMin);
+        this.setpBd(tmpMax);
+
+
+
+
+
+    JSONArray aLayers= jsonCache.getJSONArray("layers");
+    for(int i=0 ; i<aLayers.length();i++){
+        this.layers.add(aLayers.getString(i));
+    }
+
+
 
     } catch (JSONException e) {
         e.printStackTrace();
@@ -65,20 +85,20 @@ try{
         this.nom = nom;
     }
 
-    public GeoPoint getpBg() {
-        return pBg;
+    public GeoPoint getpHg() {
+        return pHg;
     }
 
-    public void setpBg(GeoPoint pBg) {
-        this.pBg = pBg;
+    public void setpHg(GeoPoint pHg) {
+        this.pHg = pHg;
     }
 
-    public GeoPoint getpHd() {
-        return pHd;
+    public GeoPoint getpBd() {
+        return pBd;
     }
 
-    public void setpHd(GeoPoint pHd) {
-        this.pHd = pHd;
+    public void setpBd(GeoPoint pBd) {
+        this.pBd = pBd;
     }
 
     public String getSource() {
@@ -89,12 +109,11 @@ try{
         Source = source;
     }
 
-
-    public String getTypeSource() {
+    public sourceType getTypeSource() {
         return typeSource;
     }
 
-    public void setTypeSource(String typeSource) {
+    public void setTypeSource(sourceType typeSource) {
         this.typeSource = typeSource;
     }
 
@@ -122,18 +141,26 @@ try{
         this.zMax = zMax;
     }
 
+    public ArrayList<String> getLayers() {
+        return layers;
+    }
+
+    public void setLayers(ArrayList<String> layers) {
+        this.layers = layers;
+    }
+
     @Override
     public String toString() {
         return "CacheDescriptor{" +
                 "nom='" + nom + '\'' +
                 ", Source='" + Source + '\'' +
-                ", typeSource='" + typeSource + '\'' +
+                ", typeSource=" + typeSource +
                 ", urlSource='" + urlSource + '\'' +
+                ", layers=" + layers +
                 ", zMin=" + zMin +
                 ", zMax=" + zMax +
-                ", pBg=" + pBg +
-                ", pHd=" + pHd +
-                ", path='" + path + '\'' +
+                ", pHg=" + pHg +
+                ", pBd=" + pBd +
                 '}';
     }
 
@@ -144,25 +171,22 @@ try{
 
         ArrayList<Tile> aTile = new ArrayList<Tile>();
 
-        Log.d("PluginRDE_debug", "geoPoint Bg : "+this.getpBg().toString());
-        Log.d("PluginRDE_debug", "geoPoint Hd : "+this.getpHd().toString());
+        Log.d("PluginRDE_debug", "geoPoint Min : "+this.getpHg().toString());
+        Log.d("PluginRDE_debug", "geoPoint Max : "+this.getpBd().toString());
 
-        Tile tBg = this.getpBg().toTileTMS(this.getzMin());
-        Tile tHd = this.getpHd().toTileTMS(this.getzMin());
+        Tile tHg = this.getpHg().toTileTMS(this.getzMin());
+        Tile tBd = this.getpBd().toTileTMS(this.getzMin());
 
-        Log.d("PluginRDE_debug", "tile Bg : "+tBg.toString());
-        Log.d("PluginRDE_debug", "tile Hd : "+tHd.toString());
+        Log.d("PluginRDE_debug", "tile Hg : "+tHg.toString());
+        Log.d("PluginRDE_debug", "tile Bd : "+tBd.toString());
 
-        for (int x = tBg.getX();x<=tHd.getX();x++ ){
-            for (int y = tBg.getY();y<=tHd.getY();y++ ) {
+        for (int x = tHg.getX();x<=tBd.getX();x++ ){
+            for (int y = tHg.getY();y<=tBd.getY();y++ ) {
                 Tile tmp = new Tile(this.getzMin(),x,y);
                 Log.d("PluginRDE_debug", "tile en cours : "+tmp.toString());
                 aTile.add(tmp);
             }
-
         }
-
-
         return aTile;
 
     }
@@ -180,6 +204,7 @@ try{
 
     //TODO filtre sur les revision uniqement?
 
+    //TODO include layers
 
     @Override
     public boolean equals(Object o) {
@@ -192,8 +217,8 @@ try{
         if (zMin != that.zMin) return false;
         if (Source != null ? !Source.equals(that.Source) : that.Source != null) return false;
         if (nom != null ? !nom.equals(that.nom) : that.nom != null) return false;
-        if (pBg != null ? !pBg.equals(that.pBg) : that.pBg != null) return false;
-        if (pHd != null ? !pHd.equals(that.pHd) : that.pHd != null) return false;
+        if (pHg != null ? !pHg.equals(that.pHg) : that.pHg != null) return false;
+        if (pBd != null ? !pBd.equals(that.pBd) : that.pBd != null) return false;
         if (typeSource != null ? !typeSource.equals(that.typeSource) : that.typeSource != null)
             return false;
         if (urlSource != null ? !urlSource.equals(that.urlSource) : that.urlSource != null)
@@ -211,8 +236,8 @@ try{
 //        if (zMin != that.zMin) return false;
 //        if (Source != null ? !Source.equals(that.Source) : that.Source != null) return false;
 //        if (nom != null ? !nom.equals(that.nom) : that.nom != null) return false;
-//        if (pBg != null ? !pBg.equals(that.pBg) : that.pBg != null) return false;
-//        if (pHd != null ? !pHd.equals(that.pHd) : that.pHd != null) return false;
+//        if (pHg != null ? !pHg.equals(that.pHg) : that.pHg != null) return false;
+//        if (pBd != null ? !pBd.equals(that.pBd) : that.pBd != null) return false;
 //        if (typeSource != null ? !typeSource.equals(that.typeSource) : that.typeSource != null)
 //            return false;
 //        if (urlSource != null ? !urlSource.equals(that.urlSource) : that.urlSource != null)
@@ -229,8 +254,8 @@ try{
         result = 31 * result + (urlSource != null ? urlSource.hashCode() : 0);
         result = 31 * result + zMin;
         result = 31 * result + zMax;
-        result = 31 * result + (pBg != null ? pBg.hashCode() : 0);
-        result = 31 * result + (pHd != null ? pHd.hashCode() : 0);
+        result = 31 * result + (pHg != null ? pHg.hashCode() : 0);
+        result = 31 * result + (pBd != null ? pBd.hashCode() : 0);
         return result;
     }
 
@@ -247,6 +272,12 @@ try{
         }
 
          return resultante;
+    }
+
+
+    public String getWMSdescriptor(){
+        //todo multilayers?
+        return "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image%2Fpng&TRANSPARENT=true&LAYERS="+this.layers.get(0);
     }
 
     //todo controle de la présence de tout les fichier

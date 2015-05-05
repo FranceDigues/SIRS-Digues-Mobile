@@ -58,6 +58,11 @@ public class AsyncClear extends AsyncTask {
         Log.d("PluginRDE_RUN","asyncTask Clear");
 
 
+//        //ESSAI REPROJ
+//        BBox b= new BBox(3.5134210456400266,2.8113711933311194,44.296875, 43.59375);
+//        b.toESPG3857().toString();
+
+
         this.onProgressUpdate(0);
 //        Log.d("PluginRDE_debug","path  : "+Environment.getExternalStorageDirectory()+Environment.);
 //        String s = myContext.getExternalFilesDirs(this.filePath);

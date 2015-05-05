@@ -25,7 +25,7 @@ import org.json.JSONObject;
 
 
 /**
- * Created by harksin on 22/04/15.
+ * Created by roch DARDIE on 22/04/15.
  */
 public class AsyncCacheBuilder extends AsyncTask {
     private Context myContext;
@@ -93,12 +93,9 @@ public class AsyncCacheBuilder extends AsyncTask {
 
 
 
-//
-//        try {
-// open the file for reading
-        InputStream instream = null;
+
         try {
-            instream = new FileInputStream(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
+            InputStream instream = new FileInputStream(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
 
 
 // if file the available for reading
@@ -131,15 +128,7 @@ public class AsyncCacheBuilder extends AsyncTask {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        finally {
-//
-//                try {
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//        }
+
 
 
 
@@ -158,21 +147,8 @@ public class AsyncCacheBuilder extends AsyncTask {
 
         //chargement des tuiles si inexistant
         if(caDeLocal == null){
-
-            if(this.caDe.getTypeSource().equals("TMS")){
-
-
-//                ArrayList<Tile> aTile = this.caDe.firstLvlTileFromBb_TMS();
-
-
+            Log.d("PluginRDE_DEBUG","CREATETILE");
                 this.aTileDownload( this.caDe.firstLvlTileFromBb_TMS());
-
-
-
-            }
-            //todo iplementer les autres type
-
-
         }
         //Cas d'une mise a jour :
         if(! (caDeLocal==null) && ! caDeLocal.equals(caDe)){
@@ -180,14 +156,8 @@ public class AsyncCacheBuilder extends AsyncTask {
             /**
              * TODO comment on gere la fraicheur des donnée?
              */
-
-
-
-            if(this.caDe.getTypeSource().equals("TMS")){
-
+            Log.d("PluginRDE_DEBUG","MAJTILE");
                 this.aTileDownload( caDeLocal.getDiff(caDe)); //recupere les tuiles et leur sous tuile non encore presente
-
-            }
 
         }
 
@@ -258,7 +228,9 @@ public class AsyncCacheBuilder extends AsyncTask {
 
 
     private void aTileDownload(ArrayList<Tile> aTile){
-        if(aTile.get(0).getZ()<= caDe.getzMax())
+        Log.d("PluginRDE_RUN", "downloadTile"+aTile);
+
+//        if(aTile.get(0).getZ()<= caDe.getzMax())
 
         for(Tile t  :aTile){
             Log.d("PluginRDE_debug_DL", "tile en cours de DL : "+t.toString());
@@ -269,6 +241,7 @@ public class AsyncCacheBuilder extends AsyncTask {
             if(t.getZ()< caDe.getzMax()) {
                 aTileDownload(t.subServientTile_TMS());
             }
+            Log.d("PluginRDE_DEBUG_DLT", t.toString());
         }
 
     }
@@ -276,28 +249,82 @@ public class AsyncCacheBuilder extends AsyncTask {
 
 
     public long launchTileDl(Tile t) {
+        Log.d("PluginRDE_DLT", "downloadTile");
+
 
 
         //TODO methode get url dans tile @param type
+        DownloadManager.Request request =null;
+//        //Gestion des requete par source
+//        if(this.caDe.getTypeSource().equals("TMS")){
+////            DownloadManager.Request request = new DownloadManager.Request( Uri.parse(this.caDe.getUrlSource() +"/"+t.getTMSsampleReq()));
+//
+//        }
+//
+//
+//        if(this.caDe.getTypeSource().equals("ImageWMS")){
+//
+//
+//
+//
+////            DownloadManager.Request request = new DownloadManager.Request( Uri.parse(this.caDe.getUrlSource() +"/"+t.getTMSsampleReq()));
+////            Log.d("PluginRDE","http://a.tile.openstreetmap.org" + "/" + t.getZ() + "/" + t.getX() + "/" + t.getY() + ".png");
+//        }
+        Log.d("PluginRDE_DLT", this.caDe.getTypeSource().toString());
+
+        switch(this.caDe.getTypeSource()){
+            case TMS:
+                Log.d("PluginRDE_DLT", "TMS CASE");
+                 request = new DownloadManager.Request( Uri.parse(this.caDe.getUrlSource() +"/"+t.getTMSsampleReq()));
+                    Log.d("PluginRDE","http://a.tile.openstreetmap.org" + "/" + t.getZ() + "/" + t.getX() + "/" + t.getY() + ".png");
+                     request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                //        request.setAllowedOverRoaming(false);
+
+                request.setDescription("MiseAJourDuCache");
+                request.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png");
+                return dm.enqueue(request);
+//                break;
+            case ImageWMS :
+                Log.d("PluginRDE_DLT", "WMS CASE");
+                    Log.d("PluginRDE_BBOX","BBox coordinate : "+t.getBoundingBox("unUse").toString());
+                    Log.d("PluginRDE_BBOX","BBox projeté : "+t.getBoundingBox("unUse").toESPG3857().toString());
 
 
-        Log.d("PluginRDE", "downloadTile");
-
-//        DownloadManager.Request request = new DownloadManager.Request( Uri.parse(this.caDe.getUrlSource() + "/" + t.getZ() + "/" + t.getX() + "/" + t.getY() + ".png"));
-        DownloadManager.Request request = new DownloadManager.Request( Uri.parse(this.caDe.getUrlSource() +"/"+t.getTMSsampleReq()));
-        Log.d("PluginRDE","http://a.tile.openstreetmap.org" + "/" + t.getZ() + "/" + t.getX() + "/" + t.getY() + ".png");
-
-        //Restrict the types of networks over which this download may proceed.
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-        //Set whether this download may proceed over a roaming connection.
-//        request.setAllowedOverRoaming(false);
-
-        request.setDescription("MiseAJourDuCache");
 
 
-        request.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png");
+                    request = new DownloadManager.Request( Uri.parse(this.caDe.getUrlSource()+caDe.getWMSdescriptor()+t.getWMSsampleReq()));
+                    Log.d("PluginRDE_DLT","req   ====> " +this.caDe.getUrlSource()+caDe.getWMSdescriptor()+t.getWMSsampleReq());
 
-        return dm.enqueue(request);
+                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                    //        request.setAllowedOverRoaming(false);
 
+                    request.setDescription("MiseAJourDuCache");
+                    request.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png");
+                    return dm.enqueue(request);
+//                break;
+            default:
+                Log.d("PluginRDE_DLT", "DEFAULT CASE");
+                break;
+        }
+
+                //Restrict the types of networks over which this download may proceed.
+
+                //FIXME sleep on it
+//                if (request ){
+//
+//                }
+
+
+        Log.d("PluginRDE", "END DL");
+        return 0l;
     }
-}
+
+
+
+
+
+
+
+
+
+   }

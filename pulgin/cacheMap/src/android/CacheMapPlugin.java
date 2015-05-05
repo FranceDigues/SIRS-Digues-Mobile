@@ -24,14 +24,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
-
-
-
-
-
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 /**
@@ -124,6 +124,74 @@ public class CacheMapPlugin extends CordovaPlugin {
             AsyncClear asyncCbuilder = new AsyncClear(this.cordova.getActivity(),"/Tile");
 
             asyncCbuilder.execute();
+
+
+
+
+        }
+//getSource
+        if( action.equals("existingCache") )
+        {
+            Log.d("PluginRDE","existingCache");
+            //TODO clear juste le cache en parametre
+            this.runToast("existingCache :");
+
+
+
+            File[] jsonList = this.cordova.getActivity().getExternalFilesDir( "Tile").listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return pathname.getName().endsWith(".json");
+                }
+            });
+
+            JSONArray aCaDe = new JSONArray();
+            for(File f : jsonList){
+
+                try {
+                    InputStream instream = new FileInputStream(f);
+
+                    InputStreamReader inputreader = new InputStreamReader(instream);
+                    BufferedReader buffreader = new BufferedReader(inputreader);
+
+                    String line="";
+
+                    // read every line of the file into the line-variable, on line at the time
+                    do {
+                        line = line +" " +buffreader.readLine();
+                        // do something with the line
+                    } while (line != null);
+
+                    Log.d("PluginRDE_Json","String in Json File : "+line);
+
+                    //stack json Object
+                    aCaDe.put( new JSONObject(line));
+
+
+                    instream.close();
+
+
+
+
+
+                    //TODO fire event to JS?
+
+
+
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
+            };
+
+
 
 
 
@@ -224,10 +292,10 @@ public class CacheMapPlugin extends CordovaPlugin {
         //creation et lancement async task
 
 
-
+        Log.d("PluginRDE_DEBUG","buildCache + "+caDes.toString());
             AsyncCacheBuilder asyncCbuilder = new AsyncCacheBuilder(this.cordova.getActivity(), caDes, this.dm);
 
-            asyncCbuilder.execute();
+        asyncCbuilder.execute();
 
 
 

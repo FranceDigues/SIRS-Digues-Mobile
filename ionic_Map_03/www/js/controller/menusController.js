@@ -44,7 +44,7 @@ angular.module('controllers.menus', [])
         //};
 
 
-        $scope.plugTestUpdate = function(){
+        $scope.plugTestUpdateTMS = function(){
             //$log.debug("test");
             CacheMapPlugin.updateCache([{
                 "nom":"essai",
@@ -53,7 +53,20 @@ angular.module('controllers.menus', [])
                 "zMin":"8",
                 "zMax":"11",
                 "url":"http://a.tile.openstreetmap.org",
-                "bbox":[[3.0,43.0],[4.0,44.0]]
+                "bbox":[[43.0,3.0],[44.0,9.0]]
+            }]);
+        };
+        $scope.plugTestUpdateWMS = function(){
+            //$log.debug("test");
+            CacheMapPlugin.updateCache([{
+                "nom":"essaiWMS",
+                "source":"cstl-demo",
+                "type":"ImageWMS",
+                "zMin":"8",
+                "zMax":"9",
+                "url":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
+                "layers":["ZA_EID_Nuisance"],
+                "bbox":[[42.5,2.5],[44.0,5.0]]
             }]);
         };
 
