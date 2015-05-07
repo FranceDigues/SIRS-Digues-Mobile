@@ -7,19 +7,51 @@ function CacheMapPlugin() {
     console.log("CacheMapPlugin.js: is created");
 }
 
+
+
+
+CacheMapPlugin.prototype._amplifier = function (info) {
+    console.log("firset step");
+    //if (info) {
+
+
+    if(info.evType === "clearCacheProgress") {
+        cordova.fireWindowEvent("clearCacheProgress", info);
+        console.log("event recive from android");
+        console.log(info);
+    }
+
+
+    //}
+
+};
+
+
+
 CacheMapPlugin.prototype.updateCache = function (cacheArray) {
     console.log("CacheMapPlugin.js: updateCache");
-    exec(function (result) {/*alert("OK" + reply);*/
-    }, function (result) {/*alert("Error" + reply);*/
+    exec(function (result) {
+
+        //alert("result" + result);
+    }, function (result) {
+    //alert("Error" + result);
     }, "CacheMapPlugin", "updateCache", cacheArray);
 };
 
 CacheMapPlugin.prototype.clearCache = function () {
     console.log("CacheMapPlugin.js: initUserData");
-    exec(function (result) {/*alert("OK" + reply);*/
-    }, function (result) {/*alert("Error" + reply);*/
+    exec(cacheMapPlugin._amplifier, function () {
+        console.log("ERROR");
+        //alert("Error" + result);
     }, "CacheMapPlugin", "clearWay", []);
 };
+
+
+
+
+
+
+
 
 
 

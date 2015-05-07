@@ -10,7 +10,8 @@ var app = angular.module('cartoMobile', [
     'openlayers-directive',
     'controllers',
     'controllers.map',
-    'controllers.mapCache',
+    //'controllers.mapCache',
+    'module_rde.geoCache',
     'controllers.menus',
     'data.services.pipe',
     'data.services.source',
@@ -109,8 +110,9 @@ app.run(function ($ionicPlatform) {
             })
             .state('cache', {
                 url: '/cache',
-                controller: 'CacheCtrl',
-                templateUrl: 'templates/cache.html'
+                controller: 'cGeoCache as c',
+                //controllerAs:'c',
+                templateUrl: 'module_rde/geoCache/geoCache.html'
             })
             .state('formGenerator', {
                 url: '/formGenerator',

@@ -28,13 +28,12 @@
         <source-file src="src/android/Tile.java" target-dir="src/" />
         <source-file src="src/android/BBox.java" target-dir="src/" />
         <source-file src="src/android/sourceType.java" target-dir="src/" />
+        
+        <source-file src="src/android/Pyromaniac.java" target-dir="src/" />
 
-
-        <source-file src="src/android/CoordinateConversion.java" target-dir="src/" />
-        <source-file src="src/android/SingletonCoordinateConvertion.java" target-dir="src/" />
 
 
         <source-file src="libs/gson-2.2.4.jar" target-dir="libs/" />
-        <source-file src="libs/JMapProjLib.jar" target-dir="libs/" />
+
     </platform>
 </plugin>

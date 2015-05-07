@@ -32,15 +32,17 @@ public class AsyncCacheBuilder extends AsyncTask {
     private CacheDescriptor caDe;
     private DownloadManager dm;
     private CacheDescriptor caDeLocal;
+    Pyromaniac flamethrower;
 
     //constructeur
-    public AsyncCacheBuilder(Context context, CacheDescriptor c,DownloadManager d)
+    public AsyncCacheBuilder(Context context, Pyromaniac eventTrigger , CacheDescriptor c,DownloadManager d )
     {
 
         this.myContext = context ;
         this.caDe=c;
         this.dm =d;
         this.caDeLocal=null;
+        this.flamethrower = eventTrigger;
     }
 
 

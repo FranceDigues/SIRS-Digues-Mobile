@@ -5,11 +5,11 @@
 //import com.jhlabs.map.*;
 import android.util.Log;
 
-import com.rde.geodroid.ersatz.PointD;
-import com.rde.geodroid.ersatz.RectD;
-
-import com.jhlabs.map.proj.Projection;
-import com.jhlabs.map.proj.ProjectionFactory;
+//import com.rde.geodroid.ersatz.PointD;
+//import com.rde.geodroid.ersatz.RectD;
+//
+//import com.jhlabs.map.proj.Projection;
+//import com.jhlabs.map.proj.ProjectionFactory;
 
 public class GeoPoint {
 
@@ -22,14 +22,14 @@ public class GeoPoint {
         this.lon = lo;
     }
 
-    public GeoPoint(PointD p){
-        this.lat = p.x;
-        this.lon = p.y;
-    }
+//    public GeoPoint(PointD p){
+//        this.lat = p.x;
+//        this.lon = p.y;
+//    }
 
-    public PointD getPointD(){
-        return new PointD(this.getLat(),this.getLon());
-    }
+//    public PointD getPointD(){
+//        return new PointD(this.getLat(),this.getLon());
+//    }
 
 
 
@@ -129,61 +129,7 @@ public class GeoPoint {
 
 
 
-//TODO: externalisé l'appel de la projection
-//    public GeoPoint toESPG3857() {
-//        // Create a new SWEREF99 TM projection
-////        Projection projection = ProjectionFactory.getNamedProjection("ESPG:3857");
-//        Projection destProj = ProjectionFactory.getNamedPROJ4CoordinateSystem("3857");
-////        Projection projection = ProjectionFactory.getNamedPROJ4CoordinateSystem("2000");
-//        Projection sourceProj = ProjectionFactory.getNamedPROJ4CoordinateSystem("4326");
-//
-//
-//
-////        Log.d("PluginRDE_debug", "proj NAME  : " + projection.getName());
-////        Log.d("PluginRDE_debug", "description " + projection.getPROJ4Description());
-//
-////        Projection projection = ProjectionFactory.fromPROJ4Specification(new String[] {
-////                "+proj=merc",
-////                "+a=6378137",
-////                "+b=6378137,",
-////                "+lat_ts=0.0",
-////                "+lon_0=0.0",
-////                "+x_0=0.0",
-////                "+y_0=0 ",
-////                "+k=1.0",
-////                "+units=m ",
-////                "+nadgrids=@null",
-////                "+no_defs"
-//////
-//////
-//////                "+proj=tmerc",
-//////                "+zone=33",
-//////                "+ellps=GRS80",
-//////                "+towgs84=0,0,0,0,0,0,0",
-//////                "+units=m",
-//////                "+no_defs"
-////        });
-//
-//        // Convert the long-lat coordinate to a Point2D.Double
-////        PointD longlatPoint = new PointD(this.getLat(), this.getLon());
-////        // Get the location as a SWEREF99 TM Point2D.Double
-////        PointD  sweref99TMPoint = projection.transform(this.getPointD(), new PointD());
-//
-//        // Convert the Point2D.Double to a Coordinate and return it
-//        Log.d("PluginRDE_debug", "ponit Initial " +  this.toString());
-//        PointD g = sourceProj.transform(this.getPointD(), new PointD());
-//        Log.d("PluginRDE_debug", "ponit proj " +  g.toString());
-//
-//
-//
-//
-////        CoordinateConversion c = SingletonCoordinateConvertion.getInstance();
-////        c.latLon2UTM(this.getLat(),this.getLon())
-////        Log.d("PluginRDE_debug", "IBM : " +  c.latLon2UTM(this.getLat(),this.getLon()).toString());
-//
-//        return  SingletonCoordinateConvertion.getInstance().latLon2UTM(this.getLat(), this.getLon());
-//    }
-
+//FIXME :  lib geo
     public GeoPoint toESPG3857(){
 
         double φ = Math.toRadians(this.getLat());
@@ -200,9 +146,5 @@ public class GeoPoint {
 
 
 public static final double R= 6378137;
-//    public static final double LINEAR_TOLERANCE = 0.01;
-//    public static final double ANGULAR_TOLERANCE = LINEAR_TOLERANCE / (NAUTICAL_MILE * 60);
-//    public static final double NAUTICAL_MILE = 1852;
-//    public static final double POSITIVE_INFINITY = 1.0 / 0.0;
 
 }

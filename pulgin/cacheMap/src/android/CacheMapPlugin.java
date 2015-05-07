@@ -65,6 +65,7 @@ public class CacheMapPlugin extends CordovaPlugin {
     private long enqueue;  //do Tableau
     private DownloadManager dm;
     private String StorageDrive;
+    private Pyromaniac flamethrower;
 
 
     /**
@@ -92,6 +93,17 @@ public class CacheMapPlugin extends CordovaPlugin {
         //recuperé le stokage de cordova? moche..
 //        StorageDrive =args[1];
         Log.d("PluginRDE","PlugCall");
+
+
+
+
+        //construction de l'emetteur d'evenement :
+        this.flamethrower = new Pyromaniac(callbackContext);
+
+
+
+
+
 
         if( action.equals("updateCache") )
         {
@@ -121,7 +133,7 @@ public class CacheMapPlugin extends CordovaPlugin {
             this.runToast("clearAllCache :");
 
 
-            AsyncClear asyncCbuilder = new AsyncClear(this.cordova.getActivity(),"/Tile");
+            AsyncClear asyncCbuilder = new AsyncClear(this.cordova.getActivity(),this.flamethrower,"/Tile");
 
             asyncCbuilder.execute();
 
@@ -293,7 +305,7 @@ public class CacheMapPlugin extends CordovaPlugin {
 
 
         Log.d("PluginRDE_DEBUG","buildCache + "+caDes.toString());
-            AsyncCacheBuilder asyncCbuilder = new AsyncCacheBuilder(this.cordova.getActivity(), caDes, this.dm);
+            AsyncCacheBuilder asyncCbuilder = new AsyncCacheBuilder(this.cordova.getActivity(),this.flamethrower,caDes, this.dm);
 
         asyncCbuilder.execute();
 

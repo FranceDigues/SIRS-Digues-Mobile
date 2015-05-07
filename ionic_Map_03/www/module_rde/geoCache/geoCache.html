@@ -1,0 +1,58 @@
+<ion-view class="cache-view">
+    <ion-content scroll="false">
+        <div class="row">
+            <div class="col col-25 cache-form">
+                <ion-list>
+                    <!--FIXME  validation de form-->
+                    <label class="item item-input">
+                        <span class="input-label">nom du Cache</span>
+                        <input type="text" ng-model="c.CacheName">
+                    </label>
+                    <ion-toggle ng-model="polyOrnotPoly">
+                        Selection Polygonale
+                    </ion-toggle>
+                    <ion-checkbox ng-repeat="layer in c.layers|filter:{isCache:false}" ng-model="c.isChecked"> Recup
+                        {{layer.name}} ?
+                    </ion-checkbox>
+
+                    <rzslider rz-slider-model="centreCarte.zoom" rz-slider-floor="0" rz-slider-ceil="18"></rzslider>
+                    <rzslider rz-slider-model="c.z.zMin" rz-slider-high="c.z.zMax" rz-slider-floor="0"
+                              rz-slider-ceil="18"></rzslider>
+                    <progress max="{{c.nbTileMax}}" value="{{c.nbTile}}"></progress>
+
+
+                    <!--TODO : alert volume?-->
+                    <button class="button button-block button-positive" href="#/" ng-click="c.cachMe()">Mise en Cache
+                    </button>
+                </ion-list>
+            </div>
+            <div class="col col-75">
+                <openlayers id="mapCache" ol-center="centreCarte" ol-controls="controls" ol-defaults="defaults"
+                            height="400px">
+                    <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.layers|filter:{active:true}"></ol-layer>
+                </openlayers>
+
+
+                <div class="action-buttons">
+                    <div>
+                        <button class="button button-block button-positive button-yellow" ng-click="c.lock()">verr.</button>
+                        <button class="button button-block button-positive button-yellow" ng-click="c.unlock()">libre</button>
+                        <!--<button class="button button-block button-positive button-yellow" ng-click="openPopover()">Pop</button>-->
+                    </div>
+                </div>
+
+
+
+                <ion-list>
+                    <!--ng-click="changeColorOfFeature()"-->
+                    <ion-item ng-repeat="item in  c.user.cache.layers">Source en Cache : {{item.origine}} , Nom Du Cache :
+                        {{item.nom}}
+                    </ion-item>
+                </ion-list>
+
+
+            </div>
+        </div>
+        <!--{{var.CoordList}}-->
+    </ion-content>
+</ion-view>

@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -15,13 +18,19 @@ import java.util.ArrayList;
 public class AsyncClear extends AsyncTask {
     private Context myContext;
     private String filePath;
+    private Pyromaniac flamethrower;
+    private int nbItem;
+    private int pas;
+    private int ix;
+
 
     //constructeur
-    public AsyncClear(Context context, String FilePath)
+    public AsyncClear(Context context, Pyromaniac eventTrigger,String FilePath )
     {
 
         this.myContext = context ;
-    this.filePath=FilePath;
+        this.filePath=FilePath;
+        this.flamethrower = eventTrigger;
     }
 
 
@@ -71,6 +80,9 @@ public class AsyncClear extends AsyncTask {
 
 
 
+        this.countPathElement(baseDir);
+        this.pas = this.nbItem/10;
+        int ix=0;
         this.DeleteRecursive(baseDir);
 
         this.onProgressUpdate(100);
@@ -110,5 +122,22 @@ public class AsyncClear extends AsyncTask {
                 DeleteRecursive(child);
 
         fileOrDirectory.delete();
+
+
+        try {
+            this.ix++;
+            Log.d("PluginRDE_PYRO", "event content   ::   "+"{\"evType\":\"clearCacheProgress\",\"global\":\""+this.nbItem+"\",\"ix\":\""+this.ix+"\"}");
+            this.flamethrower.fire(new JSONObject("{\"evType\":\"clearCacheProgress\",\"global\":\""+this.nbItem+"\",\"ix\":\""+this.ix+"\"}"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void countPathElement(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                countPathElement(child);
+
+       this.nbItem++;
     }
 }
