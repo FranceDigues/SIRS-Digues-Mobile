@@ -97,31 +97,33 @@ public class AsyncCacheBuilder extends AsyncTask {
 
 
         try {
-            InputStream instream = new FileInputStream(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
+//            InputStream instream = new FileInputStream(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
+            File f = new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
 
 
 // if file the available for reading
-            if (instream != null) {
-                // prepare the file for reading
-                InputStreamReader inputreader = new InputStreamReader(instream);
-                BufferedReader buffreader = new BufferedReader(inputreader);
+//            if (instream != null) {
+//                // prepare the file for reading
+//                InputStreamReader inputreader = new InputStreamReader(instream);
+//                BufferedReader buffreader = new BufferedReader(inputreader);
+//
+//                String line="";
+//
+//                // read every line of the file into the line-variable, on line at the time
+//                do {
+//                    line = line +" " +buffreader.readLine();
+//                    // do something with the line
+//                } while (line != null);
+//
+//                Log.d("PluginRDE_Json","String in Json File : "+line);
+            if(f!= null){
+                this.caDeLocal = new CacheDescriptor( new JSONObject(FileUtils.FiletoString(f)));
+            }
 
-                String line="";
 
-                // read every line of the file into the line-variable, on line at the time
-                do {
-                    line = line +" " +buffreader.readLine();
-                    // do something with the line
-                } while (line != null);
+//                }
 
-                Log.d("PluginRDE_Json","String in Json File : "+line);
-                this.caDeLocal = new CacheDescriptor( new JSONObject(line));
-
-
-
-                }
-
-            instream.close();
+//            instream.close();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -208,6 +210,12 @@ public class AsyncCacheBuilder extends AsyncTask {
 
 
         }
+
+
+
+
+        //diffusion des changement
+        FileUtils.broadCastCacheList( this.myContext,this.flamethrower);
 
 
         this.onProgressUpdate(100);

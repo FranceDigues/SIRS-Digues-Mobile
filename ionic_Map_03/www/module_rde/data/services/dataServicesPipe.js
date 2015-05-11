@@ -48,22 +48,22 @@ angular.module('module_rde.data.services.pipe', [])
         //
         //});
     })
+
+
     .service('sLayer', function (sPouch, $log, $rootScope) {
         //carcan
         var me = this;
 
         //attribut
         me.list = null;
-        var rscp = $rootScope.$new(); //FIXME le $on est focement dans un scope? pk route scope de la catch pas?
-
+        me._stateMemory = null; //FIXME ? gestion des etat de calque global a l'aplication.
+        var rscp = $rootScope.$new();
 
         /**
          *  FIXME les calque sorte direct de la db, du coup les variable de contexte ne doivent plus etre porter par ces objet
          *  TODO créer un json UUID - Layer Context Value
          *
          */
-
-
 
             //methode de mise a jour de l'objet layers
         me.update = function () {
@@ -72,6 +72,8 @@ angular.module('module_rde.data.services.pipe', [])
                 $log.debug("slayer init");
                 $log.debug(doc);
 
+                //copy des etat de calque
+                angular.Copy(me.list, me._stateMemory)
                 me.list = doc.layers;
                 $log.debug(me.list);
                 $log.debug("slayer end");
@@ -93,7 +95,49 @@ angular.module('module_rde.data.services.pipe', [])
 
         //initialisation
         me.update();
+        CacheMapPlugin.CaDeListReQuest();
 
+
+        document.addEventListener("updateListCache", function(aCaDe){
+            $log.debug("eventListCache recus");
+            $log.debug(aCaDe);
+
+            aCaDe.forEach(function(item){
+                    var tLayer = {
+                        idf: item.idf,
+                        active: false,
+                        name: item.nom,
+                        isCache: true,
+                        opacity: 0.6,
+                        source: {
+                            "type": "OSM",
+                            "url": "file:///storage/emulated/0/Android/data/com.ionic.Map03/files/Tile/cstl-demo/essaiWMS/{z}/{x}/{y}.png"
+                        }
+
+                    }
+
+                }
+
+            )
+
+            }
+            //for(var i =  ; i<aCaDe.length ; i++){
+            //    var tLayer = {
+            //        idf: aCaDe[i].,
+            //        active: false,
+            //        name: "WMSfromDeep",
+            //        isCache: true,
+            //        opacity: 0.6,
+            //        source: {
+            //            "type": "OSM",
+            //            "url": "file:///storage/emulated/0/Android/data/com.ionic.Map03/files/Tile/cstl-demo/essaiWMS/{z}/{x}/{y}.png"
+            //        }
+            //
+            //    }
+            //}
+
+
+        });
 
 
     })

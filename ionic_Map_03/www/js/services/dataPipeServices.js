@@ -46,6 +46,7 @@ angular.module('data.services.pipe', [])
 
         //attribut
         me.list = null;
+        me._layersStateList = null;
         var rscp = $rootScope.$new(); //FIXME le $on est focement dans un scope? pk route scope de la catch pas?
 
 
@@ -56,6 +57,31 @@ angular.module('data.services.pipe', [])
          */
 
 
+        me.updateLayer = function(layers){
+
+
+
+            //pour chaque calque de la db
+            for(var i = 0; i < layers.length; i++) {
+
+                var tmpState =  {idf:layers[i].idf,active:false};
+
+                //on verifie si il existe dans la liste de reference locale
+               if(me.list !== null) {
+                   for (var j = 0; j < me.list.length; j++) {
+
+                       //si oui on affecte la valeur.
+                       if (me.list[j].idf === layers[i].idf) {
+                           layers[i].active = me.list[j].active;
+                       }
+                   }
+               }
+            }
+
+
+            me.list = layers;
+        };
+
 
             //methode de mise a jour de l'objet layers
         me.update = function () {
@@ -64,7 +90,7 @@ angular.module('data.services.pipe', [])
                 $log.debug("slayer init");
                 $log.debug(doc);
 
-                me.list = doc.layers;
+                me.updateLayer( doc.layers);
                 $log.debug(me.list);
                 $log.debug("slayer end");
                 $rootScope.$broadcast("layersListUpdated");
@@ -85,6 +111,7 @@ angular.module('data.services.pipe', [])
 
         //initialisation
         me.update();
+
 
 
 

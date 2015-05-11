@@ -30,6 +30,7 @@
         <source-file src="src/android/sourceType.java" target-dir="src/" />
         
         <source-file src="src/android/Pyromaniac.java" target-dir="src/" />
+        <source-file src="src/android/FileUtils.java" target-dir="src/" />
 
 
 

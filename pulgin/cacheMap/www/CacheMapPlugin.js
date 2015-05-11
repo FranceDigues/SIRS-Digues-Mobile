@@ -12,7 +12,7 @@ function CacheMapPlugin() {
 
 CacheMapPlugin.prototype._amplifier = function (info) {
     console.log("firset step");
-    //if (info) {
+
 
 
     if(info.evType === "clearCacheProgress") {
@@ -22,7 +22,14 @@ CacheMapPlugin.prototype._amplifier = function (info) {
     }
 
 
-    //}
+    if(info.evType === "updateListCache") {
+        cordova.fireWindowEvent("updateListCache", info.aCaDe);
+        console.log("event recive from android");
+        console.log(info);
+    }
+
+
+
 
 };
 
@@ -44,6 +51,14 @@ CacheMapPlugin.prototype.clearCache = function () {
         console.log("ERROR");
         //alert("Error" + result);
     }, "CacheMapPlugin", "clearWay", []);
+};
+
+CacheMapPlugin.prototype.CaDeListReQuest = function () {
+    console.log("CacheMapPlugin.js: request cache List");
+    exec(cacheMapPlugin._amplifier, function () {
+        console.log("ERROR");
+        //alert("Error" + result);
+    }, "CacheMapPlugin", "getCaDeList", []);
 };
 
 

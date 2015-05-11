@@ -101,10 +101,6 @@ public class CacheMapPlugin extends CordovaPlugin {
         this.flamethrower = new Pyromaniac(callbackContext);
 
 
-
-
-
-
         if( action.equals("updateCache") )
         {
             Log.d("PluginRDE_RUN","updateCacheWay");
@@ -126,6 +122,7 @@ public class CacheMapPlugin extends CordovaPlugin {
 //            this.downloadTile("testUUID", "TestNom", 0,0, 0);
 
         }
+
         if( action.equals("clearWay") )
         {
             Log.d("PluginRDE","initUserData");
@@ -137,82 +134,86 @@ public class CacheMapPlugin extends CordovaPlugin {
 
             asyncCbuilder.execute();
 
-
-
-
         }
+
+
+
 //getSource
-        if( action.equals("existingCache") )
-        {
-            Log.d("PluginRDE","existingCache");
-            //TODO clear juste le cache en parametre
-            this.runToast("existingCache :");
+        if( action.equals("getCaDeList") )
 
-
-
-            File[] jsonList = this.cordova.getActivity().getExternalFilesDir( "Tile").listFiles(new FileFilter() {
-                @Override
-                public boolean accept(File pathname) {
-                    return pathname.getName().endsWith(".json");
-                }
-            });
-
-            JSONArray aCaDe = new JSONArray();
-            for(File f : jsonList){
-
-                try {
-                    InputStream instream = new FileInputStream(f);
-
-                    InputStreamReader inputreader = new InputStreamReader(instream);
-                    BufferedReader buffreader = new BufferedReader(inputreader);
-
-                    String line="";
-
-                    // read every line of the file into the line-variable, on line at the time
-                    do {
-                        line = line +" " +buffreader.readLine();
-                        // do something with the line
-                    } while (line != null);
-
-                    Log.d("PluginRDE_Json","String in Json File : "+line);
-
-                    //stack json Object
-                    aCaDe.put( new JSONObject(line));
-
-
-                    instream.close();
+    {
+        Log.d("PluginRDE", "getCaDeList");
+        //TODO clear juste le cache en parametre
+        this.runToast("Recuperation de la liste des caches :");
 
 
 
 
+        FileUtils.broadCastCacheList(this.cordova.getActivity(),this.flamethrower);
 
-                    //TODO fire event to JS?
+//        File[] jsonList = this.cordova.getActivity().getExternalFilesDir("Tile").listFiles(new FileFilter() {
+//            @Override
+//            public boolean accept(File pathname) {
+//                return pathname.getName().endsWith(".json");
+//            }
+//        });
+//
+//        JSONArray aCaDe = new JSONArray();
+//        for (File f : jsonList) {
+//
+//            try {
+////                InputStream instream = new FileInputStream(f);
+////
+////                InputStreamReader inputreader = new InputStreamReader(instream);
+////                BufferedReader buffreader = new BufferedReader(inputreader);
+////
+////
+//////                IOUtils.readLines  ??
+//////
+////
+////                StringBuilder total = new StringBuilder();
+////                String line;
+////                while ((line = buffreader.readLine()) != null) {
+////                    total.append(line);
+////                }
+////
+////                Log.d("PluginRDE_Json", "String in Json File : " + total);
+//
+//                //stack json Object
+//
+//                aCaDe.put(new JSONObject(FileUtils.FiletoString(f)));
+//
+//////clear.
+////                instream.close();
+////                buffreader.close();
+////
+//
+//
+//                //preparation du message contenant les descripteur de caches
+//                JSONObject eventMessage = new JSONObject("{\"evType\":\"updateListCache\",\"aCade\":\"null\"}");
+//                eventMessage.put("aCade", aCaDe);
+//
+//                //envoie du message par lanceflame interposé
+//                this.flamethrower.fire(eventMessage);
+//
+//
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//
+//        };
 
 
-
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-
-            };
-
-
-
-
-
-
-        }
+    }
 
 
         return true;
-    }
+    };
 
 
 

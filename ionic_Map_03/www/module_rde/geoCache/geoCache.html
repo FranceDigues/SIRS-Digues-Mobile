@@ -45,8 +45,7 @@
 
                 <ion-list>
                     <!--ng-click="changeColorOfFeature()"-->
-                    <ion-item ng-repeat="item in  c.user.cache.layers">Source en Cache : {{item.origine}} , Nom Du Cache :
-                        {{item.nom}}
+                    <ion-item ng-repeat="item in  c.user.cacheGjson.features">Cache Descriptor : {{item.properties.cacheDescriptor}}
                     </ion-item>
                 </ion-list>
 

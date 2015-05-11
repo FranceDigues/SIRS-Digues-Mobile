@@ -88,6 +88,9 @@ public class AsyncClear extends AsyncTask {
         this.onProgressUpdate(100);
 
 
+        FileUtils.broadCastCacheList(this.myContext, this.flamethrower);
+
+
         return null;
 
     }

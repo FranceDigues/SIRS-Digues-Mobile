@@ -2,6 +2,17 @@
  * Created by roch Dardie on 07/05/15.
  */
 
+
+
+/**
+ * const :
+ */
+var CACHE_FIRST_IDF = 1000000;
+
+
+
+
+
 angular.module('module_rde.geoCache', [
     'data.services.source',
     'data.services.pipe',
@@ -19,6 +30,7 @@ angular.module('module_rde.geoCache', [
 
 
         me.layers = sLayer.list; // maj .?
+
         me.mode = sMap.mode;
         me.vsCacheBox = null;
         me.lCacheBox = null;
@@ -159,9 +171,9 @@ angular.module('module_rde.geoCache', [
 
 
                 //init des zonne de cache
-                if (sContext.auth.user.cacheGeom != "") {
+                if (sContext.auth.user.cg != "") {
                     var gjson = new ol.format.GeoJSON();
-                    var aFeatures = gjson.readFeatures(sContext.auth.user.cacheGeom);
+                    var aFeatures = gjson.readFeatures(sContext.auth.user.cacheGjson);
                     $log.debug(aFeatures);
 
                    me.ExistingCacheSource.addFeatures(aFeatures);
@@ -248,7 +260,7 @@ angular.module('module_rde.geoCache', [
             //eregistrement ds l'objet utilisater
             //TODO user dans le context!
             sContext.auth.user.cacheGeom = atoGeoJson($scope.ExistingCacheSource);
-            sContext.auth.user.cache.layers.push({nom: cacheName, origine: LayerSourceName});
+            //sContext.auth.user.cache.layers.push({nom: cacheName, origine: LayerSourceName});
 
             $log.debug(sContext.auth.user);
             //TODO stoker la liste des tuile pour controle au chargement
@@ -257,6 +269,7 @@ angular.module('module_rde.geoCache', [
             sContext.saveUser();
 
         };
+
 
 
 

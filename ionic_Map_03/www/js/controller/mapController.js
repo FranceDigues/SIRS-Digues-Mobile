@@ -21,7 +21,42 @@ angular.module('controllers.map', [])
         //$scope.msk = sMask.doc;
         //$log.debug($scope.msk)
 
+        //$scope.layers= null;
+        //$scope.layersStateList= null;
+
+
         $scope.layers = sLayer.list;
+
+        //me.updateLayer = function(){
+        //
+        //
+        //    var aRef = [];
+        //    for(var i = 0; i < $scope.layers.length; i++) {
+        //
+        //       var tmpState =  {idf:$scope.layers[i].idf,active:false};
+        //
+        //            for (var j = 0; j < $scope.layersStateList.length; j++) {
+        //
+        //                if ($scope.layersStateList[j].idf === $scope.layers[i].idf) {
+        //                    tmpState.active = $scope.layersStateList[j].active);
+        //                }
+        //
+        //
+        //            }
+        //
+        //            aRef.push({idf: tmpState.idf.idf, active:tmpState.active});
+        //
+        //    }
+        //
+        //    $scope.layersStateList = aRef;
+        //
+        //};
+
+
+        //me.updateLayer();
+
+
+
         $scope.mode = sMap.mode;
         $scope.Ploting = [];
         $scope.newObs = null;
@@ -30,7 +65,7 @@ angular.module('controllers.map', [])
 
 
         $scope.$on("formUpdate", function (data) {
-            $log.debug("reception event formUpdate")
+            $log.debug("reception event formUpdate");
             $timeout(function () {
                 $scope.newObs = sMask.form;
             });
@@ -57,7 +92,7 @@ angular.module('controllers.map', [])
 
         $scope.toGeoJson = function (f) {
             return new ol.format.GeoJSON().writeFeatures(f.getFeatures().getArray());
-        }
+        };
 
 
 
@@ -101,7 +136,7 @@ angular.module('controllers.map', [])
                 mouseposition: {},
                 mouseclickposition: {},
                 projection: 'EPSG:4326',
-                markers: new Array()  //FIXME zoom impossible si marker sur la carte
+                markers: []  //FIXME zoom impossible si marker sur la carte
 
             });
 
@@ -192,59 +227,13 @@ angular.module('controllers.map', [])
 
                 draw.on('drawend', function (f) {
                     //elPropagator
-                    $scope.newObs.feature = f.feature
+                    $scope.newObs.feature = f.feature;
                     $rootScope.$broadcast('drawend', f);
-                })
+                });
 
                 map.addInteraction(draw);
             }
 
-
-            ///************************************ deport gestion des interacton ol3 ************************************/
-            ////todo deport direct dans le service?
-            ////copy copy copy
-            //angular.copy($scope.master)
-            //
-            //
-            //idrawP = new ol.interaction.Draw({
-            //    features: featureOverlay.getFeatures(),
-            //    //type: ol.geom.GeometryType.POLYGON
-            //    type: ol.geom.GeometryType.POINT
-            //});
-            //$log.debug(idrawP);
-            //
-            ////idrawL = new ol.interaction.Draw({
-            ////    features: featureOverlay.getFeatures(),
-            ////    //type: ol.geom.GeometryType.POLYGON
-            ////    type: ol.geom.GeometryType.LineString
-            ////});
-            ////$log.debug(idrawL);
-            //
-            //idrawA = new ol.interaction.Draw({
-            //    features: featureOverlay.getFeatures(),
-            //    //type: ol.geom.GeometryType.POLYGON
-            //    type: ol.geom.GeometryType.Polygon
-            //});
-            //$log.debug(idrawA);
-            //
-            //
-            ////desactivation initiale
-            ////idrawP
-            //idrawL.setActive(false);
-            //idrawA.setActive(false);
-            //
-            ////ajout a la carte
-            //map.addInteraction(idrawP);
-            //map.addInteraction(idrawL);
-            //map.addInteraction(idrawA);
-            //
-            ////ajout au service
-            //sEventSuperviseur.olInteract.draw.point = idrawP;
-            //sEventSuperviseur.olInteract.draw.line = idrawL;
-            //sEventSuperviseur.olInteract.draw.area= idrawA;
-            //
-            //
-            ///************************************ end ************************************/
 
 
             $scope.updateType = function (dt) {
@@ -280,7 +269,7 @@ angular.module('controllers.map', [])
 
             sMask.doc.GeoJson = toGeoJson(featureOverlay);
             sMask.writeDocOnDb();
-        }
+        };
 
 
 //todo clear avant dessin
@@ -347,7 +336,7 @@ angular.module('controllers.map', [])
 
                 ixix = 0;
 
-            };
+            }
             if($scope.drawType.active=="LineString"){
                 //do nothing
                 ixix = 0;
@@ -383,6 +372,7 @@ angular.module('controllers.map', [])
         $scope.$on('layersListUpdated', function () {
 
 
+            //me.updateLayer();
 
             $scope.layers = sLayer.list;
         });
@@ -546,4 +536,4 @@ angular.module('controllers.map', [])
 
 
 
-    })
+    });

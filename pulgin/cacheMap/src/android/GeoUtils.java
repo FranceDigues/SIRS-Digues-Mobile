@@ -18,8 +18,6 @@ public  class GeoUtils {
         aTile.add(new Tile(Z+1,X+1,Y+1));
 
         return aTile;
-
-
     }
 
 
