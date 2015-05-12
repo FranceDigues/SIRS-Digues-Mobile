@@ -40,13 +40,14 @@ angular.module('module_rde.data.services.pipe', [])
         //
         //});
     })
-    .service('sLayer', function (sPouch, $log, $rootScope) {
+    .service('sLayer', function (sPouch, $log, $rootScope,$timeout) {
         //carcan
         var me = this;
 
         //attribut
         me.list = null;
-        me._layersStateList = null;
+        me._listLayer = null;
+        me._listCacheLayer = null;
         var rscp = $rootScope.$new(); //FIXME le $on est focement dans un scope? pk route scope de la catch pas?
 
 
@@ -58,31 +59,45 @@ angular.module('module_rde.data.services.pipe', [])
 
 
         me.updateLayer = function(layers){
-
-
-
             layers.forEach(function(lay){
-
                 //typage de l'objet
                 lay = new oLayer(lay);
 
                 //on verifie si il existe dans la liste de reference locale
                 if(me.list !== null) {
-                    for (var j = 0; j < me.list.length; j++) {
+                    for (var j = 0; j < me._listLayer.length; j++) {
 
                         //si oui on affecte la valeur.
                         if (me.list[j].idf === lay.idf) {
-                            tmpLayer.active = me.list[j].active;
+                            tmpLayer.active = me._listLayer[j].active;
                         }
                     }
                 }
-
-
             });
+            me._listLayer = layers;
 
-
-            me.list = layers;
+            me._fusionLayerList();
         };
+
+
+        me._fusionLayerList = function(){
+
+            //TODO faire mieux
+
+            if(me._listCacheLayer == null) {
+                me.list =me._listLayer;
+            }   else if( me._listLayer == null && me._listCacheLayer ==null){
+                me.list=null;
+            }else{
+                me.list =me._listLayer.concat( me._listCacheLayer);
+            }
+
+            $log.error("fuisoneur");
+            $log.error(me.list);
+            $log.error(me._listLayer);
+            $log.error(me._listCacheLayer);
+
+        }
 
 
         //methode de mise a jour de l'objet layers
@@ -111,33 +126,37 @@ angular.module('module_rde.data.services.pipe', [])
 
 
         document.addEventListener("updateListCache", function(aCaDe){
-            $log.debug("eventListCache recus");
+            $log.error("eventListCache recus");
             $log.debug(aCaDe);
 
-            //aCaDe.forEach(function(item){
-            //        //var tLayer = {
-            //        //    idf: item.idf,
-            //        //    active: false,
-            //        //    name: item.nom,
-            //        //    isCache: true,
-            //        //    opacity: 0.6,
-            //        //    source: {
-            //        //        "type": "OSM",
-            //        //        "url": "file:///storage/emulated/0/Android/data/com.ionic.Map03/files/Tile/cstl-demo/essaiWMS/{z}/{x}/{y}.png"
-            //        //    }
-            //        //
-            //        //}
-            //
-            //    }
-            //
-            //)
+            aCaDe.forEach(function(item){
+
+                //typage des object
+                item = new oCacheDescriptor(item);
+
+                //convertion en layer et oublie du caDe car on est dans sLayer
+                item = item.getLayer();
+
+
+                });
+
+            //affectation masterListe
+            me._listCacheLayer = aCaDe;
+
+
+            me._fusionLayerList()
 
         });
 
 
         //initialisation
-        me.update();
-        CacheMapPlugin.CaDeListReQuest();
+
+            me.update();
+
+        $timeout(function(){
+            CacheMapPlugin.CaDeListReQuest();
+        },2000);
+
 
 
 

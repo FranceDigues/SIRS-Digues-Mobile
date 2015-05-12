@@ -26,6 +26,10 @@ function oCacheDescriptor(idf, nom, source, type , zMin , zMax, url, layer ,bbox
     this.bbox = bbox ;
 }
 
+function oCacheDescriptor(CaDeObject ){
+    angular.extend(this,CaDeObject);
+}
+
 oCacheDescriptor.prototype.getLayer=function(){
 
     return new oLayer(this.idf, false, this.nom, true, 0.6, new oSource("OSM", NON_AUTO_FILE_SYSTEM+this.source+"/"+this.nom+"/{z}/{x}/{y}.png"));
