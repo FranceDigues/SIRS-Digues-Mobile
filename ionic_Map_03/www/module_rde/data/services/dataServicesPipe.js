@@ -40,8 +40,10 @@ angular.module('module_rde.data.services.pipe', [])
         //
         //});
     })
-    .service('sLayer', function (sPouch, $log, $rootScope,$timeout) {
+    .service('sLayer', function ($ionicPlatform,sPouch, $log, $rootScope,$timeout) {
         //carcan
+
+
         var me = this;
 
         //attribut
@@ -125,37 +127,43 @@ angular.module('module_rde.data.services.pipe', [])
         });
 
 
-        document.addEventListener("updateListCache", function(aCaDe){
-            $log.error("eventListCache recus");
-            $log.debug(aCaDe);
+        //$ionicPlatform.ready(function () {
+            //window.document.addEventListener
+        document.addEventListener("updateListCache", function (e) {
+                $log.debug("eventListCache recus IN SERVICE");
+                $log.debug(e.aCaDe);
+           var  aCADE =  e.aCaDe;
 
-            aCaDe.forEach(function(item){
+            e.aCaDe.forEach(function (item) {
 
-                //typage des object
-                item = new oCacheDescriptor(item);
+                $log.debug(item);
+                    //typage des object
+                    item = new oCacheDescriptor(item);
 
-                //convertion en layer et oublie du caDe car on est dans sLayer
-                item = item.getLayer();
+                    //convertion en layer et oublie du caDe car on est dans sLayer
+                    item = item.getLayer();
 
 
                 });
 
-            //affectation masterListe
-            me._listCacheLayer = aCaDe;
+                //affectation masterListe
+                me._listCacheLayer =e.aCaDe;
+            $log.error(me._listCacheLayer);
+
+                me._fusionLayerList();
+
+            });
 
 
-            me._fusionLayerList()
-
-        });
+        //}
 
 
         //initialisation
 
-            me.update();
+        me.update();
 
-        $timeout(function(){
-            CacheMapPlugin.CaDeListReQuest();
-        },2000);
+        CacheMapPlugin.CaDeListReQuest();
+
 
 
 

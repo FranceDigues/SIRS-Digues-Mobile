@@ -23,14 +23,14 @@ CacheMapPlugin.prototype._amplifier = function (info) {
 
 
     if(info.evType === "updateListCache") {
-        cordova.fireWindowEvent("updateListCache", info.aCaDe);
-        console.log("event recive from android");
-        console.log(info);
+        //FIXME : pk on doit encapsuler ce con d'objet??
+        cordova.fireDocumentEvent("updateListCache", {aCaDe:info.aCaDe});
+        //MyEvent = new CustomEvent("updateListCache", info);
+        //document.dispatchEvent(MyEvent);
+        //console.log("event recive from android");
+        //console.log(info);
+        //console.log( info.aCaDe);
     }
-
-
-
-
 };
 
 

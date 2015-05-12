@@ -14,7 +14,7 @@
     //TODO construction depuis un objet existant?
 //var oLayer =
 function oLayer(idf, active, name, isCache , opacity , source ){
-    this.idf = idf;
+        this.idf = idf;
         this.active= isCache;
         this.name= name;
         this.isCache= isCache;

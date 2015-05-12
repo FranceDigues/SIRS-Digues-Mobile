@@ -27,6 +27,11 @@ angular.module('controllers.map', [])
 
         $scope.layers = sLayer.list;
 
+
+        $scope.pluginTest = function(){
+            CacheMapPlugin.CaDeListReQuest();
+        }
+
         //me.updateLayer = function(){
         //
         //

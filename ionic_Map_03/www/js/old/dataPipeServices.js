@@ -125,9 +125,7 @@ angular.module('data.services.pipe', [])
                         }
 
                     }
-
                 }
-
             )
 
         }

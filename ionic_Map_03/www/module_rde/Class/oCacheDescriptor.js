@@ -32,6 +32,7 @@ function oCacheDescriptor(CaDeObject ){
 
 oCacheDescriptor.prototype.getLayer=function(){
 
-    return new oLayer(this.idf, false, this.nom, true, 0.6, new oSource("OSM", NON_AUTO_FILE_SYSTEM+this.source+"/"+this.nom+"/{z}/{x}/{y}.png"));
+    //FIXME pk l'attribut s'appel nom au liex de name???
+    return new oLayer(this.idf, false, this.nom, true, 0.6, {type:"OSM",url: NON_AUTO_FILE_SYSTEM+this.source+"/"+this.nom+"/{z}/{x}/{y}.png"});
 
 }
