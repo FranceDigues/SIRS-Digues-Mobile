@@ -9,6 +9,18 @@
  *
  */
 //TODO expand
-var oWmsParams = function(layers){
+function oWmsParams(layers){
     this.LAYERS= layers;
 }
+
+
+
+/**
+ * @constructor
+ * @param {oWmsParams}
+ *
+ */
+function oWmsParams(WmsParamsObject){
+    angular.extend(this,WmsParamsObject);
+}
+

@@ -4,14 +4,6 @@
  *
  */
 angular.module('module_rde.data.services.pipe', [])
-    //.filter('layerActiveFilter', function() {
-    //    return function(input,ref) {
-    //        for(i=0; i<ref.length; i++)
-    //        {
-    //            if(input.idf== ref)
-    //        }
-    //    }
-    //    }
 
     .service('sContext', function (sPouch, pouchDB, $rootScope, $log) {
         var rscptt = $rootScope.$new();
@@ -48,16 +40,15 @@ angular.module('module_rde.data.services.pipe', [])
         //
         //});
     })
-
-
     .service('sLayer', function (sPouch, $log, $rootScope) {
         //carcan
         var me = this;
 
         //attribut
         me.list = null;
-        me._stateMemory = null; //FIXME ? gestion des etat de calque global a l'aplication.
-        var rscp = $rootScope.$new();
+        me._layersStateList = null;
+        var rscp = $rootScope.$new(); //FIXME le $on est focement dans un scope? pk route scope de la catch pas?
+
 
         /**
          *  FIXME les calque sorte direct de la db, du coup les variable de contexte ne doivent plus etre porter par ces objet
@@ -65,16 +56,43 @@ angular.module('module_rde.data.services.pipe', [])
          *
          */
 
-            //methode de mise a jour de l'objet layers
+
+        me.updateLayer = function(layers){
+
+
+
+            layers.forEach(function(lay){
+
+                //typage de l'objet
+                lay = new oLayer(lay);
+
+                //on verifie si il existe dans la liste de reference locale
+                if(me.list !== null) {
+                    for (var j = 0; j < me.list.length; j++) {
+
+                        //si oui on affecte la valeur.
+                        if (me.list[j].idf === lay.idf) {
+                            tmpLayer.active = me.list[j].active;
+                        }
+                    }
+                }
+
+
+            });
+
+
+            me.list = layers;
+        };
+
+
+        //methode de mise a jour de l'objet layers
         me.update = function () {
             $log.debug("update")
             sPouch.layer.get(cLayerBase).then(function (doc) {
                 $log.debug("slayer init");
                 $log.debug(doc);
 
-                //copy des etat de calque
-                angular.Copy(me.list, me._stateMemory)
-                me.list = doc.layers;
+                me.updateLayer( doc.layers);
                 $log.debug(me.list);
                 $log.debug("slayer end");
                 $rootScope.$broadcast("layersListUpdated");
@@ -90,7 +108,31 @@ angular.module('module_rde.data.services.pipe', [])
             $log.debug("event recus");
             me.update();
         });
-        //rscp.$on("esyChanged", function(event, args){ $log.debug("event recus")});
+
+
+        document.addEventListener("updateListCache", function(aCaDe){
+            $log.debug("eventListCache recus");
+            $log.debug(aCaDe);
+
+            //aCaDe.forEach(function(item){
+            //        //var tLayer = {
+            //        //    idf: item.idf,
+            //        //    active: false,
+            //        //    name: item.nom,
+            //        //    isCache: true,
+            //        //    opacity: 0.6,
+            //        //    source: {
+            //        //        "type": "OSM",
+            //        //        "url": "file:///storage/emulated/0/Android/data/com.ionic.Map03/files/Tile/cstl-demo/essaiWMS/{z}/{x}/{y}.png"
+            //        //    }
+            //        //
+            //        //}
+            //
+            //    }
+            //
+            //)
+
+        });
 
 
         //initialisation
@@ -98,46 +140,7 @@ angular.module('module_rde.data.services.pipe', [])
         CacheMapPlugin.CaDeListReQuest();
 
 
-        document.addEventListener("updateListCache", function(aCaDe){
-            $log.debug("eventListCache recus");
-            $log.debug(aCaDe);
 
-            aCaDe.forEach(function(item){
-                    var tLayer = {
-                        idf: item.idf,
-                        active: false,
-                        name: item.nom,
-                        isCache: true,
-                        opacity: 0.6,
-                        source: {
-                            "type": "OSM",
-                            "url": "file:///storage/emulated/0/Android/data/com.ionic.Map03/files/Tile/cstl-demo/essaiWMS/{z}/{x}/{y}.png"
-                        }
-
-                    }
-
-                }
-
-            )
-
-            }
-            //for(var i =  ; i<aCaDe.length ; i++){
-            //    var tLayer = {
-            //        idf: aCaDe[i].,
-            //        active: false,
-            //        name: "WMSfromDeep",
-            //        isCache: true,
-            //        opacity: 0.6,
-            //        source: {
-            //            "type": "OSM",
-            //            "url": "file:///storage/emulated/0/Android/data/com.ionic.Map03/files/Tile/cstl-demo/essaiWMS/{z}/{x}/{y}.png"
-            //        }
-            //
-            //    }
-            //}
-
-
-        });
 
 
     })
@@ -184,30 +187,30 @@ angular.module('module_rde.data.services.pipe', [])
 
         me.getObs = function (featurePos, ObsUUID) {
             sPouch.obs.get(ObsUUID).then(function (doc) {
-                    me.currentObs.push({
-                        'featurePos': featurePos,
-                        'doc': doc
-                    });
-                }).catch(function (err) {
-                    $log.debug(err);
-
+                me.currentObs.push({
+                    'featurePos': featurePos,
+                    'doc': doc
                 });
-            };
+            }).catch(function (err) {
+                $log.debug(err);
+
+            });
+        };
 
 
         me.writeObsOnDB = function (obs) {
             $log.debug("=============ECRITURE OBS ==============")
             sPouch.obs.post({
-                    'obs': obs
-                }).then(function (response) {
+                'obs': obs
+            }).then(function (response) {
                 $log.debug("=============result ECRITURE OBS ==============")
-                    me.obsUUID = response.id;
-                    $rootScope.$broadcast("ObsCreated");
-                }).catch(function (err) {
+                me.obsUUID = response.id;
+                $rootScope.$broadcast("ObsCreated");
+            }).catch(function (err) {
                 $log.debug("============= errorECRITURE OBS ==============")
-                    $log.error(err);
-                });
-            };
+                $log.error(err);
+            });
+        };
 
 
 
@@ -233,12 +236,12 @@ angular.module('module_rde.data.services.pipe', [])
                 var formUUID = layer.formUUID;
                 $log.debug('formUUID: '+layer.formUUID)
                 sPouch.form.get(""+formUUID).then(function (formDoc) {
-                        me.form = formDoc;
+                    me.form = formDoc;
                     $log.debug(formDoc);
-                        $rootScope.$broadcast("formUpdate");
-                    }).catch(function (err) {
-                        $log.debug(err);
-                    });
+                    $rootScope.$broadcast("formUpdate");
+                }).catch(function (err) {
+                    $log.debug(err);
+                });
             }).catch(function (err) {
                 $log.debug(err);
             });

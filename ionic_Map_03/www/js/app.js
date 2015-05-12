@@ -12,10 +12,12 @@ var app = angular.module('cartoMobile', [
     'controllers.map',
     //'controllers.mapCache',
     'module_rde.geoCache',
+    'module_rde.data.services.pipe',
+    'module_rde.data.services.source',
     'controllers.menus',
     'filter.custom',
-    'data.services.pipe',
-    'data.services.source',
+    //'data.services.pipe',
+    //'data.services.source',
     'device.services',
     'data.services']);
 

@@ -14,8 +14,10 @@ var CACHE_FIRST_IDF = 1000000;
 
 
 angular.module('module_rde.geoCache', [
-    'data.services.source',
-    'data.services.pipe',
+    //'data.services.source',
+    //'data.services.pipe',
+    'module_rde.data.services.pipe',
+    'module_rde.data.services.source',
     'openlayers-directive',
     'ionic',
     'ngCordova',

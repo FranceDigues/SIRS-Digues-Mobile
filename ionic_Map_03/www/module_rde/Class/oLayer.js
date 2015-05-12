@@ -2,7 +2,8 @@
  * Created by roch dardie on 11/05/15.
  */
 
-require('oSource');
+//require('oSource');
+//require('oWmsParams');
 
 /**
  * @constructor
@@ -11,7 +12,8 @@ require('oSource');
  */
 
     //TODO construction depuis un objet existant?
-var oLayer = function(idf, active, name, isCache , opacity , source ){
+//var oLayer =
+function oLayer(idf, active, name, isCache , opacity , source ){
     this.idf = idf;
         this.active= isCache;
         this.name= name;
@@ -21,4 +23,26 @@ var oLayer = function(idf, active, name, isCache , opacity , source ){
 
 }
 
-//
+
+/**
+ * @constructor
+ * @param {oLayer }
+ *
+ */
+
+//var oLayer =
+function oLayer(layerObject){
+    //this=layerObject;
+    angular.extend(this,layerObject);
+}
+
+
+oLayer.prototype.equals=function(){
+
+    return null;
+
+}
+
+
+
+

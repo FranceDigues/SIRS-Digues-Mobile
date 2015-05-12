@@ -106,11 +106,37 @@ angular.module('data.services.pipe', [])
             $log.debug("event recus");
             me.update();
         });
-        //rscp.$on("esyChanged", function(event, args){ $log.debug("event recus")});
+
+
+        document.addEventListener("updateListCache", function(aCaDe){
+            $log.debug("eventListCache recus");
+            $log.debug(aCaDe);
+
+            aCaDe.forEach(function(item){
+                    var tLayer = {
+                        idf: item.idf,
+                        active: false,
+                        name: item.nom,
+                        isCache: true,
+                        opacity: 0.6,
+                        source: {
+                            "type": "OSM",
+                            "url": "file:///storage/emulated/0/Android/data/com.ionic.Map03/files/Tile/cstl-demo/essaiWMS/{z}/{x}/{y}.png"
+                        }
+
+                    }
+
+                }
+
+            )
+
+        }
 
 
         //initialisation
         me.update();
+        CacheMapPlugin.CaDeListReQuest();
+
 
 
 
