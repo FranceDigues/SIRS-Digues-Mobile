@@ -20,7 +20,7 @@ function oWmsParams(layers){
  * @param {oWmsParams}
  *
  */
-function oWmsParams(WmsParamsObject){
+oWmsParams.prototype.patch = function(WmsParamsObject){
     angular.extend(this,WmsParamsObject);
 }
 

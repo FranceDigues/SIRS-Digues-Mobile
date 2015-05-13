@@ -26,13 +26,25 @@ function oCacheDescriptor(idf, nom, source, type , zMin , zMax, url, layer ,bbox
     this.bbox = bbox ;
 }
 
-function oCacheDescriptor(CaDeObject ){
+oCacheDescriptor.prototype.patch = function(CaDeObject ){
     angular.extend(this,CaDeObject);
 }
 
 oCacheDescriptor.prototype.getLayer=function(){
 
     //FIXME pk l'attribut s'appel nom au liex de name???
-    return new oLayer(this.idf, false, this.nom, true, 0.6, {type:"OSM",url: NON_AUTO_FILE_SYSTEM+this.source+"/"+this.nom+"/{z}/{x}/{y}.png"});
+    //FIXME constructeur de' oSource
+
+    //var src = new oSource("OSM",NON_AUTO_FILE_SYSTEM+this.source+"/"+this.nom+"/{z}/{x}/{y}.png");
+    //console.log(src);
+    //return new oLayer(this.idf, false, this.nom, true, 0.6, src);
+    console.log("ok")
+
+    var olayer = new oLayer(this.idf, false, this.nom, true, 0.6, {type : "OSM", url : NON_AUTO_FILE_SYSTEM+this.source+"/"+this.nom+"/{z}/{x}/{y}.png"});
+
+    console.log(olayer);
+
+    return olayer;
+
 
 }

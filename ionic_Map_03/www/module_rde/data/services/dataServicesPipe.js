@@ -99,6 +99,9 @@ angular.module('module_rde.data.services.pipe', [])
             $log.error(me._listLayer);
             $log.error(me._listCacheLayer);
 
+
+            //mise a jour terminer
+            $rootScope.$broadcast("layersListUpdated");
         }
 
 
@@ -106,13 +109,11 @@ angular.module('module_rde.data.services.pipe', [])
         me.update = function () {
             $log.debug("update")
             sPouch.layer.get(cLayerBase).then(function (doc) {
-                $log.debug("slayer init");
                 $log.debug(doc);
 
                 me.updateLayer( doc.layers);
                 $log.debug(me.list);
-                $log.debug("slayer end");
-                $rootScope.$broadcast("layersListUpdated");
+
             }).catch(function (err) {
                 $log.debug(err);
             });
@@ -132,23 +133,32 @@ angular.module('module_rde.data.services.pipe', [])
         document.addEventListener("updateListCache", function (e) {
                 $log.debug("eventListCache recus IN SERVICE");
                 $log.debug(e.aCaDe);
-           var  aCADE =  e.aCaDe;
+           var  aLayer =[];
 
             e.aCaDe.forEach(function (item) {
+//FIXME optimise
 
                 $log.debug(item);
                     //typage des object
-                    item = new oCacheDescriptor(item);
+                    var localCaDe = new oCacheDescriptor();//creation de l'objet et patch des valeur
+                    localCaDe.patch(item);
+                    $log.debug(localCaDe);
+
+                    aLayer.push(localCaDe.getLayer());
 
                     //convertion en layer et oublie du caDe car on est dans sLayer
-                    item = item.getLayer();
+                    //item = item.getLayer();
+                //$log.debug(item);
+
 
 
                 });
+            $log.debug("aLayer:");
+            $log.debug(aLayer);
 
                 //affectation masterListe
-                me._listCacheLayer =e.aCaDe;
-            $log.error(me._listCacheLayer);
+                me._listCacheLayer =aLayer;
+            //$log.error(me._listCacheLayer);
 
                 me._fusionLayerList();
 

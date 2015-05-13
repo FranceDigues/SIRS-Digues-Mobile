@@ -231,6 +231,7 @@ angular.module('module_rde.geoCache', [
            //build cache descriptor
            var caDeList =[{
                "nom":"essaiWMS",
+               "idf":"1000000",
                "source":"cstl-demo",
                "type":"ImageWMS",
                "zMin":"8",

@@ -15,7 +15,7 @@
 //var oLayer =
 function oLayer(idf, active, name, isCache , opacity , source ){
         this.idf = idf;
-        this.active= isCache;
+        this.active= active;
         this.name= name;
         this.isCache= isCache;
         this.opacity= opacity;
@@ -31,7 +31,7 @@ function oLayer(idf, active, name, isCache , opacity , source ){
  */
 
 //var oLayer =
-function oLayer(layerObject){
+oLayer.prototype.patch = function(layerObject){
     //this=layerObject;
     angular.extend(this,layerObject);
 }

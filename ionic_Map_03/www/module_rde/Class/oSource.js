@@ -22,7 +22,7 @@ function oSource(type, uri){
      *
      */
 
-   function  oSource(type, uri, params){
+    oSource.prototype.WMSconstructor(type, uri, params){
         this.type= type;
         this.url= uri;
         this.params = params;
@@ -34,7 +34,7 @@ function oSource(type, uri){
      *
      */
 
-    function  oSource(type, uri, key, imagerySet){
+    oSource.prototype.BingConstructor = function(type, uri, key, imagerySet){
         this.type= type;
         this.url= uri;
         this.key = key;
@@ -48,7 +48,7 @@ function oSource(type, uri){
  *
  */
 
-function  oSource(sourceObject){
+oSource.prototype.patch = function(sourceObject){
     angular.extend(this,sourceObject);
 }
 

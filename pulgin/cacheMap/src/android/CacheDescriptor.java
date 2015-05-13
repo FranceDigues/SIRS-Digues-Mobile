@@ -12,6 +12,7 @@ import java.util.ArrayList;
 //TODO ! pHd, pBg == > MIN MAX
 public class CacheDescriptor {
 
+    private int idf;
     private String nom;
     private String Source;
     private sourceType typeSource;
@@ -39,6 +40,7 @@ public class CacheDescriptor {
         this.layers = new ArrayList<String>();
 
 try{
+        this.setIdf(jsonCache.getInt("idf"));
         this.setNom(jsonCache.getString("nom"));
         this.setSource(jsonCache.getString("source"));
         this.setTypeSource(sourceType.valueOf(jsonCache.getString("type")));
@@ -76,6 +78,13 @@ try{
 
     }
 
+    public int getIdf() {
+        return idf;
+    }
+
+    public void setIdf(int idf) {
+        this.idf = idf;
+    }
 
     public String getNom() {
         return nom;

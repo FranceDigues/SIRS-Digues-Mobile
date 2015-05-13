@@ -48,6 +48,7 @@ angular.module('controllers.menus', [])
             //$log.debug("test");
             CacheMapPlugin.updateCache([{
                 "nom":"essai",
+                "idf":"1000001",
                 "source":"OSM",
                 "type":"TMS",
                 "zMin":"8",
@@ -60,6 +61,7 @@ angular.module('controllers.menus', [])
             //$log.debug("test");
             CacheMapPlugin.updateCache([{
                 "nom":"essaiWMS",
+                "idf":"1000000",
                 "source":"cstl-demo",
                 "type":"ImageWMS",
                 "zMin":"8",
