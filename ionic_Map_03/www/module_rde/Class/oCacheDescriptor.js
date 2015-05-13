@@ -8,18 +8,19 @@
 
 //FIXME a reflechir !
 
-var NON_AUTO_FILE_SYSTEM = "file:///storage/emulated/0/Android/data/com.ionic.Map03/files/Tile/";
+var NON_AUTO_FILE_SYSTEM = "file:///storage/emulated/0/Android/data/com.ionic.Map03/files/";
 
 /**
  * @constructor
  * @param {number, string, string, ol.sourceType, int[0-19], int[0-19], uri, array string, BBox en degree }
  *
  */
-function oCacheDescriptor(idf, nom, source, type , zMin , zMax, url, layer ,bbox ){
+function oCacheDescriptor(idf, nom, Source,path, typeSource , zMin , zMax, url, layer ,bbox ){
     this.idf = idf;
     this.nom= nom;
-    this.source= source;
-    this.type= type;
+    this.Source= Source;
+    this.path= path;
+    this.typeSource= typeSource;
     this.zMin= zMin;
     this.zMax = zMax ;
     this.url = url ;
@@ -40,7 +41,7 @@ oCacheDescriptor.prototype.getLayer=function(){
     //return new oLayer(this.idf, false, this.nom, true, 0.6, src);
     console.log("ok")
 
-    var olayer = new oLayer(this.idf, false, this.nom, true, 0.6, {type : "OSM", url : NON_AUTO_FILE_SYSTEM+this.source+"/"+this.nom+"/{z}/{x}/{y}.png"});
+    var olayer = new oLayer(this.idf, false, this.nom, true, 0.6, {type : "OSM", url : NON_AUTO_FILE_SYSTEM+this.path+"{z}/{x}/{y}.png"});
 
     console.log(olayer);
 
