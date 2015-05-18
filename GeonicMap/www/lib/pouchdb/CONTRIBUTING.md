@@ -12,7 +12,8 @@ The following documentation should answer most of the common questions about how
 Most project discussions should happen on the Mailing list / Bug Tracker and IRC, however if you are a first time contributor and want some help getting started feel free to send a private email to any of the following maintainers:
 
  * Dale Harvey (dale@arandomurl.com, daleharvey on IRC)
- * Calvin Metcalf (calvin.metcalf@gmail.com)
+ * Nolan Lawson (nolan@nolanlawson.com, nolanlawson on IRC)
+ * Calvin Metcalf (calvin.metcalf@gmail.com, calvinmetcalf on IRC)
 
 #### PouchDB meeting
 
@@ -27,7 +28,7 @@ Guide to Contributions
 --------------------------------------
 
   * Almost all Pull Requests for features or bug fixes will need tests
-  * We follow [Felix's Node.js Style Guide](http://nodeguide.com/style.html)
+  * We follow [Felix's Node.js Style Guide](https://github.com/felixge/node-style-guide)
   * Almost all Pull Requests for features or bug fixes will need tests (seriously, its really important)
   * Before opening a pull request run `$ npm test` to lint test the changes and run node tests. Preferably run the browser tests as well.
   * Commit messages should follow the following style:

@@ -4,6 +4,7 @@
 
 var app = angular.module('cartoMobile', [
     'ionic',
+    //'ng-cordova',
     'ngCordova',
     'rzModule',
     'pouchdb',

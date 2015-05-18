@@ -43,6 +43,8 @@ gulp.task('index', function () {
 
 gulp.task('jslink', function () {
 
+    console.log(mainBowerFiles( {paths : '../' }));
+
    return gulp.src('./index.html')
         .pipe(inject(
                 gulp.src(mainBowerFiles({ paths : '../' }), { read: false }),
