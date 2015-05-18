@@ -45,12 +45,20 @@ CacheMapPlugin.prototype.updateCache = function (cacheArray) {
     }, "CacheMapPlugin", "updateCache", cacheArray);
 };
 
-CacheMapPlugin.prototype.clearCache = function () {
+CacheMapPlugin.prototype.clearCaches = function (cacheArray) {
     console.log("CacheMapPlugin.js: initUserData");
     exec(cacheMapPlugin._amplifier, function () {
         console.log("ERROR");
         //alert("Error" + result);
-    }, "CacheMapPlugin", "clearWay", []);
+    }, "CacheMapPlugin", "clearWay", cacheArray);
+};
+
+CacheMapPlugin.prototype.clearAll = function () {
+    console.log("CacheMapPlugin.js: initUserData");
+    exec(cacheMapPlugin._amplifier, function () {
+        console.log("ERROR");
+        //alert("Error" + result);
+    }, "CacheMapPlugin", "clearAll", []);
 };
 
 CacheMapPlugin.prototype.CaDeListReQuest = function () {

@@ -72,8 +72,22 @@ angular.module('controllers.menus', [])
             }]);
         };
 
-        $scope.plugTestClear = function(){
-            CacheMapPlugin.clearCache();
+        $scope.plugTestClearAll = function(){
+            CacheMapPlugin.clearAll();
+        };
+
+        $scope.plugTestClearOne = function(){
+            CacheMapPlugin.clearCaches([{
+                "nom":"essaiWMS",
+                "idf":"1000000",
+                "source":"cstl-demo",
+                "type":"ImageWMS",
+                "zMin":"8",
+                "zMax":"9",
+                "url":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
+                "layers":["ZA_EID_Nuisance"],
+                "bbox":[[42.5,2.5],[44.0,5.0]]
+            }]);
         };
 
         $scope.openPdf = function (pdf) {

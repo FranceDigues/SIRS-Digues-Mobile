@@ -17,20 +17,30 @@ import java.util.ArrayList;
  */
 public class AsyncClear extends AsyncTask {
     private Context myContext;
-    private String filePath;
+    private boolean clearAll;
     private Pyromaniac flamethrower;
     private int nbItem;
     private int pas;
     private int ix;
+    private CacheDescriptor caDe;
 
 
     //constructeur
-    public AsyncClear(Context context, Pyromaniac eventTrigger,String FilePath )
+    public AsyncClear(Context context, Pyromaniac eventTrigger,boolean FilePath )
     {
 
         this.myContext = context ;
-        this.filePath=FilePath;
+        this.clearAll=FilePath;
         this.flamethrower = eventTrigger;
+    }
+
+    public AsyncClear(Context context, Pyromaniac eventTrigger,JSONObject jobs )
+    {
+
+        this.myContext = context ;
+        this.clearAll=false;
+        this.flamethrower = eventTrigger;
+        this.caDe= new CacheDescriptor(jobs);
     }
 
 
@@ -75,7 +85,21 @@ public class AsyncClear extends AsyncTask {
         this.onProgressUpdate(0);
 //        Log.d("PluginRDE_debug","path  : "+Environment.getExternalStorageDirectory()+Environment.);
 //        String s = myContext.getExternalFilesDirs(this.filePath);
-        File baseDir = myContext.getExternalFilesDir(this.filePath);
+
+
+            File baseDir = myContext.getExternalFilesDir("/Tile");
+        if(!this.clearAll){
+            baseDir = myContext.getExternalFilesDir("/Tile/"+this.caDe.getSource()); //si not clear all on suprime uniquement le caDe
+
+//            supression du descripteur de cache associer
+            File jsonCade = new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
+            jsonCade.delete();
+
+        }
+
+
+
+
         Log.d("PluginRDE_debug","path  : "+baseDir.getPath());
 
 
