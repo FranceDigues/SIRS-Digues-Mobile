@@ -125,14 +125,20 @@ public class CacheMapPlugin extends CordovaPlugin {
 
         if( action.equals("clearWay") )
         {
-            Log.d("PluginRDE","initUserData");
+            Log.d("PluginRDE", "initUserData");
             //TODO clear juste le cache en parametre
             this.runToast("clearAllCache :");
 
 
-            AsyncClear asyncCbuilder = new AsyncClear(this.cordova.getActivity(),this.flamethrower,"/Tile");
+            for(JSONObject jsO : args){
 
-            asyncCbuilder.execute();
+
+                AsyncClear asyncCbuilder = new AsyncClear(this.cordova.getActivity(),this.flamethrower,"/Tile");
+
+                asyncCbuilder.execute();
+
+            }
+
 
         }
 
@@ -215,7 +221,7 @@ public class CacheMapPlugin extends CordovaPlugin {
         return true;
     };
 
-
+//FIXME vider cette classe, et integrer la creation des Cade dans les asyncTask.
 
 
 
@@ -272,34 +278,11 @@ public class CacheMapPlugin extends CordovaPlugin {
     private boolean buildCache(JSONObject jsonCache){
         Log.d("PluginRDE_RUN","buildCache");
 
+
+        //FIXME vider cette classe, et integrer la creation des Cade dans les asyncTask.
 //construction de l'objet java depuis le json
          CacheDescriptor caDes = new CacheDescriptor(jsonCache);
 
-//        //TODO methode qui retourne un array de descriptor depuis le parametre, sinon dans les async direct?
-//
-//        try {
-//            caDes.setNom(jsonCache.getString("nom"));
-//            caDes.setSource(jsonCache.getString("source"));
-//            caDes.setTypeSource(jsonCache.getString("type"));
-//            caDes.setUrlSource(jsonCache.getString("url"));
-//            caDes.setzMin( jsonCache.getInt("zMin"));
-//            caDes.setzMax( jsonCache.getInt("zMax"));
-//
-//            JSONArray aBbox= jsonCache.getJSONArray("bbox");
-//
-//            GeoPoint tmpMin = new GeoPoint(aBbox.getJSONArray(0).getDouble(0), aBbox.getJSONArray(0).getDouble(1) );
-//            GeoPoint tmpMax = new GeoPoint(aBbox.getJSONArray(1).getDouble(0), aBbox.getJSONArray(1).getDouble(1) );
-//
-//
-//            tmpMin.maxwell(tmpMax);
-//
-//            caDes.setpBg(tmpMin);
-//            caDes.setpHd(tmpMax);
-//
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
 
 
         //creation et lancement async task
