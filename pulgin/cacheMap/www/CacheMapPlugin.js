@@ -50,7 +50,7 @@ CacheMapPlugin.prototype.clearCaches = function (cacheArray) {
     exec(cacheMapPlugin._amplifier, function () {
         console.log("ERROR");
         //alert("Error" + result);
-    }, "CacheMapPlugin", "clearWay", cacheArray);
+    }, "CacheMapPlugin", "clearOne", cacheArray);
 };
 
 CacheMapPlugin.prototype.clearAll = function () {

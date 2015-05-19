@@ -13,8 +13,8 @@ import java.util.ArrayList;
 public class CacheDescriptor {
 
     private int idf;
-    private String nom;
-    private String Source;
+    private String name;
+    private String layerSource;
     private sourceType typeSource;
     private String urlSource;
 
@@ -41,10 +41,10 @@ public class CacheDescriptor {
 
 try{
         this.setIdf(jsonCache.getInt("idf"));
-        this.setNom(jsonCache.getString("nom"));
-        this.setSource(jsonCache.getString("source"));
-        this.setTypeSource(sourceType.valueOf(jsonCache.getString("type")));
-        this.setUrlSource(jsonCache.getString("url"));
+        this.setName(jsonCache.getString("name"));
+        this.setLayerSource(jsonCache.getString("layerSource"));
+        this.setTypeSource(sourceType.valueOf(jsonCache.getString("typeSource")));
+        this.setUrlSource(jsonCache.getString("urlSource"));
         this.setzMin(jsonCache.getInt("zMin"));
         this.setzMax(jsonCache.getInt("zMax"));
 
@@ -86,12 +86,12 @@ try{
         this.idf = idf;
     }
 
-    public String getNom() {
-        return nom;
+    public String getName() {
+        return name;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public GeoPoint getpHg() {
@@ -110,12 +110,12 @@ try{
         this.pBd = pBd;
     }
 
-    public String getSource() {
-        return Source;
+    public String getLayerSource() {
+        return layerSource;
     }
 
-    public void setSource(String source) {
-        Source = source;
+    public void setLayerSource(String source) {
+        layerSource = source;
     }
 
     public sourceType getTypeSource() {
@@ -161,8 +161,8 @@ try{
     @Override
     public String toString() {
         return "CacheDescriptor{" +
-                "nom='" + nom + '\'' +
-                ", Source='" + Source + '\'' +
+                "name='" + name + '\'' +
+                ", layerSource='" + layerSource + '\'' +
                 ", typeSource=" + typeSource +
                 ", urlSource='" + urlSource + '\'' +
                 ", layers=" + layers +
@@ -204,7 +204,7 @@ try{
     public String getDirPath(){
         Log.d("PluginRDE_debug", this.path);
         if (this.path ==""){
-            this.path = "Tile/"+this.getSource() + "/" + this.getNom() + "/";
+            this.path = "Tile/"+this.getLayerSource() + "/" + this.getName() + "/";
         }
         Log.d("PluginRDE_debug", this.path);
         return this.path ;
@@ -224,8 +224,8 @@ try{
 
         if (zMax != that.zMax) return false;
         if (zMin != that.zMin) return false;
-        if (Source != null ? !Source.equals(that.Source) : that.Source != null) return false;
-        if (nom != null ? !nom.equals(that.nom) : that.nom != null) return false;
+        if (layerSource != null ? !layerSource.equals(that.layerSource) : that.layerSource != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (pHg != null ? !pHg.equals(that.pHg) : that.pHg != null) return false;
         if (pBd != null ? !pBd.equals(that.pBd) : that.pBd != null) return false;
         if (typeSource != null ? !typeSource.equals(that.typeSource) : that.typeSource != null)
@@ -236,29 +236,12 @@ try{
         return true;
     }
 
-//
-//    @Override
-//    public boolean equals(CacheDescriptor that) {
-//        if (this == that) return true;
-//
-//        if (zMax != that.zMax) return false;
-//        if (zMin != that.zMin) return false;
-//        if (Source != null ? !Source.equals(that.Source) : that.Source != null) return false;
-//        if (nom != null ? !nom.equals(that.nom) : that.nom != null) return false;
-//        if (pHg != null ? !pHg.equals(that.pHg) : that.pHg != null) return false;
-//        if (pBd != null ? !pBd.equals(that.pBd) : that.pBd != null) return false;
-//        if (typeSource != null ? !typeSource.equals(that.typeSource) : that.typeSource != null)
-//            return false;
-//        if (urlSource != null ? !urlSource.equals(that.urlSource) : that.urlSource != null)
-//            return false;
-//
-//        return true;
-//    }
+
 
     @Override
     public int hashCode() {
-        int result = nom != null ? nom.hashCode() : 0;
-        result = 31 * result + (Source != null ? Source.hashCode() : 0);
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (layerSource != null ? layerSource.hashCode() : 0);
         result = 31 * result + (typeSource != null ? typeSource.hashCode() : 0);
         result = 31 * result + (urlSource != null ? urlSource.hashCode() : 0);
         result = 31 * result + zMin;

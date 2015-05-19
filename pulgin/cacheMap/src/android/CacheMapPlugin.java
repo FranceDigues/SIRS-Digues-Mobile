@@ -123,18 +123,18 @@ public class CacheMapPlugin extends CordovaPlugin {
 
         }
 
-        if( action.equals("clearWay") )
+        if( action.equals("clearOne") )
         {
             Log.d("PluginRDE", "clear CadeList");
             //TODO clear juste le cache en parametre
-            this.runToast("clearAllCache :");
+            this.runToast("clearListCache :");
 
 
                 for(int i = 0 ; i<args.length();i++){
 
-                AsyncClear asyncCbuilder = new AsyncClear(this.cordova.getActivity(),this.flamethrower,args.getJSONObject(i));
+                AsyncClear threadClear = new AsyncClear(this.cordova.getActivity(),this.flamethrower,args.getJSONObject(i));
 
-                asyncCbuilder.execute();
+                    threadClear.execute();
 
             }
 
@@ -146,14 +146,10 @@ public class CacheMapPlugin extends CordovaPlugin {
             //TODO clear juste le cache en parametre
             this.runToast("clearAllCache :");
 
+                AsyncClear threadClear = new AsyncClear(this.cordova.getActivity(),this.flamethrower,true);
 
-                for(int i = 0 ; i<args.length();i++){
+                    threadClear.execute();
 
-                AsyncClear asyncCbuilder = new AsyncClear(this.cordova.getActivity(),this.flamethrower,true);
-
-                asyncCbuilder.execute();
-
-            }
 
 
         }

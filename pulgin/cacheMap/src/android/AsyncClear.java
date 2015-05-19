@@ -26,11 +26,11 @@ public class AsyncClear extends AsyncTask {
 
 
     //constructeur
-    public AsyncClear(Context context, Pyromaniac eventTrigger,boolean FilePath )
+    public AsyncClear(Context context, Pyromaniac eventTrigger,boolean clearAll )
     {
 
         this.myContext = context ;
-        this.clearAll=FilePath;
+        this.clearAll=clearAll;
         this.flamethrower = eventTrigger;
     }
 
@@ -89,10 +89,10 @@ public class AsyncClear extends AsyncTask {
 
             File baseDir = myContext.getExternalFilesDir("/Tile");
         if(!this.clearAll){
-            baseDir = myContext.getExternalFilesDir("/Tile/"+this.caDe.getSource()); //si not clear all on suprime uniquement le caDe
+            baseDir = myContext.getExternalFilesDir("/Tile/"+this.caDe.getLayerSource()); //si not clear all on suprime uniquement le caDe
 
 //            supression du descripteur de cache associer
-            File jsonCade = new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
+            File jsonCade = new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getLayerSource() +"_"+ this.caDe.getName()+".json");
             jsonCade.delete();
 
         }

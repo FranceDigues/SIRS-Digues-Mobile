@@ -98,7 +98,7 @@ public class AsyncCacheBuilder extends AsyncTask {
 
         try {
 //            InputStream instream = new FileInputStream(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
-            File f = new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
+            File f = new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getLayerSource() +"_"+ this.caDe.getName()+".json");
 
 
 // if file the available for reading
@@ -116,8 +116,13 @@ public class AsyncCacheBuilder extends AsyncTask {
 //                } while (line != null);
 //
 //                Log.d("PluginRDE_Json","String in Json File : "+line);
+
+            Log.d("PluginRDE_DEBUG","CADE FILE"+FileUtils.FiletoString(f));
+            Log.d("PluginRDE_DEBUG","CADE JSONOBJ"+new JSONObject(FileUtils.FiletoString(f)).toString());
+
             if(f!= null){
                 this.caDeLocal = new CacheDescriptor( new JSONObject(FileUtils.FiletoString(f)));
+                Log.d("PluginRDE_DEBUG","CADE OBJ"+this.caDeLocal.toString());
             }
 
 
@@ -155,7 +160,7 @@ public class AsyncCacheBuilder extends AsyncTask {
                 this.aTileDownload( this.caDe.firstLvlTileFromBb_TMS());
         }
         //Cas d'une mise a jour :
-        if(! (caDeLocal==null) && ! caDeLocal.equals(caDe)){
+        if(! (caDeLocal==null) && (! caDeLocal.equals(caDe))){
 
             /**
              * TODO comment on gere la fraicheur des donnée?
@@ -191,11 +196,11 @@ public class AsyncCacheBuilder extends AsyncTask {
 
             FileWriter file = null;
             try {
-                File fi = new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
+                File fi = new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getLayerSource() +"_"+ this.caDe.getName()+".json");
 
-                Log.d("PluginRDE_Json", myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
+                Log.d("PluginRDE_Json", myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getLayerSource() +"_"+ this.caDe.getName()+".json");
 
-                file = new FileWriter(new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json"));
+                file = new FileWriter(new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getLayerSource() +"_"+ this.caDe.getName()+".json"));
                 file.write(gson.toJson(this.caDe));
 //            file.flush();
                 file.close();
