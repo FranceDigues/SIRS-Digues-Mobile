@@ -50,25 +50,36 @@ try{
 
 
 
+    //FIXME stop stoker des point dans un array sale
+    if(jsonCache.has("bbox")){ //BBOX prend le pas
+
         JSONArray aBbox= jsonCache.getJSONArray("bbox");
 
         GeoPoint tmpMin = new GeoPoint(aBbox.getJSONArray(0).getDouble(0), aBbox.getJSONArray(0).getDouble(1) );
         GeoPoint tmpMax = new GeoPoint(aBbox.getJSONArray(1).getDouble(0), aBbox.getJSONArray(1).getDouble(1) );
-
-
         tmpMin.maxwell(tmpMax);
 
         this.setpHg(tmpMin);
         this.setpBd(tmpMax);
 
 
-
-
-
-    JSONArray aLayers= jsonCache.getJSONArray("layers");
-    for(int i=0 ; i<aLayers.length();i++){
-        this.layers.add(aLayers.getString(i));
     }
+    if(jsonCache.has("pHg") && jsonCache.has("pBd")){ //BBOX prend le pas
+
+        this.setpHg(new GeoPoint(jsonCache.getJSONObject("pHg")));
+        this.setpBd(new GeoPoint(jsonCache.getJSONObject("pBd")));
+
+
+    }
+
+
+
+        if(this.getTypeSource()== sourceType.ImageWMS){
+            JSONArray aLayers= jsonCache.getJSONArray("layers");
+            for(int i=0 ; i<aLayers.length();i++){
+                this.layers.add(aLayers.getString(i));
+            }
+        }
 
 
 
@@ -215,28 +226,48 @@ try{
 
     //TODO include layers
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//
+//        CacheDescriptor that = (CacheDescriptor) o;
+//
+//        if (zMax != that.zMax) return false;
+//        if (zMin != that.zMin) return false;
+//        if (layerSource != null ? !layerSource.equals(that.layerSource) : that.layerSource != null) return false;
+//        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+//        if (pHg != null ? !pHg.equals(that.pHg) : that.pHg != null) return false;
+//        if (pBd != null ? !pBd.equals(that.pBd) : that.pBd != null) return false;
+//        if (typeSource != null ? !typeSource.equals(that.typeSource) : that.typeSource != null)
+//            return false;
+//        if (urlSource != null ? !urlSource.equals(that.urlSource) : that.urlSource != null)
+//            return false;
+//
+//        return true;
+//    }
+
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o) { //FIXME aLayer non suivi
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         CacheDescriptor that = (CacheDescriptor) o;
 
-        if (zMax != that.zMax) return false;
+        if (idf != that.idf) return false;
         if (zMin != that.zMin) return false;
-        if (layerSource != null ? !layerSource.equals(that.layerSource) : that.layerSource != null) return false;
+        if (zMax != that.zMax) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (pHg != null ? !pHg.equals(that.pHg) : that.pHg != null) return false;
-        if (pBd != null ? !pBd.equals(that.pBd) : that.pBd != null) return false;
-        if (typeSource != null ? !typeSource.equals(that.typeSource) : that.typeSource != null)
+        if (layerSource != null ? !layerSource.equals(that.layerSource) : that.layerSource != null)
             return false;
+        if (typeSource != that.typeSource) return false;
         if (urlSource != null ? !urlSource.equals(that.urlSource) : that.urlSource != null)
             return false;
+        if (pHg != null ? !pHg.equals(that.pHg) : that.pHg != null) return false;
+        return !(pBd != null ? !pBd.equals(that.pBd) : that.pBd != null);
 
-        return true;
     }
-
-
 
     @Override
     public int hashCode() {

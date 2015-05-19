@@ -165,7 +165,9 @@ public class AsyncCacheBuilder extends AsyncTask {
             /**
              * TODO comment on gere la fraicheur des donnée?
              */
-            Log.d("PluginRDE_DEBUG","MAJTILE");
+//            Log.d("PluginRDE_DEBUG","MAJTILE");
+//            Log.d("PluginRDE_DEBUG","CADELOCAL : " + caDeLocal.toString());
+//            Log.d("PluginRDE_DEBUG","CADE : "+caDe.toString());
                 this.aTileDownload( caDeLocal.getDiff(caDe)); //recupere les tuiles et leur sous tuile non encore presente
 
         }

@@ -5,6 +5,9 @@
 //import com.jhlabs.map.*;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 //import com.rde.geodroid.ersatz.PointD;
 //import com.rde.geodroid.ersatz.RectD;
 //
@@ -20,6 +23,12 @@ public class GeoPoint {
     public GeoPoint(double lati, double lo){
         this.lat = lati;
         this.lon = lo;
+    }
+
+
+    public GeoPoint(JSONObject jGp) throws JSONException {
+        this.lat = jGp.getDouble("lat");
+        this.lon = jGp.getDouble("lon");
     }
 
 //    public GeoPoint(PointD p){
