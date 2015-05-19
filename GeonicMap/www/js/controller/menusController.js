@@ -47,26 +47,26 @@ angular.module('controllers.menus', [])
         $scope.plugTestUpdateTMS = function(){
             //$log.debug("test");
             CacheMapPlugin.updateCache([{
-                "nom":"essai",
+                "name":"essai",
                 "idf":"1000001",
-                "source":"OSM",
-                "type":"TMS",
+                "layerSource":"OSM",
+                "typeSource":"TMS",
                 "zMin":"8",
                 "zMax":"11",
-                "url":"http://a.tile.openstreetmap.org",
+                "urlSource":"http://a.tile.openstreetmap.org",
                 "bbox":[[43.0,3.0],[44.0,9.0]]
             }]);
         };
         $scope.plugTestUpdateWMS = function(){
             //$log.debug("test");
             CacheMapPlugin.updateCache([{
-                "nom":"essaiWMS",
+                "name":"essaiWMS",
                 "idf":"1000000",
-                "source":"cstl-demo",
-                "type":"ImageWMS",
+                "layerSource":"cstl-demo",
+                "typeSource":"ImageWMS",
                 "zMin":"8",
                 "zMax":"9",
-                "url":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
+                "urlSource":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
                 "layers":["ZA_EID_Nuisance"],
                 "bbox":[[42.5,2.5],[44.0,5.0]]
             }]);
@@ -78,13 +78,13 @@ angular.module('controllers.menus', [])
 
         $scope.plugTestClearOne = function(){
             CacheMapPlugin.clearCaches([{
-                "nom":"essaiWMS",
+                "name":"essaiWMS",
                 "idf":"1000000",
-                "source":"cstl-demo",
-                "type":"ImageWMS",
+                "layerSource":"cstl-demo",
+                "typeSource":"ImageWMS",
                 "zMin":"8",
                 "zMax":"9",
-                "url":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
+                "urlSource":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
                 "layers":["ZA_EID_Nuisance"],
                 "bbox":[[42.5,2.5],[44.0,5.0]]
             }]);
