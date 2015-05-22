@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="com.rde.backgroundpointproximity"
+        version="0.0.1">
+    <name>CacheMapPlugin</name>
+    <description> watch for point proximity</description>
+    <license>Roch Dardie</license>
+    <keywords>cordova,cache,map</keywords>
+    <repo></repo>
+    <issue></issue>
+    <js-module src="www/pointProximityPlugin.js" name="PointProximityPlugin">
+        <clobbers target="PoProxPlugin" />
+    </js-module>
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="PointProximityPlugin" >
+                <param name="android-package" value="PointProximityPlugin"/>
+            </feature>
+        </config-file>
+        <source-file src="src/android/CacheMapPlugin.java" target-dir="src/" />
+        <source-file src="src/android/AsyncCacheBuilder.java" target-dir="src/" />
+        <source-file src="src/android/AsyncClear.java" target-dir="src/" />
+        <source-file src="src/android/CacheDescriptor.java" target-dir="src/" />
+        <source-file src="src/android/GeoPoint.java" target-dir="src/" />
+        <source-file src="src/android/GeoUtils.java" target-dir="src/" />
+        <source-file src="src/android/Tile.java" target-dir="src/" />
+        <source-file src="src/android/BBox.java" target-dir="src/" />
+        <source-file src="src/android/sourceType.java" target-dir="src/" />
+        
+        <source-file src="src/android/Pyromaniac.java" target-dir="src/" />
+        <source-file src="src/android/FileUtils.java" target-dir="src/" />
+
+
+
+        <source-file src="libs/gson-2.2.4.jar" target-dir="libs/" />
+
+    </platform>
+</plugin>
