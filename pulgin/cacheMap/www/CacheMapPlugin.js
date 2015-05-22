@@ -45,7 +45,15 @@ CacheMapPlugin.prototype.updateCache = function (cacheArray) {
     }, "CacheMapPlugin", "updateCache", cacheArray);
 };
 
-CacheMapPlugin.prototype.clearCaches = function (cacheArray) {
+CacheMapPlugin.prototype.clearOneCache = function (cache) {
+    console.log("CacheMapPlugin.js: initUserData");
+    exec(cacheMapPlugin._amplifier, function () {
+        console.log("ERROR");
+        //alert("Error" + result);
+    }, "CacheMapPlugin", "clearOne", [cache]);
+};
+
+CacheMapPlugin.prototype.clearCacheList = function (cacheArray) {
     console.log("CacheMapPlugin.js: initUserData");
     exec(cacheMapPlugin._amplifier, function () {
         console.log("ERROR");
@@ -55,11 +63,19 @@ CacheMapPlugin.prototype.clearCaches = function (cacheArray) {
 
 CacheMapPlugin.prototype.clearAll = function () {
     console.log("CacheMapPlugin.js: initUserData");
+
+    //fixme :  juste pour le debug
+
+    exec(function () {console.log("ERROR");}, function () {console.log("ERROR");}, "CacheMapPlugin", "unregisterReceiver", []);
+
+
+    //clean
     exec(cacheMapPlugin._amplifier, function () {
         console.log("ERROR");
         //alert("Error" + result);
     }, "CacheMapPlugin", "clearAll", []);
 };
+
 
 CacheMapPlugin.prototype.CaDeListReQuest = function () {
     console.log("CacheMapPlugin.js: request cache List");

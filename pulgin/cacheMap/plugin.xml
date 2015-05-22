@@ -33,6 +33,9 @@
         <source-file src="src/android/FileUtils.java" target-dir="src/" />
 
 
+        <source-file src="src/android/DownloadReceiver.java" target-dir="src/" />
+
+
 
         <source-file src="libs/gson-2.2.4.jar" target-dir="libs/" />
 

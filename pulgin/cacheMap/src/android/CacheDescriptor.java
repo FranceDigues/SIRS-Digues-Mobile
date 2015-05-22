@@ -213,11 +213,11 @@ try{
 
 
     public String getDirPath(){
-        Log.d("PluginRDE_debug", this.path);
+//        Log.d("PluginRDE_debug", this.path);
         if (this.path ==""){
             this.path = "Tile/"+this.getLayerSource() + "/" + this.getName() + "/";
         }
-        Log.d("PluginRDE_debug", this.path);
+//        Log.d("PluginRDE_debug", this.path);
         return this.path ;
     }
 

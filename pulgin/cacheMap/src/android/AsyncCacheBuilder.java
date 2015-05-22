@@ -34,6 +34,8 @@ public class AsyncCacheBuilder extends AsyncTask {
     private CacheDescriptor caDeLocal;
     Pyromaniac flamethrower;
 
+    private final String DM_FIX = "-t";
+
     //constructeur
     public AsyncCacheBuilder(Context context, Pyromaniac eventTrigger , CacheDescriptor c,DownloadManager d )
     {
@@ -218,9 +220,6 @@ public class AsyncCacheBuilder extends AsyncTask {
 
         }
 
-
-
-
         //diffusion des changement
         FileUtils.broadCastCacheList( this.myContext,this.flamethrower);
 
@@ -245,12 +244,12 @@ public class AsyncCacheBuilder extends AsyncTask {
 
 
     private void aTileDownload(ArrayList<Tile> aTile){
-        Log.d("PluginRDE_RUN", "downloadTile"+aTile);
+//        Log.d("PluginRDE_RUN", "downloadTile" + aTile);
 
 //        if(aTile.get(0).getZ()<= caDe.getzMax())
 
         for(Tile t  :aTile){
-            Log.d("PluginRDE_debug_DL", "tile en cours de DL : "+t.toString());
+//            Log.d("PluginRDE_debug_DL", "tile en cours de DL : "+t.toString());
 
             this.launchTileDl(t);
 
@@ -258,7 +257,7 @@ public class AsyncCacheBuilder extends AsyncTask {
             if(t.getZ()< caDe.getzMax()) {
                 aTileDownload(t.subServientTile_TMS());
             }
-            Log.d("PluginRDE_DEBUG_DLT", t.toString());
+//            Log.d("PluginRDE_DEBUG_DLT", t.toString());
         }
 
     }
@@ -266,7 +265,7 @@ public class AsyncCacheBuilder extends AsyncTask {
 
 
     public long launchTileDl(Tile t) {
-        Log.d("PluginRDE_DLT", "downloadTile");
+//        Log.d("PluginRDE_DLT", "downloadTile");
 
 
 
@@ -287,36 +286,54 @@ public class AsyncCacheBuilder extends AsyncTask {
 ////            DownloadManager.Request request = new DownloadManager.Request( Uri.parse(this.caDe.getUrlSource() +"/"+t.getTMSsampleReq()));
 ////            Log.d("PluginRDE","http://a.tile.openstreetmap.org" + "/" + t.getZ() + "/" + t.getX() + "/" + t.getY() + ".png");
 //        }
-        Log.d("PluginRDE_DLT", this.caDe.getTypeSource().toString());
+//        Log.d("PluginRDE_DLT", this.caDe.getTypeSource().toString());
 
         switch(this.caDe.getTypeSource()){
             case TMS:
-                Log.d("PluginRDE_DLT", "TMS CASE");
+                Log.d("PluginRDE_TEST",  Uri.parse(this.caDe.getUrlSource() +"/"+t.getTMSsampleReq()).toString());
+
+
+
                  request = new DownloadManager.Request( Uri.parse(this.caDe.getUrlSource() +"/"+t.getTMSsampleReq()));
-                    Log.d("PluginRDE","http://a.tile.openstreetmap.org" + "/" + t.getZ() + "/" + t.getX() + "/" + t.getY() + ".png");
-                     request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+//                    Log.d("PluginRDE", "http://a.tile.openstreetmap.org" + "/" + t.getZ() + "/" + t.getX() + "/" + t.getY() + ".png");
+//                     request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
                 //        request.setAllowedOverRoaming(false);
 
                 request.setDescription("MiseAJourDuCache");
-                request.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png");
+//                request.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX() + "/", t.getY() + ".png");
+
+                this.putLocalPathInRequest(request,t);
+
+                //suppression annulation ?
+
+                request.setMimeType("application/octet-stream");
+//                request.setMimeType("image/png");
+                request.setTitle(t.getTMSsampleReq());
+
                 return dm.enqueue(request);
+
+
 //                break;
             case ImageWMS :
-                Log.d("PluginRDE_DLT", "WMS CASE");
-                    Log.d("PluginRDE_BBOX","BBox coordinate : "+t.getBoundingBox("unUse").toString());
-                    Log.d("PluginRDE_BBOX","BBox projeté : "+t.getBoundingBox("unUse").toESPG3857().toString());
+//                Log.d("PluginRDE_DLT", "WMS CASE");
+//                    Log.d("PluginRDE_BBOX","BBox coordinate : "+t.getBoundingBox("unUse").toString());
+//                    Log.d("PluginRDE_BBOX","BBox projeté : "+t.getBoundingBox("unUse").toESPG3857().toString());
 
 
-
+                Log.d("PluginRDE_TEST",  Uri.parse(this.caDe.getUrlSource()+caDe.getWMSdescriptor()+t.getWMSsampleReq()).toString());
 
                     request = new DownloadManager.Request( Uri.parse(this.caDe.getUrlSource()+caDe.getWMSdescriptor()+t.getWMSsampleReq()));
-                    Log.d("PluginRDE_DLT","req   ====> " +this.caDe.getUrlSource()+caDe.getWMSdescriptor()+t.getWMSsampleReq());
+//                Log.d("PluginRDE_DLT", "req   ====> " + this.caDe.getUrlSource() + caDe.getWMSdescriptor()+t.getWMSsampleReq());
 
-                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
                     //        request.setAllowedOverRoaming(false);
 
-                    request.setDescription("MiseAJourDuCache");
-                    request.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png");
+                request.setDescription("MiseAJourDuCache");
+
+//                    request.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png");
+
+                    this.putLocalPathInRequest(request,t);
+
                     return dm.enqueue(request);
 //                break;
             default:
@@ -338,6 +355,12 @@ public class AsyncCacheBuilder extends AsyncTask {
 
 
 
+    private void putLocalPathInRequest(DownloadManager.Request r, Tile t){
+
+        r.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png"+DM_FIX);
+
+//        return r;
+    }
 
 
 

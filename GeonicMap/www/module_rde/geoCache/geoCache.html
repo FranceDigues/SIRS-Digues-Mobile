@@ -45,7 +45,8 @@
 
                 <ion-list>
                     <!--ng-click="changeColorOfFeature()"-->
-                    <ion-item ng-repeat="item in  c.user.cacheGjson.features">Cache Descriptor : {{item.properties.cacheDescriptor}}
+                    <ion-item ng-repeat="item in  c.user.cacheGjson.features">Layer Source : {{item.properties.cacheDescriptor.layerSource}}, nom : {{item.properties.cacheDescriptor.layerSource}}
+                        <button class="button button-block button-positive button-yellow" ng-click="c.lock()"> Suppr.</button>
                     </ion-item>
                 </ion-list>
 

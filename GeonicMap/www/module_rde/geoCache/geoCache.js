@@ -28,6 +28,11 @@ angular.module('module_rde.geoCache', [
     .controller('cGeoCache', function ($scope, sLayer, sMap, olData, $log, $timeout, sCacheMap, sContext, $rootScope) {
 
         var me = this;
+
+        //mappage du plugin
+        me.CacheMapPlugin = CacheMapPlugin;
+
+
         me.var = {CoordList: null};
 
 
@@ -272,6 +277,8 @@ angular.module('module_rde.geoCache', [
             sContext.saveUser();
 
         };
+
+
 
 
 

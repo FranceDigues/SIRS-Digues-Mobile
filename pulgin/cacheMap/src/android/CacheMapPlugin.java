@@ -10,6 +10,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 //import android.database.Cursor;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 
 
@@ -18,6 +20,7 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaInterface;
 
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.widget.Toast;
 import org.json.JSONArray;
@@ -64,6 +67,8 @@ public class CacheMapPlugin extends CordovaPlugin {
     private int percent; //0-100
     private long enqueue;  //do Tableau
     private DownloadManager dm;
+    private DownloadReceiver dr;
+
     private String StorageDrive;
     private Pyromaniac flamethrower;
 
@@ -95,6 +100,8 @@ public class CacheMapPlugin extends CordovaPlugin {
         Log.d("PluginRDE","PlugCall");
 
 
+
+        this.registerDr();
 
 
         //construction de l'emetteur d'evenement :
@@ -149,9 +156,16 @@ public class CacheMapPlugin extends CordovaPlugin {
                 AsyncClear threadClear = new AsyncClear(this.cordova.getActivity(),this.flamethrower,true);
 
                     threadClear.execute();
+        }
 
-
-
+        //gestion du receiver by js ??
+        if( action.equals("registerReceiver") )
+        {
+            this.registerDr();
+        }
+        if( action.equals("unregisterReceiver") )
+        {
+            this.unRegisterDr();
         }
 
 
@@ -169,62 +183,7 @@ public class CacheMapPlugin extends CordovaPlugin {
 
         FileUtils.broadCastCacheList(this.cordova.getActivity(),this.flamethrower);
 
-//        File[] jsonList = this.cordova.getActivity().getExternalFilesDir("Tile").listFiles(new FileFilter() {
-//            @Override
-//            public boolean accept(File pathname) {
-//                return pathname.getName().endsWith(".json");
-//            }
-//        });
-//
-//        JSONArray aCaDe = new JSONArray();
-//        for (File f : jsonList) {
-//
-//            try {
-////                InputStream instream = new FileInputStream(f);
-////
-////                InputStreamReader inputreader = new InputStreamReader(instream);
-////                BufferedReader buffreader = new BufferedReader(inputreader);
-////
-////
-//////                IOUtils.readLines  ??
-//////
-////
-////                StringBuilder total = new StringBuilder();
-////                String line;
-////                while ((line = buffreader.readLine()) != null) {
-////                    total.append(line);
-////                }
-////
-////                Log.d("PluginRDE_Json", "String in Json File : " + total);
-//
-//                //stack json Object
-//
-//                aCaDe.put(new JSONObject(FileUtils.FiletoString(f)));
-//
-//////clear.
-////                instream.close();
-////                buffreader.close();
-////
-//
-//
-//                //preparation du message contenant les descripteur de caches
-//                JSONObject eventMessage = new JSONObject("{\"evType\":\"updateListCache\",\"aCade\":\"null\"}");
-//                eventMessage.put("aCade", aCaDe);
-//
-//                //envoie du message par lanceflame interposé
-//                this.flamethrower.fire(eventMessage);
-//
-//
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//
-//        };
+
 
 
     }
@@ -258,31 +217,13 @@ public class CacheMapPlugin extends CordovaPlugin {
     }
 
 
-
-    /**
-     *
-     *
-     *
-     *
-     * TODO : structure Json a utilisé dans le Js, Objet de base pour les test :
-     *
-     *  {
-     "nom":"essai",
-     "source":"OSM",
-     "type":"TMS",
-     "zMin":"8",
-     "zMax":"14",
-     "url":"http://a.tile.openstreetmap.org",
-     "bbox":[[3,43][4,44]]
-
-
-     }
-     *
-     *
-     *
-     *
-     *
-     * */
+    public void registerDr(){
+        dr = new DownloadReceiver();
+        this.cordova.getActivity().registerReceiver(dr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+    public void unRegisterDr(){
+        this.cordova.getActivity().unregisterReceiver(dr);
+    }
 
 
 
@@ -344,9 +285,47 @@ return true;
 
 
 
-
-
-
-
+//private void initBroadCastReceiver() {
+//    File f = new File();
+//    f.renameTo()
+//
+//
+//    private BroadcastReceiver receiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            queryDownloadStatus();
+//        }
+//    };
+//
+//    private void queryDownloadStatus() {
+//        DownloadManager.Query query = new DownloadManager.Query();
+//        query.setFilterById(prefs.getLong(DL_ID, 0));
+//        Cursor c = dm.query(query);
+//        if (c.moveToFirst()) {
+//            int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+//            Log.d("DM Sample", "Status Check: " + status);
+//            switch (status) {
+////                case DownloadManager.STATUS_PAUSED:
+////                case DownloadManager.STATUS_PENDING:
+////                case DownloadManager.STATUS_RUNNING:
+////                    break;
+//                case DownloadManager.STATUS_SUCCESSFUL:
+//                    try {
+//                        ParcelFileDescriptor file = dm.openDownloadedFile(prefs.getLong(DL_ID, 0));
+//                        FileInputStream fis = new ParcelFileDescriptor.AutoCloseInputStream(file);
+//                        imageView.setImageBitmap(BitmapFactory.decodeStream(fis));
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    break;
+//                case DownloadManager.STATUS_FAILED:
+//                    dm.remove(prefs.getLong(DL_ID, 0));
+//                    prefs.edit().clear().commit();
+//                    break;
+//            }
+//        }
+//    }
+//
+//}
 
 }
