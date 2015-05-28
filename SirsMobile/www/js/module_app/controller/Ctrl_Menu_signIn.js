@@ -2,7 +2,7 @@
  * Created by roch dardie on 28/05/15.
  */
 
-angular.module('ctrl.menus.signIn', [])
+angular.module('ctrl.menu.signIn', [])
 .controller('SignInCtrl', function ($scope, $state, sPouch, sMask, $log, sContext) {
 
 

@@ -16,8 +16,8 @@ var app = angular.module('SirsMobile', [
     'filter.custom',
     'module_app.services.device',
 
-    'ctrl.menus.signIn',
-    'ctrl.menus.init'
+    'ctrl.menu.signIn',
+    'ctrl.menu.init'
 
 
      ]);

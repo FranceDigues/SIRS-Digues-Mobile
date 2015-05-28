@@ -3,9 +3,9 @@
  */
 
 
-angular.module('ctrl.menus.init', [])
+angular.module('ctrl.menu.init', [])
 
-    .controller('initCtrl', function ($scope, $log) {
+    .controller('InitCtrl', function ($scope, $log) {
 
 
 
