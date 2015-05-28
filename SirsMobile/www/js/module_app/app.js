@@ -106,6 +106,6 @@ app.run(function ($ionicPlatform) {
 
 
         //$urlRouterProvider.otherwise('/tab');
-        $urlRouterProvider.otherwise('/sign-in');
+        $urlRouterProvider.otherwise('/init');
     });
 
