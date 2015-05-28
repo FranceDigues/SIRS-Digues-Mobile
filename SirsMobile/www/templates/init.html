@@ -7,33 +7,35 @@
 
                 <div class="list">
                     <label class="item item-input signin-item">
-                        <input type="text" placeholder="adresse" ng-model="user.username">
+                        <input type="text" placeholder="adresse" ng-model="c.url.adress">
                     </label>
                     <label class="item item-input signin-item">
-                        <input type="number" placeholder="port" ng-model="user.password">
-                    </label>
-
-                    <label class="item item-input signin-item">
-                        <input type="text" placeholder="Nom" ng-model="admin.id">
+                        <input type="number" placeholder="port" ng-model="c.url.port">
                     </label>
                     <label class="item item-input signin-item">
-                        <input type="password" placeholder="Mot de passe" ng-model="admin.psw">
+                        <input type="text" placeholder="nom de la base (fixMe nom auto chargée?)" ng-model="c.url.db">
                     </label>
 
 
                     <h1 class="signin-title">Administateur de la base ( FIXME db design ...)</h1>
-                    <select > </select>
+                    <label class="item item-input signin-item">
+                        <input type="text" placeholder="Nom" ng-model="c.url.id">
+                    </label>
+                    <label class="item item-input signin-item">
+                        <input type="password" placeholder="Mot de passe" ng-model="c.url.psw">
+                    </label>
+
+
+                    <h1 class="signin-title">Bases de données connus</h1>
+                    <select > TODO </select>
                 </div>
 
 
                 <div class="signin-valid-button">
                     <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
                             ng-click="signIn(user)">
-                        CONNEXION
+                        SYNCRO
                     </button>
-                    <p class="text-right">
-                        <a href="#/forgot-password">Mot de passe oublié</a>
-                    </p>
                 </div>
             </div>
         </div>

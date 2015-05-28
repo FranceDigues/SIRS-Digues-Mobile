@@ -7,7 +7,7 @@ angular.module('ctrl.menu.init', [])
 
     .controller('InitCtrl', function ($scope, $log) {
 
-
+        c.url = new oUrlCouchDb();
 
 
 
