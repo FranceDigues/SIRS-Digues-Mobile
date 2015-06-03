@@ -23,6 +23,7 @@ function oUrlCouchDb(id,psw,adress,db ){
  * @param {oWmsParams}
  *
  */
+
 oUrlCouchDb.prototype.patch = function(oUrlCouchDb){
     angular.extend(this,oUrlCouchDb);
 }
@@ -30,6 +31,6 @@ oUrlCouchDb.prototype.patch = function(oUrlCouchDb){
 
 
 oUrlCouchDb.prototype.getUrlString = function(){
-    return "http://"+this.id+":"+this.psw+"@"+this.adress+"/"this.db;
+    return "http://"+this.id+":"+this.psw+"@"+this.adress+"/"+this.db;
 }
 

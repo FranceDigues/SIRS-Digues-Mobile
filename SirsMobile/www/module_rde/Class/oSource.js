@@ -22,7 +22,7 @@ function oSource(type, uri){
      *
      */
 
-    oSource.prototype.WMSconstructor(type, uri, params){
+    oSource.prototype.WMSconstructor = function(type, uri, params){
         this.type= type;
         this.url= uri;
         this.params = params;

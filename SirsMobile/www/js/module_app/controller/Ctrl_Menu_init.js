@@ -5,9 +5,19 @@
 
 angular.module('ctrl.menu.init', [])
 
-    .controller('InitCtrl', function ($scope, $log) {
+    .controller('InitCtrl', function ($scope, $log, sPouch) {
 
-        c.url = new oUrlCouchDb();
+        var me = this;
+
+        me.oUrlCdb = new oUrlCouchDb();
+
+        //TODO debug only
+        //me.oUrlCdb = new oUrlCouchDb("geouser","geopw","5.196.17.92:5984","sirs_isere");
+        //
+        me.syncro= function(oUrlCdb){
+                sPouch.dbConf(oUrlCdb);
+
+        };
 
 
 

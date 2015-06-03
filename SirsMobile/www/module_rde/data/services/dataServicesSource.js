@@ -11,110 +11,55 @@ angular.module('module_rde.data.services.source', [])
          * instanciation de tte les base
          * @type {pouchDB}
          */
-        me.cfg = new pouchDB('moskito_config');
-        me.usr = new pouchDB('moskito_user');
-        me.layer = new pouchDB('moskito_layer');
-        me.form = new pouchDB('moskito_form');
-        me.obs = new pouchDB('moskito_obs');
+        me.localDb =  null;
+
+        //objet pour couper la syncro
+        me.synclocalDb = null;
 
 
-            //instancie une syncro bi-directionelle avec support de l'interuption, et propagation des evenement change
-            //les evenements sont nomer comme la database
-        me.initiateSync = function (database) {
-            return PouchDB.sync("" + database, 'http://178.32.34.74:5984/' + database, {
+
+        //instancie une syncro bi-directionelle avec support de l'interuption, et propagation des evenement change
+            //les evenements sont nome comme la base
+        me.initiateSync = function (oUrlCdb) {
+            return PouchDB.sync("" + oUrlCdb.db, oUrlCdb.getUrlString(), {
                 live: true,
                 retry: true
             }).on('change', function (info) {
                 // handle change
-                $log.debug(database + '_change');
+                $log.info(oUrlCdb.db + '_change');
                 $log.debug(info);
                 if (info.direction == "pull") {
-                    $rootScope.$broadcast(database + "_change"); //FIXME  ne pas declacher l'event lorsque la modification vien du local.
+                    $rootScope.$broadcast(oUrlCdb.db + "_change"); //FIXME  ne pas declacher l'event lorsque la modification vien du local.
                 }
             }).on('paused', function () {
                 // replication paused (e.g. user went offline)
-                $log.debug(database + '_paused');
+                $log.info(oUrlCdb.db + '_paused');
             }).on('active', function () {
                 // replicate resumed (e.g. user went back online)
-                $log.debug(database + '_active');
+                $log.info(oUrlCdb.db + '_active');
             }).on('denied', function (info) {
                 // a document failed to replicate, e.g. due to permissions
-                $log.debug(database + '_denied');
-                $log.debug(info);
+                $log.error(oUrlCdb.db + '_denied');
+                $log.error(info);
             }).on('complete', function (info) {
                 // handle complete
-                $log.debug(database + '_complete');
-                $log.debug(info);
+                $log.info(oUrlCdb.db + '_complete');
+                $log.info(info);
             }).on('error', function (err) {
                 // handle error
-                $log.debug(database + '_error');
-                $log.debug(error);
+                $log.error(oUrlCdb.db + '_error');
+                $log.error(error);
             });
         };
 
 
-//essai syncro + propagation
-        me.esy = new pouchDB('essai_sync');
 
-        //objet pour couper la syncro
-        //TODO fonction en gise de constructeur ol School.
-        var syncCfg = me.initiateSync("moskito_config");
-        var syncUsr = me.initiateSync("moskito_user");
-        var syncLayer = me.initiateSync("moskito_layer");
-        var syncForm = me.initiateSync("moskito_form");
-        var syncObs = me.initiateSync("moskito_obs");
+        me.dbConf = function(oUrlCdb){
+            me.localDb = new pouchDB(oUrlCdb.db);
+            me.synclocalDb =   me.initiateSync(oUrlCdb);
 
-
-        //me.cfg.allDocs().then(function (result) {
-        //    console.log(result);
-        //}).catch(function (err) {
-        //    console.log(err);
-        //});
-        //
-        //me.usr.allDocs().then(function (result) {
-        //    console.log(result);
-        //}).catch(function (err) {
-        //    console.log(err);
-        //});
-        //
-        //me.layer.allDocs().then(function (result) {
-        //    console.log(result);
-        //}).catch(function (err) {
-        //    console.log(err);
-        //});
-        //
-        //me.form.allDocs().then(function (result) {
-        //    console.log("form");
-        //    console.log(result);
-        //}).catch(function (err) {
-        //    console.log("form");
-        //    console.log(err);
-        //});
-
-
-        /**
-         * generation des index en local de la base PouchDb
-         * @type {{_id: string, views: {name_index: {map: *}}}}
-         */
-
-        var designDoc = {
-            _id: '_design/name_index',
-            views: {
-                'name_index': {
-                    map: function (doc) {
-                        emit(doc.name, doc);
-                    }.toString()
-                }
-            }
         };
 
 
-        me.usr.put(designDoc).then(function (info) {
-            // design doc created
-            $log.debug(info);
-        }).catch(function (err) {
-            // design doc already exists
-            $log.debug(err);
-        });
 
     })

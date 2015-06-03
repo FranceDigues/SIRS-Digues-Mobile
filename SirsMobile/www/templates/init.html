@@ -7,33 +7,33 @@
 
                 <div class="list">
                     <label class="item item-input signin-item">
-                        <input type="text" placeholder="adresse" ng-model="c.url.adress">
+                        <input type="text" placeholder="adresse" ng-model="c.oUrlCdb.adress">
                     </label>
                     <label class="item item-input signin-item">
-                        <input type="number" placeholder="port" ng-model="c.url.port">
+                        <input type="number" placeholder="port" ng-model="c.oUrlCdb.port">
                     </label>
                     <label class="item item-input signin-item">
-                        <input type="text" placeholder="nom de la base (fixMe nom auto chargée?)" ng-model="c.url.db">
+                        <input type="text" placeholder="nom de la base (fixMe nom auto chargée?)" ng-model="c.oUrlCdb.db">
                     </label>
 
 
                     <h1 class="signin-title">Administateur de la base ( FIXME db design ...)</h1>
                     <label class="item item-input signin-item">
-                        <input type="text" placeholder="Nom" ng-model="c.url.id">
+                        <input type="text" placeholder="Nom" ng-model="c.oUrlCdb.id">
                     </label>
                     <label class="item item-input signin-item">
-                        <input type="password" placeholder="Mot de passe" ng-model="c.url.psw">
+                        <input type="password" placeholder="Mot de passe" ng-model="c.oUrlCdb.psw">
                     </label>
 
-
-                    <h1 class="signin-title">Bases de données connus</h1>
-                    <select > TODO </select>
+{{c.oUrlCdb}}
+                    <!--<h1 class="signin-title">Bases de données connus</h1>-->
+                    <!--<select > TODO </select>-->
                 </div>
 
 
                 <div class="signin-valid-button">
                     <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
-                            ng-click="signIn(user)">
+                            ng-click="c.syncro(c.oUrlCdb)">
                         SYNCRO
                     </button>
                 </div>
