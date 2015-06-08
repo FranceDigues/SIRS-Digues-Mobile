@@ -5,22 +5,20 @@
 
 angular.module('ctrl.menu.init', [])
 
-    .controller('InitCtrl', function ($scope, $log, sPouch) {
+    .controller('InitCtrl', function ($scope, $log, sPouch,$state) {
 
         var me = this;
 
-        me.oUrlCdb = new oUrlCouchDb();
+        //me.oUrlCdb = new oUrlCouchDb();
 
         //TODO debug only
-        //me.oUrlCdb = new oUrlCouchDb("geouser","geopw","5.196.17.92:5984","sirs_isere");
+        me.oUrlCdb = new oUrlCouchDb("geouser","geopw","5.196.17.92",5984,"sirs_isere");
         //
         me.syncro= function(oUrlCdb){
                 sPouch.dbConf(oUrlCdb);
-
         };
 
-
-
-
-
+        me.note= function(note){
+            $state.go('note');
+        }
     })

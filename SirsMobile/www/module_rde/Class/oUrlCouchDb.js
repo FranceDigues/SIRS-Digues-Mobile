@@ -9,10 +9,11 @@
  *
  */
 //TODO expand
-function oUrlCouchDb(id,psw,adress,db ){
+function oUrlCouchDb(id,psw,adress,port,db ){
     this.id= id;
     this.psw= psw;
     this.adress= adress;
+    this.port =port;
     this.db= db;
 }
 
@@ -31,6 +32,6 @@ oUrlCouchDb.prototype.patch = function(oUrlCouchDb){
 
 
 oUrlCouchDb.prototype.getUrlString = function(){
-    return "http://"+this.id+":"+this.psw+"@"+this.adress+"/"+this.db;
+    return "http://"+this.id+":"+this.psw+"@"+this.adress+":"+this.port+"/"+this.db;
 }
 

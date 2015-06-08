@@ -55,37 +55,49 @@
     <ion-content padding="true" overflow-scroll="true">
         <div class="row">
             <div class="col col-50 col-offset-25" style="margin-top:6%;">
-                <button class="button button-block button-positive home-button" ng-click="openPdf('courrier_mme_la_ministre_sante.pdf')">
-                    <span class="icon ion-search"> </span> courrier mme la ministre sante.
+                <button class="button button-block button-positive home-button" ng-click="openPdf('classeur.ods','application/vnd.oasis.opendocument.spreadsheet')">
+                    <span class="icon ion-search"> </span> classeur.ods
                 </button>
-                <button class="button button-block button-positive home-button" ng-click="openPdf('gbp_gestion_de_l_eau.pdf')">
-                    <span class="icon ion-search"> </span> gestion de l'eau
+                <button class="button button-block button-positive home-button" ng-click="openPdf('classeur.xlsx','application/msword')">
+                    <span class="icon ion-search"> </span> classeur.xlsx
                 </button>
-                <button class="button button-block button-positive home-button" ng-click="openPdf('stats_indigo_2014.pdf')">
-                    <span class="icon ion-search"> </span> stats indigo 2014
+                <button class="button button-block button-positive home-button" ng-click="openPdf('document.docx','application/msword')">
+                    <span class="icon ion-search"> </span> document.docx
                 </button>
-                <button class="button button-block button-positive home-button" ng-click="openPdf('tableaux_de_bord_fevrier_mars_2015.pdf')">
-                    <span class="icon ion-search"> </span> tableaux de bord fevrier mars 2015
-                </button>
-
-                <button class="button button-block button-positive home-button" ng-click="plugTestUpdateTMS()">
-                    <span class="icon ion-search"> </span> TMSAquisition
-                </button>
-                <button class="button button-block button-positive home-button" ng-click="plugTestUpdateWMS()">
-                    <span class="icon ion-search"> </span> WMSAquisition
-                </button>
-                <button class="button button-block button-positive home-button" ng-click="plugTestClearAll()">
-                    <span class="icon ion-search"> </span> clear all
-                </button>
-                <button class="button button-block button-positive home-button" ng-click="plugTestClearOne()">
-                    <span class="icon ion-search"> </span> clearOne
+                <button class="button button-block button-positive home-button" ng-click="openPdf('document.odt','application/vnd.oasis.opendocument.text')">
+                    <span class="icon ion-search"> </span> document.odt
                 </button>
 
-                <video width="320" height="240" controls>
-                    <source src="/Removable/MicroSD/Android/data/com.ionic.Map03/files/video-cstl-ndvi.mp4"
-                            type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+                <button class="button button-block button-positive home-button" ng-click="openPdf('images.jpg','image/jpg')">
+                    <span class="icon ion-search"> </span> images.jpg
+                </button>
+                <button class="button button-block button-positive home-button" ng-click="openPdf('images.png','image/png')">
+                    <span class="icon ion-search"> </span> images.png
+                </button>
+
+                <button class="button button-block button-positive home-button" ng-click="openPdf('application/visualization_-_condominium_with_skylight.dwg','dwg')">
+                    <span class="icon ion-search"> </span> visualization_-_condominium_with_skylight.dwg
+                </button>
+
+
+                <!--<button class="button button-block button-positive home-button" ng-click="plugTestUpdateTMS()">-->
+                    <!--<span class="icon ion-search"> </span> TMSAquisition-->
+                <!--</button>-->
+                <!--<button class="button button-block button-positive home-button" ng-click="plugTestUpdateWMS()">-->
+                    <!--<span class="icon ion-search"> </span> WMSAquisition-->
+                <!--</button>-->
+                <!--<button class="button button-block button-positive home-button" ng-click="plugTestClearAll()">-->
+                    <!--<span class="icon ion-search"> </span> clear all-->
+                <!--</button>-->
+                <!--<button class="button button-block button-positive home-button" ng-click="plugTestClearOne()">-->
+                    <!--<span class="icon ion-search"> </span> clearOne-->
+                <!--</button>-->
+
+                <!--<video width="320" height="240" controls>-->
+                    <!--<source src="/Removable/MicroSD/Android/data/com.ionic.Map03/files/video-cstl-ndvi.mp4"-->
+                            <!--type="video/mp4">-->
+                    <!--Your browser does not support the video tag.-->
+                <!--</video>-->
             </div>
         </div>
 

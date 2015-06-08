@@ -12,6 +12,11 @@ var app = angular.module('SirsMobile', [
     'module_rde.geoCache',
     'module_rde.data.services.pipe',
     'module_rde.data.services.source',
+
+    'module_rde.note',
+
+
+
     'controllers.menus',
     'filter.custom',
     'module_app.services.device',
@@ -55,6 +60,12 @@ app.run(function ($ionicPlatform) {
                 templateUrl: 'templates/sign-in.html',
                 controller: 'SignInCtrl'
             })
+            .state('note', {
+                url: '/note',
+                templateUrl: 'module_rde/note/note.html',
+                controller: 'NoteCtrl as c'
+            })
+
             .state('home', {
                 url: '/home',
                 abstract: true,

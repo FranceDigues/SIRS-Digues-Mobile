@@ -90,13 +90,13 @@ angular.module('controllers.menus', [])
             }]);
         };
 
-        $scope.openPdf = function (pdf) {
+        $scope.openPdf = function (pdf, type ) {
             //$log.debug(cordova.file.externalDataDirectory + 'doc/cv.pdf');
             $cordovaFileOpener2.open(
                 //cordova.file.externalDataDirectory+'doc/cv.pdf',
                 //'Removable/MicroSD/Android/data/com.ionic.Map03/files/' + 'doc/cv.pdf',
-                'Removable/MicroSD/Android/data/com.ionic.Map03/files/' + pdf,
-                'application/pdf'
+                'Removable/MicroSD/Android/data/com.ionic.Map03/files/DocTest/' + pdf
+                ,type
             ).then(function (res) {
                     $log.debug(res)
                 }, function (err) {
