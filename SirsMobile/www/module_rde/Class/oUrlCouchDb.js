@@ -25,8 +25,8 @@ function oUrlCouchDb(id,psw,adress,port,db ){
  *
  */
 
-oUrlCouchDb.prototype.patch = function(oUrlCouchDb){
-    angular.extend(this,oUrlCouchDb);
+oUrlCouchDb.prototype.patch = function(obj){
+    angular.extend(this,obj);
 }
 
 

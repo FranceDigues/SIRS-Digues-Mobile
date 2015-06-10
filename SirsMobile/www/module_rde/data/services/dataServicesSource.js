@@ -12,9 +12,11 @@ angular.module('module_rde.data.services.source', [])
          * @type {pouchDB}
          */
         me.localDb =  null;
+        me.confDb =  null;
 
         //objet pour couper la syncro
         me.syncInstanceColector = {};
+        me.dbs = {loaded:false, list:[]};
 
         me.syncState = {actual:0, total:0, ratio:0 ,  clonning:false}
 
@@ -22,7 +24,7 @@ angular.module('module_rde.data.services.source', [])
 
         //instancie une syncro bi-directionelle avec support de l'interuption, et propagation des evenement change
             //les evenements sont nome comme la base
-        me.initiateSync = function (oUrlCdb) {
+        me.initiateSync = function (oUrlCdb, UpToDateCallBack) {
             $log.info("RUN_db_SYNC");
             me.syncInstanceColector[oUrlCdb.db] = PouchDB.sync("" + oUrlCdb.db, oUrlCdb.getUrlString(), {
                 live: true,
@@ -51,10 +53,20 @@ angular.module('module_rde.data.services.source', [])
             }).on('error', function (err) {
                 // handle error
                 $log.error(oUrlCdb.db +'_Sync_'+ '_error');
-                $log.error(error);
+                $log.error(err);
+            }).on('uptodate', function (err) {
+
+
+
+                $log.error(oUrlCdb.db +'_Sync_'+ '_uptodate');
+
+                if(me.dbs.loaded==false){ //only once time
+                    //FIXME cas ou le get renvoie une erreur, gerrer l'auto reload
+                    me.dbs.loaded = true;
+                    UpToDateCallBack();
+                }
             });
         };
-
 
         me.instantiateRep = function(oUrlCdb,syncMe){
             $log.info("RUN_db_REP");
@@ -104,9 +116,7 @@ angular.module('module_rde.data.services.source', [])
 
         }
 
-
-
-       me._recursiveRegularGetState =  function(){
+        me._recursiveRegularGetState =  function(){
            $log.debug("RUN__recursiveRegularGetState")
            $log.debug("RUN__recursiveRegularGetState")
 
@@ -131,16 +141,44 @@ angular.module('module_rde.data.services.source', [])
 
        }
 
-        me.dbConf = function(oUrlCdb){
+        //TODO need reduce
+        me.syncLocalDb = function(oUrlCdb){
             me.localDb = new pouchDB(oUrlCdb.db);
-                me.initiateSync(oUrlCdb);
+            me.initiateSync(oUrlCdb);
             $log.debug("instance de base");
             $log.debug(me.syncInstanceColector);
 
 
         };
 
+        me.syncConfDb = function(oUrlCdb){
+            me.confDb = new pouchDB(oUrlCdb.db);
+            me.initiateSync(oUrlCdb,me.getDbs);
+            $log.debug("instance de base");
+            $log.debug(me.syncInstanceColector);
+
+
+        };
+
+        me.getDbs = function(){
+
+            $log.debug("RUN_GetDbs");
+            me.confDb.query('databases/available/dbs').then(function (res) {
+
+                $log.debug(res);
+                $log.debug(res.rows[0].value);
+                //me.dbs.list.concat(me.dbs,res.rows[0].value )
+                me.dbs.list = res.rows[0].value;
+            }).catch(function (err) {
+                //$log.debug(err);
+            });
+
+        }
+
+
         me.dbInit = function(oUrlCdb){
+
+            $log.error(oUrlCdb);
 
             $http.get(oUrlCdb.getUrlString()).
                 success(function(data, status, headers, config) {
@@ -168,21 +206,6 @@ angular.module('module_rde.data.services.source', [])
             });
 
         };
-
-
-
-
-
-            //$http.get(oUrlCdb.getUrlString()).
-            //    success(function(data, status, headers, config) {
-            //        $log.debug(data)
-            //        //me.syncState.total =
-            //    }).
-            //    error(function(data, status, headers, config) {
-            //        // called asynchronously if an error occurs
-            //        // or server returns response with an error status.
-            //    });
-
 
 
     })
