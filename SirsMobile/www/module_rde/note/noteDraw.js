@@ -10,7 +10,7 @@
 
 angular.module('module_rde.note', [])
 
-    .controller('NoteCtrl', function ($scope, $log, $ionicPlatform) {
+    .controller('cNote', function ($scope, $log, $ionicPlatform) {
 
         var me = this;
         var canvas =  null;

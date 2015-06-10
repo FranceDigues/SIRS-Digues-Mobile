@@ -3,7 +3,7 @@
  */
 
 angular.module('ctrl.menu.signIn', [])
-.controller('SignInCtrl', function ($scope, $state, sPouch, sMask, $log, sContext) {
+.controller('cSignIn', function cSignIn ($scope, $state, sPouch, sMask, $log, sContext) {
 
 
     $scope.signIn = function (user) {

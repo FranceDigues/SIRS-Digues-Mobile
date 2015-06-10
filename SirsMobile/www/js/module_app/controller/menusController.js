@@ -61,7 +61,7 @@ angular.module('controllers.menus', [])
 /***************************************************************** SIDE MENU *****************************************************/
 /***************************************************************** --------- *****************************************************/
 
-    .controller('sideMenu', function ($scope, $state, $ionicSideMenuDelegate, sLayer, $log, sEventSuperviseur, $rootScope) { //kifkif un global controler non?
+    .controller('sideMenu', function  sideMenu ($scope, $state, $ionicSideMenuDelegate, sLayer, $log, sEventSuperviseur, $rootScope) { //kifkif un global controler non?
 
         //$log.debug("sideMenu");
         ////$log.debug(doc.layers);

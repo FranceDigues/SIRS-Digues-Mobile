@@ -11,7 +11,7 @@ angular.module('controllers.map', [])
 /***************************************************************** --------- *****************************************************/
 
 
-    .controller('MapCtrl', function ($scope, sLayer, $log, sMap, olData, sEventSuperviseur, sMask, sContext, $rootScope, $cordovaGeolocation,$timeout,$ionicPopover) {
+    .controller('MapCtrl', function MapCtrl ($scope, sLayer, $log, sMap, olData, sEventSuperviseur, sMask, sContext, $rootScope, $cordovaGeolocation,$timeout,$ionicPopover) {
 
         var me = this;
         //var myMap =null

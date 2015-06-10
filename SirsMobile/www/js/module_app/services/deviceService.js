@@ -2,7 +2,7 @@
  * Created by roch dardie on 03/04/15.
  */
 angular.module('module_app.services.device', [])
-    .service('sEventSuperviseur', function ($log, $rootScope) {
+    .service('sEventSuperviseur', function  sEventSuperviseur ($log, $rootScope) {
 
         var rscpEVS = $rootScope.$new();
 

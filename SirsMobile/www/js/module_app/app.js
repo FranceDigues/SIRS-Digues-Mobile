@@ -53,17 +53,17 @@ app.run(function ($ionicPlatform) {
             .state('init', {
                 url: '/init',
                 templateUrl: 'templates/init.html',
-                controller: 'InitCtrl as c'
+                controller: 'cInit as c'
             })
             .state('signin', {
                 url: '/sign-in',
                 templateUrl: 'templates/sign-in.html',
-                controller: 'SignInCtrl'
+                controller: 'cSignIn'
             })
             .state('note', {
                 url: '/note',
                 templateUrl: 'module_rde/note/note.html',
-                controller: 'NoteCtrl as c'
+                controller: 'cNote as c'
             })
 
             .state('home', {

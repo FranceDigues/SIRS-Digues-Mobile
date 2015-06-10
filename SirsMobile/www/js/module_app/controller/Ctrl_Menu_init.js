@@ -7,7 +7,7 @@
 
 angular.module('ctrl.menu.init', [])
 
-    .controller('InitCtrl', function InitCtrl($scope, $log, sPouch,$state) {
+    .controller('cInit', function cInit($scope, $log, sPouch,$state) {
 
         var me = this;
 

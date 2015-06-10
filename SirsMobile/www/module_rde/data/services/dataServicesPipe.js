@@ -5,7 +5,7 @@
  */
 angular.module('module_rde.data.services.pipe', [])
 
-    .service('sContext', function (sPouch, pouchDB, $rootScope, $log) {
+    .service('sContext',  function sContext (sPouch, pouchDB, $rootScope, $log) {
         var rscptt = $rootScope.$new();
 
 
@@ -40,7 +40,7 @@ angular.module('module_rde.data.services.pipe', [])
         //
         //});
     })
-    .service('sLayer', function ($ionicPlatform,sPouch, $log, $rootScope,$timeout) {
+    .service('sLayer', function sLayer ($ionicPlatform,sPouch, $log, $rootScope,$timeout) {
         //carcan
 
 
@@ -183,7 +183,7 @@ angular.module('module_rde.data.services.pipe', [])
     })
 
 
-    .service('sMask', function (sPouch, $log, $rootScope, sContext) {
+    .service('sMask', function sMask (sPouch, $log, $rootScope, sContext) {
         //carcan
         var me = this;
 
