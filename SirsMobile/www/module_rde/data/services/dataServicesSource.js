@@ -3,7 +3,7 @@
  */
 angular.module('module_rde.data.services.source', [])
 
-    .service('sPouch', function sPouch (pouchDB, $log, $rootScope, $timeout, $http,$ionicPopup ) {
+    .service('sPouch', function sPouch (pouchDB, $log, $rootScope, $timeout, $http,$ionicPopup,$state ) {
 
         var me = this;
 
@@ -16,15 +16,17 @@ angular.module('module_rde.data.services.source', [])
 
         //objet pour couper la syncro
         me.syncInstanceColector = {};
-        me.dbs = {loaded:false, list:[]};
+        me.dbs = {list:[]};
 
-        me.syncState = {actual:0.0, total:0.0, ratio:0.0 ,  clonning:false}
+        me.syncState = {actual:0.0, total:0.0, ratio:0.0 ,  clonning:false, runNextSync:false}
 
 
 
         //instancie une syncro bi-directionelle avec support de l'interuption, et propagation des evenement change
             //les evenements sont nome comme la base
         me.initiateSync = function (oUrlCdb, UpToDateCallBack) {
+            var onlyOnce = true;
+
             $log.info("RUN_db_SYNC");
             me.syncInstanceColector[oUrlCdb.db] = PouchDB.sync("" + oUrlCdb.db, oUrlCdb.getUrlString(), {
                 live: true,
@@ -55,14 +57,15 @@ angular.module('module_rde.data.services.source', [])
                 $log.error(oUrlCdb.db +'_Sync_'+ '_error');
                 $log.error(err);
             }).on('uptodate', function (err) {
-
-
-
                 $log.error(oUrlCdb.db +'_Sync_'+ '_uptodate');
 
-                if(me.dbs.loaded==false){ //only once time
+    $log.error("onlyOnce : "+onlyOnce)
+    $log.error("UpToDateCallBack : "+UpToDateCallBack)
+
+
+                if(UpToDateCallBack != null && onlyOnce==true){ //only once time
                     //FIXME cas ou le get renvoie une erreur, gerrer l'auto reload
-                    me.dbs.loaded = true;
+                    onlyOnce = false;
                     UpToDateCallBack();
                 }
             });
@@ -97,7 +100,7 @@ angular.module('module_rde.data.services.source', [])
 
                 me.syncState.clonning = false
 
-                if(syncMe === true) me.initiateSync(RemoteDbDesc);
+                if(syncMe === true) me.syncLocalDb(RemoteDbDesc);
 
 
 
@@ -145,18 +148,24 @@ angular.module('module_rde.data.services.source', [])
 
         //TODO need reduce
         me.syncLocalDb = function(oUrlCdb){
+            //me.syncState.runNextSync =true; //permet l'execution du callback unique apres le
+
             me.localDb = new pouchDB(oUrlCdb.db);
-            me.initiateSync(oUrlCdb);
+            me.initiateSync(oUrlCdb,  me.roadRunner);
             $log.debug("instance de base");
             $log.debug(me.syncInstanceColector);
 
 
         };
+        me.roadRunner = function(){
+            $log.debug('GOTO SIGN IN')
+            $state.go('signin')
+        };
 
 
         me.syncConfDb = function(oUrlCdb){
             //accept refresh
-            me.dbs.loaded= false;
+            //me.syncState.runNextSync= true;
 
 
             me.confDb = new pouchDB(oUrlCdb.db);
@@ -224,6 +233,8 @@ angular.module('module_rde.data.services.source', [])
             });
 
         };
+
+
 
 
     })
