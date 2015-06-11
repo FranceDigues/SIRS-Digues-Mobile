@@ -3,7 +3,7 @@
  */
 angular.module('module_rde.data.services.source', [])
 
-    .service('sPouch', function sPouch (pouchDB, $log, $rootScope, $timeout, $http) {
+    .service('sPouch', function sPouch (pouchDB, $log, $rootScope, $timeout, $http,$ionicPopup ) {
 
         var me = this;
 
@@ -207,6 +207,17 @@ angular.module('module_rde.data.services.source', [])
             me.localDb = new pouchDB(oUrlCdb.db);
             me.localDb.destroy().then(function () {
                 $log.debug("db_clear")
+
+
+
+                    $ionicPopup.alert({
+                        title: 'Base de donnée effacée ',
+                        template: 'source'+oUrlCdb.db
+                    });
+
+
+
+
             }).catch(function (error) {
                 console.log(error);
             });
