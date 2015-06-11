@@ -154,6 +154,10 @@ angular.module('module_rde.data.services.source', [])
         };
 
         me.syncConfDb = function(oUrlCdb){
+            //accept refresh
+            me.dbs.loaded= false;
+
+
             me.confDb = new pouchDB(oUrlCdb.db);
             me.initiateSync(oUrlCdb,me.getDbs);
             $log.debug("instance de base");
