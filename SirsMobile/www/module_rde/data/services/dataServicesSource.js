@@ -18,7 +18,7 @@ angular.module('module_rde.data.services.source', [])
         me.syncInstanceColector = {};
         me.dbs = {loaded:false, list:[]};
 
-        me.syncState = {actual:0, total:0, ratio:0 ,  clonning:false}
+        me.syncState = {actual:0.0, total:0.0, ratio:0.0 ,  clonning:false}
 
 
 
@@ -124,11 +124,13 @@ angular.module('module_rde.data.services.source', [])
             me.localDb.info().then( function(result){
                 $log.debug("RUN__info")
                 $log.debug( result)
-                $log.debug( me.syncState.clonning)
+                $log.debug(me.syncState.clonning)
                 $log.debug(me.syncState.actual)
                 $log.debug(result.doc_count);
 
-                me.syncState.actual= (result.doc_count / me.syncState.ratio).toFixed(2);
+                if ((result.doc_count / me.syncState.ratio) != NaN ){
+                    me.syncState.actual = (result.doc_count / me.syncState.ratio).toFixed(2);
+                }
 
                 if(me.syncState.clonning == true){
                     $timeout( me._recursiveRegularGetState,2000);
