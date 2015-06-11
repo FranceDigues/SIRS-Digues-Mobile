@@ -68,42 +68,42 @@ angular.module('module_rde.data.services.source', [])
             });
         };
 
-        me.instantiateRep = function(oUrlCdb,syncMe){
+    //FIXME nom de base peut il etre distinct (local - remote?)
+        me.instantiateRep = function(RemoteDbDesc,LocalDbName,syncMe){
             $log.info("RUN_db_REP");
             me.syncState.clonning=true;
 
             //var RemoteDb = new PouchDB(oUrlCdb.getUrlString());
-
-
-            me.localDb.replicate.from( oUrlCdb.getUrlString(), {
+            //me.localDb.replicate.from
+            PouchDB.replicate( RemoteDbDesc.getUrlString(), LocalDbName, {
                 live: false,
                 retry: true
             }).on('change', function (info) {
-                $log.info(oUrlCdb.db +'_Repliation_'+ '_paused');
+                $log.info(RemoteDbDesc.db +'_Repliation_'+ '_paused');
             }).on('paused', function () {
                 // replication paused (e.g. user went offline)
-                $log.info(oUrlCdb.db +'_Repliation_'+ '_paused');
+                $log.info(RemoteDbDesc.db +'_Repliation_'+ '_paused');
             }).on('active', function () {
                 // replicate resumed (e.g. user went back online)
-                $log.info(oUrlCdb.db +'_Repliation_'+ '_active');
+                $log.info(RemoteDbDesc.db +'_Repliation_'+ '_active');
             }).on('denied', function (info) {
                 // a document failed to replicate, e.g. due to permissions
-                $log.error(oUrlCdb.db +'_Repliation_'+ '_denied');
+                $log.error(RemoteDbDesc.db +'_Repliation_'+ '_denied');
                 $log.error(info);
             }).on('complete', function (info) {
                 // handle complete
-                $log.info(oUrlCdb.db + '_Repliation_'+'_complete');
+                $log.info(RemoteDbDesc.db + '_Repliation_'+'_complete');
                 $log.info(info);
 
                 me.syncState.clonning = false
 
-                if(syncMe === true) me.initiateSync(oUrlCdb);
+                if(syncMe === true) me.initiateSync(RemoteDbDesc);
 
 
 
             }).on('error', function (err) {
                 // handle error
-                $log.error(oUrlCdb.db + '_Repliation_'+'_error');
+                $log.error(RemoteDbDesc.db + '_Repliation_'+'_error');
                 $log.error(error);
 
                 me.syncState.clonning = false
@@ -153,6 +153,7 @@ angular.module('module_rde.data.services.source', [])
 
         };
 
+
         me.syncConfDb = function(oUrlCdb){
             //accept refresh
             me.dbs.loaded= false;
@@ -197,7 +198,7 @@ angular.module('module_rde.data.services.source', [])
 
 
             me.localDb = new pouchDB(oUrlCdb.db);
-            me.instantiateRep( oUrlCdb,true  );
+            me.instantiateRep( oUrlCdb,oUrlCdb.db,true  );
 
         };
 
