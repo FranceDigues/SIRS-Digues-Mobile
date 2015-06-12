@@ -16,8 +16,11 @@ var CACHE_FIRST_IDF = 1000000;
 angular.module('module_rde.geoCache', [
     //'data.services.source',
     //'data.services.pipe',
-    'module_rde.data.services.pipe',
-    'module_rde.data.services.source',
+    //'module_rde.data.services.context',
+    //'module_rde.data.services.Maplayer',
+    //'module_rde.data.services.dbManager',
+
+    'module_rde.data.services',
     'openlayers-directive',
     'ionic',
     'ngCordova',
@@ -25,7 +28,7 @@ angular.module('module_rde.geoCache', [
     'pouchdb'
 ])
 
-    .controller('cGeoCache', function cGeoCache ($scope, sLayer, sMap, olData, $log, $timeout, sCacheMap, sContext, $rootScope) {
+    .controller('cGeoCache', function cGeoCache ($scope, sMapLayer, sMap, olData, $log, $timeout, sCacheMap, sContext, $rootScope) {
 
         var me = this;
 
@@ -36,7 +39,7 @@ angular.module('module_rde.geoCache', [
         me.var = {CoordList: null};
 
 
-        me.layers = sLayer.list; // maj .?
+        me.layers = sMapLayer.list; // maj .?
 
         me.mode = sMap.mode;
         me.vsCacheBox = null;
@@ -73,7 +76,7 @@ angular.module('module_rde.geoCache', [
                     zoom: 7
                 },
 
-                //layers:  sLayer.json,
+                //layers:  sMapLayer.json,
                 defaults: {
                     events: {
                         map: ['singleclick', 'pointermove', 'boxend']

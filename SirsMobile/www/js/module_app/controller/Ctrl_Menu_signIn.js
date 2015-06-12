@@ -2,8 +2,8 @@
  * Created by roch dardie on 28/05/15.
  */
 
-angular.module('ctrl.menu.signIn', [])
-.controller('cSignIn', function cSignIn ($scope, $state, sPouch, sMask, $log, sContext, md5) {
+angular.module('module_app.controllers.menus.signIn', [])
+.controller('cSignIn', function cSignIn ($scope, $state, sPouch,  $log, sContext, md5) {
 
     var me = this;
         me.user=null;

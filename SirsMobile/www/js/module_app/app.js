@@ -9,32 +9,39 @@ var app = angular.module('SirsMobile', [
     'rzModule',
     'pouchdb',
     'openlayers-directive',
-    'controllers.map',
+
+
+    'module_app.controllers',
+
+    'module_rde.data.services',
     'module_rde.geoCache',
-    'module_rde.data.services.pipe',
-    'module_rde.data.services.source',
+
+    //'module_rde.data.services.context',
+    //'module_rde.data.services.dbManager',
 
     'module_rde.note',
 
 
 
-    'controllers.menus',
+    //'controllers.menus',
     'filter.custom',
     'module_app.services.device',
 
-    'ctrl.menu.signIn',
-    'ctrl.menu.init'
+    'module_app.data.services.applayer',
+
+    //'ctrl.menu.signIn',
+    //'ctrl.menu.init'
 
 
      ]);
 
 app.run(function ($ionicPlatform) {
-    //sLayer
+    //sMapLayer
     $ionicPlatform.ready(function () {
 
 
 
-        //sLayer.list;
+        //sMapLayer.list;
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -71,12 +78,12 @@ app.run(function ($ionicPlatform) {
                 url: '/home',
                 abstract: true,
                 templateUrl: 'templates/home.html',
-                controller: 'sidemenu'
+                controller: 'cSideLeft'
             })
             .state('loading', {
                 url: '/loading',
                 templateUrl: 'templates/loading.html',
-                controller: 'loader'
+                controller: 'cLoader'
             })
             .state('forgotpassword', {
                 url: '/forgot-password',
@@ -86,7 +93,7 @@ app.run(function ($ionicPlatform) {
                 url: '/tab',
                 views: {
                     'menuContent': {
-                        controller: 'TabsCtrl',
+                        controller: 'cTabs',
                         templateUrl: 'templates/tabs.html'
                     }
                 }
@@ -96,7 +103,7 @@ app.run(function ($ionicPlatform) {
                 views: {
                     'home-tab': {
                         templateUrl: 'templates/tab-map.html',
-                        controller: 'MapCtrl'
+                        controller: 'cMap'
                     }
                 }
             })

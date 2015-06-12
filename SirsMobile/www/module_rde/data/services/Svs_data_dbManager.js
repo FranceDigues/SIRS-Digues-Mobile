@@ -1,7 +1,7 @@
 /**
  * Created by dardie roch on 03/04/15.
  */
-angular.module('module_rde.data.services.source', [])
+angular.module('module_rde.data.services.dbManager', [])
 
     .service('sPouch', function sPouch (pouchDB, $log, $rootScope, $timeout, $http,$ionicPopup,$state ) {
 

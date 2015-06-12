@@ -5,18 +5,18 @@
 
 //"active": true,
 
-angular.module('controllers.map', [])
+angular.module('module_app.controllers.map', [])
 /***************************************************************** --------- *****************************************************/
 /*****************************************************************  MAP    *****************************************************/
 /***************************************************************** --------- *****************************************************/
 
 
-    .controller('MapCtrl', function MapCtrl ($scope, sLayer, $log, sMap, olData, sEventSuperviseur, sMask, sContext, $rootScope, $cordovaGeolocation,$timeout,$ionicPopover) {
+    .controller('cMap', function cMap ($scope, sMapLayer, $log, sMap, olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,$ionicPopover) {
 
         var me = this;
         //var myMap =null
         //$scope.tt=tt;
-        $log.debug(sLayer.list);
+        $log.debug(sMapLayer.list);
 
         //$scope.msk = sMask.doc;
         //$log.debug($scope.msk)
@@ -25,7 +25,7 @@ angular.module('controllers.map', [])
         //$scope.layersStateList= null;
 
 
-        $scope.layers = sLayer.list;
+        $scope.layers = sMapLayer.list;
 
 
         $scope.pluginTest = function(){
@@ -65,14 +65,14 @@ angular.module('controllers.map', [])
         $scope.mode = sMap.mode;
         $scope.Ploting = [];
         $scope.newObs = null;
-        $scope.sMask = sMask;
+        //$scope.sMask = sMask;
         $scope.limitList = 2;
 
 
         $scope.$on("formUpdate", function (data) {
             $log.debug("reception event formUpdate");
             $timeout(function () {
-                $scope.newObs = sMask.form;
+                //$scope.newObs = sMask.form;
             });
         });
 
@@ -83,15 +83,15 @@ angular.module('controllers.map', [])
         $scope.publishForm = function () {
             $log.debug($scope.newObs.feature);
             $log.debug($scope.newObs.param);
-            sMask.writeObsOnDB($scope.newObs.param);
+            //sMask.writeObsOnDB($scope.newObs.param);
         };
 
         $scope.$on("ObsCreated", function () {
             //publish feature in layer
-            $scope.newObs.feature.set('ObsUUID', sMask.obsUUID);
-            sMask.doc.GeoJson = $scope.toGeoJson(featureOverlay);
+            //$scope.newObs.feature.set('ObsUUID', sMask.obsUUID);
+            //sMask.doc.GeoJson = $scope.toGeoJson(featureOverlay);
             $timeout(function () {
-                sMask.writeDocOnDb();
+                //sMask.writeDocOnDb();
             })
         });
 
@@ -125,7 +125,7 @@ angular.module('controllers.map', [])
                     //     }
                     // }
                 },
-                //layers:  sLayer.json,
+                //layers:  sMapLayer.json,
                 defaults: {
                     events: {
                         //map: [ 'drawend' ]
@@ -270,10 +270,10 @@ angular.module('controllers.map', [])
             $log.debug(featureOverlay.getFeatures());
             $log.debug(toGeoJson(featureOverlay));
             $log.debug(sContext.param);
-            $log.debug(sMask.doc);
+            //$log.debug(sMask.doc);
 
-            sMask.doc.GeoJson = toGeoJson(featureOverlay);
-            sMask.writeDocOnDb();
+            //sMask.doc.GeoJson = toGeoJson(featureOverlay);
+            //sMask.writeDocOnDb();
         };
 
 
@@ -379,38 +379,38 @@ angular.module('controllers.map', [])
 
             //me.updateLayer();
 
-            $scope.layers = sLayer.list;
+            $scope.layers = sMapLayer.list;
         });
 
 
 
         $scope.$on("maskGeoJsonUpdate", function () {
-            $log.debug("event maskGeoJsonUpdate");
-            $log.debug(sMask.doc.GeoJson);
-            if(featureOverlay != null){
-                featureOverlay.getFeatures().clear();
-            }
-
-
-            if(sMask.doc.GeoJson != "") {
-                var gjson = new ol.format.GeoJSON();
-                $log.debug(gjson);
-                var currentGeoJson = gjson.readFeatures(sMask.doc.GeoJson);
-                //angular.forEach(currentGeoJson, function (feature, key) {
-                //    $log.debug('feature.ObsUUID: ' + feature.get('ObsUUID'));
-                //    sMask.getObs(key, feature.get('ObsUUID'));
-                //})
-                var olcFeatures = new ol.Collection(currentGeoJson);
-                $log.debug(olcFeatures);
-                featureOverlay.setFeatures(olcFeatures);
-                $rootScope.$broadcast('msk_Geom_Updated');
-            }
-
-            if(featureOverlay != null) {
-                $log.debug(featureOverlay.getFeatures());
-            }
-
-            sMask.searchFormByLayerUUID(sContext.param.mskUUID);
+            //$log.debug("event maskGeoJsonUpdate");
+            ////$log.debug(sMask.doc.GeoJson);
+            //if(featureOverlay != null){
+            //    featureOverlay.getFeatures().clear();
+            //}
+            //
+            //
+            //if(sMask.doc.GeoJson != "") {
+            //    var gjson = new ol.format.GeoJSON();
+            //    $log.debug(gjson);
+            //    //var currentGeoJson = gjson.readFeatures(sMask.doc.GeoJson);
+            //    //angular.forEach(currentGeoJson, function (feature, key) {
+            //    //    $log.debug('feature.ObsUUID: ' + feature.get('ObsUUID'));
+            //    //    sMask.getObs(key, feature.get('ObsUUID'));
+            //    //})
+            //    var olcFeatures = new ol.Collection(currentGeoJson);
+            //    $log.debug(olcFeatures);
+            //    featureOverlay.setFeatures(olcFeatures);
+            //    $rootScope.$broadcast('msk_Geom_Updated');
+            //}
+            //
+            //if(featureOverlay != null) {
+            //    $log.debug(featureOverlay.getFeatures());
+            //}
+            //
+            ////sMask.searchFormByLayerUUID(sContext.param.mskUUID);
         });
 
 
@@ -503,12 +503,12 @@ angular.module('controllers.map', [])
             $log.debug("event msk geom Updated recive");
             var gjson = new ol.format.GeoJSON();
             $log.debug(gjson);
-            var currentGeoJson = gjson.readFeatures(sMask.doc.GeoJson);
-            angular.forEach(currentGeoJson, function (feature, key) {
-                $log.debug('feature.ObsUUID: ' + feature.get('ObsUUID'));
-                sMask.getObs(key, feature.get('ObsUUID'));
-
-            });
+            //var currentGeoJson = gjson.readFeatures(sMask.doc.GeoJson);
+            //angular.forEach(currentGeoJson, function (feature, key) {
+            //    $log.debug('feature.ObsUUID: ' + feature.get('ObsUUID'));
+            //    sMask.getObs(key, feature.get('ObsUUID'));
+            //
+            //});
         });
 
         //POPOVER

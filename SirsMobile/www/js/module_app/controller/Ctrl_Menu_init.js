@@ -5,7 +5,7 @@
 //TODO nommer controller
 //TODO créer la doc pas default
 
-angular.module('ctrl.menu.init', [])
+angular.module('module_app.controllers.menus.init', [])
 
     .controller('cInit', function cInit($scope, $log, sPouch,$state) {
 
