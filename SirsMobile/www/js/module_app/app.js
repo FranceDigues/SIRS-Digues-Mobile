@@ -5,6 +5,7 @@
 var app = angular.module('SirsMobile', [
     'ionic',
     'ngCordova',
+    'angular-md5',
     'rzModule',
     'pouchdb',
     'openlayers-directive',
@@ -58,7 +59,7 @@ app.run(function ($ionicPlatform) {
             .state('signin', {
                 url: '/sign-in',
                 templateUrl: 'templates/sign-in.html',
-                controller: 'cSignIn'
+                controller: 'cSignIn as c'
             })
             .state('note', {
                 url: '/note',

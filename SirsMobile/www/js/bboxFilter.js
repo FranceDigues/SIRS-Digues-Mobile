@@ -8,7 +8,7 @@
 //cherche  premiere et derniere valeur, puis kill le reste
 
 
-function(doc, bbox) {
+function couchFilter (doc, bbox) {
 
     if(doc.xmin > bbox.xmin) {
         if(doc.xmin < bbox.xmax) emit(doc._id, doc);

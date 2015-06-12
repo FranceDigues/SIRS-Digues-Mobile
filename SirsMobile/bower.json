@@ -13,6 +13,9 @@
     "angular-pouchdb": "~2.0.8",
     "angular-openlayers-directive": "~0.0.5",
     "ng-cordova": "~0.0.3",
-    "ngCordova": "~0.1.15-alpha"
+    "ngCordova": "~0.1.15-alpha",
+    "angular-md5": "~0.1.7",
+    "pouchdb-quick-search": "~1.0.2",
+    "pouchdb-load": "~1.4.0"
   }
 }

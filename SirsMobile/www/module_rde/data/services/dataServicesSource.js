@@ -7,12 +7,20 @@ angular.module('module_rde.data.services.source', [])
 
         var me = this;
 
+//FIXME require
+        //PouchDB.plugin(require('pouchdb-load'));
+        //PouchDB.plugin('pouchdb-load');
+
         /**
          * instanciation de tte les base
          * @type {pouchDB}
          */
         me.localDb =  null;
         me.confDb =  null;
+
+        me.contextDb = new pouchDB('context');
+
+
 
         //objet pour couper la syncro
         me.syncInstanceColector = {};
@@ -119,6 +127,8 @@ angular.module('module_rde.data.services.source', [])
 
         }
 
+
+
         me._recursiveRegularGetState =  function(){
            $log.debug("RUN__recursiveRegularGetState")
            $log.debug("RUN__recursiveRegularGetState")
@@ -136,7 +146,7 @@ angular.module('module_rde.data.services.source', [])
                 }
 
                 if(me.syncState.clonning == true){
-                    $timeout( me._recursiveRegularGetState,2000);
+                    $timeout( me._recursiveRegularGetState,500);
 
                 }
 
@@ -174,6 +184,17 @@ angular.module('module_rde.data.services.source', [])
             $log.debug(me.syncInstanceColector);
 
 
+            //ecriture du secripteur de base dans le contexte
+            me.contextDb.put({
+                _id: 'confdb',
+                db: oUrlCdb
+            }).then(function (response) {
+                // handle response
+            }).catch(function (err) {
+                console.log(err);
+            });
+
+
         };
 
         me.getDbs = function(){
@@ -205,9 +226,32 @@ angular.module('module_rde.data.services.source', [])
                 }).
                 error(function(data, status, headers, config) {});
 
-
+            //
             me.localDb = new pouchDB(oUrlCdb.db);
             me.instantiateRep( oUrlCdb,oUrlCdb.db,true  );
+
+
+            //ecriture du secripteur de base dans le contexte
+          me.contextDb.put({
+                    _id: 'activedb',
+                    db: oUrlCdb
+            }).then(function (response) {
+                // handle response
+            }).catch(function (err) {
+                console.log(err);
+            });
+
+            //FIXME debug pares resolution de require
+            //me.syncState.clonning=true;
+            //me.localDb.load( RemoteDbDesc.getUrlString()+'/_all_docs?include_docs=true').then(function () {
+            //    me.syncState.clonning = false
+            //    if(syncMe === true) me.syncLocalDb(RemoteDbDesc);
+            //}).catch(function (err) {
+            //    me.syncState.clonning = false
+            //});
+            //
+            //me._recursiveRegularGetState();
+
 
         };
 
@@ -234,6 +278,29 @@ angular.module('module_rde.data.services.source', [])
 
         };
 
+
+
+
+
+        //Skip init view if context exist
+        //TODO ajouter gestion de base dans l'applis
+
+        //run sync on config db
+        me.contextDb.get('confdb').then(function (response) {
+            //fixme pk une var temporaire obligatoire??
+            var dbDesc = new oUrlCouchDb();
+            dbDesc.patch(response.db);
+
+            me.syncConfDb(dbDesc);
+        })
+
+        //run sync on sirs target db
+        me.contextDb.get('activedb').then(function (response) {
+            var dbDesc = new oUrlCouchDb();
+            dbDesc.patch(response.db);
+
+            me.syncLocalDb(dbDesc); //==> declenche le roadRunner
+        })
 
 
 

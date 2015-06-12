@@ -3,10 +3,13 @@
  */
 
 angular.module('ctrl.menu.signIn', [])
-.controller('cSignIn', function cSignIn ($scope, $state, sPouch, sMask, $log, sContext) {
+.controller('cSignIn', function cSignIn ($scope, $state, sPouch, sMask, $log, sContext, md5) {
+
+    var me = this;
+        me.user=null;
 
 
-    $scope.signIn = function (user) {
+    me.signIn = function (user) {
         console.log('Sign-In', user);
 
         //TODO DEMO Comment
@@ -14,28 +17,36 @@ angular.module('ctrl.menu.signIn', [])
 
         //TODO DEMO unComment
         //sPouch.usr.query('name_index', {key: 'mok-sensei'}).then(function(result) {
-        sPouch.usr.query('name_index', {key: user.username}).then(function (result) {
+        //sPouch.localDb.query('Utilisateur/byLogin', {key: user.login, include_docs:true}).then(function (result) {
+        sPouch.localDb.query('Utilisateur/byLogin/'+user.login, {include_docs:true}).then(function (result) {
             // do something with result
             $log.debug(result);
 
-            $log.debug(result.rows[0].value);
-            $log.debug(parseInt(user.password)); //TODO not int only
+            $log.debug(result.rows[0].doc);
+            $log.debug(result.rows[0].doc.password);
+            $log.debug(user.password);
+            $log.debug(md5.createHash(user.password)); //TODO not int only
 
-            if (result.rows[0].value.psw == parseInt(user.password)) {
-                sContext.auth.user = result.rows[0].value;
+            //FIXME verif apref mise a jour de l'encodage des mot de passe par samuel.
+            //if (result.rows[0].doc.password == md5.createHash(user.password)) {
+            if (0==0) {
+                sContext.auth.user = result.rows[0].doc;
                 $state.go('loading');
             }
 
         });
 
+
+
+
     };
 
 
-    $scope.logout = function () {
+    me.logout = function () {
         $state.go('signin');
     };
 
-    $scope.home = function () {
+    me.home = function () {
         $state.go('menu.home');
     };
 

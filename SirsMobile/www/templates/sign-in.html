@@ -7,15 +7,15 @@
 
                 <div class="list">
                     <label class="item item-input signin-item">
-                        <input type="text" placeholder="Identifiant" ng-model="user.username">
+                        <input type="text" placeholder="Identifiant" ng-model="c.user.login">
                     </label>
                     <label class="item item-input signin-item">
-                        <input type="password" placeholder="Mot de passe" ng-model="user.password">
+                        <input type="password" placeholder="Mot de passe" ng-model="c.user.password">
                     </label>
                 </div>
                 <div class="signin-valid-button">
                     <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
-                            ng-click="signIn(user)">
+                            ng-click="c.signIn(c.user)">
                         CONNEXION
                     </button>
                     <p class="text-right">
