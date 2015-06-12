@@ -24,7 +24,8 @@ angular.module('module_rde.data.services.source', [])
 
         //objet pour couper la syncro
         me.syncInstanceColector = {};
-        me.dbs = {list:[]};
+        //me.dbs = {list:[]};
+        me.dbs = [];
 
         me.syncState = {actual:0.0, total:0.0, ratio:0.0 ,  clonning:false, runNextSync:false}
 
@@ -200,15 +201,27 @@ angular.module('module_rde.data.services.source', [])
         me.getDbs = function(){
 
             $log.debug("RUN_GetDbs");
-            me.confDb.query('databases/available/dbs').then(function (res) {
+            //me.confDb.query('databases/available/dbs').then(function (res) {
+            //
+            //    $log.debug(res);
+            //    $log.debug(res.rows[0].value);
+            //    //me.dbs.list.concat(me.dbs,res.rows[0].value )
+            //    me.dbs.list = res.rows[0].value;
+            //}).catch(function (err) {
+            //    //$log.debug(err);
+            //});
+
+            me.confDb.get('dbsList').then(function (res) {
 
                 $log.debug(res);
-                $log.debug(res.rows[0].value);
+                //$log.debug(res.rows[0].value);
                 //me.dbs.list.concat(me.dbs,res.rows[0].value )
-                me.dbs.list = res.rows[0].value;
+                //me.dbs.list = res.dbs;
+                me.dbs = res.dbs;
             }).catch(function (err) {
                 //$log.debug(err);
             });
+
 
         }
 
