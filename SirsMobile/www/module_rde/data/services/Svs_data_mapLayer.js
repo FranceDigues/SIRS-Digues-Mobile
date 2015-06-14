@@ -35,10 +35,14 @@ angular.module('module_rde.data.services.maplayer', [])
                     //si oui on affecte la valeur.
                     if (me.list[j].idf === lay.idf) {
                         tmpLayer.active = me._listLayer[j].active;
+                        $log.debug('tmpLayer');
+                        $log.debug(tmpLayer);
                     }
                 }
             }
         });
+        $log.debug('LayerList');
+        $log.debug(layers);
         me._listLayer = layers;
 
         me._fusionLayerList();

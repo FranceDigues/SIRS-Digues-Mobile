@@ -1,11 +1,11 @@
-<ion-header-bar align-title="left" class="bar-header bar-positive" ng-controller="SignInCtrl">
+<ion-header-bar align-title="left" class="bar-header bar-positive" ng-controller="cHud as c">
     <div class="buttons">
-        <button class="button button-icon button-clear ion-home" ng-click="home()"></button>
+        <button class="button button-icon button-clear ion-home" ng-click="c.home()"></button>
     </div>
     <h1 class="title">{{}}</h1>
 
     <div class="buttons">
-        <button class="button button-icon button-clear ion-power" ng-click="logout()"></button>
+        <button class="button button-icon button-clear ion-power" ng-click="c.logout()"></button>
     </div>
 </ion-header-bar>
 
@@ -39,3 +39,13 @@
     </ion-side-menu>
 
 </ion-side-menus>
+
+
+<ion-view title="Map" name="map">
+
+    <!--<ion-content padding="false">-->
+        <!--&lt;!&ndash; carte start &ndash;&gt;-->
+        <!--<div ng-include="'templates/map.html'"></div>-->
+        <!--&lt;!&ndash; carte end &ndash;&gt;-->
+    <!--</ion-content>-->
+</ion-view>

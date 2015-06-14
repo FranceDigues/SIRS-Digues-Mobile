@@ -11,5 +11,7 @@ angular.module('module_app.controllers',
         'module_app.controllers.menus.init',
         'module_app.controllers.menus.sideLeft',
         'module_app.controllers.menus.signIn',
-        'module_app.controllers.menus.tab'
+        'module_app.controllers.menus.tab',
+
+        'module_app.controllers.menus.hud'
     ])

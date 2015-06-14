@@ -25,11 +25,11 @@ angular.module('module_app.controllers.menus.signIn', [])
             $log.debug(result.rows[0].doc);
             $log.debug(result.rows[0].doc.password);
             $log.debug(user.password);
-            $log.debug(md5.createHash(user.password)); //TODO not int only
+            $log.debug((md5.createHash(user.password)).toUpperCase()); //TODO not int only
 
             //FIXME verif apref mise a jour de l'encodage des mot de passe par samuel.
-            //if (result.rows[0].doc.password == md5.createHash(user.password)) {
-            if (0==0) {
+            if (result.rows[0].doc.password == (md5.createHash(user.password)).toUpperCase() ) {
+            //if (0==0) {
                 sContext.auth.user = result.rows[0].doc;
                 $state.go('loading');
             }
@@ -42,12 +42,5 @@ angular.module('module_app.controllers.menus.signIn', [])
     };
 
 
-    me.logout = function () {
-        $state.go('signin');
-    };
-
-    me.home = function () {
-        $state.go('menu.home');
-    };
 
 })

@@ -12,25 +12,18 @@ var app = angular.module('SirsMobile', [
 
 
     'module_app.controllers',
+    'module_app.services.device',
+    'module_app.data.services.applayer',
 
     'module_rde.data.services',
     'module_rde.geoCache',
-
-    //'module_rde.data.services.context',
-    //'module_rde.data.services.dbManager',
-
     'module_rde.note',
 
 
 
-    //'controllers.menus',
-    'filter.custom',
-    'module_app.services.device',
+    'filter.custom'
 
-    'module_app.data.services.applayer',
 
-    //'ctrl.menu.signIn',
-    //'ctrl.menu.init'
 
 
      ]);
@@ -89,20 +82,29 @@ app.run(function ($ionicPlatform) {
                 url: '/forgot-password',
                 templateUrl: 'templates/forgot-password.html'
             })
-            .state('home.tabs', {
-                url: '/tab',
-                views: {
-                    'menuContent': {
-                        controller: 'cTabs',
-                        templateUrl: 'templates/tabs.html'
-                    }
-                }
-            })
-            .state('home.tabs.map', {
+            //.state('home.tabs', {
+            //    url: '/tab',
+            //    views: {
+            //        'menuContent': {
+            //            controller: 'cTabs',
+            //            templateUrl: 'templates/tabs.html'
+            //        }
+            //    }
+            //})
+            //.state('home.tabs.map', {
+            //    url: '/map',
+            //    views: {
+            //        'map': {
+            //            templateUrl: 'templates/tab-map.html',
+            //            controller: 'cMap'
+            //        }
+            //    }
+            //})
+            .state('home.map', {
                 url: '/map',
                 views: {
-                    'home-tab': {
-                        templateUrl: 'templates/tab-map.html',
+                    'map': {
+                        templateUrl: 'templates/map.html',
                         controller: 'cMap'
                     }
                 }
