@@ -32,6 +32,7 @@ angular.module('module_app.controllers.loader', [])
                 $scope.loadingPercent = $scope.loadingPercent + 25;
                 $timeout(function () {
                     $scope.loadingPercent = $scope.loadingPercent + 25;
+                    $scope.loadingPercent = 0;
                     $state.go("home.map");
                 }, 600);
             }, 600);

@@ -35,14 +35,11 @@ angular.module('module_rde.data.services.maplayer', [])
                     //si oui on affecte la valeur.
                     if (me.list[j].idf === lay.idf) {
                         tmpLayer.active = me._listLayer[j].active;
-                        $log.debug('tmpLayer');
-                        $log.debug(tmpLayer);
+
                     }
                 }
             }
         });
-        $log.debug('LayerList');
-        $log.debug(layers);
         me._listLayer = layers;
 
         me._fusionLayerList();
@@ -122,11 +119,15 @@ angular.module('module_rde.data.services.maplayer', [])
         $log.debug("aLayer:");
         $log.debug(aLayer);
 
-        //affectation masterListe
-        me._listCacheLayer =aLayer;
-        //$log.error(me._listCacheLayer);
+        //protection contre les init vide
+        if(aLayer.length !=0){
+            //affectation masterListe
+            me._listCacheLayer =aLayer;
+            //$log.error(me._listCacheLayer);
 
-        me._fusionLayerList();
+            me._fusionLayerList();
+        }
+
 
     });
 
