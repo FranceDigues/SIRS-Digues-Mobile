@@ -25,10 +25,10 @@ angular.module('module_app.controllers.map', [])
         //$scope.layersStateList= null;
 
 
-        $scope.layers = sMapLayer.list;
+        me.layers = sMapLayer.list;
 
 
-        $scope.pluginTest = function(){
+        me.pluginTest = function(){
             CacheMapPlugin.CaDeListReQuest();
         }
 
@@ -63,53 +63,53 @@ angular.module('module_app.controllers.map', [])
 
 
 
-        $scope.Ploting = [];
-        $scope.newObs = null;
-        //$scope.sMask = sMask;
-        $scope.limitList = 2;
+        me.Ploting = [];
+        me.newObs = null;
+        //me.sMask = sMask;
+        me.limitList = 2;
 
 
         $scope.$on("formUpdate", function (data) {
             $log.debug("reception event formUpdate");
             $timeout(function () {
-                //$scope.newObs = sMask.form;
+                //me.newObs = sMask.form;
             });
         });
 
-        $scope.evalAngular = function (string) {
-            return $scope.$eval(string);
+        me.evalAngular = function (string) {
+            return me.$eval(string);
         };
 
-        $scope.publishForm = function () {
-            $log.debug($scope.newObs.feature);
-            $log.debug($scope.newObs.param);
-            //sMask.writeObsOnDB($scope.newObs.param);
+        me.publishForm = function () {
+            $log.debug(me.newObs.feature);
+            $log.debug(me.newObs.param);
+            //sMask.writeObsOnDB(me.newObs.param);
         };
 
         $scope.$on("ObsCreated", function () {
             //publish feature in layer
-            //$scope.newObs.feature.set('ObsUUID', sMask.obsUUID);
-            //sMask.doc.GeoJson = $scope.toGeoJson(featureOverlay);
+            //me.newObs.feature.set('ObsUUID', sMask.obsUUID);
+            //sMask.doc.GeoJson = me.toGeoJson(featureOverlay);
             $timeout(function () {
                 //sMask.writeDocOnDb();
             })
         });
 
-        $scope.toGeoJson = function (f) {
+        me.toGeoJson = function (f) {
             return new ol.format.GeoJSON().writeFeatures(f.getFeatures().getArray());
         };
 
 
 
-        $scope.drawType = {active: "Point"};
-        $scope.typeEdition = [
+        me.drawType = {active: "Point"};
+        me.typeEdition = [
             {label: 'Point', type: "Point"},
             {label: 'Ligne', type: "LineString"},
             {label: 'Polygone', type: "Polygon"}
         ];
 
 
-        angular.extend($scope,
+        angular.extend(me,
             {
                 centreCarte: {
                     lat: 43.5,
@@ -156,13 +156,13 @@ angular.module('module_app.controllers.map', [])
 
             $log.debug(map);
 
-            $scope.currentMap = map;
+            me.currentMap = map;
 
 
 
 
 //INIT du feature de selection
-            $scope.featureOverlaySelected = new ol.FeatureOverlay({
+            me.featureOverlaySelected = new ol.FeatureOverlay({
                 style: new ol.style.Style({
                     fill: new ol.style.Fill({
                         color: 'rgba(255, 255, 255, 0.2)'
@@ -223,7 +223,7 @@ angular.module('module_app.controllers.map', [])
                 draw = new ol.interaction.Draw({
                     features: featureOverlay.getFeatures(),
                     //type: ol.geom.GeometryType.POLYGON
-                    type: /** @type {ol.geom.GeometryType} */ ($scope.drawType.active)
+                    type: /** @type {ol.geom.GeometryType} */ (me.drawType.active)
                 });
 
                 //draw.setActive(false);
@@ -232,7 +232,7 @@ angular.module('module_app.controllers.map', [])
 
                 draw.on('drawend', function (f) {
                     //elPropagator
-                    $scope.newObs.feature = f.feature;
+                    me.newObs.feature = f.feature;
                     $rootScope.$broadcast('drawend', f);
                 });
 
@@ -241,11 +241,11 @@ angular.module('module_app.controllers.map', [])
 
 
 
-            $scope.updateType = function (dt) {
+            me.updateType = function (dt) {
 
                 $log.debug("change");
                 $log.debug(dt);
-                $log.debug($scope.drawType.active);
+                $log.debug(me.drawType.active);
 
                 map.removeInteraction(draw);
                 addInteraction();
@@ -266,7 +266,7 @@ angular.module('module_app.controllers.map', [])
          //end essai de rechargement*/
 
 
-        $scope.publie = function () {
+        me.publie = function () {
             $log.debug(featureOverlay.getFeatures());
             $log.debug(toGeoJson(featureOverlay));
             $log.debug(sContext.param);
@@ -280,31 +280,31 @@ angular.module('module_app.controllers.map', [])
 //todo clear avant dessin
         //todo
         var ixix = 0;
-        $scope.plot = function () {
+        me.plot = function () {
 
             //zoom quand on plote
-            $scope.centreCarte.zoom = 18;
+            me.centreCarte.zoom = 18;
 
 
 
             //EMULATE MOVE MODE
-            var cTemp =  [($scope.centreCarte.lat+ixix),($scope.centreCarte.lon+(ixix*2))];
+            var cTemp =  [(me.centreCarte.lat+ixix),(me.centreCarte.lon+(ixix*2))];
             //NORMAL MODE
-            //var cTemp =  [$scope.centreCarte.lat,$scope.centreCarte.lon];
+            //var cTemp =  [me.centreCarte.lat,me.centreCarte.lon];
 
 
             $log.debug(cTemp);
             var cTemp1 = ol.proj.transform(cTemp.reverse(),'EPSG:4326', 'EPSG:3857');
             $log.debug(cTemp1);
 
-            $scope.Ploting.push(cTemp1);
+            me.Ploting.push(cTemp1);
             //ol.proj.transform.(
             //    cTemp,
             //'EPSG:3857','EPSG:4326'));
             ixix++;
 
 
-            if(($scope.drawType.active=="Polygon") || ($scope.drawType.active=="LineString") ){
+            if((me.drawType.active=="Polygon") || (me.drawType.active=="LineString") ){
 
 //FIXME stoque la feature active ou alors avoir un calque special dessin??
                 featureOverlay.getFeatures().clear();
@@ -312,53 +312,53 @@ angular.module('module_app.controllers.map', [])
                 featureOverlay.addFeature(
                     new ol.Feature({
                         geometry: new ol.geom.LineString(
-                            $scope.Ploting
+                            me.Ploting
                         )
                     }));
 
-                $log.debug($scope.Ploting);
+                $log.debug(me.Ploting);
                 $log.debug(featureOverlay.getFeatures());
 
             }
-            if($scope.drawType.active=="Point"){ $scope.Clore()}
+            if(me.drawType.active=="Point"){ me.Clore()}
 
 
         };
 
         //TODO garde Fous
-        $scope.Clore = function () {
+        me.Clore = function () {
 
 
 
-            if(($scope.drawType.active=="Polygon") ){
+            if((me.drawType.active=="Polygon") ){
                 featureOverlay.getFeatures().clear();
 
                 featureOverlay.addFeature(
                     new ol.Feature({
-                        geometry: new ol.geom.Polygon(ArrayasPolygon($scope.Ploting))
+                        geometry: new ol.geom.Polygon(ArrayasPolygon(me.Ploting))
 
                     }));
 
                 ixix = 0;
 
             }
-            if($scope.drawType.active=="LineString"){
+            if(me.drawType.active=="LineString"){
                 //do nothing
                 ixix = 0;
             }
-            if($scope.drawType.active=="Point"){
+            if(me.drawType.active=="Point"){
 
                 featureOverlay.addFeature(
                     new ol.Feature({
                         geometry: new ol.geom.Point(
-                            $scope.Ploting[0]
+                            me.Ploting[0]
                         )
                     }));
 
             }
 
             //eraseTempVar
-            $scope.Ploting = [];
+            me.Ploting = [];
 
 
 
@@ -369,7 +369,7 @@ angular.module('module_app.controllers.map', [])
         //biutifule
         $scope.$on('drawend', function (F) {
             //on pluble quand on enregistre le form
-            //$scope.publie();
+            //me.publie();
 
         });
 
@@ -379,7 +379,7 @@ angular.module('module_app.controllers.map', [])
 
             //me.updateLayer();
 
-            $scope.layers = sMapLayer.list;
+            me.layers = sMapLayer.list;
         });
 
 
@@ -415,17 +415,17 @@ angular.module('module_app.controllers.map', [])
 
 
 
-        $scope.lightInteruptor=function(f){
+        me.lightInteruptor=function(f){
             fp=f.featurePos;
 
             $log.debug(featureOverlay.getFeatures().item(fp).OnAir);
             if(featureOverlay.getFeatures().item(fp).get('OnAir')==true){
-                $scope.hideGeom(fp);
+                me.hideGeom(fp);
                 featureOverlay.getFeatures().item(fp).set('OnAir', false);
                 f.set('obsStyle', "white");
             }else{
 
-                $scope.displayGeom(fp);
+                me.displayGeom(fp);
                 featureOverlay.getFeatures().item(fp).set('OnAir', true);
                 f.set('obsStyle', "");
             }
@@ -435,30 +435,30 @@ angular.module('module_app.controllers.map', [])
 
 //FIXME non multi  calque
 
-        $scope.displayGeom = function (featureIndex) {
+        me.displayGeom = function (featureIndex) {
             console.log("enter in displayGeom " + featureIndex);
 
             //netoyage du calque de selection
-            $scope.featureOverlaySelected.getFeatures().clear();
+            me.featureOverlaySelected.getFeatures().clear();
 
             var feature = new ol.Feature({
                 geometry: featureOverlay.getFeatures().item(featureIndex).getGeometry().clone()
             });
             var col = new ol.Collection();
             col.push(feature);
-            $scope.featureOverlaySelected.setFeatures(col);
+            me.featureOverlaySelected.setFeatures(col);
 
-            $log.debug($scope.currentMap);
-            $log.debug($scope.featureOverlaySelected);
-            $scope.currentMap.addOverlay($scope.featureOverlaySelected);
+            $log.debug(me.currentMap);
+            $log.debug(me.featureOverlaySelected);
+            me.currentMap.addOverlay(me.featureOverlaySelected);
             console.log("leave in displayGeom" + featureIndex);
         };
 
 
-        $scope.hideGeom = function (featureIndex) {
+        me.hideGeom = function (featureIndex) {
             console.log("enter in hideGeom" + featureIndex);
-            //$scope.currentMap.getOverlays().pop();
-            $scope.featureOverlaySelected.getFeatures().clear();
+            //me.currentMap.getOverlays().pop();
+            me.featureOverlaySelected.getFeatures().clear();
             console.log("leave in hideGeom" + featureIndex);
         };
 
@@ -481,8 +481,8 @@ angular.module('module_app.controllers.map', [])
                 },
                 function (position) {
                     $log.debug(position);
-                    $scope.centreCarte.lat =  Math.round(position.coords.latitude * 1000) / 1000 ;
-                    $scope.centreCarte.lon = Math.round(position.coords.longitude * 1000) / 1000;
+                    me.centreCarte.lat =  Math.round(position.coords.latitude * 1000) / 1000 ;
+                    me.centreCarte.lon = Math.round(position.coords.longitude * 1000) / 1000;
                 });
 
         });
@@ -514,21 +514,21 @@ angular.module('module_app.controllers.map', [])
         //POPOVER
 
         //$ionicPopover.fromTemplateUrl('templates/dynFormPopOver.html', {
-        //    scope: $scope
+        //    scope: me
         //}).then(function (popover) {
-        //    $scope.popover = popover;
+        //    me.popover = popover;
         //});
         //
         //
-        //$scope.openPopover = function ($event) {
-        //    $scope.popover.show($event);
+        //me.openPopover = function ($event) {
+        //    me.popover.show($event);
         //};
-        //$scope.closePopover = function () {
-        //    $scope.popover.hide();
+        //me.closePopover = function () {
+        //    me.popover.hide();
         //};
         ////Cleanup the popover when we're done with it!
         //$scope.$on('$destroy', function () {
-        //    $scope.popover.remove();
+        //    me.popover.remove();
         //});
         //// Execute action on hide popover
         //$scope.$on('popover.hidden', function () {

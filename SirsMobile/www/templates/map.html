@@ -1,16 +1,17 @@
 <div class="map-div">
-    <openlayers id="map" ol-center="centreCarte" ol-controls="controls" ol-defaults="defaults" height="634px">
-        <ol-layer ol-layer-properties="layer" ng-repeat="layer in layers|filter:{active:true}"></ol-layer>
+    <openlayers id="map" ol-center="c.centreCarte" ol-controls="c.controls" ol-defaults="c.defaults" >
+        <!--height="100%" width="100%"-->
+        <ol-layer ol-layer-properties="c.layer" ng-repeat="layer in c.layers|filter:{active:true}"></ol-layer>
         {{layers}}
 
-        <ol-marker  ol-marker-properties="centreCarte"></ol-marker>
+        <ol-marker  ol-marker-properties="c.centreCarte"></ol-marker>
 
     </openlayers>
     <div class="action-buttons">
         <div>
-            <button class="button button-block button-positive button-yellow" ng-click="plot()">Plot</button>
-            <button class="button button-block button-positive button-yellow" ng-click="Clore()">Clore</button>
-            <button class="button button-block button-positive button-yellow" ng-click="pluginTest()">pluginTest</button>
+            <button class="button button-block button-positive button-yellow" ng-click="c.plot()">Plot</button>
+            <button class="button button-block button-positive button-yellow" ng-click="c.Clore()">Clore</button>
+            <button class="button button-block button-positive button-yellow" ng-click="c.pluginTest()">pluginTest</button>
 
         </div>
     </div>
@@ -19,73 +20,19 @@
             <div class="input-label">
                 <span class="icon ion-edit"></span>
             </div>
-            <select ng-model="drawType.active" ng-change="updateType()"
-                    ng-options="opt.type as opt.label for opt in typeEdition">
+
+            <select ng-model="c.drawType.active" ng-change="c.updateType()"
+                    ng-options="opt.type as opt.label for opt in c.typeEdition">
             </select>
+
+           {{c.typeEdition}}
         </label>
 
         <div class="draw-mode-text">
-            {{drawType.type}}
+            {{c.drawType.type}}
 
         </div>
     </div>
 </div>
 
-<div class="map-features">
-    <div class="form">
-        <div ng-repeat="formElement in newObs.param" >
-            <div ng-if="formElement.type == 'text' " ng-hide="evalAngular(formElement.hide)">
-                <div class="list">
-                    <label class="item item-input">
-                        <span class="input-label">{{formElement.label}}</span>
-                        <input type="{{formElement.type}}" id="{{formElement.id}}" ng-model="formElement.value" placeholder="{{formElement.placeholder}}">
-                    </label>
-                </div>
-            </div>
 
-            <div ng-if="formElement.type == 'textarea' " ng-hide="evalAngular(formElement.hide)">
-                <div class="list">
-                    <label class="item item-input">
-                        <span class="input-label">{{formElement.label}}</span>
-                        <textarea id="{{formElement.id}}" ng-model="formElement.value" placeholder="{{formElement.placeholder}}"></textarea>
-                    </label>
-                </div>
-            </div>
-
-            <div ng-if="formElement.type == 'date' " ng-hide="ctrl.evalAngular(formElement.hide)">
-                <div class="list">
-                    <label class="item item-input">
-                        <span class="input-label">{{formElement.label}}</span>
-                        <input type="{{formElement.type}}" id="{{formElement.id}}" ng-model="formElement.value" placeholder="{{formElement.placeholder}}">
-                    </label>
-                </div>
-            </div>
-
-            <div ng-if="formElement.type == 'select' " ng-hide="ctrl.evalAngular(formElement.hide)">
-
-                <div class="list">
-                    <label class="item item-input item-select">
-                        <div class="input-label">
-                            {{formElement.label}}
-                        </div>
-                        <select id="{{formElement.id}}" ng-model="formElement.value" ng-options="item.value as item.text for item in formElement.values" ng-change="evalAngular(formElement.change)">
-                        </select>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <button class="button button-block button-positive button-form" href="#/" ng-click="publishForm()">Valider
-        </button>
-    </div>
-
-    <div>
-        <div ng-repeat="obs in sMask.currentObs" class="md-whiteframe-z1 div-feature" ng-class="{'selected':toto}" ng-click="lightInteruptor(obs.featurePos)">
-            <!--{{obs.featurePos}}-->
-            <div class="feature-info" ng-repeat="observation in obs.doc.obs|limitTo:limitList">
-                <b>{{observation.label}}</b> <span style="margin-left : 5px">{{observation.value}}</span>
-            </div>
-            <div ng-show="limitList==2"><span class="link-info" ng-click="limitList=obs.doc.obs.length"><i class="icon ion-arrow-down-b"></i>Afficher plus d'informations</span></div>
-            <div ng-show="limitList==obs.doc.obs.length" class="link-info"><span ng-click="limitList=2"><i class="icon ion-arrow-up-b"></i>Afficher moins d'informations</span></div>
-        </div>
-    </div>
-</div>
