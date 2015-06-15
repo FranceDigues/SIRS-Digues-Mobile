@@ -100,10 +100,19 @@ app.run(function ($ionicPlatform) {
             //        }
             //    }
             //})
+            //.state('home.map', {
+            //    url: '/map',
+            //    views: {
+            //                'map': {
+            //                    templateUrl: 'templates/tab-map.html',
+            //                    controller: 'cMap'
+            //                }
+            //            }
+            //})
             .state('home.map', {
                 url: '/map',
                 views: {
-                    'map': {
+                    'home-panel': {
                         templateUrl: 'templates/map.html',
                         controller: 'cMap'
                     }

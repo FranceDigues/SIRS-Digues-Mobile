@@ -28,7 +28,7 @@ angular.module('module_rde.geoCache', [
     'pouchdb'
 ])
 
-    .controller('cGeoCache', function cGeoCache ($scope, sMapLayer, sMap, olData, $log, $timeout, sCacheMap, sContext, $rootScope) {
+    .controller('cGeoCache', function cGeoCache ($scope, sMapLayer, olData, $log, $timeout, sCacheMap, sContext, $rootScope) {
 
         var me = this;
 
@@ -41,7 +41,7 @@ angular.module('module_rde.geoCache', [
 
         me.layers = sMapLayer.list; // maj .?
 
-        me.mode = sMap.mode;
+
         me.vsCacheBox = null;
         me.lCacheBox = null;
 

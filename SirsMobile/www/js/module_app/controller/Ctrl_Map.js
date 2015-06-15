@@ -10,8 +10,8 @@ angular.module('module_app.controllers.map', [])
 /*****************************************************************  MAP    *****************************************************/
 /***************************************************************** --------- *****************************************************/
 
-
-    .controller('cMap', function cMap ($scope, sMapLayer, $log, sMap, olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,$ionicPopover) {
+//sMap ==> ?
+    .controller('cMap', function cMap ($scope, sMapLayer, $log,  olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,$ionicPopover) {
 
         var me = this;
         //var myMap =null
@@ -62,7 +62,7 @@ angular.module('module_app.controllers.map', [])
 
 
 
-        $scope.mode = sMap.mode;
+
         $scope.Ploting = [];
         $scope.newObs = null;
         //$scope.sMask = sMask;
