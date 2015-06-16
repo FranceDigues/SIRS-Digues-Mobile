@@ -71,7 +71,7 @@ app.run(function ($ionicPlatform) {
                 url: '/home',
                 abstract: true,
                 templateUrl: 'templates/home.html',
-                controller: 'cSideLeft'
+                controller: 'cHud as c'
             })
             .state('loading', {
                 url: '/loading',
