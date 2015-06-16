@@ -6,7 +6,8 @@ angular.module('module_app.controllers.menus.signIn', [])
 .controller('cSignIn', function cSignIn ($scope, $state, sPouch,  $log, sContext, md5) {
 
     var me = this;
-        me.user=null;
+        me.user={login:"admin",password:"admin"};
+
 
 
     me.signIn = function (user) {

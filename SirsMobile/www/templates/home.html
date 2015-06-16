@@ -2,8 +2,10 @@
     <ion-side-menus>
 
         <!--drag-content="sEventSuperviseur.event.sideMenu"-->
-        <ion-side-menu-content>
+        <!--drag-content="c.proxyNet"-->
+        <ion-side-menu-content drag-content="c.proxyNet">
 
+            <!--//NAV-->
             <ion-nav-bar>
                 <ion-nav-buttons side="left">
                     <!--<button class="button button-icon button-clear ion-navicon" ng-click="c.openLeftMenu()"></button>-->
@@ -27,7 +29,21 @@
             </ion-nav-bar>
 
 
-            <ion-nav-view name="home-panel"></ion-nav-view>
+            <!--//PANEL-->
+        <div class="cargo">
+            <div name="babord" class=" inline side babord">
+                    <img src="./img/slider1.png"  ng-click="c.switchLock()">
+            </div>
+            <!--<div name="container"  class="inline container">-->
+            <!--class="inline container"-->
+                <ion-nav-view name="home-panel" class="inline container"></ion-nav-view>
+            <!--</div>-->
+
+            <div name="tribord"  class="inline side tribord">
+                <img src="./img/slider2.png" ng-click="c.switchLock()">
+            </div>
+        </div>
+
         </ion-side-menu-content>
 
 
