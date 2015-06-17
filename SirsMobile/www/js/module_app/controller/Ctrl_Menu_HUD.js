@@ -7,6 +7,8 @@ angular.module('module_app.controllers.menus.hud', [])
 
         var me = this;
         me.swipeProxy= false;
+        me.babordActiveView = "menu";
+        me.tribordActiveView = "addDesordre";
 
         me.logout = function () {
             $log.debug('logout')
@@ -50,6 +52,7 @@ angular.module('module_app.controllers.menus.hud', [])
 
         me.toggleRightMenu = function () {
             $ionicSideMenuDelegate.toggleRight();
+            $state.go("home.tAddDesordre");
         }
 
 

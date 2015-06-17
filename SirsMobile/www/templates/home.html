@@ -33,7 +33,8 @@
             <!--//PANEL-->
         <div class="cargo">
             <div name="babord" class=" inline side babord">
-                    <img src="./img/slider1.png" id="babordHandle" ng-click="c.toggleLeftMenu()" >
+                    <img src="./img/slider1.png" ng-click="c.toggleLeftMenu()" >
+                <!--ng-click="c.toggleLeftMenu()"-->
                 <!--on-swipe="c.switchLock()"-->
             </div>
 
@@ -49,38 +50,44 @@
 
 
         <ion-side-menu side="left">
-            <ion-header-bar class="bar bar-header bar-dark"></ion-header-bar>
-            <ion-content has-header="true">
-                <ion-list>
-                    <ion-item href="#/" menu-close>Home</ion-item>
+            <!--<ion-header-bar class="bar bar-header bar-dark"></ion-header-bar>-->
+            <!--<ion-content has-header="true">-->
+                <!--<ion-list>-->
+                    <!--<ion-item href="#/" menu-close>Home</ion-item>-->
 
 
-                    <ion-toggle ng-repeat="layer in layers" ng-model="layer.active">
-                        Layers {{layer.name}}
-                    </ion-toggle>
+                    <!--<ion-toggle ng-repeat="layer in layers" ng-model="layer.active">-->
+                        <!--Layers {{layer.name}}-->
+                    <!--</ion-toggle>-->
 
-                    <!--<ion-item ng-click="newCache()" menu-close>Nouveau Cache</ion-item>-->
-                </ion-list>
+                    <!--&lt;!&ndash;<ion-item ng-click="newCache()" menu-close>Nouveau Cache</ion-item>&ndash;&gt;-->
+                <!--</ion-list>-->
 
-            </ion-content>
+            <!--</ion-content>-->
+
+            <div ng-include="'templates/sideMenu/babord/'+c.babordActiveView+'.html'"></div>
+
         </ion-side-menu>
 
 
         <ion-side-menu side="right">
-            <ion-header-bar class="bar bar-header bar-dark"></ion-header-bar>
-            <ion-content has-header="true">
-                <ion-list>
-                    <ion-item href="#/" menu-close>Home</ion-item>
+            <!--<ion-header-bar class="bar bar-header bar-dark"></ion-header-bar>-->
+            <!--<ion-content has-header="true">-->
+                <!--<ion-list>-->
+                    <!--<ion-item href="#/" menu-close>Home</ion-item>-->
 
 
-                    <ion-toggle ng-repeat="layer in layers" ng-model="layer.active">
-                        Layers {{layer.name}}
-                    </ion-toggle>
+                    <!--<ion-toggle ng-repeat="layer in layers" ng-model="layer.active">-->
+                        <!--Layers {{layer.name}}-->
+                    <!--</ion-toggle>-->
 
-                    <!--<ion-item ng-click="newCache()" menu-close>Nouveau Cache</ion-item>-->
-                </ion-list>
+                    <!--&lt;!&ndash;<ion-item ng-click="newCache()" menu-close>Nouveau Cache</ion-item>&ndash;&gt;-->
+                <!--</ion-list>-->
 
-            </ion-content>
+            <!--</ion-content>-->
+
+            <div ng-include="'templates/sideMenu/tribord/'+c.tribordActiveView+'.html'"></div>
+
         </ion-side-menu>
 
 

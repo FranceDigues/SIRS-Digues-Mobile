@@ -118,6 +118,19 @@ app.run(function ($ionicPlatform) {
                     }
                 }
             })
+
+            .state('home.tAddDesordre', {
+                url: '/tAddDesordre',
+                views: {
+                    'tribord-panel': {
+                        templateUrl: 'templates/sideMenu/tribord/addDesordre.html'
+                        //controller: 'cMap'
+                    }
+                }
+            })
+
+
+
             .state('home.tabs.settings', {
                 url: '/settings',
                 views: {
