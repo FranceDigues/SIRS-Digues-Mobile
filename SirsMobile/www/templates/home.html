@@ -2,8 +2,9 @@
     <ion-side-menus>
 
         <!--drag-content="sEventSuperviseur.event.sideMenu"-->
-        <!--drag-content="c.proxyNet"-->
-        <ion-side-menu-content drag-content="c.proxyNet">
+        <!--drag-content="c.swipeProxy"-->
+        <!--<ion-side-menu-content drag-content="c.swipeProxy">-->
+        <ion-side-menu-content drag-content="false">
 
             <!--//NAV-->
             <ion-nav-bar>
@@ -32,15 +33,15 @@
             <!--//PANEL-->
         <div class="cargo">
             <div name="babord" class=" inline side babord">
-                    <img src="./img/slider1.png"  ng-click="c.switchLock()">
+                    <img src="./img/slider1.png" id="babordHandle" ng-click="c.toggleLeftMenu()" >
+                <!--on-swipe="c.switchLock()"-->
             </div>
-            <!--<div name="container"  class="inline container">-->
-            <!--class="inline container"-->
+
                 <ion-nav-view name="home-panel" class="inline container"></ion-nav-view>
-            <!--</div>-->
 
             <div name="tribord"  class="inline side tribord">
-                <img src="./img/slider2.png" ng-click="c.switchLock()">
+                <img src="./img/slider2.png" id="tribordHandle" ng-click="c.toggleRightMenu()" >
+                <!--on-swipe="c.switchLock()"-->
             </div>
         </div>
 

@@ -3,9 +3,10 @@
  */
 angular.module('module_app.controllers.menus.hud', [])
 
-    .controller('cHud', function cHud ($scope, $state,  $log,sMapLayer, sContext, $rootScope,$ionicSideMenuDelegate) {
+    .controller('cHud', function cHud ($scope, $state,  $log,sMapLayer, sContext, $rootScope,$ionicSideMenuDelegate, $timeout) {
 
         var me = this;
+        me.swipeProxy= false;
 
         me.logout = function () {
             $log.debug('logout')
@@ -20,7 +21,19 @@ angular.module('module_app.controllers.menus.hud', [])
         };
 
 
+        me.swipeProxy= false;
 
+        //me.switchLock= function(){
+        //    $log.debug("swipe");
+        //    me.swipeProxy=true;
+        //
+        //    //FIXME replace by swipe end event?
+        //    $timeout(function(){
+        //        me.swipeProxy = false;
+        //
+        //        $log.debug("swipe end : "+me.swipeProxy)
+        //    },1000)
+        //}
 
         $log.debug("sideMenu");
         //$log.debug(doc.layers);
@@ -31,12 +44,15 @@ angular.module('module_app.controllers.menus.hud', [])
             $scope.layers = sMapLayer.list;
         });
 
-        $scope.openLeftMenu = function () {
+        me.toggleLeftMenu = function () {
             $ionicSideMenuDelegate.toggleLeft();
         }
 
-        $scope.openRightMenu = function () {
+        me.toggleRightMenu = function () {
             $ionicSideMenuDelegate.toggleRight();
         }
+
+
+        //$ionicSideMenuDelegate.$getByHandle('babordHandle').toggleLeft();
 
     })
