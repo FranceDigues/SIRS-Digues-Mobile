@@ -12,8 +12,7 @@ var app = angular.module('SirsMobile', [
 
 
     'module_app.controllers',
-    'module_app.services.device',
-    'module_app.data.services.applayer',
+    'module_app.services',
 
     'module_rde.data.services',
     'module_rde.geoCache',

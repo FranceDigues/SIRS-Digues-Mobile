@@ -58,6 +58,8 @@ angular.module('module_rde.data.services.context', [])
         });
 
         rscp.$on("viewUpdateRequest",  function(event, viewDesc) {
+            $log.debug("EVENT RECEIVE VIEW UPDATE");
+            $log.debug(viewDesc);
 
             if(viewDesc.target == "b")  me.babordActiveView = viewDesc.file ; //babord
             if(viewDesc.target == "t")  me.tribordActiveView = viewDesc.file ; //tribord

@@ -1,7 +1,9 @@
 <div ng-controller="cBabordMenu as c">
 
     <ion-list>
-        <!--<ion-item ng-repeat=""></ion-item>-->
+        <ion-item ng-repeat="menu in c.sConf.BabordMenu" ng-click="c.UpdateView('b',menu.file)">{{menu.name}}
+            {{menu}}
+        </ion-item>
 
     </ion-list>
 
