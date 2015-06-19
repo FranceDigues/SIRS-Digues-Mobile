@@ -13,5 +13,15 @@ angular.module('module_app.controllers',
         'module_app.controllers.menus.signIn',
         'module_app.controllers.menus.tab',
 
-        'module_app.controllers.menus.hud'
+        'module_app.controllers.menus.hud',
+
+
+
+        'module_app.controllers.menus.babord.appLayerMgmt',
+        'module_app.controllers.menus.babord.globalSettings',
+        'module_app.controllers.menus.babord.helpMe',
+        'module_app.controllers.menus.babord.menu',
+        'module_app.controllers.menus.babord.newObjectSummary',
+        'module_app.controllers.menus.babord.porteDoc'
+
     ])
