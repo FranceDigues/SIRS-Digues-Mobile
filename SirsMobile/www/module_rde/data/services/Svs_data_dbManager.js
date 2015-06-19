@@ -180,7 +180,10 @@ angular.module('module_rde.data.services.dbManager', [])
 
 
             me.confDb = new pouchDB(oUrlCdb.db);
-            me.initiateSync(oUrlCdb,me.getDbs);
+            me.initiateSync(oUrlCdb,function(){
+                me.getDbs();
+                $rootScope.$broadcast("buildBaseContext"); //permet l'initialisation des variable de sContext
+            });
             $log.debug("instance de base");
             $log.debug(me.syncInstanceColector);
 

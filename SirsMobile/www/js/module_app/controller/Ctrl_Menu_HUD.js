@@ -3,12 +3,12 @@
  */
 angular.module('module_app.controllers.menus.hud', [])
 
-    .controller('cHud', function cHud ($scope, $state,  $log,sMapLayer, sContext, $rootScope,$ionicSideMenuDelegate, $timeout) {
+    .controller('cHud', function cHud ($scope, $state,  $log,sMapLayer, sContext,sPouch, $rootScope,$ionicSideMenuDelegate, $timeout) {
 
         var me = this;
         me.swipeProxy= false;
-        me.babordActiveView = "menu";
-        me.tribordActiveView = "addDesordre";
+        me.sContext=sContext;
+
 
         me.logout = function () {
             $log.debug('logout')
