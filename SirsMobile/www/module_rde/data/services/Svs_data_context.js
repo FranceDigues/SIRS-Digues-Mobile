@@ -11,6 +11,9 @@ angular.module('module_rde.data.services.context', [])
 
         var rscp = $rootScope.$new();
 
+        me.tribordView = {active: "addDesordre"  , last:[]};
+        me.babordView = {active: "menu" , last:[]};
+
 
         this.param = {action: null, mskUUID: null}
         this.auth = {user: null}
@@ -48,8 +51,8 @@ angular.module('module_rde.data.services.context', [])
 
             sPouch.confDb.get('baseContext').then(function (res) {
                 $log.debug(res);
-                me.babordActiveView = res.tribordActiveView ; //babord
-                me.tribordActiveView = res.babordActiveView ;
+                me.babordView.active = res.tribordActiveView ; //babord
+                me.tribordView.active = res.babordActiveView ;
             }).catch(function (err) {
                 //$log.debug(err);
             });
@@ -61,20 +64,38 @@ angular.module('module_rde.data.services.context', [])
             $log.debug("EVENT RECEIVE VIEW UPDATE");
             $log.debug(viewDesc);
 
-            if(viewDesc.target == "b")  me.babordActiveView = viewDesc.file ; //babord
-            if(viewDesc.target == "t")  me.tribordActiveView = viewDesc.file ; //tribord
+
+
+
+
+            if(viewDesc.target == "b"){
+
+                //res si menu de base
+                if(viewDesc.file=="menu"){ //TODO metre tout les string hardcodé dans un fichier recap.
+                    me.babordView.last = [];
+                }else{
+                    me.babordView.last.push(  me.babordView.active);
+                }
+
+
+
+                me.babordView.active = viewDesc.file ; //babord
+            }
+            if(viewDesc.target == "t")  me.tribordView.active = viewDesc.file ; //tribord
             //if(viewDesc.target == "c")  me.centerActiveView = viewDesc.file ; //center
 
 
         });
 
 
+        me.backBabordMenus= function(){
 
+            me.babordView.active = me.babordView.last.pop();
+        }
 
         //TODO gestion reprise a chaud
 
         //TODO gestion neastedViewContext
         //
-        //me.tribordActiveView ="addDesordre" ;
-        //me.babordActiveView = "menu" ;
+
     })

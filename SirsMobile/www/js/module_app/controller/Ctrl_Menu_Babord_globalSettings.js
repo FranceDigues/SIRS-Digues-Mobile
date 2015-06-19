@@ -8,5 +8,7 @@
 angular.module('module_app.controllers.menus.babord.globalSettings', [])
 
     .controller('cGlobalSettings', function cGlobalSettings($scope, $state, $log, sContext) {
+        var me = this;
+        me.sContext = sContext;
 
     })

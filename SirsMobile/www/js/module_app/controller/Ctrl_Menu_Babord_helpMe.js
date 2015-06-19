@@ -6,5 +6,7 @@
 angular.module('module_app.controllers.menus.babord.helpMe', [])
 
     .controller('cHelpMe', function cHelpMe($scope, $state, $log, sContext) {
+        var me = this;
+        me.sContext = sContext;
 
     })

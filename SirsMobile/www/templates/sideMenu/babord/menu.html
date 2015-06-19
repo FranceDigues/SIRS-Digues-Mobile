@@ -1,8 +1,8 @@
 <div ng-controller="cBabordMenu as c">
 
     <ion-list>
-        <ion-item ng-repeat="menu in c.sConf.BabordMenu" ng-click="c.UpdateView('b',menu.file)">{{menu.name}}
-            {{menu}}
+        <ion-item ng-repeat="menu in c.sConf.BabordMenu" class="menu.icon" ng-click="c.UpdateView('b',menu.file)">{{menu.name}}
+
         </ion-item>
 
     </ion-list>

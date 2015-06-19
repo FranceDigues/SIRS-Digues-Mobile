@@ -7,5 +7,7 @@
 angular.module('module_app.controllers.menus.babord.newObjectSummary', [])
 
     .controller('cNewObjectSummary', function cNewObjectSummary($scope, $state, $log, sContext) {
+        var me = this;
+        me.sContext = sContext;
 
     })
