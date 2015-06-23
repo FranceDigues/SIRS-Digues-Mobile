@@ -32,7 +32,7 @@ angular.module('module_app.controllers.menus.signIn', [])
             if (result.rows[0].doc.password == (md5.createHash(user.password)).toUpperCase() ) {
             //if (0==0) {
                 sContext.auth.user = result.rows[0].doc;
-                $state.go('loading');
+                $state.go('loading', {}, {reload: true}); //force ctrl reload
             }
 
         });
