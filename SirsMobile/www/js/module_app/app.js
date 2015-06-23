@@ -81,33 +81,6 @@ app.run(function ($ionicPlatform) {
                 url: '/forgot-password',
                 templateUrl: 'templates/forgot-password.html'
             })
-            //.state('home.tabs', {
-            //    url: '/tab',
-            //    views: {
-            //        'menuContent': {
-            //            controller: 'cTabs',
-            //            templateUrl: 'templates/tabs.html'
-            //        }
-            //    }
-            //})
-            //.state('home.tabs.map', {
-            //    url: '/map',
-            //    views: {
-            //        'map': {
-            //            templateUrl: 'templates/tab-map.html',
-            //            controller: 'cMap'
-            //        }
-            //    }
-            //})
-            //.state('home.map', {
-            //    url: '/map',
-            //    views: {
-            //                'map': {
-            //                    templateUrl: 'templates/tab-map.html',
-            //                    controller: 'cMap'
-            //                }
-            //            }
-            //})
             .state('home.map', {
                 url: '/map',
                 views: {
@@ -139,8 +112,8 @@ app.run(function ($ionicPlatform) {
                     }
                 }
             })
-            .state('cache', {
-                url: '/cache',
+            .state('geoCache', {
+                url: '/geoCache',
                 controller: 'cGeoCache as c',
                 //controllerAs:'c',
                 templateUrl: 'module_rde/geoCache/geoCache.html'
