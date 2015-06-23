@@ -1,8 +1,8 @@
 <div class="map-div">
-    <openlayers id="map" ol-center="c.centreCarte" ol-controls="c.controls" ol-defaults="c.defaults" >
+    <openlayers id="map"  custom-layers="true" ol-center="c.centreCarte" ol-controls="c.controls" ol-defaults="c.defaults" >
         <!--height="100%" width="100%"-->
-        <ol-layer ol-layer-properties="c.layer" ng-repeat="layer in c.layers|filter:{active:true}"></ol-layer>
-        {{layers}}
+        <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.layers|filter:{active:true}"></ol-layer>
+        {{c.layers}}
 
         <ol-marker  ol-marker-properties="c.centreCarte"></ol-marker>
 

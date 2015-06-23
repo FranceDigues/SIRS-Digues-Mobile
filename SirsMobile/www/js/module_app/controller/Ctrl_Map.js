@@ -383,7 +383,6 @@ angular.module('module_app.controllers.map', [])
         });
 
 
-
         $scope.$on("maskGeoJsonUpdate", function () {
             //$log.debug("event maskGeoJsonUpdate");
             ////$log.debug(sMask.doc.GeoJson);
@@ -539,6 +538,15 @@ angular.module('module_app.controllers.map', [])
         //    // Execute action
         //});
 
+
+
+        /**************************************          SIRS MOBILE         *******************************************************/
+
+        $rootScope.$on("" , function(layer){
+
+            var tmp = new ol.layer.Base();
+            me.currentMap.setBaseLayer(layer)
+        })
 
 
     });

@@ -86,7 +86,7 @@ app.run(function ($ionicPlatform) {
                 views: {
                     'home-panel': {
                         templateUrl: 'templates/map.html',
-                        controller: 'cMap'
+                        controller: 'cMap as c'
                     }
                 }
             })
