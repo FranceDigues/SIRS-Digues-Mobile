@@ -28,7 +28,7 @@ angular.module('module_rde.geoCache', [
     'pouchdb'
 ])
 
-    .controller('cGeoCache', function cGeoCache ($scope, sMapLayer, olData, $log, $timeout, sCacheMap, sContext, $rootScope) {
+    .controller('cGeoCache', function cGeoCache ($scope, sMapLayer, olData, $log, $timeout, sContext, $rootScope) {
 
         var me = this;
 
@@ -54,9 +54,7 @@ angular.module('module_rde.geoCache', [
        me.user = sContext.auth.user;
 
 
-        //todo faire le trie :
-       me.nbTile = sCacheMap.nbTileDownloaded;
-       me.nbTileMax = sCacheMap.nbTile;
+
        me.imageTmp = null;
        me.HL = false; //Mode Hors Ligne
        me.z = {zMin: 8, zMax: 13};
