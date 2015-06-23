@@ -31,10 +31,6 @@ angular.module('module_app.controllers.menus.init', [])
 
         me.replicationInitiale = function(){
             var tmp = new oUrlCouchDb() ;
-            //$log.debug(tmp);
-            //$log.debug(tmp.patch(me.activeDbDesc));
-            //$log.debug("normal");
-
                 sPouch.dbInit( new oUrlCouchDb(me.activeDbDesc.id,me.activeDbDesc.psw, me.activeDbDesc.adress, me.activeDbDesc.port,me.activeDbDesc.db) ); //FIXME persistance de l'objet au travert du select
         };
 

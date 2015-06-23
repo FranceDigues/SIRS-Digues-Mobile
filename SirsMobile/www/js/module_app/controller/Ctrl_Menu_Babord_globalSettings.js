@@ -13,9 +13,10 @@ angular.module('module_app.controllers.menus.babord.globalSettings', [])
         me.sPouch = sPouch;
 
 
-        me.goToBaseCtrl = function(){
+        me.goToInit = function(){
             //TODO fenetre de confimation multiple...
-            $state.go('goToInit')
+            $log.debug("goto init")
+            $state.go('init')
         }
 
 
