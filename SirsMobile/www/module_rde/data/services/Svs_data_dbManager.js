@@ -11,6 +11,9 @@ angular.module('module_rde.data.services.dbManager', [])
         //PouchDB.plugin(require('pouchdb-load'));
         //PouchDB.plugin('pouchdb-load');
 
+        //TODO controle de a la resyncro?
+        me.syncActive = true ;
+
         /**
          * instanciation de tte les base
          * @type {pouchDB}
@@ -24,7 +27,6 @@ angular.module('module_rde.data.services.dbManager', [])
 
         //objet pour couper la syncro
         me.syncInstanceColector = {};
-        //me.dbs = {list:[]};
         me.dbs = [];
 
         me.syncState = {actual:0.0, total:0.0, ratio:0.0 ,  clonning:false, runNextSync:false}
@@ -33,6 +35,62 @@ angular.module('module_rde.data.services.dbManager', [])
 
         //instancie une syncro bi-directionelle avec support de l'interuption, et propagation des evenement change
             //les evenements sont nome comme la base
+
+        me.switchSync = function () {
+            if (me.syncActive === true) {
+                $log.debug("desactivation Syncro");
+                $log.debug(me.syncActive);
+
+                me._unSync();
+            }
+            else {
+                $log.debug("activation Syncro");
+                $log.debug(me.syncActive);
+                me._reSync(null,null);
+
+            }
+        }
+
+        //unsync all db
+      me._unSync = function(){
+          $log.info("run sPouch _unsync")
+
+          $log.debug(me.syncInstanceColector);
+
+
+          angular.forEach(  me.syncInstanceColector, function(value, key){
+              $log.debug(value);
+              value.cancel();
+          });
+
+          me.syncActive=false;
+      }
+
+        //get conf on contextDb and up  all db sync
+        me._reSync = function(callbackActiveDb, callBackConfDb){ //TODO objectifi les parametre
+            me.contextDb.get('confdb').then(function (response) {
+                //fixme pk une var temporaire obligatoire??
+                var dbDesc = new oUrlCouchDb();
+                dbDesc.patch(response.db);
+                me.syncConfDb(dbDesc, callBackConfDb );
+            })
+
+            //run sync on sirs target db
+            me.contextDb.get('activedb').then(function (response) {
+                var dbDesc = new oUrlCouchDb();
+                dbDesc.patch(response.db);
+
+                $log.debug("callBack :");
+                $log.debug(callbackActiveDb);
+
+                me.syncLocalDb(dbDesc,callbackActiveDb); //==> declenche le roadRunner
+                me.syncActive=true;
+            })
+
+
+      }
+
+
         me.initiateSync = function (oUrlCdb, UpToDateCallBack) {
             var onlyOnce = true;
 
@@ -73,6 +131,9 @@ angular.module('module_rde.data.services.dbManager', [])
 
 
                 if(UpToDateCallBack != null && onlyOnce==true){ //only once time
+
+                    me.syncActive = true;
+
                     //FIXME cas ou le get renvoie une erreur, gerrer l'auto reload
                     onlyOnce = false;
                     UpToDateCallBack();
@@ -109,7 +170,7 @@ angular.module('module_rde.data.services.dbManager', [])
 
                 me.syncState.clonning = false
 
-                if(syncMe === true) me.syncLocalDb(RemoteDbDesc);
+                if(syncMe === true) me.syncLocalDb(RemoteDbDesc,  me.roadRunner);
 
 
 
@@ -158,32 +219,30 @@ angular.module('module_rde.data.services.dbManager', [])
        }
 
         //TODO need reduce
-        me.syncLocalDb = function(oUrlCdb){
+        me.syncLocalDb = function(oUrlCdb, syncCallback){
             //me.syncState.runNextSync =true; //permet l'execution du callback unique apres le
 
             me.localDb = new pouchDB(oUrlCdb.db);
-            me.initiateSync(oUrlCdb,  me.roadRunner);
+            me.initiateSync(oUrlCdb, syncCallback);
             $log.debug("instance de base");
             $log.debug(me.syncInstanceColector);
 
 
         };
+
         me.roadRunner = function(){
             $log.debug('GOTO SIGN IN')
             $state.go('signin')
         };
 
 
-        me.syncConfDb = function(oUrlCdb){
+        me.syncConfDb = function(oUrlCdb, syncCallback ){
             //accept refresh
             //me.syncState.runNextSync= true;
 
 
             me.confDb = new pouchDB(oUrlCdb.db);
-            me.initiateSync(oUrlCdb,function(){
-                me.getDbs();
-                $rootScope.$broadcast("buildBaseContext"); //permet l'initialisation des variable de sContext
-            });
+            me.initiateSync(oUrlCdb, syncCallback);
             $log.debug("instance de base");
             $log.debug(me.syncInstanceColector);
 
@@ -198,28 +257,15 @@ angular.module('module_rde.data.services.dbManager', [])
                 console.log(err);
             });
 
-
         };
 
         me.getDbs = function(){
 
             $log.debug("RUN_GetDbs");
-            //me.confDb.query('databases/available/dbs').then(function (res) {
-            //
-            //    $log.debug(res);
-            //    $log.debug(res.rows[0].value);
-            //    //me.dbs.list.concat(me.dbs,res.rows[0].value )
-            //    me.dbs.list = res.rows[0].value;
-            //}).catch(function (err) {
-            //    //$log.debug(err);
-            //});
 
             me.confDb.get('dbsList').then(function (res) {
 
                 $log.debug(res);
-                //$log.debug(res.rows[0].value);
-                //me.dbs.list.concat(me.dbs,res.rows[0].value )
-                //me.dbs.list = res.dbs;
                 me.dbs = res.dbs;
             }).catch(function (err) {
                 //$log.debug(err);
@@ -295,28 +341,11 @@ angular.module('module_rde.data.services.dbManager', [])
         };
 
 
-
-
-
-        //Skip init view if context exist
-        //TODO ajouter gestion de base dans l'applis
-
-        //run sync on config db
-        me.contextDb.get('confdb').then(function (response) {
-            //fixme pk une var temporaire obligatoire??
-            var dbDesc = new oUrlCouchDb();
-            dbDesc.patch(response.db);
-
-            me.syncConfDb(dbDesc);
-        })
-
-        //run sync on sirs target db
-        me.contextDb.get('activedb').then(function (response) {
-            var dbDesc = new oUrlCouchDb();
-            dbDesc.patch(response.db);
-
-            me.syncLocalDb(dbDesc); //==> declenche le roadRunner
-        })
+        //INITIALISATION
+       me._reSync(me.roadRunner, function(){
+           me.getDbs();
+           $rootScope.$broadcast("buildBaseContext"); //permet l'initialisation des variable de sContext
+       });
 
 
 
