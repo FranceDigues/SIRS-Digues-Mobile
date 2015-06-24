@@ -75,7 +75,7 @@ app.run(function ($ionicPlatform) {
             .state('loading', {
                 url: '/loading',
                 templateUrl: 'templates/loading.html',
-                controller: 'cLoader'
+                controller: 'cLoader as c'
             })
             .state('forgotpassword', {
                 url: '/forgot-password',

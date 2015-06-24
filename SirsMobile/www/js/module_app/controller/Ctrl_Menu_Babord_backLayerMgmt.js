@@ -17,6 +17,12 @@ angular.module('module_app.controllers.menus.babord.backLayerMgmt', [])
             $state.go('geoCache')
         }
 
+        me.goToAddLayer = function(){
+            $log.debug("goto add layer source")
+            //todo
+
+        }
+
 
         me.updateBaseLayer=function(layerName){
 
