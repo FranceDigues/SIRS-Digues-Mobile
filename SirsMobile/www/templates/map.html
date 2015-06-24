@@ -1,37 +1,11 @@
 <div class="map-div">
-    <openlayers id="map"  custom-layers="true" ol-center="c.centreCarte" ol-controls="c.controls" ol-defaults="c.defaults" >
-        <!--height="100%" width="100%"-->
-        <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.layers|filter:{active:true}"></ol-layer>
+    <openlayers id="map"  height="100%" width="100%" custom-layers="true" ol-center="c.centreCarte" ol-controls="c.controls" ol-defaults="c.defaults" >
+
+        <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.sMapLayer.list|filter:{active:true}"></ol-layer>
 
         <ol-marker  ol-marker-properties="c.centreCarte"></ol-marker>
 
     </openlayers>
-    <div class="action-buttons">
-        <div>
-            <button class="button button-block button-positive button-yellow" ng-click="c.plot()">Plot</button>
-            <button class="button button-block button-positive button-yellow" ng-click="c.Clore()">Clore</button>
-            <button class="button button-block button-positive button-yellow" ng-click="c.pluginTest()">pluginTest</button>
-
-        </div>
-    </div>
-    <div class="draw-mode-div">
-        <label class="item item-input item-select">
-            <div class="input-label">
-                <span class="icon ion-edit"></span>
-            </div>
-
-            <select ng-model="c.drawType.active" ng-change="c.updateType()"
-                    ng-options="opt.type as opt.label for opt in c.typeEdition">
-            </select>
-
-           {{c.typeEdition}}
-        </label>
-
-        <div class="draw-mode-text">
-            {{c.drawType.type}}
-
-        </div>
-    </div>
 </div>
 
 
