@@ -16,6 +16,7 @@ angular.module('module_app.controllers.map', [])
         // affect
         var me = this;
         me.sMapLayer = sMapLayer;
+        me.sAppLayer = sAppLayer;
 
 
 //todo add to conf db
@@ -63,7 +64,7 @@ angular.module('module_app.controllers.map', [])
 
 
         $scope.$on("enableGeoLoc", function () {
-         //todo link cme plugin
+             //todo link cme plugin
         });
 
         $scope.$on("disableGeoLoc", function () {
@@ -72,8 +73,8 @@ angular.module('module_app.controllers.map', [])
 
 
         $rootScope.$on("sAppLayer_LayerList_Update",function(){
-
-
+            $log.debug("testLayer return");
+            $log.debug(me.sAppLayer.list);
         });
 
 

@@ -12,9 +12,7 @@ angular.module('module_app.data.services.applayer', [])
             sPouch.localDb.query('TronconDigue/all', {
                 include_docs : true
             }).then(function (res) {
-                $log.debug("testLayer return");
-               $log.debug(res);
-                me.list.push({name:"TronconDigue/all",data:res});
+                me.list.push({name:"TronconDigue/all",data:res.rows});
                 $rootScope.$broadcast("sAppLayer_LayerList_Update");
             }).catch(function (err) {
                 // some error
