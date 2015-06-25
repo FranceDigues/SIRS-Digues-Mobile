@@ -22,7 +22,7 @@ angular.module('module_rde.data.services.dbManager', [])
         me.confDb =  null;
 
         me.contextDb = new pouchDB('context');
-
+        me.firstTime = true;
 
 
         //objet pour couper la syncro
@@ -85,6 +85,11 @@ angular.module('module_rde.data.services.dbManager', [])
 
                 me.syncLocalDb(dbDesc,callbackActiveDb); //==> declenche le roadRunner
                 me.syncActive=true;
+
+
+                //pour le ProfJs
+                me.firstTime = false;
+
             })
 
 
