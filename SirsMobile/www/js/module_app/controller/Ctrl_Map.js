@@ -11,7 +11,7 @@ angular.module('module_app.controllers.map', [])
 /***************************************************************** --------- *****************************************************/
 
 //sMap ==> ?
-    .controller('cMap', function cMap ($scope, sMapLayer, $log,  olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,$ionicPopover) {
+    .controller('cMap', function cMap ($scope, sMapLayer,sAppLayer, $log,  olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,$ionicPopover) {
 
         // affect
         var me = this;
@@ -71,6 +71,12 @@ angular.module('module_app.controllers.map', [])
         });
 
 
+        $rootScope.$on("sAppLayer_LayerList_Update",function(){
 
 
+        });
+
+
+        //get One AppLayerfor debug
+        sAppLayer.updateList();
     });
