@@ -138,7 +138,6 @@ angular.module('module_rde.data.services.dbManager', [])
                 if(UpToDateCallBack != null && onlyOnce==true){ //only once time
 
                     me.syncActive = true;
-
                     //FIXME cas ou le get renvoie une erreur, gerrer l'auto reload
                     onlyOnce = false;
                     UpToDateCallBack();
