@@ -13,6 +13,8 @@ angular.module('module_app.controllers.map', [])
 //sMap ==> ?
     .controller('cMap', function cMap ($scope, sMapLayer,sAppLayer, $log,  olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,$ionicPopover) {
 
+        var format = new ol.format.WKT();
+
         // affect
         var me = this;
         me.sMapLayer = sMapLayer;
@@ -75,9 +77,44 @@ angular.module('module_app.controllers.map', [])
         $rootScope.$on("sAppLayer_LayerList_Update",function(){
             $log.debug("testLayer return");
             $log.debug(me.sAppLayer.list);
+            $timeout(addFeaturesToAppLayers); // wait for openlayers directive update (next digest)
         });
 
 
         //get One AppLayerfor debug
         sAppLayer.updateList();
+
+
+        function addFeaturesToAppLayers() {
+            olData.getMap("map").then(function(map) {
+                angular.forEach(me.sAppLayer.list, function(layer) {
+
+                    // Retrieve the map layer from its name.
+                    var layerFound = null;
+                    map.getLayers().forEach(function(oLayer) {
+                        if (!layerFound && oLayer.get('name') === layer.name) {
+                            layerFound = oLayer;
+                        }
+                    });
+                    if (!layerFound) {
+                        $log.debug('No layer named "' + layer.name + '" was found on map');
+                        return;
+                    }
+
+                    // Create features from documents and display them.
+                    var features = [];
+                    angular.forEach(layer.data, function(item) {
+                        if (item.doc && angular.isString(item.doc.geometry)) { // it seems that some documents have no geometry
+                            var feature = format.readFeature(item.doc.geometry);
+                            feature.set('id', item.doc._id);
+                            feature.set('rev', item.doc._rev);
+                            feature.getGeometry().transform('EPSG:2154', 'EPSG:3857');
+                            features.push(feature);
+                        }
+                    });
+                    $log.debug('Add ' + features.length + ' feature(s) to the layer named "' + layer.name + '"');
+                    layerFound.getSource().addFeatures(features);
+                });
+            });
+        }
     });
