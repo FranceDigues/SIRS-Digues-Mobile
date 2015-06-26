@@ -19,8 +19,14 @@ var app = angular.module('SirsMobile', [
     'module_rde.note',
 
 
+    'module_rde.profiling',
+
+
 
     'filter.custom'
+
+
+
 
 
 
