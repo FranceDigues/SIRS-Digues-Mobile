@@ -9,7 +9,7 @@
     "openlayers"
   ],
   "main": [
-    "dist/angular-openlayers-directive.min.js"
+    "dist/angular-openlayers-directive.js"
   ],
   "dependencies": {
     "angular": "*",

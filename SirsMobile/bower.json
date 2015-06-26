@@ -16,6 +16,7 @@
     "ngCordova": "~0.1.15-alpha",
     "angular-md5": "~0.1.7",
     "pouchdb-quick-search": "~1.0.2",
-    "pouchdb-load": "~1.4.0"
+    "pouchdb-load": "~1.4.0",
+    "proj4": "~2.3.6"
   }
 }

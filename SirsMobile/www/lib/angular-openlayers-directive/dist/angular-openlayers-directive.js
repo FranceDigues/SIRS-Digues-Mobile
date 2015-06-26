@@ -1023,6 +1023,8 @@ angular.module('openlayers-directive').factory('olHelpers', ["$q", "$log", "$htt
                     return 'Vector';
                 case 'KML':
                     return 'Vector';
+                case 'Vector':
+                    return 'Vector';
                 default:
                     return 'Tile';
             }
@@ -1305,6 +1307,9 @@ angular.module('openlayers-directive').factory('olHelpers', ["$q", "$log", "$htt
                     imageExtent: projection.getExtent(),
                     imageLoadFunction: source.imageLoadFunction
                 });
+                break;
+            case 'Vector':
+                oSource = new ol.source.Vector();
                 break;
         }
 
