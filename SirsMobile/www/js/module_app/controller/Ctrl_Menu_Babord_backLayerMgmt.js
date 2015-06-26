@@ -12,6 +12,8 @@ angular.module('module_app.controllers.menus.babord.backLayerMgmt', [])
         me.sContext = sContext;
         me.sMapLayer = sMapLayer;
 
+        me.typeServeur = [{name:"WMS",type:"ImageWMS"},{name:"TMS",type:"OSM"}]
+        me.addlayer= false;
         me.goToGeoCache = function(){
             $log.debug("goto geoCache")
             $state.go('geoCache')
@@ -21,6 +23,7 @@ angular.module('module_app.controllers.menus.babord.backLayerMgmt', [])
             $log.debug("goto add layer source")
             //todo
 
+            me.addlayer= true;
         }
 
 
@@ -34,6 +37,30 @@ angular.module('module_app.controllers.menus.babord.backLayerMgmt', [])
                     me.sMapLayer.list[i].active = false;
                 }
         }
+
+
+
+        me.addSource = function(){
+
+            var source = new oSource()
+            var layer = new oLayer();
+
+        }
+
+
+        //{
+        //    "idf": 5,
+        //    "active": false,
+        //    "name": "constelDemo_ZA",
+        //    "isCache": false,
+        //    "opacity": 0.5,
+        //    "source": {
+        //    "type": "ImageWMS",
+        //        "url": "http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
+        //        "params": {
+        //        "LAYERS": "ZA_EID_Nuisance"
+        //    }
+        //}
     })
 
 
