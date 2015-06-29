@@ -15,16 +15,16 @@ var NON_AUTO_FILE_SYSTEM = "file:///storage/emulated/0/Android/data/com.ionic.Ma
  * @param {number, string, string, ol.sourceType, int[0-19], int[0-19], uri, array string, BBox en degree }
  *
  */
-function oCacheDescriptor(idf, nom, Source,path, typeSource , zMin , zMax, url, layer ,bbox ){
-    this.idf = idf;
-    this.nom= nom;
-    this.Source= Source;
-    this.path= path;
-    this.typeSource= typeSource;
-    this.zMin= zMin;
-    this.zMax = zMax ;
-    this.url = url ;
-    this.bbox = bbox ;
+function oCacheDescriptor(param){
+    this.idf = param.idf;
+    this.nom= param.nom;
+    this.Source= param.Source;
+    this.path= param.path;
+    this.typeSource= param.typeSource;
+    this.zMin= param.zMin;
+    this.zMax = param.zMax ;
+    this.url = param.url ;
+    this.bbox = param.bbox ;
 }
 
 oCacheDescriptor.prototype.patch = function(CaDeObject ){
@@ -41,7 +41,8 @@ oCacheDescriptor.prototype.getLayer=function(){
     //return new oLayer(this.idf, false, this.nom, true, 0.6, src);
     console.log("ok")
 
-    var olayer = new oLayer(this.idf, false, this.nom, true, 0.6, {type : "OSM", url : NON_AUTO_FILE_SYSTEM+this.path+"{z}/{x}/{y}.png"});
+    //var olayer = new oLayer(this.idf, false, this.nom, true, 0.6,{type : "OSM", url : NON_AUTO_FILE_SYSTEM+this.path+"{z}/{x}/{y}.png"} );
+    var olayer = new oLayer({idf:this.idf , active:false, name:this.nom, isCache:true , opacity:0.6 , source :{type : "OSM", url : NON_AUTO_FILE_SYSTEM+this.path+"{z}/{x}/{y}.png"}});
 
     console.log(olayer);
 

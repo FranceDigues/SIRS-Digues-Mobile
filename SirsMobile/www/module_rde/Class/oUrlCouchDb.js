@@ -9,12 +9,13 @@
  *
  */
 //TODO expand
-function oUrlCouchDb(id,psw,adress,port,db ){
-    this.id= id;
-    this.psw= psw;
-    this.adress= adress;
-    this.port =port;
-    this.db= db;
+//id,psw,adress,port,db
+function oUrlCouchDb(param ){
+    this.id= param.id;
+    this.psw= param.psw;
+    this.adress= param.adress;
+    this.port =param.port;
+    this.db= param.db;
 }
 
 

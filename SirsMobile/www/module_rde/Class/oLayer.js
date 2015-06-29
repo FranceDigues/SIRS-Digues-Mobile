@@ -13,13 +13,13 @@
 
     //TODO construction depuis un objet existant?
 //var oLayer =
-function oLayer(idf, active, name, isCache , opacity , source ){
-        this.idf = idf;
-        this.active= active;
-        this.name= name;
-        this.isCache= isCache;
-        this.opacity= opacity;
-        this.source = source ;
+function oLayer(param){
+        this.idf = param.idf;
+        this.active= param.active;
+        this.name= param.name;
+        this.isCache= param.isCache;
+        this.opacity= param.opacity;
+        this.source = param.source ;
 
 }
 
