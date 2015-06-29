@@ -13,6 +13,7 @@ angular.module('module_rde.data.services.context', [])
 
         me.tribordView = {active: "addDesordre"  , last:[]};
         me.babordView = {active: "menu" , last:[]};
+        me.logProfiling=false;
 
 
         this.param = {action: null, mskUUID: null}
@@ -46,6 +47,8 @@ angular.module('module_rde.data.services.context', [])
         //
         //});
         //
+
+
         // Initialisation du contexte avec les donnée de la base de conf
         rscp.$on("buildBaseContext",  function(event, viewDesc) {
 
@@ -53,6 +56,7 @@ angular.module('module_rde.data.services.context', [])
                 $log.debug(res);
                 me.babordView.active = res.tribordActiveView ; //babord
                 me.tribordView.active = res.babordActiveView ;
+                me.logProfiling=res.logProfiling;//if yes we send data on influxdb
             }).catch(function (err) {
                 //$log.debug(err);
             });
