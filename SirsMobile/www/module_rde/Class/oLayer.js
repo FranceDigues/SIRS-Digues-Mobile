@@ -13,13 +13,14 @@
 
     //TODO construction depuis un objet existant?
 //var oLayer =
+//idf active name isCache opacity source
 function oLayer(param){
         this.idf = param.idf;
         this.active= param.active;
         this.name= param.name;
         this.isCache= param.isCache;
         this.opacity= param.opacity;
-        this.source = param.source ;
+        this.source =new oSource(param.source);
 
 }
 

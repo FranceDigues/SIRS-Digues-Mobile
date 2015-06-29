@@ -18,8 +18,8 @@ function oSource(param){
         if(param.type == "ImageWMS"){
             this.params = param.params;
         }if(param.type=="BingMaps"){
-            this.key = key;
-            this.imagerySet = imagerySet;
+            this.key = param.key;
+            this.imagerySet = param.imagerySet;
         }
     }
 
