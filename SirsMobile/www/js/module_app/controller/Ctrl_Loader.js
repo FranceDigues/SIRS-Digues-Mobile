@@ -8,21 +8,19 @@
 /***************************************************************** --------- *****************************************************/
 
 angular.module('module_app.controllers.loader', [])
-.controller('cLoader', function cLoader ($scope,$timeout, $log, $state, sPouch, sMapLayer, sProf) {
-    var me = this;
+    .controller('cLoader', function cLoader ($scope,$timeout, $log, $state, sPouch, sMapLayer, sProf, sContext) {
+        var me = this;
 
-    me.max = 0;
-    me.actual = 0;
+        me.sContext =sContext;
+
+        me.max = 0;
+        me.actual = 0;
         me.masterPile=[];
+        me.step ="waiting..."
 
 
 
-    $log.debug("loader");
-
-
-
-
-
+        $log.debug("loader");
 
 
 
@@ -30,7 +28,12 @@ angular.module('module_app.controllers.loader', [])
 
 
 
-        me.buildIndex = function(){
+
+
+
+
+
+        me.buildIndex = function(conf){
             $log.error("build index")
             //recuperation de la liste des design
             sPouch.localDb.allDocs({startkey : '_design/', endkey : '_design0', include_docs : true}).then(function (res) {
@@ -47,30 +50,11 @@ angular.module('module_app.controllers.loader', [])
                     var design = item.doc._id.substring(8,  item.doc._id.length);
 
                     //pour chaque vue
+
                     angular.forEach(item.doc.views, function(v,k){
                         $log.error(design+"/"+k)
 
                         me.masterPile.push("pdb_"+sPouch.localDb.adapter+"_"+design+"/"+k);
-
-                        ////start ProfJs
-                        //sProf.startLog("pdb_"+sPouch.localDb.adapter+"_"+design+"/"+k,Date.now());
-
-
-                        ////creation de l'index
-                        //sPouch.localDb.query('TronconDigue/all', {
-                        //    include_docs : true
-                        //}).then(function (res) {
-                        //
-                        //    //stop ProfJs
-                        //    sProf.stopLog("pdb_"+sPouch.localDb.adapter+"_"+design+"/"+k,Date.now(), res.total_rows, sPouch.firstTime);
-                        //
-                        //    me.actual++;
-                        //    //if all index created go home :
-                        //    if(me.max==me.actual) $state.go("home.map");
-                        //}).catch(function (err) {
-                        //    // some error
-                        //});
-
 
                         me.max++;
                     })
@@ -82,7 +66,7 @@ angular.module('module_app.controllers.loader', [])
                 })
 
 
-                me._recursiveIndex(me.masterPile);
+                me._recursiveIndex(me.masterPile, conf);
 
 
             }).catch(function (err) {
@@ -94,61 +78,75 @@ angular.module('module_app.controllers.loader', [])
 
 
         //pour bien separer les durrée de requette
-me._recursiveIndex = function(pile){
+        me._recursiveIndex = function(pile, conf){
 
-    var viewItem = pile.pop();
+            var viewItem = pile.pop();
 
-    //start ProfJs
-    sProf.startLog(viewItem,Date.now());
-
-    //creation de l'index
-    sPouch.localDb.query('TronconDigue/all', {
-        include_docs : true
-    }).then(function (res) {
-
-        //stop ProfJs
-        sProf.stopLog(viewItem,Date.now(), res.total_rows, sPouch.firstTime);
-
-        me.actual++;
+            //start ProfJs
+            if(conf.profLog===true) sProf.startLog(viewItem,Date.now());
 
 
-        //if pile, rerun, else go home
-        if(pile.length>0){
-            me._recursiveIndex(pile);
-        }else{
-            $state.go("home.map");
+            //creation de l'index
+            sPouch.localDb.query('TronconDigue/all', {
+                include_docs : true
+            }).then(function (res) {
+
+                //stop ProfJs
+                if(conf.profLog===true) sProf.stopLog(viewItem,Date.now(), res.total_rows, sPouch.firstTime);
+
+                me.actual++;
+
+                //if pile, rerun, else go home
+                if(pile.length>0){
+                    me._recursiveIndex(pile);
+                }else{
+                    me.upEnv();
+                }
+                //if(me.max==me.actual) $state.go("home.map");
+            }).catch(function (err) {
+                // some error
+            });
+
         }
-        //if(me.max==me.actual) $state.go("home.map");
-    }).catch(function (err) {
-        // some error
-    });
 
-}
+        me.upEnv = function(){
+            me.step="Preparation de votre environement";
+            //Bouchon
+            me.max = 100;
+            me.actual = 0;
+            $timeout(function () {
+                me.actual=  25;
+
+                $timeout(function () {
+                    me.actual=  50;
+                    $timeout(function () {
+                        me.actual=  75;
+                        $timeout(function () {
+                            me.actual=  100;
+                            $state.go("home.map");
+                        }, 350);
+                    }, 350);
+                }, 350);
+            }, 350);
+        }
 
 
 
-
-
-
-
-        //
-    //    //Bouchon de vase
-    //$timeout(function () {
-    //    me.loadingPercent = me.loadingPercent + 25;
-    //
-    //    $timeout(function () {
-    //        me.loadingPercent = me.loadingPercent + 25;
-    //        $timeout(function () {
-    //            me.loadingPercent = me.loadingPercent + 25;
-    //            $timeout(function () {
-    //                me.loadingPercent = me.loadingPercent + 25;
-    //                $state.go("home.map");
-    //            }, 600);
-    //        }, 600);
-    //    }, 600);
-    //}, 600);
 
 
         //init
-        me.buildIndex();
-});
+        if(me.sContext.firstTime == true){
+            me.step="Mise à jour des indexes...";
+            me.buildIndex({profLog:false}); //run up environement
+        }else{
+            me.upEnv();
+        }
+
+
+
+
+
+
+    });
+
+

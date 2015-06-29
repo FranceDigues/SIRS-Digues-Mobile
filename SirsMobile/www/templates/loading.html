@@ -1,10 +1,10 @@
 <ion-view class="loading-view">
     <div class="row">
         <div class="col col-50 col-offset-25 signin-form">
-            <ion-content scroll="false">
+            <ionc-content scroll="false">
                 <progress max="{{c.max}}" value="{{c.actual}}"></progress>
-                Mise à jour des indexes
-            </ion-content>
+                {{c.step}}
+            </ionc-content>
         </div>
     </div>
 </ion-view>
