@@ -11,27 +11,11 @@
 
         <div ng-hide="c.viewAddSourceForm">
             <ion-list>
-
-                <!--fixme why ng change not working here???-->
-
-                <!--<ion-radio class="waves-effect  waves-teal btn-flat" ng-click="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sMapLayer.list">-->
-                       <!--Layers {{layer.name}}-->
-                <!--</ion-radio>-->
-
-
-                <ion-item class="waves-effect waves-teal btn-flat" width="100%"  ng-click="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sMapLayer.list">  <i ng-show="layer.active"   class="material-icons  right" >offline_pin</i>Layers {{layer.name}}</ion-item>
-
-
-
+                <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sMapLayer.list">  <i ng-show="layer.active"   class="material-icons  right" >offline_pin</i>Layers {{layer.name}}</ion-item>
             </ion-list>
 
 
             <a class="waves-effect waves-light btn-large"  ng-click="c.goToGeoCache()"><i class="mdi-content-cloud right"> </i>Gestion du Cache</a>
-
-            <!--<button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"-->
-                    <!--ng-click="c.goToAddSource()">-->
-                <!--Ajouter un fond de carte-->
-            <!--</button>-->
         </div>
 
 
