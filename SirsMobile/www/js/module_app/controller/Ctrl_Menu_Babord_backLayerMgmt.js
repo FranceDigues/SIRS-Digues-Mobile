@@ -6,24 +6,32 @@
 
 angular.module('module_app.controllers.menus.babord.backLayerMgmt', [])
 
-    .controller('cBackLayerMgmt', function cBackLayerMgmt($scope, $state, $log, sContext, sMapLayer) {
+    .controller('cBackLayerMgmt', function cBackLayerMgmt($scope, $state, $log, sContext, sMapLayer, sPouch) {
         var me = this;
 
         me.sContext = sContext;
         me.sMapLayer = sMapLayer;
 
         me.typeServeur = [{name:"WMS",type:"ImageWMS"},{name:"TMS",type:"OSM"}]
-        me.addlayer= false;
+        me.viewAddSourceForm= false;
+
+
+        //debug
+        //me.newSource = {name:"essai OSM",url:"http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png",type:"OSM"};
+
+
+
         me.goToGeoCache = function(){
             $log.debug("goto geoCache")
             $state.go('geoCache')
         }
 
-        me.goToAddLayer = function(){
+        me.goToAddSource = function(){
             $log.debug("goto add layer source")
             //todo
 
-            me.addlayer= true;
+            me.viewAddSourceForm= true;
+            $log.debug(me.viewAddSourceForm);
         }
 
 
@@ -40,10 +48,38 @@ angular.module('module_app.controllers.menus.babord.backLayerMgmt', [])
 
 
 
-        me.addSource = function(){
+        me.addSource = function(obj){
 
-            var source = new oSource()
-            var layer = new oLayer();
+            me.viewAddSourceForm=false;
+            //var source = new oSource()
+
+
+            sPouch.confDb.get('layersList').then(function (res) {
+
+                $log.debug(res);
+                $log.debug(obj);
+
+
+                var newLayer = new oLayer({idf:res.layers.length+1, active:false, name:obj.name ,isCache:false, opacity:0.6, source:{url:obj.url, type:obj.type}});
+                $log.debug(newLayer);
+
+                res.layers.push(newLayer);
+
+                sPouch.confDb.put(res).then(function (response) {
+                   $log.debug("layer Added")
+                }).catch(function (err) {
+                    $log.debug("add layer error")
+                });
+
+
+
+            }).catch(function (err) {
+                //$log.debug(err);
+            });
+
+
+
+            //var layers = new oLayer({idf:, active:false, name:obj.name ,isCache:false, opacity:0.6, source:{}});
 
         }
 
