@@ -21,6 +21,7 @@ angular.module('module_rde.data.services.dbManager', [])
         me.localDb =  null;
         me.confDb =  null;
 
+        //me.contextDb = new pouchDB('context',{adapter : 'websql'});
         me.contextDb = new pouchDB('context');
         me.firstTime = true;
 
@@ -70,15 +71,15 @@ angular.module('module_rde.data.services.dbManager', [])
         me._reSync = function(callbackActiveDb, callBackConfDb){ //TODO objectifi les parametre
             me.contextDb.get('confdb').then(function (response) {
                 //fixme pk une var temporaire obligatoire??
-                var dbDesc = new oUrlCouchDb();
-                dbDesc.patch(response.db);
+                var dbDesc = new oUrlCouchDb(response.db);
+                //dbDesc.patch(response.db);
                 me.syncConfDb(dbDesc, callBackConfDb );
             })
 
             //run sync on sirs target db
             me.contextDb.get('activedb').then(function (response) {
-                var dbDesc = new oUrlCouchDb();
-                dbDesc.patch(response.db);
+                var dbDesc = new oUrlCouchDb(response.db);
+                //dbDesc.patch(response.db);
 
                 $log.debug("callBack :");
                 $log.debug(callbackActiveDb);
@@ -226,6 +227,7 @@ angular.module('module_rde.data.services.dbManager', [])
         me.syncLocalDb = function(oUrlCdb, syncCallback){
             //me.syncState.runNextSync =true; //permet l'execution du callback unique apres le
 
+            //me.localDb = new pouchDB(oUrlCdb.db, {adapter : 'websql'});
             me.localDb = new pouchDB(oUrlCdb.db);
             me.initiateSync(oUrlCdb, syncCallback);
             $log.debug("instance de base");
@@ -245,10 +247,9 @@ angular.module('module_rde.data.services.dbManager', [])
             //me.syncState.runNextSync= true;
 
 
+            //me.confDb = new pouchDB(oUrlCdb.db, {adapter : 'websql'});
             me.confDb = new pouchDB(oUrlCdb.db);
             me.initiateSync(oUrlCdb, syncCallback);
-            $log.debug("instance de base");
-            $log.debug(me.syncInstanceColector);
 
 
             //ecriture du secripteur de base dans le contexte
@@ -263,12 +264,12 @@ angular.module('module_rde.data.services.dbManager', [])
 
         };
 
+
         me.getDbs = function(){
 
             $log.debug("RUN_GetDbs");
 
             me.confDb.get('dbsList').then(function (res) {
-
                 $log.debug(res);
                 me.dbs = res.dbs;
             }).catch(function (err) {
@@ -293,6 +294,7 @@ angular.module('module_rde.data.services.dbManager', [])
                 error(function(data, status, headers, config) {});
 
             //
+            //me.localDb = new pouchDB(oUrlCdb.db, {adapter : 'websql'});
             me.localDb = new pouchDB(oUrlCdb.db);
             me.instantiateRep( oUrlCdb,oUrlCdb.db,true  );
 
@@ -324,6 +326,7 @@ angular.module('module_rde.data.services.dbManager', [])
         me.destroyDb = function(oUrlCdb){
             $log.debug("RUN__clear")
 
+            //me.localDb = new pouchDB(oUrlCdb.db, {adapter : 'websql'});
             me.localDb = new pouchDB(oUrlCdb.db);
             me.localDb.destroy().then(function () {
                 $log.debug("db_clear")

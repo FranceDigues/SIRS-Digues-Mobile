@@ -104,7 +104,7 @@ angular.module('module_rde.data.services.maplayer', [])
             $log.debug(item);
             //typage des object
             var localCaDe = new oCacheDescriptor();//creation de l'objet et patch des valeur
-            localCaDe.patch(item);
+            localCaDe.patch(item); //TODO remove (param)
             $log.debug(localCaDe);
 
             aLayer.push(localCaDe.getLayer());

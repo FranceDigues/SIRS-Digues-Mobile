@@ -23,6 +23,13 @@ angular.module('module_app.controllers',
         'module_app.controllers.menus.babord.menu',
         'module_app.controllers.menus.babord.newObjectSummary',
         'module_app.controllers.menus.babord.porteDoc',
-        'module_app.controllers.menus.babord.backLayerMgmt'
+        'module_app.controllers.menus.babord.backLayerMgmt',
+
+
+
+
+        'module_app.controllers.menus.tribord.desordreMgmt',
+        'module_app.controllers.menus.tribord.closableDesordre',
+        'module_app.controllers.menus.tribord.editableLayer',
 
     ])
