@@ -3,7 +3,7 @@
  */
 
 angular.module('module_app.controllers.menus.signIn', [])
-.controller('cSignIn', function cSignIn ($scope, $state, sPouch,  $log, sContext, md5) {
+.controller('cSignIn', function cSignIn ($scope, $state, sPouch,  $log, sContext, md5, sProf) {
 
     var me = this;
         me.user={login:"admin",password:"admin"};
@@ -19,8 +19,19 @@ angular.module('module_app.controllers.menus.signIn', [])
         //TODO DEMO unComment
         //sPouch.usr.query('name_index', {key: 'mok-sensei'}).then(function(result) {
         //sPouch.localDb.query('Utilisateur/byLogin', {key: user.login, include_docs:true}).then(function (result) {
-        sPouch.localDb.query('Utilisateur/byLogin/'+user.login, {include_docs:true}).then(function (result) {
-            // do something with result
+
+
+
+            //start ProfJs
+        if(sContext.logProfiling===true)  sProf.startLog("pdb_"+sPouch.localDb.adapter+"_Utilisateur/byLogin/"+user.login,Date.now());
+
+            sPouch.localDb.query('Utilisateur/byLogin/'+user.login, {include_docs:true}).then(function (result) {
+            // do something with result.
+
+            // stop ProfJs
+                if(sContext.logProfiling===true) sProf.stopLog("pdb_"+sPouch.localDb.adapter+"_Utilisateur/byLogin/"+user.login,Date.now(), result.total_rows, sPouch.firstTime);
+
+
             $log.debug(result);
 
             $log.debug(result.rows[0].doc);
