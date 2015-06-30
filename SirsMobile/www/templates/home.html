@@ -1,80 +1,65 @@
+<ion-side-menus>
 
-    <ion-side-menus>
+    <!--drag-content="sEventSuperviseur.event.sideMenu"-->
+    <!--drag-content="c.swipeProxy"-->
+    <!--<ion-side-menu-content drag-content="c.swipeProxy">-->
+    <ion-side-menu-content drag-content="false">
 
-        <!--drag-content="sEventSuperviseur.event.sideMenu"-->
-        <!--drag-content="c.swipeProxy"-->
-        <!--<ion-side-menu-content drag-content="c.swipeProxy">-->
-        <ion-side-menu-content drag-content="false">
-
-            <!--//NAV-->
-            <ion-nav-bar>
-                <ion-nav-buttons side="left">
-                    <!--<button class="button button-icon button-clear ion-navicon" ng-click="c.openLeftMenu()"></button>-->
-                    <button class="col-25 button button-icon button-clear ion-home" ng-click="c.home()"></button>
-                </ion-nav-buttons>
-
-
-                <!--<div class="buttons">-->
-                <!--<button class="col-25 button button-icon button-clear ion-home" ng-click="c.home()"></button>-->
-                <!--</div>-->
-                <!--<h1 class="col-50  title">{{}}</h1>-->
-
-                <!--<div class="buttons">-->
-                <!--<button class=" col-75 button button-icon button-clear ion-power" ng-click="c.logout()"></button>-->
-                <!--</div>-->
-
-                <ion-nav-buttons side="right">
-                    <!--<button class="button button-icon button-clear ion-navicon" ng-click="c.openRightMenu()"></button>-->
-                    <button class=" col-75 button button-icon button-clear ion-power" ng-click="c.logout()"></button>
-                </ion-nav-buttons>
-            </ion-nav-bar>
+        <!--//NAV-->
+        <ion-nav-bar>
+            <ion-nav-buttons side="left">
+                <!--<button class="button button-icon button-clear ion-navicon" ng-click="c.openLeftMenu()"></button>-->
+                <button class="col-25 button button-icon button-clear ion-home" ng-click="c.home()"></button>
+            </ion-nav-buttons>
 
 
-            <!--//PANEL-->
+            <!--<div class="buttons">-->
+            <!--<button class="col-25 button button-icon button-clear ion-home" ng-click="c.home()"></button>-->
+            <!--</div>-->
+            <!--<h1 class="col-50  title">{{}}</h1>-->
+
+            <!--<div class="buttons">-->
+            <!--<button class=" col-75 button button-icon button-clear ion-power" ng-click="c.logout()"></button>-->
+            <!--</div>-->
+
+            <ion-nav-buttons side="right">
+                <!--<button class="button button-icon button-clear ion-navicon" ng-click="c.openRightMenu()"></button>-->
+                <button class=" col-75 button button-icon button-clear ion-power" ng-click="c.logout()"></button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+
+
+        <!--//PANEL-->
         <div class="cargo">
             <div name="babord" class=" inline side babord">
-                    <img src="./img/slider1.png" ng-click="c.toggleLeftMenu()" >
+                <img src="./img/slider1.png" ng-click="c.toggleLeftMenu()">
                 <!--ng-click="c.toggleLeftMenu()"-->
                 <!--on-swipe="c.switchLock()"-->
             </div>
 
-                <ion-nav-view name="home-panel" class="inline container"></ion-nav-view>
+            <ion-nav-view name="home-panel" class="inline container"></ion-nav-view>
 
-            <div name="tribord"  class="inline side tribord">
-                <img src="./img/slider2.png" id="tribordHandle" ng-click="c.toggleRightMenu()" >
+            <div name="tribord" class="inline side tribord">
+                <img src="./img/slider2.png" id="tribordHandle" ng-click="c.toggleRightMenu()">
                 <!--on-swipe="c.switchLock()"-->
             </div>
         </div>
 
-        </ion-side-menu-content>
+    </ion-side-menu-content>
 
 
-        <ion-side-menu side="left">
+    <ion-side-menu side="left">
 
-            <div ng-include="'templates/sideMenu/babord/'+c.sContext.babordView.active+'.html'"></div>
+        <div ng-include="'templates/sideMenu/babord/'+c.sContext.babordView.active+'.html'"></div>
 
-        </ion-side-menu>
-
-
-        <ion-side-menu side="right">
-            <!--<ion-header-bar class="bar bar-header bar-dark"></ion-header-bar>-->
-            <!--<ion-content has-header="true">-->
-                <!--<ion-list>-->
-                    <!--<ion-item href="#/" menu-close>Home</ion-item>-->
+    </ion-side-menu>
 
 
-                    <!--<ion-toggle ng-repeat="layer in layers" ng-model="layer.active">-->
-                        <!--Layers {{layer.name}}-->
-                    <!--</ion-toggle>-->
+    <ion-side-menu side="right">
 
-                    <!--&lt;!&ndash;<ion-item ng-click="newCache()" menu-close>Nouveau Cache</ion-item>&ndash;&gt;-->
-                <!--</ion-list>-->
+        <div ng-include="'templates/sideMenu/tribord/'+c.sContext.tribordView.active+'.html'"></div>
 
-            <!--</ion-content>-->
-
-            <div ng-include="'templates/sideMenu/tribord/'+c.sContext.tribordView.active+'.html'"></div>
-
-        </ion-side-menu>
+    </ion-side-menu>
 
 
-    </ion-side-menus>
+</ion-side-menus>

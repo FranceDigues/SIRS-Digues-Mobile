@@ -1,11 +1,22 @@
 <div ng-controller="cClosableDesordre as c">
 
-liste de Desordre
+    liste de Desordre
+
+    <ion-list>
+
+        <ion-radio ng-model="c.desordreSelected" ng-value="item" ng-repeat="item in c.sContext.unCloseDesordre">
+            {{item.name}}
+            <!--fixme desordre id ?-->
+        </ion-radio>
+
+
+    </ion-list>
 
     <!--action-->
     <div>
         <button class=" button button-icon button-clear" ng-click="c.drawOnMap()">TRACER SUR LA CARTE</button>
-        <button class=" button button-icon button-clear" ng-click="c.runWithGps()">CONTINUER AVEC LA POSITION ACTUELLE</button>
+        <button class=" button button-icon button-clear" ng-click="c.runWithGps()">CONTINUER AVEC LA POSITION ACTUELLE
+        </button>
     </div>
 
 
