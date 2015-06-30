@@ -11,7 +11,7 @@ angular.module('module_app.controllers.map', [])
 /***************************************************************** --------- *****************************************************/
 
 //sMap ==> ?
-    .controller('cMap', function cMap ($scope, sMapLayer,sAppLayer, $log,  olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,$ionicPopover) {
+    .controller('cMap', function cMap ($scope, sMapLayer,sAppLayer, $log,  olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,sStyleGenerator) {
 
         var format = new ol.format.WKT();
 
@@ -52,6 +52,8 @@ angular.module('module_app.controllers.map', [])
 //map instance
         olData.getMap("map").then(function (map) {
             me.currentMap = map;
+
+
         });
 
 
@@ -77,7 +79,13 @@ angular.module('module_app.controllers.map', [])
         $rootScope.$on("sAppLayer_LayerList_Update",function(){
             $log.debug("testLayer return");
             $log.debug(me.sAppLayer.list);
-            $timeout(addFeaturesToAppLayers); // wait for openlayers directive update (next digest)
+            $timeout(addDisorderFeatures); // wait for openlayers directive update (next digest)
+        });
+
+        $scope.$on('$destroy', function() {
+            if (me.currentMap instanceof ol.Map) {
+
+            }
         });
 
 
@@ -85,36 +93,51 @@ angular.module('module_app.controllers.map', [])
         sAppLayer.updateList();
 
 
-        function addFeaturesToAppLayers() {
+        /**
+         * Creates and adds the disorder features to application layers.
+         */
+        function addDisorderFeatures() {
             olData.getMap("map").then(function(map) {
-                angular.forEach(me.sAppLayer.list, function(layer) {
+                angular.forEach(me.sAppLayer.list, function(layer, layerIndex) {
 
                     // Retrieve the map layer from its name.
-                    var layerFound = null;
-                    map.getLayers().forEach(function(oLayer) {
-                        if (!layerFound && oLayer.get('name') === layer.name) {
-                            layerFound = oLayer;
-                        }
-                    });
-                    if (!layerFound) {
-                        $log.debug('No layer named "' + layer.name + '" was found on map');
-                        return;
-                    }
+                    var olLayer = getVectorLayerByName(map, layer.name);
 
                     // Create features from documents and display them.
                     var features = [];
                     angular.forEach(layer.data, function(item) {
                         if (item.doc && angular.isString(item.doc.geometry)) { // it seems that some documents have no geometry
                             var feature = format.readFeature(item.doc.geometry);
+                            feature.getGeometry().transform('EPSG:2154', 'EPSG:3857');
                             feature.set('id', item.doc._id);
                             feature.set('rev', item.doc._rev);
-                            feature.getGeometry().transform('EPSG:2154', 'EPSG:3857');
+                            feature.setStyle(sStyleGenerator(layerIndex));
                             features.push(feature);
                         }
                     });
                     $log.debug('Add ' + features.length + ' feature(s) to the layer named "' + layer.name + '"');
-                    layerFound.getSource().addFeatures(features);
+                    olLayer.getSource().addFeatures(features);
                 });
             });
+        }
+
+        /**
+         * Retrieves the ol.layer.Vector with the specified name from an ol.Map
+         * instance.
+         *
+         * @param {ol.Map} map the map instance.
+         * @param {String} name the layer name.
+         * @returns {ol.layer.Vector} the layer instance if exists.
+         * @throws {Error} if the layer was not found.
+         */
+        function getVectorLayerByName(map, name) {
+            var layers = map.getLayers(), i = layers.getLength();
+            while(i--) {
+                var olLayer = layers.item(i);
+                if (olLayer instanceof ol.layer.Vector && olLayer.get('name') === name) {
+                    return olLayer;
+                }
+            }
+            throw new Error('No layer named "' + layerName + '" was found on map');
         }
     });
