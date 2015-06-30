@@ -33,7 +33,7 @@ angular.module('module_app.controllers.loader', [])
 
 
 
-        me.buildIndex = function(conf){
+        me.buildIndex = function(){
             $log.error("build index")
             //recuperation de la liste des design
             sPouch.localDb.allDocs({startkey : '_design/', endkey : '_design0', include_docs : true}).then(function (res) {
@@ -78,12 +78,12 @@ angular.module('module_app.controllers.loader', [])
 
 
         //pour bien separer les durrée de requette
-        me._recursiveIndex = function(pile, conf){
+        me._recursiveIndex = function(pile){
 
             var viewItem = pile.pop();
 
             //start ProfJs
-            if(conf.profLog===true) sProf.startLog(viewItem,Date.now());
+            if(sContext.logProfiling===true) sProf.startLog(viewItem,Date.now());
 
 
             //creation de l'index
@@ -92,7 +92,7 @@ angular.module('module_app.controllers.loader', [])
             }).then(function (res) {
 
                 //stop ProfJs
-                if(conf.profLog===true) sProf.stopLog(viewItem,Date.now(), res.total_rows, sPouch.firstTime);
+                if(sContext.logProfiling===true) sProf.stopLog(viewItem,Date.now(), res.total_rows, sPouch.firstTime);
 
                 me.actual++;
 
@@ -137,7 +137,7 @@ angular.module('module_app.controllers.loader', [])
         //init
         if(me.sContext.firstTime == true){
             me.step="Mise à jour des indexes...";
-            me.buildIndex({profLog:false}); //run up environement
+            me.buildIndex(); //run up environement
         }else{
             me.upEnv();
         }

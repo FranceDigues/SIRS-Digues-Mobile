@@ -18,20 +18,21 @@ angular.module('module_app.controllers.menus.init', [])
         //me.oUrlCdb = new oUrlCouchDb();
 
         //TODO debug only
-        me.confDbDesc = new oUrlCouchDb("geouser","geopw","5.196.17.92",5984,"sirs_conf");
-        me.activeDbDesc = new oUrlCouchDb();
+        me.confDbDesc = new oUrlCouchDb({id:"geouser",psw:"geopw",adress:"5.196.17.92",port:5984,db:"sirs_conf"});
+        me.activeDbDesc = new oUrlCouchDb({});
 
 
         /**
          * @param {oUrlCouchDb} oUrlCdb
          */
         me.syncro= function(){
-                sPouch.syncConfDb(me.confDbDesc );
+                sPouch.syncConfDb(me.confDbDesc, sPouch.getDbs );
         };
 
         me.replicationInitiale = function(){
-            var tmp = new oUrlCouchDb() ;
-                sPouch.dbInit( new oUrlCouchDb(me.activeDbDesc.id,me.activeDbDesc.psw, me.activeDbDesc.adress, me.activeDbDesc.port,me.activeDbDesc.db) ); //FIXME persistance de l'objet au travert du select
+            var tmp = new oUrlCouchDb(me.activeDbDesc) ;
+                //sPouch.dbInit( new oUrlCouchDb(me.activeDbDesc.id,me.activeDbDesc.psw, me.activeDbDesc.adress, me.activeDbDesc.port,me.activeDbDesc.db) ); //FIXME persistance de l'objet au travert du select
+                sPouch.dbInit(tmp); //FIXME persistance de l'objet au travert du select
         };
 
         me.clearDb= function(oUrlCdb){
