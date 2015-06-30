@@ -3,6 +3,7 @@
     <header class="bar bar-header bar-stable">
         <button class="col-25 button button-icon button-clear ion-arrow-left-a"
                 ng-click="c.sContext.backBabordMenus()"></button>
+        <a class="btn-floating btn-large waves-effect waves-light red"><i class="mdi-content-add" ng-click="c.viewAddSourceForm = true"></i></a>
     </header>
 
 
@@ -12,23 +13,25 @@
             <ion-list>
 
                 <!--fixme why ng change not working here???-->
-                <ion-radio ng-click="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sMapLayer.list">
-                    Layers {{layer.name}}
-                </ion-radio>
+
+                <!--<ion-radio class="waves-effect  waves-teal btn-flat" ng-click="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sMapLayer.list">-->
+                       <!--Layers {{layer.name}}-->
+                <!--</ion-radio>-->
+
+
+                <ion-item class="waves-effect waves-teal btn-flat" width="100%"  ng-click="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sMapLayer.list">  <i ng-show="layer.active"   class="material-icons  right" >offline_pin</i>Layers {{layer.name}}</ion-item>
+
 
 
             </ion-list>
 
 
-            <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
-                    ng-click="c.goToGeoCache()">
-                Gestion du Cache
-            </button>
+            <a class="waves-effect waves-light btn-large"  ng-click="c.goToGeoCache()"><i class="mdi-content-cloud right"> </i>Gestion du Cache</a>
 
-            <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
-                    ng-click="c.goToAddSource()">
-                Ajouter un fond de carte
-            </button>
+            <!--<button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"-->
+                    <!--ng-click="c.goToAddSource()">-->
+                <!--Ajouter un fond de carte-->
+            <!--</button>-->
         </div>
 
 
@@ -65,11 +68,10 @@
                 </label>
             </div>
 
-
-            <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
-                    ng-click="c.addSource(c.newSource)">
-                AJOUTER LA SOURCE
+            <button class="btn waves-effect waves-light" type="submit" name="action" ng-click="c.addSource(c.newSource)">AJOUTER LA SOURCE
+                <i class="mdi-content-send" ></i>
             </button>
+
 
         </div>
 

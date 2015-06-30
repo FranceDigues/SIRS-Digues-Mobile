@@ -11,6 +11,7 @@ angular.module('module_app.controllers.menus.tribord.closableDesordre', [])
 
         var me = this;
         me.sContext = sContext;
+        me.desordreSelected=null;
 
 
         me.drawOnMap = function(){

@@ -11,7 +11,7 @@ angular.module('module_rde.data.services.context', [])
 
         var rscp = $rootScope.$new();
 
-        me.tribordView = {active: "addDesordre"  , last:[]};
+        me.tribordView = {active: "desordreMgmt"  , last:[]};
         me.babordView = {active: "menu" , last:[]};
         me.logProfiling=false;
 
@@ -101,5 +101,12 @@ angular.module('module_rde.data.services.context', [])
 
         //TODO gestion neastedViewContext
         //
+
+
+
+        //desordre
+        me.editedDesordre=[];
+        me.unCloseDesordre=[];
+
 
     })
