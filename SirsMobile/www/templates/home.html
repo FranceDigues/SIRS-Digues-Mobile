@@ -40,7 +40,7 @@
             <ion-nav-view name="home-panel" class="inline container"></ion-nav-view>
 
             <div name="tribord" class="inline side tribord">
-                <img src="./img/slider2.png" id="tribordHandle" ng-click="c.toggleRightMenu()">
+                <img src="./img/slider2.png" id="tribordHandle"  ng-click="c.toggleRightMenu()">
                 <!--on-swipe="c.switchLock()"-->
             </div>
         </div>
@@ -70,7 +70,7 @@
 
 </ion-side-menus>
 
-<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-    <a class="btn-floating btn-large waves-effect waves-light red right" ><i class="mdi-content-add" ng-click="c.toggleRightMenu()"></i></a>
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;" ng-show="c.addButton">
+    <a class="btn-floating btn-large waves-effect waves-light red right" ><i class="mdi-content-add" ng-click="c.toggleRightMenu();   me.addButton = !me.addButton;"></i></a>
 </div>
 <!--fixme bouton ne bouge pas avec la map-->

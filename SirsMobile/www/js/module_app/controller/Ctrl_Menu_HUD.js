@@ -8,6 +8,7 @@ angular.module('module_app.controllers.menus.hud', [])
         var me = this;
         me.swipeProxy= false;
         me.sContext=sContext;
+        me.addButton = true;
 
 
         me.logout = function () {
@@ -53,6 +54,7 @@ angular.module('module_app.controllers.menus.hud', [])
         me.toggleRightMenu = function () {
             $ionicSideMenuDelegate.toggleRight();
             $state.go("home.tAddDesordre");
+            me.addButton = !me.addButton;
         }
 
 
