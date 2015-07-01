@@ -12,9 +12,16 @@
 
     <!--action-->
     <div>
-        <button class=" button button-icon button-clear" ng-click="c.drawOnMap()">TRACER SUR LA CARTE</button>
-        <button class=" button button-icon button-clear" ng-click="c.runWithGps()">CONTINUER AVEC LA POSITION ACTUELLE
-        </button>
+        <a class="waves-effect waves-light btn-large"
+           ng-click="c.drawOnMap()"
+           style="  display: inline-block; width: 49%;">
+            TRACER
+        </a>
+        <a class="waves-effect waves-light btn-large"
+           ng-click="c.runWithGps()"
+           style="  display: inline-block; width: 49%;">
+            CONTINUER
+        </a>
     </div>
 
 </div>
