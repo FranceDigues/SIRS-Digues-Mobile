@@ -42,4 +42,15 @@ angular.module('module_app.controllers.menus.init', [])
         me.note= function(note){
             $state.go('note');
         }
+
+
+        $(document).ready(function(){
+            $('.collapsible').collapsible({
+                accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+            });
+        });
+        $(document).ready(function() {
+            $('select').material_select();
+        });
+
     })

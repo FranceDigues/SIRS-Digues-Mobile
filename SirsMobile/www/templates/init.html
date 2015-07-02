@@ -2,62 +2,95 @@
 
     <ion-content>
         <div class="row">
-            <div class="col col-50 col-offset-25 signin-form">
-                <h1 class="signin-title">Première Connection : Ajout du serveur</h1>
 
-                <div class="list">
-
-                    <label class="item item-input signin-item">
-                        <input type="text" placeholder="adresse" ng-model="c.confDbDesc.adress">
-                    </label>
-                    <label class="item item-input signin-item">
-                        <input type="number" placeholder="port" ng-model="c.confDbDesc.port">
-                    </label>
-                    <label class="item item-input signin-item">
-                        <input type="text" placeholder="nom de la base (fixMe nom auto chargée?)"
-                               ng-model="c.confDbDesc.db">
-                    </label>
+        <div class="col col-50 col-offset-25">
 
 
-                    <h1 class="signin-title">Administateur de la base ( FIXME db design ...)</h1>
-                    <label class="item item-input signin-item">
-                        <input type="text" placeholder="Nom" ng-model="c.confDbDesc.id">
-                    </label>
+        <ul class="collapsible popout" data-collapsible="accordion">
+            <li class="init-accordion-li">
+                <div class="collapsible-header active"><i class="material-icons">settings</i>Paramétrage</div>
+                <div class="collapsible-body">
+                    <h1 class="signin-title">Première Connection : Ajout du serveur</h1>
 
-                    <label class="item item-input signin-item">
-                        <input type="password" placeholder="Mot de passe" ng-model="c.confDbDesc.psw">
-                    </label>
-
-                    {{c.confDbDesc}}
-                    <!--{{c.sPouch.dbs.list}}-->
-                    {{c.activeDbDesc}}
-                    <!--<h1 class="signin-title">Bases de données connus</h1>-->
-                    <!--<select > TODO </select>-->
-                </div>
-
-
-                <div class="signin-valid-button">
-                    <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
-                            ng-click="c.syncro()">
-                        SYNCRO
-                    </button>
                     <div class="list">
 
-                        <select ng-model="c.activeDbDesc"
-                                ng-options="item as item.db for item in c.sPouch.dbs">
-                        </select>
+                        <label class="item item-input signin-item">
+                            <input type="text" placeholder="adresse" ng-model="c.confDbDesc.adress">
+                        </label>
+                        <label class="item item-input signin-item">
+                            <input type="number" placeholder="port" ng-model="c.confDbDesc.port">
+                        </label>
+                        <label class="item item-input signin-item">
+                            <input type="text" placeholder="nom de la base (fixMe nom auto chargée?)"
+                                   ng-model="c.confDbDesc.db">
+                        </label>
 
-                        <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
-                                ng-click="c.clearDb(c.activeDbDesc)">
-                            CLEAR DB
-                        </button>
-                        <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
-                                ng-click="c.replicationInitiale()">
-                            Valide
-                        </button>
+
+                        <h1 class="signin-title">Administateur de la base ( FIXME db design ...)</h1>
+                        <label class="item item-input signin-item">
+                            <input type="text" placeholder="Nom" ng-model="c.confDbDesc.id">
+                        </label>
+
+                        <label class="item item-input signin-item">
+                            <input type="password" placeholder="Mot de passe" ng-model="c.confDbDesc.psw">
+                        </label>
+
+
+                        {{c.confDbDesc}}
+                        <!--{{c.sPouch.dbs.list}}-->
+                        {{c.activeDbDesc}}
+                        <!--<h1 class="signin-title">Bases de données connus</h1>-->
+                        <!--<select > TODO </select>-->
+
+
+                        <div class="div-button">
+                            <button class="waves-effect waves-light btn signin-valid-button"
+                                    ng-click="c.syncro()">
+                                SYNCRO
+                            </button>
+                        </div>
                     </div>
 
                 </div>
+            </li>
+
+            <li class="init-accordion-li">
+                <div class="collapsible-header"><i class="material-icons">launch</i>Connexion à la base</div>
+                <div class="collapsible-body">
+                    <div class="signin-valid-button">
+
+                        <div>
+
+                            {{c.sPouch.dbs}}
+                            <div class="input-field">
+                                <select ng-model="c.activeDbDesc"
+                                        ng-options="item as item.db for item in c.sPouch.dbs">
+                                </select>
+                            </div>
+
+                            <div class="div-button">
+                                <button class="waves-effect waves-light btn signin-valid-button"
+                                        ng-click="c.clearDb(c.activeDbDesc)">
+                                    CLEAR DB
+                                </button>
+
+                                <button class="waves-effect waves-light btn signin-valid-button"
+                                        ng-click="c.replicationInitiale()">
+                                    VALIDER
+                                </button>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </li>
+        </ul>
+        </div>
+
+
 
 
                 <!--loader-->
