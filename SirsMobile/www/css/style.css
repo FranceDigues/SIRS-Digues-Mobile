@@ -49,13 +49,10 @@
     margin-top: 10px;
 }
 .div-button .signin-valid-button{
-    color: #fff;
-    background-color: #00BCD0;
+    color: #26c6da;
+    background-color: #fff;
     margin-left: 10px;
-}
-.div-button .signin-valid-button:hover{
-    color: #fff;
-    background-color: #26c6da;
+    font-size: 15px;
 }
 
 /* Loading page */
@@ -85,11 +82,13 @@
 }
 
 .signin-form .signin-item {
-    border: 2px solid #AEAEAE;
-    border-top: none;
-    border-left: none;
-    border-right: none;
     margin-top: 5px;
+    border:none;
+}
+
+.signin-form input[type=text]:focus:not([readonly]), .signin-form input[type=password]:focus:not([readonly]), .signin-form input[type=email]:focus:not([readonly]), .signin-form input[type=url]:focus:not([readonly]), .signin-form input[type=time]:focus:not([readonly]), .signin-form input[type=date]:focus:not([readonly]), .signin-form input[type=datetime-local]:focus:not([readonly]), .signin-form input[type=tel]:focus:not([readonly]), .signin-form input[type=number]:focus:not([readonly]), .signin-form input[type=search]:focus:not([readonly]), .signin-form textarea.materialize-textarea:focus:not([readonly]){
+    border-bottom: 1px solid #ffeb3b;
+    box-shadow: 0 1px 0 0 #ffeb3b;
 }
 
 .signin-title {
