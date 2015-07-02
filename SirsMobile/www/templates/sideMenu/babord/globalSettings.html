@@ -16,6 +16,10 @@
            Haute précision
         </ion-toggle>
 
+        <ion-toggle ng-value="c.sContext.editionMode" ng-click="c.sContext.switchEditionMode()">
+            Mode édition
+        </ion-toggle>
+
         <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
                 ng-click="c.goToInit()">
             Gestion de base

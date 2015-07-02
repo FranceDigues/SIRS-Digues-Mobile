@@ -15,6 +15,8 @@ angular.module('module_rde.data.services.context', [])
         me.babordView = {active: "menu" , last:[]};
         me.logProfiling=false;
 
+        me.editionMode = false;
+
 
         this.param = {action: null, mskUUID: null}
         this.auth = {user: null}
@@ -31,6 +33,11 @@ angular.module('module_rde.data.services.context', [])
                     $log.debug(err);
                 });
         }
+
+        me.switchEditionMode = function() {
+            me.editionMode = !me.editionMode;
+            $rootScope.$broadcast("editionModeChanged", me.editionMode);
+        };
 
 
         ////mise a jour de l'utilisateur via un event.'

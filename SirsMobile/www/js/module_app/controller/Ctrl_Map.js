@@ -79,14 +79,10 @@ angular.module('module_app.controllers.map', [])
         $rootScope.$on("sAppLayer_LayerList_Update",function(){
             $log.debug("testLayer return");
             $log.debug(me.sAppLayer.list);
-            $timeout(addDisorderFeatures); // wait for openlayers directive update (next digest)
+            $timeout(addFeaturesToAppLayers); // wait for openlayers directive update (next digest)
         });
 
-        $scope.$on('$destroy', function() {
-            if (me.currentMap instanceof ol.Map) {
-
-            }
-        });
+        $scope.$on('editionModeChanged', updateStyleOfAppLayers);
 
 
         //get One AppLayerfor debug
@@ -94,14 +90,17 @@ angular.module('module_app.controllers.map', [])
 
 
         /**
-         * Creates and adds the disorder features to application layers.
+         * Draws the features of application layers.
          */
-        function addDisorderFeatures() {
+        function addFeaturesToAppLayers() {
             olData.getMap("map").then(function(map) {
                 angular.forEach(me.sAppLayer.list, function(layer, layerIndex) {
 
                     // Retrieve the map layer from its name.
                     var olLayer = getVectorLayerByName(map, layer.name);
+
+                    // Remove old features.
+                    olLayer.getSource().clear(true);
 
                     // Create features from documents and display them.
                     var features = [];
@@ -111,19 +110,52 @@ angular.module('module_app.controllers.map', [])
                             feature.getGeometry().transform('EPSG:2154', 'EPSG:3857');
                             feature.set('id', item.doc._id);
                             feature.set('rev', item.doc._rev);
-                            feature.setStyle(sStyleGenerator(layerIndex));
+                            setFeatureStyle(feature, layerIndex);
                             features.push(feature);
                         }
                     });
-                    $log.debug('Add ' + features.length + ' feature(s) to the layer named "' + layer.name + '"');
                     olLayer.getSource().addFeatures(features);
+
+                    // Log.
+                    $log.debug(features.length + ' feature(s) added to the layer named "' + layer.name + '"');
                 });
             });
         }
 
         /**
-         * Retrieves the ol.layer.Vector with the specified name from an ol.Map
-         * instance.
+         * Updates the style of application layers (feature per feature).
+         */
+        function updateStyleOfAppLayers() {
+            olData.getMap("map").then(function(map) {
+                angular.forEach(me.sAppLayer.list, function(layer, layerIndex) {
+
+                    // Retrieve the map layer from its name.
+                    var olLayer = getVectorLayerByName(map, layer.name);
+
+                    // Create features from documents and display them.
+                    olLayer.getSource().getFeatures().forEach(function(feature) {
+                        setFeatureStyle(feature, layerIndex);
+                    });
+                });
+            });
+        }
+
+        /**
+         * Sets/updates the style of the specified feature.
+         *
+         * @param feature {ol.Feature} the feature to style
+         * @param layerIndex {Integer} the vector layer index
+         */
+        function setFeatureStyle(feature, layerIndex) {
+            if (sContext.editionMode) {
+                feature.setStyle(sStyleFactory.create(feature.get('modified') ? 'green' : 'grey'));
+            } else {
+                feature.setStyle(sStyleFactory.createByIndex(layerIndex));
+            }
+        }
+
+        /**
+         * Retrieves the ol.layer.Vector with the specified name from an ol.Map instance.
          *
          * @param {ol.Map} map the map instance.
          * @param {String} name the layer name.
@@ -138,6 +170,6 @@ angular.module('module_app.controllers.map', [])
                     return olLayer;
                 }
             }
-            throw new Error('No layer named "' + layerName + '" was found on map');
+            throw new Error('No layer named "' + name + '" was found on map');
         }
     });
