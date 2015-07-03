@@ -121,8 +121,12 @@ app.run(function ($ionicPlatform) {
             .state('geoCache', {
                 url: '/geoCache',
                 controller: 'cGeoCache as c',
-                //controllerAs:'c',
-                templateUrl: 'module_rde/geoCache/geoCache.html'
+                templsateUrl: 'module_rde/geoCache/geoCache.html'
+            })
+            .state('newDesordre', {
+                url: '/newDesordre',
+                controller: 'cNewDesordre as c',
+                templateUrl: 'templates/formApp/newDesordre.html'
             });
 
 
