@@ -38,7 +38,7 @@ angular.module('module_rde.data.services.dbManager', [])
             //les evenements sont nome comme la base
 
         me.switchSync = function () {
-            if (me.syncActive === true) {
+            if (me.syncActive === false) {
                 $log.debug("desactivation Syncro");
                 $log.debug(me.syncActive);
 

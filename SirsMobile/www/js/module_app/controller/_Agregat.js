@@ -15,6 +15,8 @@ angular.module('module_app.controllers',
 
         'module_app.controllers.menus.hud',
 
+        'module_app.controllers.from.newDesordre',
+
 
 
         'module_app.controllers.menus.babord.appLayerMgmt',
