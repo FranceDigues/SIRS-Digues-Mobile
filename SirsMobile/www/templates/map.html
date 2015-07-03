@@ -1,5 +1,5 @@
 <div class="map-div">
-    <openlayers id="map"  height="100%" width="100%" custom-layers="true" ol-center="c.centreCarte" ol-controls="c.controls" ol-defaults="c.defaults" >
+    <openlayers id="map"  height="100%" width="100%" custom-layers="true" ol-center="c.sLoc.geoloc" ol-controls="c.controls" ol-defaults="c.defaults" >
 
         <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.sMapLayer.list|filter:{active:true}"></ol-layer>
 

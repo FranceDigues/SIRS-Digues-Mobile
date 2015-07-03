@@ -7,7 +7,7 @@
 
 angular.module('module_app.controllers.menus.tribord.editableLayer', [])
 
-    .controller('cEditableLayer', function cEditableLayer ($scope, $log, sContext,sAppLayer) {
+    .controller('cEditableLayer', function cEditableLayer ($scope, $log, sContext,sAppLayer, $state) {
 
         var me = this;
         me.sContext = sContext;
@@ -19,7 +19,7 @@ angular.module('module_app.controllers.menus.tribord.editableLayer', [])
 
         }
         me.runWithGps =function(){
-
+            $state.go('newDesordre', {layer:me.layerforAddDesordre});
         }
 
 
