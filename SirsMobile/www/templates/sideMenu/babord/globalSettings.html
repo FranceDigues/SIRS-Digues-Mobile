@@ -6,8 +6,14 @@
 
     <ion-content class="has-header">
 
-        <ion-toggle ng-model="c.sPouch.syncActive" ng-click="c.sPouch.switchSync()">
+        <ion-toggle ng-model="c.sPouch.syncActive" ng-change="c.sPouch.switchSync()">
             Syncronisation automatique de la base
+        </ion-toggle>
+        <ion-toggle ng-model="c.sLoc.enable" ng-change="c.sLoc.toggleEnable()">
+            Positionement GPS
+        </ion-toggle>
+        <ion-toggle disabled="{{c.sLoc.enable}}" ng-model="c.sLoc.highAccuracy">
+            Positionement GPS
         </ion-toggle>
 
         <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"

@@ -11,7 +11,7 @@ angular.module('module_app.controllers.map', [])
 /***************************************************************** --------- *****************************************************/
 
 //sMap ==> ?
-    .controller('cMap', function cMap ($scope, sMapLayer,sAppLayer, $log,  olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,sStyleGenerator) {
+    .controller('cMap', function cMap ($scope, sMapLayer,sAppLayer, $log,  olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,sStyleGenerator, sLoc) {
 
         var format = new ol.format.WKT();
 
@@ -20,15 +20,15 @@ angular.module('module_app.controllers.map', [])
         me.sMapLayer = sMapLayer;
         me.sAppLayer = sAppLayer;
 
+        me.sLoc = sLoc;
+
+
+
 
 //todo add to conf db
         angular.extend(me,
             {
-                centreCarte: {
-                    lat: 43.5,
-                    lon: 3.5,
-                    zoom: 8
-                },
+
                 defaults: {
                     events: {
                         //map: [ 'drawend' ]
