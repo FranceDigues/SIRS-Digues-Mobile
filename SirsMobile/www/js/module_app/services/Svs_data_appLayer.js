@@ -38,7 +38,9 @@ angular.module('module_app.data.services.applayer', [])
                 $log.debug("tree");
                 $log.debug(me.tree);
 
-                //$rootScope.$broadcast("sAppLayer_LayerList_Update");
+
+
+                $rootScope.$broadcast("sAppLayer_LayerList_Update");
             }).catch(function (err) {
                 // some error
             });
@@ -68,7 +70,7 @@ angular.module('module_app.data.services.applayer', [])
                 angular.forEach(res.rows, function(item){
 
 
-                    //stoque le nom du design
+                    //stock le nom du design
                     var design = item.doc._id.substring(8,  item.doc._id.length);
 
                     //pour chaque vue
@@ -77,11 +79,11 @@ angular.module('module_app.data.services.applayer', [])
                         var indexe = design+"/"+k;
 
                         v.map
-                        var Expr =/.*\@class.*\=\'(.*)\'\)\s\{.*/;
+                        var Expr =/.*\@class.*\=\'(.*)\'\)\s\{.*/; //found class name
 
 
                         if(Expr.test(v.map)){
-                            $log.debug(RegExp.$1);
+                            //$log.debug(RegExp.$1);
                             me.indexeTabObj[RegExp.$1]=indexe;
                         }
 
@@ -95,22 +97,23 @@ angular.module('module_app.data.services.applayer', [])
 
                 $log.debug(me.indexeTabObj);
 
-                sPouch.localDb.get('$sirs').then(function (res) {
+                sPouch.localDb.get('$sirs').then(function (res) { //fixme doublon, kill this query
 
-                    $log.debug("REAFECTATION");
-                    $log.debug(res);
+                    //$log.debug(res);
 
                     angular.forEach(res.moduleDescriptions, function(v,k) {
-                        $log.debug(v.layers);
-                        me.layersTreeIterator(v.layers, function (item) {
-                            var tmp = item.filterValue;
-                            //we affect into obj a property for found faster the global indexe associated.
-                            item["gIndex"] = me.indexeTabObj[tmp];
-                            //todo simple stack to filter layer
-                            me.asSimpleStack.push(item);
-
-                        })
+                        //$log.debug(v.layers);
+                        me.layersTreeIterator(v.layers);
                     });
+
+                    //fixme promesse promesse, mieux vaut un "tiens",  que deux "tu l'auras"...
+                    $log.error("fixme promesse promesse, mieux vaut un \"tiens\",  que deux \"tu l\'auras\"...")
+                    $timeout(function(){
+                        //$log.debug(res);
+                        res.revOnBuildIndex = res._rev;
+                        sPouch.localDb.put(res);
+                    },800*res.moduleDescriptions.length )
+
 
                 }).catch(function (error) {
 
@@ -130,35 +133,45 @@ angular.module('module_app.data.services.applayer', [])
 
 
 
-        me.layersTreeIterator = function(sirsDef, leafCallBack, NodeCallBack){
+        me.layersTreeIterator = function(sirsDef){
 
-
-
-            var recFunc = function(itemArray, glen){
+            var recFunc = function(itemArray){
 
                 angular.forEach(itemArray, function(item) {
                     if (item.hasOwnProperty("children")) {
                         recFunc(item.children);
-
                     }else{
-                        glen-1;
-                        if(leafCallBack != null) leafCallBack(item);
-                    };
+                            var tmp = item.filterValue;
+                            //we affect into obj a property for found faster the global indexe associated.
+                            item["gIndex"] = me.indexeTabObj[tmp];
+                            //todo simple stack to filter layer
+                            me.asSimpleStack.push(item);
+                        };
                 });
-                if(one) $log.debug(sirsDef);
             }
 
-
-            recFunc(sirsDef, sirsDef.length);
+            recFunc(sirsDef); //autorun
         }
 
-        me.testExistingHashMap = function(){
-            //todo
-        }
+        //me.testExistingHashMap = function(){
+        //    //todo
+        //    sPouch.localDb.get('$sirs').then(function (res) {
+        //
+        //        if(!res.hasOwnProperty("revOnBuildIndex") || res.revOnBuildIndex!=res._rev ){
+        //            me.updateHachMapclassIndex();
+        //        }
+        //
+        //
+        //    }).catch(function(res){
+        //
+        //    })
+        //}
 
 
         //init
+        //me.testExistingHashMap();
         me.updateHachMapclassIndex();
+
 
 
 })
