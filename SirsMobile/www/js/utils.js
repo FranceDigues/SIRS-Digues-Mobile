@@ -86,3 +86,26 @@ function toGeoJson(f) {
 function atoGeoJson(s) {
     return new ol.format.GeoJSON().writeFeatures(s.getFeatures());
 }
+
+//
+//me.layersTreeIterator = function(sirsDef, leafCallBack, NodeCallBack){
+//
+//
+//
+//    var recFunc = function(itemArray, glen){
+//
+//        angular.forEach(itemArray, function(item) {
+//            if (item.hasOwnProperty("children")) {
+//                recFunc(item.children);
+//                if(NodeCallBack != null) NodeCallBack(item);
+//            }else{
+//                glen-1;
+//                if(leafCallBack != null) leafCallBack(item);
+//            };
+//        });
+//        if(one) $log.debug(sirsDef);
+//    }
+//
+//
+//    recFunc(sirsDef, sirsDef.length);
+//}
