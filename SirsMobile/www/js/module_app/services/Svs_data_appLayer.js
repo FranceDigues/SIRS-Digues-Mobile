@@ -33,7 +33,13 @@ angular.module('module_app.data.services.applayer', [])
             sPouch.localDb.query('$sirs', {
                 include_docs : true
             }).then(function (res) {
-                me.tree=res.rows[0].doc.layers;
+                me.tree=res.moduleDescriptions;
+                angular.forEach(res.moduleDescriptions, function(v,k) {
+                    me.layersTreeIterator(v.layers, function (item) {
+                        //todo simple stack to filter layer
+                        me.asSimpleStack.push(item);
+                    });
+                });
 
                 $log.debug("tree");
                 $log.debug(me.tree);
@@ -103,17 +109,22 @@ angular.module('module_app.data.services.applayer', [])
 
                     angular.forEach(res.moduleDescriptions, function(v,k) {
                         //$log.debug(v.layers);
-                        me.layersTreeIterator(v.layers);
-                    });
+                        me.layersTreeIterator(v.layers, function (item) {
+                            var tmp = item.filterValue;
+                            //we affect into obj a property for found faster the global indexe associated.
+                            item["gIndex"] = me.indexeTabObj[tmp];
+                            //todo simple stack to filter layer
+                            me.asSimpleStack.push(item);
+                        });
 
-                    //fixme promesse promesse, mieux vaut un "tiens",  que deux "tu l'auras"...
-                    $log.error("fixme promesse promesse, mieux vaut un \"tiens\",  que deux \"tu l\'auras\"...")
-                    $timeout(function(){
-                        //$log.debug(res);
-                        res.revOnBuildIndex = res._rev;
-                        sPouch.localDb.put(res);
-                    },800*res.moduleDescriptions.length )
-
+                        //fixme promesse promesse, mieux vaut un "tiens",  que deux "tu l'auras"...
+                        $log.error("fixme promesse promesse, mieux vaut un \"tiens\",  que deux \"tu l\'auras\"...")
+                        $timeout(function () {
+                            //$log.debug(res);
+                            res.revOnBuildIndex = res._rev;
+                            sPouch.localDb.put(res);
+                        }, 800 * res.moduleDescriptions.length)
+                    })
 
                 }).catch(function (error) {
 
@@ -131,46 +142,65 @@ angular.module('module_app.data.services.applayer', [])
         }
 
 
+me.layersTreeIterator = function(sirsDef, leafCallBack, NodeCallBack){
 
 
-        me.layersTreeIterator = function(sirsDef){
 
-            var recFunc = function(itemArray){
+    var recFunc = function(itemArray){
 
-                angular.forEach(itemArray, function(item) {
-                    if (item.hasOwnProperty("children")) {
-                        recFunc(item.children);
-                    }else{
-                            var tmp = item.filterValue;
-                            //we affect into obj a property for found faster the global indexe associated.
-                            item["gIndex"] = me.indexeTabObj[tmp];
-                            //todo simple stack to filter layer
-                            me.asSimpleStack.push(item);
-                        };
-                });
-            }
+        angular.forEach(itemArray, function(item) {
+            if (item.hasOwnProperty("children")) {
+                recFunc(item.children);
+                if(NodeCallBack != null) NodeCallBack(item);
+            }else{
+                if(leafCallBack != null) leafCallBack(item);
+            };
+        });
+    }
 
-            recFunc(sirsDef); //autorun
-        }
 
-        //me.testExistingHashMap = function(){
-        //    //todo
-        //    sPouch.localDb.get('$sirs').then(function (res) {
+    recFunc(sirsDef); //autoup
+}
+
+        //me.layersTreeIterator = function(sirsDef){
         //
-        //        if(!res.hasOwnProperty("revOnBuildIndex") || res.revOnBuildIndex!=res._rev ){
-        //            me.updateHachMapclassIndex();
-        //        }
+        //    var recFunc = function(itemArray){
         //
+        //        angular.forEach(itemArray, function(item) {
+        //            if (item.hasOwnProperty("children")) {
+        //                recFunc(item.children);
+        //            }else{
+        //                    var tmp = item.filterValue;
+        //                    //we affect into obj a property for found faster the global indexe associated.
+        //                    item["gIndex"] = me.indexeTabObj[tmp];
+        //                    //todo simple stack to filter layer
+        //                    me.asSimpleStack.push(item);
+        //                };
+        //        });
+        //    }
         //
-        //    }).catch(function(res){
-        //
-        //    })
+        //    recFunc(sirsDef); //autorun
         //}
+
+        me.testExistingHashMap = function(){
+            //todo
+            sPouch.localDb.get('$sirs').then(function (res) {
+
+                if(!res.hasOwnProperty("revOnBuildIndex") || res.revOnBuildIndex!=res._rev ){
+                    me.updateHachMapclassIndex();
+                }
+
+
+            }).catch(function(res){
+
+            })
+        }
 
 
         //init
-        //me.testExistingHashMap();
-        me.updateHachMapclassIndex();
+        me.testExistingHashMap();
+        me.updateList();
+        //me.updateHachMapclassIndex();
 
 
 

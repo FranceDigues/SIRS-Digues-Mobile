@@ -5,9 +5,19 @@
                 ng-click="c.sContext.backBabordMenus()"></button>
     </header>
 
-
     <ion-content class="has-header">
 
+        <ion-list>
+            <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sAppLayer.tree">  <i    class="material-icons  right" >offline_pin</i>Layers {{layer.title}}</ion-item>
+        </ion-list>
+
+        <ion-list>
+            <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sAppLayer.asSimpleStack">  <i  class="material-icons  right" >offline_pin</i>Layers {{layer.name}}</ion-item>
+        </ion-list>
+
+
+        {{c.sAppLayer.tree}}
+        {{c.sAppLayer.asSimpleStack}}
     </ion-content>
 
 </div>
