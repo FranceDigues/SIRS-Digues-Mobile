@@ -5,17 +5,21 @@
 angular.module('module_app.data.services.applayer', [])
 .service('sAppLayer', function sMapLayer ($ionicPlatform,sPouch, $log, $rootScope,$timeout) {
         var me = this;
-        me.list=[];
-        me.tree=[];
-        me.visible = [];
+        me.list=[]; //todo kill
+        me.module=[];
+        me.categorie=[];
+        me.visible = []; //todo kill
+
+
+
 
         me.updateList = function(){
             $log.debug("testLayer");
 
-            me.list = [];
-            me.visible = [];
+            me.list = []; //todo kill
+            me.visible = [];  //todo kill
 
-            sPouch.localDb.query('TronconDigue/all', {
+            sPouch.localDb.query('TronconDigue/all', { //todo kill
                 include_docs : true
             }).then(function (res) {
                 me.list.push({name:"TronconDigue/all",data:res.rows});
@@ -30,26 +34,26 @@ angular.module('module_app.data.services.applayer', [])
 
 
 
-            sPouch.localDb.query('$sirs', {
-                include_docs : true
-            }).then(function (res) {
-                me.tree=res.moduleDescriptions;
-                angular.forEach(res.moduleDescriptions, function(v,k) {
-                    me.layersTreeIterator(v.layers, function (item) {
-                        //todo simple stack to filter layer
-                        me.asSimpleStack.push(item);
-                    });
-                });
-
-                $log.debug("tree");
-                $log.debug(me.tree);
-
-
-
-                $rootScope.$broadcast("sAppLayer_LayerList_Update");
-            }).catch(function (err) {
-                // some error
-            });
+            //sPouch.localDb.query('$sirs', {
+            //    include_docs : true
+            //}).then(function (res) {
+            //    me.tree=res.moduleDescriptions;
+            //    angular.forEach(res.moduleDescriptions, function(v,k) {
+            //        me.layersTreeIterator(v.layers, function (item) {
+            //            //todo simple stack to filter layer
+            //            me.asSimpleStack.push(item);
+            //        });
+            //    });
+            //
+            //    $log.debug("tree");
+            //    $log.debug(me.tree);
+            //
+            //
+            //
+            //    $rootScope.$broadcast("sAppLayer_LayerList_Update");
+            //}).catch(function (err) {
+            //    // some error
+            //});
 
         }
 
@@ -109,13 +113,22 @@ angular.module('module_app.data.services.applayer', [])
 
                     angular.forEach(res.moduleDescriptions, function(v,k) {
                         //$log.debug(v.layers);
-                        me.layersTreeIterator(v.layers, function (item) {
+                        me.module.push(v.title);
+                        me.layersTreeIterator(v.layers,
+                            //leafFunction
+                            function (item, cat) {
+                                cat=cat!=null?cat:"";
                             var tmp = item.filterValue;
                             //we affect into obj a property for found faster the global indexe associated.
                             item["gIndex"] = me.indexeTabObj[tmp];
                             //todo simple stack to filter layer
-                            me.asSimpleStack.push(item);
-                        });
+                            me.asSimpleStack.push((new oAppLayer({title:item.title,module:v.title,categorie:cat,filterValue:item.filterValue,gIndex:item.gIndex,visible:false,editable:false, selectable:false,order:me.asSimpleStack.length+1,data:null})));
+                        },
+                            //node function
+                            function(item){
+                                me.categorie.push({title:item.title,mother: v.title,checked:false});
+                            }
+                        );
 
                         //fixme promesse promesse, mieux vaut un "tiens",  que deux "tu l'auras"...
                         $log.error("fixme promesse promesse, mieux vaut un \"tiens\",  que deux \"tu l\'auras\"...")
@@ -146,14 +159,16 @@ me.layersTreeIterator = function(sirsDef, leafCallBack, NodeCallBack){
 
 
 
-    var recFunc = function(itemArray){
+    var recFunc = function(itemArray, cat){
 
         angular.forEach(itemArray, function(item) {
             if (item.hasOwnProperty("children")) {
-                recFunc(item.children);
+                var t = null;
+                if(item.hasOwnProperty("children")) var t=item.title;
+                recFunc(item.children,t);
                 if(NodeCallBack != null) NodeCallBack(item);
             }else{
-                if(leafCallBack != null) leafCallBack(item);
+                if(leafCallBack != null) leafCallBack(item, cat);
             };
         });
     }
@@ -199,7 +214,7 @@ me.layersTreeIterator = function(sirsDef, leafCallBack, NodeCallBack){
 
         //init
         me.testExistingHashMap();
-        me.updateList();
+        //me.updateList();
         //me.updateHachMapclassIndex();
 
 

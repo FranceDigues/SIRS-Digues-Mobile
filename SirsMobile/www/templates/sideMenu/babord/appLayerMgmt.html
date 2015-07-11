@@ -3,20 +3,66 @@
     <header class="bar bar-header bar-stable">
         <button class="col-25 button button-icon button-clear ion-arrow-left-a"
                 ng-click="c.sContext.backBabordMenus()"></button>
+        <a class="btn-floating btn-large waves-effect waves-light yellow" style="left:50%;"><i class="material-icons  right"  ng-click="c.toggleFilter()">search</i></a>
     </header>
 
     <ion-content class="has-header">
 
-        <ion-list>
-            <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sAppLayer.tree">  <i    class="material-icons  right" >offline_pin</i>Layers {{layer.title}}</ion-item>
+<!--searchview-->
+        <div ng-show="c.search" >
+            <!--//Liste des module-->
+
+
+
+            <!--<label class="item item-input signin-item">-->
+                <!--<input type="text" placeholder="recherche" ng-model="c.key">-->
+            <!--</label>-->
+
+
+                <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.modList= c.modList===false?true:false">  MODULE :
+                </ion-item>
+
+            <ion-list ng-show="c.modList">
+                <!--class="waves-effect waves-teal btn-flat"-->
+                <ion-checkbox ng-repeat="mod in c.sAppLayer.module"  style="  display: block; width: 100%;" ng-click="c.toggleMod(mod)" >
+                        <!--<i ng-show="c.modAct===mod" class="material-icons  right" >done</i>-->
+                        Module : {{mod}}
+                </ion-checkbox>
+
+                    <!--</ion-item>-->
+                </ion-list>
+
+            <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.catList= c.catList===false?true:false">  CATEGORIE :
+            </ion-item>
+
+            <!--Liste des categorie-->
+            <ion-list ng-show='c.catList'>
+                <!--<ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.deepBranch(node)" ng-repeat="node in c.sAppLayer.categorie | filter:{mother:c.modAct}:true">-->
+                    <!--<i    class="material-icons  right" >done</i>-->
+                    <!--CAT {{node.title}}-->
+                <!--</ion-item>-->
+
+                <ion-checkbox ng-repeat="cat in c.sAppLayer.categorie | filter:{mother:c.modAct}:true"  style="  display: block; width: 100%;" ng-model="cat.checked" >
+                    Module : {{cat.title}}
+                </ion-checkbox>
+
+            </ion-list>
+            {{c.sAppLayer.categorie}}
+        </div>
+        <div style="background-color: #003399; width: 100%; height: 15px;">
+        </div>
+        <!--liste globale des layers-->
+        <ion-list ng-show="true">
+            <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.updateBaseLayer(layer.name)"
+                      ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{module:c.modAct}:true|filter:{c}">
+                <i  class="material-icons  right" >done</i>
+                Layers {{layer.title}}
+            </ion-item>
         </ion-list>
 
-        <ion-list>
-            <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sAppLayer.asSimpleStack">  <i  class="material-icons  right" >offline_pin</i>Layers {{layer.name}}</ion-item>
-        </ion-list>
 
-
-        {{c.sAppLayer.tree}}
+        {{c.modAct}}
+        {{c.sAppLayer.categorie}}
         {{c.sAppLayer.asSimpleStack}}
     </ion-content>
 

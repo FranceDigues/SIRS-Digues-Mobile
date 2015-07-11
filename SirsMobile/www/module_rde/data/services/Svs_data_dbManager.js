@@ -39,14 +39,14 @@ angular.module('module_rde.data.services.dbManager', [])
 
         me.switchSync = function () {
             if (me.syncActive === false) {
-                $log.debug("desactivation Syncro");
-                $log.debug(me.syncActive);
+                //$log.debug("desactivation Syncro");
+                //$log.debug(me.syncActive);
 
                 me._unSync();
             }
             else {
-                $log.debug("activation Syncro");
-                $log.debug(me.syncActive);
+                //$log.debug("activation Syncro");
+                //$log.debug(me.syncActive);
                 me._reSync(null,null);
 
             }
@@ -54,13 +54,12 @@ angular.module('module_rde.data.services.dbManager', [])
 
         //unsync all db
       me._unSync = function(){
-          $log.info("run sPouch _unsync")
-
-          $log.debug(me.syncInstanceColector);
+          //$log.info("run sPouch _unsync")
+          //$log.debug(me.syncInstanceColector);
 
 
           angular.forEach(  me.syncInstanceColector, function(value, key){
-              $log.debug(value);
+              //$log.debug(value);
               value.cancel();
           });
 
@@ -81,8 +80,8 @@ angular.module('module_rde.data.services.dbManager', [])
                 var dbDesc = new oUrlCouchDb(response.db);
                 //dbDesc.patch(response.db);
 
-                $log.debug("callBack :");
-                $log.debug(callbackActiveDb);
+                //$log.debug("callBack :");
+                //$log.debug(callbackActiveDb);
 
                 me.syncLocalDb(dbDesc,callbackActiveDb); //==> declenche le roadRunner
                 me.syncActive=true;
@@ -100,40 +99,40 @@ angular.module('module_rde.data.services.dbManager', [])
         me.initiateSync = function (oUrlCdb, UpToDateCallBack) {
             var onlyOnce = true;
 
-            $log.info("RUN_db_SYNC");
+            //$log.info("RUN_db_SYNC");
             me.syncInstanceColector[oUrlCdb.db] = PouchDB.sync("" + oUrlCdb.db, oUrlCdb.getUrlString(), {
                 live: true,
                 retry: true
             }).on('change', function (info) {
                 // handle change
-                $log.info(oUrlCdb.db +'_Sync_'+ '_change');
-                $log.debug(info);
+                //$log.info(oUrlCdb.db +'_Sync_'+ '_change');
+                //$log.debug(info);
                 if (info.direction == "pull") {
                     $rootScope.$broadcast(oUrlCdb.db + "_change"); //FIXME  ne pas declacher l'event lorsque la modification vien du local.
                 }
             }).on('paused', function () {
                 // replication paused (e.g. user went offline)
-                $log.info(oUrlCdb.db +'_Sync_'+ '_paused');
+                //$log.info(oUrlCdb.db +'_Sync_'+ '_paused');
             }).on('active', function () {
                 // replicate resumed (e.g. user went back online)
-                $log.info(oUrlCdb.db + '_Sync_'+'_active');
+                //$log.info(oUrlCdb.db + '_Sync_'+'_active');
             }).on('denied', function (info) {
                 // a document failed to replicate, e.g. due to permissions
-                $log.error(oUrlCdb.db +'_Sync_'+ '_denied');
-                $log.error(info);
+                //$log.error(oUrlCdb.db +'_Sync_'+ '_denied');
+                //$log.error(info);
             }).on('complete', function (info) {
                 // handle complete
-                $log.info(oUrlCdb.db +'_Sync_'+ '_complete');
-                $log.info(info);
+                //$log.info(oUrlCdb.db +'_Sync_'+ '_complete');
+                //$log.info(info);
             }).on('error', function (err) {
                 // handle error
-                $log.error(oUrlCdb.db +'_Sync_'+ '_error');
-                $log.error(err);
+                //$log.error(oUrlCdb.db +'_Sync_'+ '_error');
+                //$log.error(err);
             }).on('uptodate', function (err) {
-                $log.error(oUrlCdb.db +'_Sync_'+ '_uptodate');
-
-    $log.error("onlyOnce : "+onlyOnce)
-    $log.error("UpToDateCallBack : "+UpToDateCallBack)
+                //$log.error(oUrlCdb.db +'_Sync_'+ '_uptodate');
+    //
+    //$log.error("onlyOnce : "+onlyOnce)
+    //$log.error("UpToDateCallBack : "+UpToDateCallBack)
 
 
                 if(UpToDateCallBack != null && onlyOnce==true){ //only once time
@@ -148,7 +147,7 @@ angular.module('module_rde.data.services.dbManager', [])
 
     //FIXME nom de base peut il etre distinct (local - remote?)
         me.instantiateRep = function(RemoteDbDesc,LocalDbName,syncMe){
-            $log.info("RUN_db_REP");
+            //$log.info("RUN_db_REP");
             me.syncState.clonning=true;
 
             //var RemoteDb = new PouchDB(oUrlCdb.getUrlString());
@@ -157,21 +156,21 @@ angular.module('module_rde.data.services.dbManager', [])
                 live: false,
                 retry: true
             }).on('change', function (info) {
-                $log.info(RemoteDbDesc.db +'_Repliation_'+ '_paused');
+                //$log.info(RemoteDbDesc.db +'_Repliation_'+ '_paused');
             }).on('paused', function () {
                 // replication paused (e.g. user went offline)
-                $log.info(RemoteDbDesc.db +'_Repliation_'+ '_paused');
+                //$log.info(RemoteDbDesc.db +'_Repliation_'+ '_paused');
             }).on('active', function () {
                 // replicate resumed (e.g. user went back online)
-                $log.info(RemoteDbDesc.db +'_Repliation_'+ '_active');
+                //$log.info(RemoteDbDesc.db +'_Repliation_'+ '_active');
             }).on('denied', function (info) {
                 // a document failed to replicate, e.g. due to permissions
-                $log.error(RemoteDbDesc.db +'_Repliation_'+ '_denied');
-                $log.error(info);
+                //$log.error(RemoteDbDesc.db +'_Repliation_'+ '_denied');
+                //$log.error(info);
             }).on('complete', function (info) {
                 // handle complete
-                $log.info(RemoteDbDesc.db + '_Repliation_'+'_complete');
-                $log.info(info);
+                //$log.info(RemoteDbDesc.db + '_Repliation_'+'_complete');
+                //$log.info(info);
 
                 me.syncState.clonning = false
 
@@ -181,8 +180,8 @@ angular.module('module_rde.data.services.dbManager', [])
 
             }).on('error', function (err) {
                 // handle error
-                $log.error(RemoteDbDesc.db + '_Repliation_'+'_error');
-                $log.error(error);
+                //$log.error(RemoteDbDesc.db + '_Repliation_'+'_error');
+                //$log.error(error);
 
                 me.syncState.clonning = false
             });
@@ -197,16 +196,15 @@ angular.module('module_rde.data.services.dbManager', [])
 
 
         me._recursiveRegularGetState =  function(){
-           $log.debug("RUN__recursiveRegularGetState")
-           $log.debug("RUN__recursiveRegularGetState")
+           //$log.debug("RUN__recursiveRegularGetState")
 
 
             me.localDb.info().then( function(result){
-                $log.debug("RUN__info")
-                $log.debug( result)
-                $log.debug(me.syncState.clonning)
-                $log.debug(me.syncState.actual)
-                $log.debug(result.doc_count);
+                //$log.debug("RUN__info")
+                //$log.debug( result)
+                //$log.debug(me.syncState.clonning)
+                //$log.debug(me.syncState.actual)
+                //$log.debug(result.doc_count);
 
                 if ((result.doc_count / me.syncState.ratio) != NaN ){
                     me.syncState.actual = (result.doc_count / me.syncState.ratio).toFixed(2);
@@ -230,14 +228,14 @@ angular.module('module_rde.data.services.dbManager', [])
             //me.localDb = new pouchDB(oUrlCdb.db, {adapter : 'websql'});
             me.localDb = new pouchDB(oUrlCdb.db);
             me.initiateSync(oUrlCdb, syncCallback);
-            $log.debug("instance de base");
-            $log.debug(me.syncInstanceColector);
+            //$log.debug("instance de base");
+            //$log.debug(me.syncInstanceColector);
 
 
         };
 
         me.roadRunner = function(){
-            $log.debug('GOTO SIGN IN')
+            //$log.debug('GOTO SIGN IN')
             $state.go('signin')
         };
 
@@ -267,10 +265,10 @@ angular.module('module_rde.data.services.dbManager', [])
 
         me.getDbs = function(){
 
-            $log.debug("RUN_GetDbs");
+            //$log.debug("RUN_GetDbs");
 
             me.confDb.get('dbsList').then(function (res) {
-                $log.debug(res);
+                //$log.debug(res);
                 me.dbs = res.dbs;
             }).catch(function (err) {
                 //$log.debug(err);
@@ -282,12 +280,12 @@ angular.module('module_rde.data.services.dbManager', [])
 
         me.dbInit = function(oUrlCdb){
 
-            $log.error(oUrlCdb);
+            //$log.error(oUrlCdb);
 
             $http.get(oUrlCdb.getUrlString()).
                 success(function(data, status, headers, config) {
-                    $log.debug("gettotal")
-                    $log.debug(data);
+                    //$log.debug("gettotal")
+                    //$log.debug(data);
                     me.syncState.total = data.doc_count;
                     me.syncState.ratio = data.doc_count / 100;
                 }).
@@ -324,12 +322,12 @@ angular.module('module_rde.data.services.dbManager', [])
         };
 
         me.destroyDb = function(oUrlCdb){
-            $log.debug("RUN__clear")
+            //$log.debug("RUN__clear")
 
             //me.localDb = new pouchDB(oUrlCdb.db, {adapter : 'websql'});
             me.localDb = new pouchDB(oUrlCdb.db);
             me.localDb.destroy().then(function () {
-                $log.debug("db_clear")
+                //$log.debug("db_clear")
 
 
 
