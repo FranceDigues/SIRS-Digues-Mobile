@@ -14,9 +14,9 @@
 
 
 
-            <!--<label class="item item-input signin-item">-->
-                <!--<input type="text" placeholder="recherche" ng-model="c.key">-->
-            <!--</label>-->
+            <label class="item item-input signin-item">
+                <input type="text" placeholder="recherche" ng-model="c.key">
+            </label>
 
 
                 <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.modList= c.modList===false?true:false">  MODULE :
@@ -24,7 +24,7 @@
 
             <ion-list ng-show="c.modList">
                 <!--class="waves-effect waves-teal btn-flat"-->
-                <ion-checkbox ng-repeat="mod in c.sAppLayer.module"  style="  display: block; width: 100%;" ng-click="c.toggleMod(mod)" >
+                <ion-checkbox class="waves-effect waves-teal" ng-repeat="mod in c.sAppLayer.module"  style="  display: block; width: 100%;" ng-click="c.toggleMod(mod)" >
                         <!--<i ng-show="c.modAct===mod" class="material-icons  right" >done</i>-->
                         Module : {{mod}}
                 </ion-checkbox>
@@ -42,7 +42,7 @@
                     <!--CAT {{node.title}}-->
                 <!--</ion-item>-->
 
-                <ion-checkbox ng-repeat="cat in c.sAppLayer.categorie | filter:{mother:c.modAct}:true"  style="  display: block; width: 100%;" ng-model="cat.checked" >
+                <ion-checkbox class="waves-effect waves-teal" ng-repeat="cat in c.sAppLayer.categorie | filter:{mother:c.modAct}:true"  style="  display: block; width: 100%;" ng-model="cat.checked" >
                     Module : {{cat.title}}
                 </ion-checkbox>
 
@@ -53,17 +53,23 @@
         </div>
         <!--liste globale des layers-->
         <ion-list ng-show="true">
-            <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.updateBaseLayer(layer.name)"
-                      ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{module:c.modAct}:true|filter:{c}">
+            <ion-item   style="  display: block; width: 100%;" ng-click="c.updateBaseLayer(layer.name)"
+                        ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:c.catFilter">
+                        <!--ng-repeat="layer in c.sAppLayer.asSimpleStack|catFilter:layer:c.sAppLayer.categorie">-->
+
+
+                      <!--ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{module:c.modAct}:true">-->
+
+                      <!--|filter:{module:c.modAct}:true|catFilter:layer:c.sAppLayer.categorie"-->
                 <i  class="material-icons  right" >done</i>
                 Layers {{layer.title}}
             </ion-item>
         </ion-list>
 
 
-        {{c.modAct}}
-        {{c.sAppLayer.categorie}}
-        {{c.sAppLayer.asSimpleStack}}
+        <!--{{c.modAct}}-->
+        <!--{{c.sAppLayer.categorie}}-->
+        <!--{{c.sAppLayer.asSimpleStack}}-->
     </ion-content>
 
 </div>

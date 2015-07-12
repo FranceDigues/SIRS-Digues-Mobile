@@ -37,37 +37,56 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
            me.search= me.search == false ? true : false;
         }
 
+//todo WORKING with list visible??
+        me.catFilter =
+            //function() {
+            //
+            //return
+                function(layer) {
+            $log.debug("filter");
+            $log.debug(layer);
+
+
+                angular.forEach(me.sAppLayer.categorie, function (ref) {
+
+                    $log.debug("loop");
+                    $log.debug(ref);
+
+                    if (ref.checked === true) {
+                        if (layer.categorie == ref.title) {
+                            $log.debug("inLoop")
+                            $log.debug(layer)
+                            $log.debug(ref)
+                            return layer
+                        }
+                    }
+                })
+            }
+        //}
+
+
 
 
     })
-    .filter('ordinal', function() {
+    .filter('catFilter', function() {
 
         // Create the return function
         // set the required parameter name to **number**
-        return function(number) {
+        return function(item, refList) {
 
-            // Ensure that the passed in data is a number
-            if(isNaN(number) || number < 1) {
+console.log("filter");
+            console.log(refList);
+            console.log(item)
 
-                // If the data is not a number or is less than one (thus not having a cardinal value) return it unmodified.
-                return number;
+            angular.forEach(refList, function (ref) {
 
-            } else {
-
-                // If the data we are applying the filter to is a number, perform the actions to check it's ordinal suffix and apply it.
-
-                var lastDigit = number % 10;
-
-                if(lastDigit === 1) {
-                    return number + 'st'
-                } else if(lastDigit === 2) {
-                    return number + 'nd'
-                } else if (lastDigit === 3) {
-                    return number + 'rd'
-                } else if (lastDigit > 3) {
-                    return number + 'th'
+                if(ref.checked===true){
+                    if (item.categorie === ref.title) {
+                        return item
+                    }
                 }
-
-            }
+            })
         }
+
+
     });
