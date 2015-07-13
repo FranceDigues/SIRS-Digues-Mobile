@@ -5,19 +5,21 @@
     "openlayers3": true
   },
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.0.0-rc.1"
+    "ionic": "driftyco/ionic-bower#1.0.1"
   },
   "dependencies": {
     "jquery": "~2.1.4",
-    "angularjs-slider": "~0.1.6",
-    "angular-pouchdb": "~2.0.8",
+    "angularjs-slider": "~0.1.21",
+    "angular-pouchdb": "~2.1.1",
     "angular-openlayers-directive": "~0.0.5",
     "ng-cordova": "~0.0.3",
-    "ngCordova": "~0.1.15-alpha",
+    "ngCordova": "~0.1.17-alpha",
     "angular-md5": "~0.1.7",
     "pouchdb-quick-search": "~1.0.2",
     "pouchdb-load": "~1.4.0",
     "proj4": "~2.3.6",
-    "materialize": "~0.97.0"
+    "materialize": "~0.97.0",
+    "pouchdb": "~3.6.0",
+    "lodash": "~3.10.0"
   }
 }
