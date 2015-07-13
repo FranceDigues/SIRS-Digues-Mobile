@@ -6,7 +6,7 @@
 
 angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
 
-    .controller('cAppLayerMgmt', function cAppLayerMgmt($scope, $state, $log, sContext, sAppLayer) {
+    .controller('cAppLayerMgmt', function cAppLayerMgmt($scope, $state, $log, sContext, sAppLayer, $timeout) {
         var me = this;
 
         me.sContext = sContext;
@@ -19,6 +19,23 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
 
         me.modList=false;
         me.catList=false;
+
+
+        me.noFilter=false;
+        me.shouldShowDelete=false;
+        me.shouldShowReorder=false;
+        me.listCanSwipe=true;
+
+        me.reorderItem = function(item, fromIndex, toIndex) {
+            //Move the item in the array
+            $log.debug(fromIndex);
+            $log.debug(toIndex);
+
+            me.sAppLayer.asSimpleStack.splice(fromIndex, 1);
+            me.sAppLayer.asSimpleStack.splice(toIndex, 0, item);
+
+        };
+
 
         me.displayModule=function(key){
             me.modAct=""+key;
@@ -38,31 +55,43 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
         }
 
 //todo WORKING with list visible??
-        me.catFilter =
-            //function() {
-            //
-            //return
-                function(layer) {
-            $log.debug("filter");
-            $log.debug(layer);
-
-
-                angular.forEach(me.sAppLayer.categorie, function (ref) {
-
-                    $log.debug("loop");
-                    $log.debug(ref);
-
-                    if (ref.checked === true) {
-                        if (layer.categorie == ref.title) {
-                            $log.debug("inLoop")
-                            $log.debug(layer)
-                            $log.debug(ref)
-                            return layer
-                        }
-                    }
-                })
-            }
+//        me.catFilter =
+//            //function() {
+//            //
+//            //return
+//                function(layer) {
+//                    var a =0;
+//                    if(layer) {
+//                        $log.debug("filter");
+//                        $log.debug(layer);
+//
+//
+//                        angular.forEach(me.sAppLayer.categorie, function (ref) {
+//
+//                            if (ref.checked === true) {
+//                                if (layer.categorie == ref.title) {
+//                                    a++;
+//                                    $log.debug("inLoop")
+//                                    $log.debug(layer)
+//                                    $log.debug(a)
+//                                    return layer
+//                                }
+//                            }
+//                        })
+//                    }
+//            }
         //}
+
+
+
+        ////INIT :
+        ////UNIQUE METHOD
+        //$timeout(function(){
+        //    $log.debug("sparadra");
+        //    $log.debug(me.sAppLayer.asSimpleStack);
+        //    me.sAppLayer.asSimpleStack = _.uniq(me.sAppLayer.asSimpleStack, "title");  // fixme stop add layer  for all of his views... (3 times avg..)
+        //    $log.debug(me.sAppLayer.asSimpleStack);
+        //},1000);
 
 
 
@@ -72,20 +101,34 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
 
         // Create the return function
         // set the required parameter name to **number**
-        return function(item, refList) {
+        return function(layersArray,refList ) {
 
-console.log("filter");
-            console.log(refList);
-            console.log(item)
+            //var Filtered = [];
+            ////todo think to mapfor reflist
+            //angular.forEach(layersArray,function(layer){
+            //        angular.forEach(refList, function (ref) {
+            //            if (ref.checked === true) {
+            //                if (layer.categorie == ref.title) {
+            //                    Filtered.push(layer);
+            //                }
+            //            }
+            //        })
+            //});
+            //return Filtered
 
-            angular.forEach(refList, function (ref) {
-
-                if(ref.checked===true){
-                    if (item.categorie === ref.title) {
-                        return item
+            return layersArray.filter(function(layer){
+                var _bool = false;
+                for(var i=0;i < refList.length;i++){
+                    if (refList[i].checked === true) {
+                        if (layer.categorie == refList[i].title) {
+                            _bool =  true;
+                            break;
+                        }
                     }
-                }
-            })
+                };
+                return _bool;
+            });
+
         }
 
 
