@@ -5,7 +5,7 @@
 
 
 //sample Param :
-//{title:"",module="",categorie="",filterValue:"",gIndex:"",visible:false,editable:false, selectable:false,order:null,data:null}
+//{title:"",module="",categorie="",filterValue:"",gIndex:"",propVisible:false,visible:false,editable:false, selectable:false,order:null,data:null}
 function oAppLayer(param){
     this.title = param.title;
     this.module  = param.module;
@@ -14,6 +14,8 @@ function oAppLayer(param){
     this.gIndex =param.gIndex;
 
 
+    this.propVisible=param.propVisible != null ? param.propVisible : false;
+    this.realPosition=param.realPosition != null ? param.realPosition : true;
     this.visible= param.visible;
     this.editable= param.editable;
     this.selectable= param.selectable;
