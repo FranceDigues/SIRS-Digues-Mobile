@@ -8257,10 +8257,11 @@ ol.DRAGZOOM_ANIMATION_DURATION = 200;
  */
 ol.DRAG_BOX_HYSTERESIS_PIXELS = 8;
 
+
 /**
  * @define {number} Hysteresis pixels.
  */
-ol.DRAG_BOX_TOUCH_HYSTERESIS_PIXELS = 8;
+ol.LONG_CLICK_HYSTERESIS_PIXELS = 15;
 
 
 /**
@@ -54137,7 +54138,6 @@ ol.interaction.DragBox.handleDownEvent_ = function(mapBrowserEvent) {
   }
 
   var browserEvent = mapBrowserEvent.browserEvent;
-    // TODO
   if (browserEvent.isMouseActionButton() && this.condition_(mapBrowserEvent)) {
     this.startPixel_ = mapBrowserEvent.pixel;
     this.box_.setMap(mapBrowserEvent.map);
@@ -78918,7 +78918,7 @@ goog.fx.Dragger.prototype.enabled_ = true;
  * @type {boolean}
  * @private
  */
-goog.fx.Dragger.prototype.dragging_ = false;
+goog.fx.Dragger.prototype.handlingLongClick_ = false;
 
 
 /**
@@ -79112,12 +79112,12 @@ goog.fx.Dragger.prototype.startDrag = function(e) {
   // it does not make sense to check for the button if the user is already
   // dragging.
 
-  if (this.enabled_ && !this.dragging_ &&
+  if (this.enabled_ && !this.handlingLongClick_ &&
       (!isMouseDown || e.isMouseActionButton())) {
     this.maybeReinitTouchEvent_(e);
     if (this.hysteresisDistanceSquared_ == 0) {
       if (this.fireDragStart_(e)) {
-        this.dragging_ = true;
+        this.handlingLongClick_ = true;
         e.preventDefault();
       } else {
         // If the start drag is cancelled, don't setup for a drag.
@@ -79222,9 +79222,9 @@ goog.fx.Dragger.prototype.cleanUpAfterDragging_ = function() {
 goog.fx.Dragger.prototype.endDrag = function(e, opt_dragCanceled) {
   this.cleanUpAfterDragging_();
 
-  if (this.dragging_) {
+  if (this.handlingLongClick_) {
     this.maybeReinitTouchEvent_(e);
-    this.dragging_ = false;
+    this.handlingLongClick_ = false;
 
     var x = this.limitX(this.deltaX);
     var y = this.limitY(this.deltaY);
@@ -79285,13 +79285,13 @@ goog.fx.Dragger.prototype.handleMove_ = function(e) {
     this.screenX = e.screenX;
     this.screenY = e.screenY;
 
-    if (!this.dragging_) {
+    if (!this.handlingLongClick_) {
       var diffX = this.startX - this.clientX;
       var diffY = this.startY - this.clientY;
       var distance = diffX * diffX + diffY * diffY;
       if (distance > this.hysteresisDistanceSquared_) {
         if (this.fireDragStart_(e)) {
-          this.dragging_ = true;
+          this.handlingLongClick_ = true;
         } else {
           // DragListGroup disposes of the dragger if BEFOREDRAGSTART is
           // canceled.
@@ -79307,7 +79307,7 @@ goog.fx.Dragger.prototype.handleMove_ = function(e) {
     var x = pos.x;
     var y = pos.y;
 
-    if (this.dragging_) {
+    if (this.handlingLongClick_) {
 
       var rv = this.dispatchEvent(new goog.fx.DragEvent(
           goog.fx.Dragger.EventType.BEFOREDRAG, this, e.clientX, e.clientY,
@@ -79444,7 +79444,7 @@ goog.fx.Dragger.prototype.defaultAction = function(x, y) {
  * @return {boolean} Whether the dragger is currently in the midst of a drag.
  */
 goog.fx.Dragger.prototype.isDragging = function() {
-  return this.dragging_;
+  return this.handlingLongClick_;
 };
 
 
@@ -104145,214 +104145,6 @@ ol.interaction.DragAndDropEvent =
 };
 goog.inherits(ol.interaction.DragAndDropEvent, goog.events.Event);
 
-// FIXME draw drag box
-goog.provide('ol.DragBoxTouchEvent');
-goog.provide('ol.interaction.DragBoxTouch');
-
-goog.require('goog.events.Event');
-goog.require('ol');
-goog.require('ol.events.ConditionType');
-goog.require('ol.events.condition');
-goog.require('ol.interaction.Pointer');
-goog.require('ol.render.Box');
-
-
-/**
- * @const
- * @type {number}
- */
-ol.DRAG_BOX_TOUCH_HYSTERESIS_PIXELS_SQUARED =
-    ol.DRAG_BOX_TOUCH_HYSTERESIS_PIXELS *
-    ol.DRAG_BOX_TOUCH_HYSTERESIS_PIXELS;
-
-
-/**
- * @enum {string}
- */
-ol.DragBoxTouchEventType = {
-  /**
-   * Triggered upon drag box start.
-   * @event ol.DragBoxTouchEvent#boxstart
-   * @api stable
-   */
-  BOXSTART: 'boxstart',
-  /**
-   * Triggered upon drag box end.
-   * @event ol.DragBoxTouchEvent#boxend
-   * @api stable
-   */
-  BOXEND: 'boxend'
-};
-
-
-
-/**
- * @classdesc
- * Events emitted by {@link ol.interaction.DragBoxTouch} instances are instances of
- * this type.
- *
- * @param {string} type The event type.
- * @param {ol.Coordinate} coordinate The event coordinate.
- * @extends {goog.events.Event}
- * @constructor
- * @implements {oli.DragBoxTouchEvent}
- */
-ol.DragBoxTouchEvent = function(type, coordinate) {
-  goog.base(this, type);
-
-  /**
-   * The coordinate of the drag event.
-   * @const
-   * @type {ol.Coordinate}
-   * @api stable
-   */
-  this.coordinate = coordinate;
-
-};
-goog.inherits(ol.DragBoxTouchEvent, goog.events.Event);
-
-
-
-/**
- * @classdesc
- * Allows the user to draw a vector box by clicking and dragging on the map,
- * normally combined with an {@link ol.events.condition} that limits
- * it to when the shift or other key is held down. This is used, for example,
- * for zooming to a specific area of the map
- * (see {@link ol.interaction.DragZoom} and
- * {@link ol.interaction.DragRotateAndZoom}).
- *
- * This interaction is only supported for mouse devices.
- *
- * @constructor
- * @extends {ol.interaction.Pointer}
- * @fires ol.DragBoxTouchEvent
- * @param {olx.interaction.DragBoxTouchOptions=} opt_options Options.
- * @api stable
- */
-ol.interaction.DragBoxTouch = function(opt_options) {
-
-  goog.base(this, {
-    handleDownEvent: ol.interaction.DragBoxTouch.handleDownEvent_,
-    handleDragEvent: ol.interaction.DragBoxTouch.handleDragEvent_,
-    handleUpEvent: ol.interaction.DragBoxTouch.handleUpEvent_
-  });
-
-  var options = goog.isDef(opt_options) ? opt_options : {};
-
-  /**
-   * @private
-   * @type {ol.style.Style}
-   */
-  var style = goog.isDef(options.style) ? options.style : null;
-
-  /**
-   * @type {ol.render.Box}
-   * @private
-   */
-  this.box_ = new ol.render.Box(style);
-
-  /**
-   * @type {ol.Pixel}
-   * @private
-   */
-  this.startPixel_ = null;
-
-  /**
-   * @private
-   * @type {ol.events.ConditionType}
-   */
-  this.condition_ = goog.isDef(options.condition) ?
-      options.condition : ol.events.condition.always;
-
-};
-goog.inherits(ol.interaction.DragBoxTouch, ol.interaction.Pointer);
-
-
-/**
- * @param {ol.MapBrowserPointerEvent} mapBrowserEvent Event.
- * @this {ol.interaction.DragBoxTouch}
- * @private
- */
-ol.interaction.DragBoxTouch.handleDragEvent_ = function(mapBrowserEvent) {
-  if (ol.events.condition.mouseOnly(mapBrowserEvent)) {
-    return;
-  }
-
-  this.box_.setPixels(this.startPixel_, mapBrowserEvent.pixel);
-};
-
-
-/**
- * Returns geometry of last drawn box.
- * @return {ol.geom.Polygon} Geometry.
- * @api stable
- */
-ol.interaction.DragBoxTouch.prototype.getGeometry = function() {
-  return this.box_.getGeometry();
-};
-
-
-/**
- * To be overriden by child classes.
- * FIXME: use constructor option instead of relying on overridding.
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- * @protected
- */
-ol.interaction.DragBoxTouch.prototype.onBoxEnd = goog.nullFunction;
-
-
-/**
- * @param {ol.MapBrowserPointerEvent} mapBrowserEvent Event.
- * @return {boolean} Stop drag sequence?
- * @this {ol.interaction.DragBoxTouch}
- * @private
- */
-ol.interaction.DragBoxTouch.handleUpEvent_ = function(mapBrowserEvent) {
-  if (ol.events.condition.mouseOnly(mapBrowserEvent)) {
-    return true;
-  }
-
-  this.box_.setMap(null);
-
-  var deltaX = mapBrowserEvent.pixel[0] - this.startPixel_[0];
-  var deltaY = mapBrowserEvent.pixel[1] - this.startPixel_[1];
-
-  if (deltaX * deltaX + deltaY * deltaY >=
-      ol.DRAG_BOX_TOUCH_HYSTERESIS_PIXELS_SQUARED) {
-    this.onBoxEnd(mapBrowserEvent);
-    this.dispatchEvent(new ol.DragBoxTouchEvent(ol.DragBoxTouchEventType.BOXEND,
-        mapBrowserEvent.coordinate));
-  }
-  return false;
-};
-
-
-/**
- * @param {ol.MapBrowserPointerEvent} mapBrowserEvent Event.
- * @return {boolean} Start drag sequence?
- * @this {ol.interaction.DragBoxTouch}
- * @private
- */
-ol.interaction.DragBoxTouch.handleDownEvent_ = function(mapBrowserEvent) {
-  if (ol.events.condition.mouseOnly(mapBrowserEvent)) {
-    return false;
-  }
-
-  var browserEvent = mapBrowserEvent.browserEvent;
-    // TODO
-  if ( this.condition_(mapBrowserEvent)) {
-    this.startPixel_ = mapBrowserEvent.pixel;
-    this.box_.setMap(mapBrowserEvent.map);
-    this.box_.setPixels(this.startPixel_, this.startPixel_);
-    this.dispatchEvent(new ol.DragBoxTouchEvent(ol.DragBoxTouchEventType.BOXSTART,
-        mapBrowserEvent.coordinate));
-    return true;
-  } else {
-    return false;
-  }
-};
-
 // Copyright 2007 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -105432,6 +105224,703 @@ ol.interaction.DrawMode = {
   CIRCLE: 'Circle'
 };
 
+goog.provide('ol.interaction.LongClick');
+
+goog.require('goog.functions');
+goog.require('goog.object');
+goog.require('ol.MapBrowserEvent.EventType');
+goog.require('ol.MapBrowserPointerEvent');
+goog.require('ol.Pixel');
+goog.require('ol.interaction.Interaction');
+
+
+/**
+ * @const
+ * @type {number}
+ */
+ol.LONG_CLICK_HYSTERESIS_PIXELS_SQUARED =
+    ol.LONG_CLICK_HYSTERESIS_PIXELS *
+    ol.LONG_CLICK_HYSTERESIS_PIXELS;
+
+
+
+/**
+ * @classdesc
+ * Base class that calls user-defined functions on a long click
+ * `down` and `up` events.
+ *
+ * @constructor
+ * @param {olx.interaction.LongClickOptions=} opt_options Options.
+ * @extends {ol.interaction.Interaction}
+ * @api
+ */
+ol.interaction.LongClick = function(opt_options) {
+
+    goog.base(this, {
+        handleEvent: ol.interaction.LongClick.handleEvent
+    });
+
+    var options = goog.isDef(opt_options) ? opt_options : {};
+
+    /**
+     * @type {function(ol.MapBrowserPointerEvent):boolean}
+     * @private
+     */
+    this.handleStartEvent_ = goog.isDef(options.handleStartEvent) ?
+        options.handleStartEvent : ol.interaction.LongClick.handleStartEvent;
+
+    /**
+     * @type {function(ol.MapBrowserPointerEvent):boolean}
+     * @private
+     */
+    this.handleDragEvent_ = goog.isDef(options.handleDragEvent) ?
+        options.handleDragEvent : ol.interaction.LongClick.handleDragEvent;
+
+    /**
+     * @type {function(ol.MapBrowserPointerEvent):boolean}
+     * @private
+     */
+    this.handleStopEvent_ = goog.isDef(options.handleStopEvent) ?
+        options.handleStopEvent : ol.interaction.LongClick.handleStopEvent;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.delay_ = goog.isNumber(options.delay) ? options.delay : 200;
+
+    /**
+     * @type {number|null}
+     * @private
+     */
+    this.timeoutId_ = null;
+
+    /**
+     * @type {ol.Pixel|null}
+     * @private
+     */
+    this.trackedPixel_ = null;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.handlingLongClick_ = false;
+};
+goog.inherits(ol.interaction.LongClick, ol.interaction.Interaction);
+
+
+/**
+ * @param {ol.MapBrowserPointerEvent} mapBrowserEvent Event.
+ * @this {ol.interaction.LongClick}
+ */
+ol.interaction.LongClick.handleStartEvent = goog.nullFunction;
+
+
+/**
+ * @param {ol.MapBrowserPointerEvent} mapBrowserEvent Event.
+ * @this {ol.interaction.LongClick}
+ */
+ol.interaction.LongClick.handleDragEvent = goog.nullFunction;
+
+
+/**
+ * @param {ol.MapBrowserPointerEvent} mapBrowserEvent Event.
+ * @this {ol.interaction.LongClick}
+ */
+ol.interaction.LongClick.handleStopEvent = goog.nullFunction;
+
+
+/**
+ * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
+ * @return {boolean} `false` to stop event propagation.
+ * @this {ol.interaction.LongClick}
+ * @api
+ */
+ol.interaction.LongClick.handleEvent = function(mapBrowserEvent) {
+    if (mapBrowserEvent instanceof ol.MapBrowserPointerEvent) {
+        switch (mapBrowserEvent.type) {
+            case ol.MapBrowserEvent.EventType.POINTERDOWN:
+                return this.handlePointerDownEvent_(mapBrowserEvent);
+            case ol.MapBrowserEvent.EventType.POINTERUP:
+                return this.handlePointerUpEvent_(mapBrowserEvent);
+            case ol.MapBrowserEvent.EventType.POINTERDRAG:
+                return this.handlePointerDragEvent_(mapBrowserEvent);
+        }
+    }
+    return true;
+};
+
+
+/**
+ * @private
+ */
+ol.interaction.LongClick.prototype.handlePointerDownEvent_ = function(mapBrowserEvent) {
+    if (goog.isNumber(this.timeoutId_)) {
+        this.abortLongClick_();
+    } else if (this.handlingLongClick_) {
+        this.stopLongClick_(mapBrowserEvent);
+    } else {
+        this.timeoutId_ = window.setTimeout(
+            goog.bind(this.startLongClick_, this, mapBrowserEvent), this.delay_);
+        this.trackedPixel_ = mapBrowserEvent.pixel;
+    }
+    return true;
+};
+
+
+/**
+ * @private
+ */
+ol.interaction.LongClick.prototype.handlePointerDragEvent_ = function(mapBrowserEvent) {
+    if (this.handlingLongClick_) {
+        return this.handleDragEvent_(mapBrowserEvent);
+    } else if (goog.isArray(this.trackedPixel_)) {
+        var deltaX = mapBrowserEvent.pixel[0] - this.trackedPixel_[0];
+        var deltaY = mapBrowserEvent.pixel[1] - this.trackedPixel_[1];
+        if (deltaX * deltaX + deltaY * deltaY >= ol.LONG_CLICK_HYSTERESIS_PIXELS_SQUARED) {
+            this.abortLongClick_();
+        }
+    }
+    return true;
+};
+
+
+/**
+ * @private
+ */
+ol.interaction.LongClick.prototype.handlePointerUpEvent_ = function(mapBrowserEvent) {
+    if (goog.isNumber(this.timeoutId_)) {
+        this.abortLongClick_();
+    } else if (this.handlingLongClick_) {
+        this.stopLongClick_(mapBrowserEvent);
+    }
+    return true;
+};
+
+
+/**
+ * @private
+ */
+ol.interaction.LongClick.prototype.abortLongClick_ = function() {
+    window.clearTimeout(this.timeoutId_);
+    this.timeoutId_ = null;
+    this.trackedPixel_ = null;
+    this.handlingLongClick_ = false;
+};
+
+
+/**
+ * @private
+ */
+ol.interaction.LongClick.prototype.startLongClick_ = function(mapBrowserEvent) {
+    this.timeoutId_ = null;
+    this.handlingLongClick_ = true;
+    this.handleStartEvent_(mapBrowserEvent);
+};
+
+
+/**
+ * @private
+ */
+ol.interaction.LongClick.prototype.stopLongClick_ = function(mapBrowserEvent) {
+    this.trackedPixel_ = null;
+    this.handlingLongClick_ = false;
+    this.handleStopEvent_(mapBrowserEvent);
+};
+goog.provide('ol.render.Circle');
+
+goog.require('goog.Disposable');
+goog.require('goog.asserts');
+goog.require('goog.events');
+goog.require('ol.geom.Polygon');
+goog.require('ol.render.EventType');
+goog.require('ol.sphere.WGS84');
+
+
+/**
+ * @constructor
+ * @extends {goog.Disposable}
+ * @param {ol.style.Style} style Style.
+ * @param {number=} vertices Optional number of vertices for the resulting
+ *     circular polygon. Default is `180`.
+ */
+ol.render.Circle = function(style, vertices) {
+
+    /**
+     * @private
+     * @type {ol.Map}
+     */
+    this.map_ = null;
+
+    /**
+     * @private
+     * @type {goog.events.Key}
+     */
+    this.postComposeListenerKey_ = null;
+
+    /**
+     * @private
+     * @type {ol.Pixel}
+     */
+    this.startPixel_ = null;
+
+    /**
+     * @private
+     * @type {ol.Pixel}
+     */
+    this.endPixel_ = null;
+
+    /**
+     * @private
+     * @type {ol.geom.Polygon}
+     */
+    this.geometry_ = null;
+
+    /**
+     * @private
+     * @type {number}
+     */
+    this.vertices_ = goog.isNumber(vertices) ? vertices : 180;
+
+    /**
+     * @private
+     * @type {ol.style.Style}
+     */
+    this.style_ = style;
+};
+goog.inherits(ol.render.Circle, goog.Disposable);
+
+
+/**
+ * @private
+ * @return {ol.geom.Polygon} Geometry.
+ */
+ol.render.Circle.prototype.createGeometry_ = function() {
+    goog.asserts.assert(!goog.isNull(this.startPixel_));
+    goog.asserts.assert(!goog.isNull(this.endPixel_));
+    goog.asserts.assert(!goog.isNull(this.map_));
+
+    var mapProjection = this.map_.getView().getProjection();
+    var wgs84StartCoord = ol.proj.transform(
+        this.map_.getCoordinateFromPixel(this.startPixel_), mapProjection, 'EPSG:4326');
+    var wgs84EndCoord = ol.proj.transform(
+        this.map_.getCoordinateFromPixel(this.endPixel_), mapProjection, 'EPSG:4326');
+    var radius = ol.sphere.WGS84.cosineDistance(wgs84StartCoord, wgs84EndCoord);
+
+    var geometry = ol.geom.Polygon.circular(ol.sphere.WGS84, wgs84StartCoord, radius, this.vertices_);
+    geometry.transform('EPSG:4326', mapProjection);
+    return geometry;
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.render.Circle.prototype.disposeInternal = function() {
+    this.setMap(null);
+};
+
+
+/**
+ * @param {ol.render.Event} event Event.
+ * @private
+ */
+ol.render.Circle.prototype.handleMapPostCompose_ = function(event) {
+    var geometry = this.geometry_;
+    goog.asserts.assert(goog.isDefAndNotNull(geometry));
+    var style = this.style_;
+    goog.asserts.assert(!goog.isNull(style));
+    // use drawAsync(Infinity) to draw above everything
+    event.vectorContext.drawAsync(Infinity, function(render) {
+        render.setFillStrokeStyle(style.getFill(), style.getStroke());
+        render.setTextStyle(style.getText());
+        render.drawPolygonGeometry(geometry, null);
+    });
+};
+
+
+/**
+ * @return {ol.geom.Polygon} Geometry.
+ */
+ol.render.Circle.prototype.getGeometry = function() {
+    return this.geometry_;
+};
+
+
+/**
+ * @private
+ */
+ol.render.Circle.prototype.requestMapRenderFrame_ = function() {
+    if (!goog.isNull(this.map_) &&
+        !goog.isNull(this.startPixel_) &&
+        !goog.isNull(this.endPixel_)) {
+        this.map_.render();
+    }
+};
+
+
+/**
+ * @param {ol.Map} map Map.
+ */
+ol.render.Circle.prototype.setMap = function(map) {
+    if (!goog.isNull(this.postComposeListenerKey_)) {
+        goog.events.unlistenByKey(this.postComposeListenerKey_);
+        this.postComposeListenerKey_ = null;
+        this.map_.render();
+        this.map_ = null;
+    }
+    this.map_ = map;
+    if (!goog.isNull(this.map_)) {
+        this.postComposeListenerKey_ = goog.events.listen(
+            map, ol.render.EventType.POSTCOMPOSE, this.handleMapPostCompose_, false,
+            this);
+        this.requestMapRenderFrame_();
+    }
+};
+
+
+/**
+ * @param {ol.Pixel} startPixel Start pixel.
+ * @param {ol.Pixel} endPixel End pixel.
+ */
+ol.render.Circle.prototype.setPixels = function(startPixel, endPixel) {
+    this.startPixel_ = startPixel;
+    this.endPixel_ = endPixel;
+    this.geometry_ = this.createGeometry_();
+    this.requestMapRenderFrame_();
+};
+
+goog.provide('ol.interaction.LongClickSelect');
+
+goog.require('goog.array');
+goog.require('goog.asserts');
+goog.require('goog.events');
+goog.require('goog.events.Event');
+goog.require('goog.functions');
+goog.require('ol.CollectionEventType');
+goog.require('ol.Feature');
+goog.require('ol.FeatureOverlay');
+goog.require('ol.events.condition');
+goog.require('ol.geom.GeometryType');
+goog.require('ol.interaction.Pointer');
+goog.require('ol.render.Circle');
+
+
+
+/**
+ * @classdesc
+ * Handles selection of vector data. A {@link ol.FeatureOverlay} is maintained
+ * internally to store the selected feature(s). Which features are selected is
+ * determined by the `condition` option, and optionally the `toggle` or
+ * `add`/`remove` options.
+ *
+ * @constructor
+ * @extends {ol.interaction.LongClick}
+ * @param {olx.interaction.LongClickSelectOptions=} opt_options Options.
+ * @api stable
+ */
+ol.interaction.LongClickSelect = function(opt_options) {
+
+    goog.base(this, {
+        handleStartEvent: ol.interaction.LongClickSelect.handleStartEvent,
+        handleDragEvent: ol.interaction.LongClickSelect.handleDragEvent,
+        handleStopEvent: ol.interaction.LongClickSelect.handleStopEvent
+    });
+
+    var options = goog.isDef(opt_options) ? opt_options : {};
+
+    /**
+     * @private
+     * @type {ol.style.Style}
+     */
+    var circleStyle = goog.isDef(options.circleStyle) ? options.circleStyle : null;
+
+    /**
+     * @type {ol.render.Circle}
+     * @private
+     */
+    this.circle_ = new ol.render.Circle(circleStyle);
+
+    /**
+     * @type {ol.Pixel}
+     * @private
+     */
+    this.startPixel_ = null;
+
+    /**
+     * @type {ol.Pixel}
+     * @private
+     */
+    this.endPixel_ = null;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.minRadius_ = goog.isNumber(options.minRadius) ? options.minRadius : 20;
+
+    /**
+     * @type {number|null}
+     * @private
+     */
+    this.maxRadius_ = goog.isNumber(options.maxRadius) ? options.maxRadius : null;
+
+    /**
+     * @type {number|null}
+     * @private
+     */
+    this.radiusTimeoutId_ = null;
+
+    /**
+     * @private
+     * @type {ol.events.ConditionType}
+     */
+    this.condition_ = goog.isDef(options.condition) ?
+        options.condition : ol.events.condition.always;
+
+    var layerFilter;
+    if (goog.isFunction(options.layers)) {
+        layerFilter = options.layers;
+    } else if (goog.isArray(options.layers)) {
+        var layers = options.layers;
+        layerFilter =
+            /**
+             * @param {ol.layer.Layer} layer Layer.
+             * @return {boolean} Include.
+             */
+            function(layer) {
+                return goog.array.contains(layers, layer);
+            };
+    } else {
+        layerFilter = goog.functions.TRUE;
+    }
+
+    /**
+     * @private
+     * @type {function(ol.layer.Layer): boolean}
+     */
+    this.layerFilter_ = layerFilter;
+
+    /**
+     * @private
+     * @type {ol.FeatureOverlay}
+     */
+    this.featureOverlay_ = new ol.FeatureOverlay({
+        style: goog.isDef(options.selectStyle) ? options.selectStyle :
+            ol.interaction.Select.getDefaultStyleFunction()
+    });
+
+    var features = this.featureOverlay_.getFeatures();
+    goog.events.listen(features, ol.CollectionEventType.ADD,
+        this.addFeature_, false, this);
+    goog.events.listen(features, ol.CollectionEventType.REMOVE,
+        this.removeFeature_, false, this);
+};
+goog.inherits(ol.interaction.LongClickSelect, ol.interaction.LongClick);
+
+
+/**
+ * Get the selected features.
+ * @return {ol.Collection.<ol.Feature>} Features collection.
+ * @api stable
+ */
+ol.interaction.LongClickSelect.prototype.getFeatures = function() {
+    return this.featureOverlay_.getFeatures();
+};
+
+
+/**
+ * Remove the interaction from its current map, if any,  and attach it to a new
+ * map, if any. Pass `null` to just remove the interaction from the current map.
+ * @param {ol.Map} map Map.
+ * @api stable
+ */
+ol.interaction.LongClickSelect.prototype.setMap = function(map) {
+    var currentMap = this.getMap();
+    var selectedFeatures = this.featureOverlay_.getFeatures();
+    if (!goog.isNull(currentMap)) {
+        selectedFeatures.forEach(currentMap.unskipFeature, currentMap);
+    }
+    goog.base(this, 'setMap', map);
+    this.featureOverlay_.setMap(map);
+    if (!goog.isNull(map)) {
+        selectedFeatures.forEach(map.skipFeature, map);
+    }
+};
+
+
+/**
+ * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
+ * @this {ol.interaction.LongClickSelect}
+ * @api
+ */
+ol.interaction.LongClickSelect.handleStartEvent = function(mapBrowserEvent) {
+    if (!this.condition_(mapBrowserEvent)) {
+        return;
+    }
+
+    // Clear previous selection.
+    this.featureOverlay_.getFeatures().clear();
+
+    // Draw the selection circle and setup the timeout function used to increase
+    // its radius each 20 milliseconds.
+    this.startPixel_ = mapBrowserEvent.pixel;
+    this.endPixel_ = [mapBrowserEvent.pixel[0] + this.minRadius_, mapBrowserEvent.pixel[1]];
+    this.circle_.setMap(mapBrowserEvent.map);
+    this.circle_.setPixels(this.startPixel_, this.endPixel_);
+    this.radiusTimeoutId_ = window.setTimeout(goog.bind(this.increaseRadius_, this), 20);
+};
+
+
+/**
+ * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
+ * @this {ol.interaction.LongClickSelect}
+ * @return {boolean} `false` to stop event propagation.
+ * @api
+ */
+ol.interaction.LongClickSelect.handleDragEvent = function(mapBrowserEvent) {
+    if (!this.condition_(mapBrowserEvent)) {
+        return true;
+    }
+
+    var stopEvent = false;
+    if (this.condition_(mapBrowserEvent) && goog.isArray(this.startPixel_)) {
+        // Compute the delta between the origin pointer location and the current
+        // pointer location.
+        var deltaX = mapBrowserEvent.pixel[0] - this.startPixel_[0];
+        var deltaY = mapBrowserEvent.pixel[1] - this.startPixel_[1];
+
+        // Interrupt the selection if the computed delta is too high. Otherwise
+        // stop the 'pointerdrag' event propagation.
+        if (deltaX * deltaX + deltaY * deltaY >= ol.LONG_CLICK_HYSTERESIS_PIXELS_SQUARED) {
+            this.removeCircle_();
+        } else {
+            stopEvent = true;
+        }
+    }
+    return !stopEvent;
+};
+
+
+/**
+ * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
+ * @this {ol.interaction.LongClickSelect}
+ * @api
+ */
+ol.interaction.LongClickSelect.handleStopEvent = function(mapBrowserEvent) {
+    if (!this.condition_(mapBrowserEvent)) {
+        return;
+    }
+
+    if (mapBrowserEvent.type == ol.MapBrowserEvent.EventType.POINTERUP && goog.isArray(this.startPixel_)) {
+        var circleExtent = this.circle_.getGeometry().getExtent();
+        var centerPixel = this.startPixel_;
+        var centerCoord = mapBrowserEvent.map.getCoordinateFromPixel(centerPixel);
+        var radiusSquared = Math.pow(this.endPixel_[0] - this.startPixel_[0], 2);
+        var features = [];
+
+        // Identifies features which have at least one point in the circle.
+        this.forEachVectorSources_(mapBrowserEvent.map.getLayers(), function(source) {
+            source.forEachFeatureIntersectingExtent(circleExtent, function(feature) {
+                var closestPixel = mapBrowserEvent.map.getPixelFromCoordinate(
+                    feature.getGeometry().getClosestPoint(centerCoord));
+
+                // Ensure that the closest pixel is in the circle.
+                var deltaX = closestPixel[0] - centerPixel[0];
+                var deltaY = closestPixel[1] - centerPixel[1];
+                if (deltaX * deltaX + deltaY * deltaY <= radiusSquared) {
+                    features.push(feature);
+                }
+            });
+        }, this.layerFilter_);
+
+        // Features have been selected, dispatch the event.
+        if (features.length) {
+            this.featureOverlay_.getFeatures().extend(features);
+            this.dispatchEvent(new ol.SelectEvent(ol.SelectEventType.SELECT, features, []));
+        }
+    }
+
+    // Always remove the circle.
+    this.removeCircle_();
+};
+
+
+/**
+ * @private
+ */
+ol.interaction.LongClickSelect.prototype.forEachVectorSources_ = function(layers, callback, layerFilter) {
+    layers.forEach(function(layer) {
+        // This is a group of layers. Call this method recursively.
+        if (layer instanceof ol.layer.Group) {
+            this.forEachVectorSources_(layer.getLayers());
+        }
+
+        // This is a single layer. Check if this layer should be included.
+        else if (layer instanceof ol.layer.Layer && layerFilter(layer)) {
+            var source = layer.getSource();
+
+            // Ensure that the layer has a vector source.
+            if (source instanceof ol.source.Vector) {
+                callback.call(this, source);
+            }
+        }
+    }, this);
+};
+
+
+/**
+ * @private
+ */
+ol.interaction.LongClickSelect.prototype.increaseRadius_ = function() {
+    this.endPixel_[0] += 2;
+    if (goog.isNumber(this.maxRadius_)) {
+        this.endPixel_[0] = Math.min(this.endPixel_[0], this.startPixel_[0] + this.maxRadius_);
+    }
+    this.circle_.setPixels(this.startPixel_, this.endPixel_);
+    this.radiusTimeoutId_ = window.setTimeout(goog.bind(this.increaseRadius_, this), 20);
+};
+
+
+/**
+ * @private
+ */
+ol.interaction.LongClickSelect.prototype.removeCircle_ = function() {
+    this.startPixel_ = null;
+    this.endPixel_ = null;
+    this.circle_.setMap(null);
+    window.clearTimeout(this.radiusTimeoutId_);
+    this.radiusTimeoutId_ = null;
+};
+
+
+/**
+ * @param {ol.CollectionEvent} evt Event.
+ * @private
+ */
+ol.interaction.LongClickSelect.prototype.addFeature_ = function(evt) {
+    var feature = evt.element;
+    var map = this.getMap();
+    goog.asserts.assertInstanceof(feature, ol.Feature);
+    if (!goog.isNull(map)) {
+        map.skipFeature(feature);
+    }
+};
+
+
+/**
+ * @param {ol.CollectionEvent} evt Event.
+ * @private
+ */
+ol.interaction.LongClickSelect.prototype.removeFeature_ = function(evt) {
+    var feature = evt.element;
+    var map = this.getMap();
+    goog.asserts.assertInstanceof(feature, ol.Feature);
+    if (!goog.isNull(map)) {
+        map.unskipFeature(feature);
+    }
+};
 goog.provide('ol.interaction.Modify');
 
 goog.require('goog.array');
@@ -115948,7 +116437,6 @@ goog.require('ol.CoordinateFormatType');
 goog.require('ol.DeviceOrientation');
 goog.require('ol.DeviceOrientationProperty');
 goog.require('ol.DragBoxEvent');
-goog.require('ol.DragBoxTouchEvent');
 goog.require('ol.DrawEvent');
 goog.require('ol.DrawEventType');
 goog.require('ol.Extent');
@@ -116041,7 +116529,6 @@ goog.require('ol.interaction.DoubleClickZoom');
 goog.require('ol.interaction.DragAndDrop');
 goog.require('ol.interaction.DragAndDropEvent');
 goog.require('ol.interaction.DragBox');
-goog.require('ol.interaction.DragBoxTouch');
 goog.require('ol.interaction.DragPan');
 goog.require('ol.interaction.DragRotate');
 goog.require('ol.interaction.DragRotateAndZoom');
@@ -116051,6 +116538,8 @@ goog.require('ol.interaction.Interaction');
 goog.require('ol.interaction.InteractionProperty');
 goog.require('ol.interaction.KeyboardPan');
 goog.require('ol.interaction.KeyboardZoom');
+goog.require('ol.interaction.LongClick');
+goog.require('ol.interaction.LongClickSelect');
 goog.require('ol.interaction.Modify');
 goog.require('ol.interaction.MouseWheelZoom');
 goog.require('ol.interaction.PinchRotate');
@@ -118724,21 +119213,6 @@ goog.exportProperty(
     'getGeometry',
     ol.interaction.DragBox.prototype.getGeometry);
 
-goog.exportProperty(
-    ol.DragBoxTouchEvent.prototype,
-    'coordinate',
-    ol.DragBoxTouchEvent.prototype.coordinate);
-
-goog.exportSymbol(
-    'ol.interaction.DragBoxTouch',
-    ol.interaction.DragBoxTouch,
-    OPENLAYERS);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'getGeometry',
-    ol.interaction.DragBoxTouch.prototype.getGeometry);
-
 goog.exportSymbol(
     'ol.interaction.DragPan',
     ol.interaction.DragPan,
@@ -118817,6 +119291,46 @@ goog.exportSymbol(
 goog.exportSymbol(
     'ol.interaction.KeyboardZoom.handleEvent',
     ol.interaction.KeyboardZoom.handleEvent,
+    OPENLAYERS);
+
+goog.exportSymbol(
+    'ol.interaction.LongClick',
+    ol.interaction.LongClick,
+    OPENLAYERS);
+
+goog.exportSymbol(
+    'ol.interaction.LongClick.handleEvent',
+    ol.interaction.LongClick.handleEvent,
+    OPENLAYERS);
+
+goog.exportSymbol(
+    'ol.interaction.LongClickSelect',
+    ol.interaction.LongClickSelect,
+    OPENLAYERS);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'getFeatures',
+    ol.interaction.LongClickSelect.prototype.getFeatures);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'setMap',
+    ol.interaction.LongClickSelect.prototype.setMap);
+
+goog.exportSymbol(
+    'ol.interaction.LongClickSelect.handleStartEvent',
+    ol.interaction.LongClickSelect.handleStartEvent,
+    OPENLAYERS);
+
+goog.exportSymbol(
+    'ol.interaction.LongClickSelect.handleDragEvent',
+    ol.interaction.LongClickSelect.handleDragEvent,
+    OPENLAYERS);
+
+goog.exportSymbol(
+    'ol.interaction.LongClickSelect.handleStopEvent',
+    ol.interaction.LongClickSelect.handleStopEvent,
     OPENLAYERS);
 
 goog.exportSymbol(
@@ -126560,86 +127074,6 @@ goog.exportProperty(
     ol.interaction.DragBox.prototype.unByKey);
 
 goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'getActive',
-    ol.interaction.DragBoxTouch.prototype.getActive);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'setActive',
-    ol.interaction.DragBoxTouch.prototype.setActive);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'bindTo',
-    ol.interaction.DragBoxTouch.prototype.bindTo);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'get',
-    ol.interaction.DragBoxTouch.prototype.get);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'getKeys',
-    ol.interaction.DragBoxTouch.prototype.getKeys);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'getProperties',
-    ol.interaction.DragBoxTouch.prototype.getProperties);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'set',
-    ol.interaction.DragBoxTouch.prototype.set);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'setProperties',
-    ol.interaction.DragBoxTouch.prototype.setProperties);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'unbind',
-    ol.interaction.DragBoxTouch.prototype.unbind);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'unbindAll',
-    ol.interaction.DragBoxTouch.prototype.unbindAll);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'changed',
-    ol.interaction.DragBoxTouch.prototype.changed);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'getRevision',
-    ol.interaction.DragBoxTouch.prototype.getRevision);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'on',
-    ol.interaction.DragBoxTouch.prototype.on);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'once',
-    ol.interaction.DragBoxTouch.prototype.once);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'un',
-    ol.interaction.DragBoxTouch.prototype.un);
-
-goog.exportProperty(
-    ol.interaction.DragBoxTouch.prototype,
-    'unByKey',
-    ol.interaction.DragBoxTouch.prototype.unByKey);
-
-goog.exportProperty(
     ol.interaction.DragPan.prototype,
     'getActive',
     ol.interaction.DragPan.prototype.getActive);
@@ -127203,6 +127637,166 @@ goog.exportProperty(
     ol.interaction.KeyboardZoom.prototype,
     'unByKey',
     ol.interaction.KeyboardZoom.prototype.unByKey);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'getActive',
+    ol.interaction.LongClick.prototype.getActive);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'setActive',
+    ol.interaction.LongClick.prototype.setActive);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'bindTo',
+    ol.interaction.LongClick.prototype.bindTo);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'get',
+    ol.interaction.LongClick.prototype.get);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'getKeys',
+    ol.interaction.LongClick.prototype.getKeys);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'getProperties',
+    ol.interaction.LongClick.prototype.getProperties);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'set',
+    ol.interaction.LongClick.prototype.set);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'setProperties',
+    ol.interaction.LongClick.prototype.setProperties);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'unbind',
+    ol.interaction.LongClick.prototype.unbind);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'unbindAll',
+    ol.interaction.LongClick.prototype.unbindAll);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'changed',
+    ol.interaction.LongClick.prototype.changed);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'getRevision',
+    ol.interaction.LongClick.prototype.getRevision);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'on',
+    ol.interaction.LongClick.prototype.on);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'once',
+    ol.interaction.LongClick.prototype.once);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'un',
+    ol.interaction.LongClick.prototype.un);
+
+goog.exportProperty(
+    ol.interaction.LongClick.prototype,
+    'unByKey',
+    ol.interaction.LongClick.prototype.unByKey);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'getActive',
+    ol.interaction.LongClickSelect.prototype.getActive);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'setActive',
+    ol.interaction.LongClickSelect.prototype.setActive);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'bindTo',
+    ol.interaction.LongClickSelect.prototype.bindTo);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'get',
+    ol.interaction.LongClickSelect.prototype.get);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'getKeys',
+    ol.interaction.LongClickSelect.prototype.getKeys);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'getProperties',
+    ol.interaction.LongClickSelect.prototype.getProperties);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'set',
+    ol.interaction.LongClickSelect.prototype.set);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'setProperties',
+    ol.interaction.LongClickSelect.prototype.setProperties);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'unbind',
+    ol.interaction.LongClickSelect.prototype.unbind);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'unbindAll',
+    ol.interaction.LongClickSelect.prototype.unbindAll);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'changed',
+    ol.interaction.LongClickSelect.prototype.changed);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'getRevision',
+    ol.interaction.LongClickSelect.prototype.getRevision);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'on',
+    ol.interaction.LongClickSelect.prototype.on);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'once',
+    ol.interaction.LongClickSelect.prototype.once);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'un',
+    ol.interaction.LongClickSelect.prototype.un);
+
+goog.exportProperty(
+    ol.interaction.LongClickSelect.prototype,
+    'unByKey',
+    ol.interaction.LongClickSelect.prototype.unByKey);
 
 goog.exportProperty(
     ol.interaction.Modify.prototype,

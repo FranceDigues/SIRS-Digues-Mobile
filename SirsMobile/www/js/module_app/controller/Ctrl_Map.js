@@ -11,9 +11,23 @@ angular.module('module_app.controllers.map', [])
 /***************************************************************** --------- *****************************************************/
 
 //sMap ==> ?
-    .controller('cMap', function cMap ($scope, sMapLayer,sAppLayer, $log,  olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,sStyleGenerator, sLoc) {
+    .controller('cMap', function cMap ($scope, sMapLayer,sAppLayer, $log,  olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation,$timeout,sStyleFactory, sLoc) {
 
         var format = new ol.format.WKT();
+
+        var selectInteraction = new ol.interaction.LongClickSelect({
+            circleStyle: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 165, 0, 0.25)'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(255, 165, 0, 1)',
+                    width: 2
+                })
+            }),
+            maxRadius: 100
+        });
+        selectInteraction.on('select', onFeaturesSelected);
 
         // affect
         var me = this;
@@ -52,8 +66,12 @@ angular.module('module_app.controllers.map', [])
 //map instance
         olData.getMap("map").then(function (map) {
             me.currentMap = map;
+            me.currentMap.addInteraction(selectInteraction);
+        });
 
-
+        $scope.$on('$destroy', function() {
+            me.currentMap.removeInteraction(selectInteraction);
+            me.currentMap = null;
         });
 
 
@@ -171,5 +189,16 @@ angular.module('module_app.controllers.map', [])
                 }
             }
             throw new Error('No layer named "' + name + '" was found on map');
+        }
+
+        /**
+         * Callback for ol.interaction.LongClickSelect 'select' event.
+         *
+         * @param {ol.SelectEvent} event the select event.
+         */
+        function onFeaturesSelected(event) {
+            $log.debug(event.selected.length + ' feature(s) selected');
+
+            // TODO -> handle selected features
         }
     });
