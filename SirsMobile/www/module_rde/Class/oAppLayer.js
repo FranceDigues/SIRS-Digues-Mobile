@@ -11,11 +11,16 @@ function oAppLayer(param){
     this.module  = param.module;
     this.categorie =param.categorie;
     this.filterValue= param.filterValue;
+
+    //layer ol propertie
+    this.source= { type: 'Vector' };
     this.gIndex =param.gIndex;
 
 
+    //layer display properties
     this.propVisible=param.propVisible != null ? param.propVisible : false;
     this.realPosition= param.realPosition != null ? param.realPosition : true;
+    this.fav= param.fav != null ? param.fav : false;
     this.visible= param.visible;
     this.editable= param.editable;
     this.selectable= param.selectable;

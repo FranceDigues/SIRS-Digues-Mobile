@@ -28,9 +28,6 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
 
         me.reorderItem = function(item, fromIndex, toIndex) {
             //Move the item in the array
-            $log.debug(fromIndex);
-            $log.debug(toIndex);
-
             me.sAppLayer.asSimpleStack.splice(fromIndex, 1);
             me.sAppLayer.asSimpleStack.splice(toIndex, 0, item);
 
@@ -58,47 +55,17 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
             if(layer.data.length==0) layer.loadData(sPouch, $rootScope); //fixme force reload?
         }
 
-//todo WORKING with list visible??
-//        me.catFilter =
-//            //function() {
-//            //
-//            //return
-//                function(layer) {
-//                    var a =0;
-//                    if(layer) {
-//                        $log.debug("filter");
-//                        $log.debug(layer);
-//
-//
-//                        angular.forEach(me.sAppLayer.categorie, function (ref) {
-//
-//                            if (ref.checked === true) {
-//                                if (layer.categorie == ref.title) {
-//                                    a++;
-//                                    $log.debug("inLoop")
-//                                    $log.debug(layer)
-//                                    $log.debug(a)
-//                                    return layer
-//                                }
-//                            }
-//                        })
-//                    }
-//            }
-        //}
+        me.upLayer =function(item, index){
+            $log.debug(index);
+                me.sAppLayer.asSimpleStack.splice(index, 1);
+                me.sAppLayer.asSimpleStack.splice(index+1, 0, item);
+        }
 
-
-
-        ////INIT :
-        ////UNIQUE METHOD
-        //$timeout(function(){
-        //    $log.debug("sparadra");
-        //    $log.debug(me.sAppLayer.asSimpleStack);
-        //    me.sAppLayer.asSimpleStack = _.uniq(me.sAppLayer.asSimpleStack, "title");  // fixme stop add layer  for all of his views... (3 times avg..)
-        //    $log.debug(me.sAppLayer.asSimpleStack);
-        //},1000);
-
-
-
+        me.downLayer = function(item, index){
+            $log.debug(index);
+            me.sAppLayer.asSimpleStack.splice(index, 1);
+            me.sAppLayer.asSimpleStack.splice(index-1, 0, item);
+        }
 
     })
     .filter('catFilter', function() {
@@ -106,19 +73,7 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
         // Create the return function
         // set the required parameter name to **number**
         return function(layersArray,refList ) {
-
-            //var Filtered = [];
             ////todo think to mapfor reflist
-            //angular.forEach(layersArray,function(layer){
-            //        angular.forEach(refList, function (ref) {
-            //            if (ref.checked === true) {
-            //                if (layer.categorie == ref.title) {
-            //                    Filtered.push(layer);
-            //                }
-            //            }
-            //        })
-            //});
-            //return Filtered
 
             return layersArray.filter(function(layer){
                 var _bool = false;

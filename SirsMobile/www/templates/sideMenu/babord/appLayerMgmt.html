@@ -71,12 +71,6 @@
 
 
                 <!--sous boutton-->
-                <ion-option-button class="button-positive">
-                    <i class="material-icons  right" ng-click="c.up(layer)">call_made</i>
-                </ion-option-button>
-                <ion-option-button class="button-positive">
-                    <i class="material-icons  right" ng-click="c.down(layer)">call_received</i>
-                </ion-option-button>
 
                 <ion-option-button class="button-info"
                                    ng-click="layer.realPosition=!layer.realPosition">
@@ -108,13 +102,21 @@
             <h2> {{layer.title}}</h2>
 
 
+                <table name="blackBox" style="">
+
+                    <tr>
+                        <td> <i class="material-icons  right">location_on</i></td>
+                        <td><i class="material-icons  right">visibility</i></td>
+                    </tr>
+                    <tr>
+                        <td> <i class="material-icons  right">volume_up</i></td>
+                        <td><i class="material-icons  right">volume_up</i></td>
+                    </tr>
+
+                </table>
+
+
             <!--sous boutton-->
-            <ion-option-button class="button-positive">
-                <i class="material-icons  right" ng-click="c.up(layer)">call_made</i>
-            </ion-option-button>
-            <ion-option-button class="button-positive">
-                <i class="material-icons  right" ng-click="c.down(layer)">call_received</i>
-            </ion-option-button>
 
             <ion-option-button class="button-info"
                                ng-click="layer.realPosition=!layer.realPosition">
@@ -133,8 +135,9 @@
             </ion-option-button>
 
 
-            <ion-delete-button class="ion-minus-circled"
-                               ng-click="c.sAppLayer.asSimpleStack.splice($index, 1)">
+            <ion-delete-button ng-class="layer.fav ? 'ion-star' : 'ion-ios-star-outline' "
+                               fav
+                               ng-click="layer.fav= !layer.fav">
             </ion-delete-button>
             <ion-reorder-button class="ion-navicon"
                                 on-reorder="c.reorderItem(layer, $fromIndex, $toIndex)">
@@ -149,7 +152,7 @@
     <!--bar bar-footer-->
     <ion-footer-bar class=" bar-positive ">
         <div class="buttons">
-            <button class="button button-icon icon ion-ios-minus-outline"
+            <button class="button button-icon icon ion-star"
                     ng-click="c.shouldShowDelete = !c.shouldShowDelete; c.shouldShowReorder = false"></button>
         </div>
         <!--<h1 class="title">gestion calques</h1>-->
