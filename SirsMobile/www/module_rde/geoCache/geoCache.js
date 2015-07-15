@@ -47,6 +47,7 @@ angular.module('module_rde.geoCache', [
 
 
         me.layers = sMapLayer.list; // maj .?
+        me.sMapLayer = sMapLayer; // maj .?
 
 
         me.vsCacheBox = null;

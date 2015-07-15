@@ -1,13 +1,12 @@
-<ion-view class="cache-view">
+<header class="bar bar-header bar-stable">
+    <button class="col-25 button button-icon button-clear ion-arrow-left-a"
+            ng-click="c.gotoHome()"></button>
+    <a class="btn-floating btn-large waves-effect waves-light red" style="left:50%;"><i
+            class="material-icons  right" ng-click="c.popNewBox()">add</i></a>
+</header>
 
-    <header class="bar bar-header bar-stable">
-        <button class="col-25 button button-icon button-clear ion-arrow-left-a"
-                ng-click="c.gotoHome()"></button>
-        <a class="btn-floating btn-large waves-effect waves-light yellow" style="left:50%;"><i
-                class="material-icons  right" ng-click="c.toggleFilter()">search</i></a>
-    </header>
-
-
+<!--cache-view-->
+<ion-view class="has-header">
     <ion-content scroll="false">
         <div class="row">
             <div class="col col-25 cache-form">
@@ -20,7 +19,7 @@
                     <ion-toggle ng-model="polyOrnotPoly">
                         Selection Polygonale
                     </ion-toggle>
-                    <ion-checkbox ng-repeat="layer in c.layers|filter:{isCache:false}" ng-model="c.isChecked"> Recup
+                    <ion-checkbox ng-repeat="layer in c.sMapLayer.list|filter:{isCache:false}" ng-model="c.isChecked"> Recup
                         {{layer.name}} ?
                     </ion-checkbox>
 
@@ -38,7 +37,7 @@
             <div class="col col-75">
                 <openlayers id="mapCache" ol-center="centreCarte" ol-controls="controls" ol-defaults="defaults"
                             height="400px">
-                    <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.layers|filter:{active:true}"></ol-layer>
+                    <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.sMapLayer.list|filter:{active:true}"></ol-layer>
                 </openlayers>
 
 
@@ -63,6 +62,5 @@
 
             </div>
         </div>
-        <!--{{var.CoordList}}-->
     </ion-content>
 </ion-view>
