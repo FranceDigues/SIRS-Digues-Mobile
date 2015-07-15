@@ -1,4 +1,13 @@
 <ion-view class="cache-view">
+
+    <header class="bar bar-header bar-stable">
+        <button class="col-25 button button-icon button-clear ion-arrow-left-a"
+                ng-click="c.gotoHome()"></button>
+        <a class="btn-floating btn-large waves-effect waves-light yellow" style="left:50%;"><i
+                class="material-icons  right" ng-click="c.toggleFilter()">search</i></a>
+    </header>
+
+
     <ion-content scroll="false">
         <div class="row">
             <div class="col col-25 cache-form">
@@ -49,6 +58,7 @@
                         <button class="button button-block button-positive button-yellow" ng-click="c.clearMe(item.properties.cacheDescriptor)"> Suppr.</button>
                     </ion-item>
                 </ion-list>
+
 
 
             </div>

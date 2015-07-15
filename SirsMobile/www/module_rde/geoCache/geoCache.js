@@ -28,9 +28,16 @@ angular.module('module_rde.geoCache', [
     'pouchdb'
 ])
 
-    .controller('cGeoCache', function cGeoCache ($scope, sMapLayer, olData, $log, $timeout, sContext, $rootScope) {
+    .controller('cGeoCache', function cGeoCache ($scope, sMapLayer, olData, $log, $timeout, sContext, $rootScope,$state) {
 
         var me = this;
+
+        me.gotoHome=function(){
+            $state.go("home.map")
+        }
+
+        /***
+         * ****/
 
         //mappage du plugin
         me.CacheMapPlugin = CacheMapPlugin;
