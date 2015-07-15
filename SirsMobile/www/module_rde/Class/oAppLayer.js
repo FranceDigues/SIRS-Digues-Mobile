@@ -15,13 +15,13 @@ function oAppLayer(param){
 
 
     this.propVisible=param.propVisible != null ? param.propVisible : false;
-    this.realPosition=param.realPosition != null ? param.realPosition : true;
+    this.realPosition= param.realPosition != null ? param.realPosition : true;
     this.visible= param.visible;
     this.editable= param.editable;
     this.selectable= param.selectable;
 
     this.order=param.order
-    this.data = param.data;
+    this.data = param.data != null ? param.data : [];
 
 }
 
@@ -34,10 +34,35 @@ function oAppLayer(param){
 
 
 
-oAppLayer.prototype.save=function(){
-
+oAppLayer.prototype.save=function(sPouch,$rootScope){
+    var me =this;
     //todo save data in object by call all save method
+    //todo chain resolve
+    for(var i = 0; i< me.data.lenght; i++ ){
+        sPouch.localDb.put(me.data[i]).then(function (res) {
+    //validation
+        }).catch(function (err) {
+            // some error
+        });
+    }
 
-    return null;
+}
+
+oAppLayer.prototype.loadData=function(sPouch,$rootScope){
+    console.log("loading data from : "+this.title);
+    var me =this;
+
+    sPouch.localDb.query(me.gIndex, {
+        include_docs : true
+    }).then(function (res) {
+
+        me.data= res.rows;
+        $rootScope.$broadcast("sAppLayer_LayerList_Update");
+        console.log(res.rows);
+        console.log(me);
+    }).catch(function (err) {
+        // some error
+    });
+
 
 }

@@ -14,46 +14,46 @@ angular.module('module_app.data.services.applayer', [])
 
 
         me.updateList = function(){
-            $log.debug("testLayer");
-
-            me.list = []; //todo kill
-            me.visible = [];  //todo kill
-
-            sPouch.localDb.query('TronconDigue/all', { //todo kill
-                include_docs : true
-            }).then(function (res) {
-                me.list.push({name:"TronconDigue/all",data:res.rows});
-
-                // Create and add the new vector layer.
-                me.visible.push({ name: 'TronconDigue/all', source: { type: 'Vector' } });
-
-                $rootScope.$broadcast("sAppLayer_LayerList_Update");
-            }).catch(function (err) {
-                // some error
-            });
-
-
-
-            //sPouch.localDb.query('$sirs', {
+            //$log.debug("testLayer");
+            //
+            //me.list = []; //todo kill
+            //me.visible = [];  //todo kill
+            //
+            //sPouch.localDb.query('TronconDigue/all', { //todo kill
             //    include_docs : true
             //}).then(function (res) {
-            //    me.tree=res.moduleDescriptions;
-            //    angular.forEach(res.moduleDescriptions, function(v,k) {
-            //        me.layersTreeIterator(v.layers, function (item) {
-            //            //todo simple stack to filter layer
-            //            me.asSimpleStack.push(item);
-            //        });
-            //    });
+            //    me.list.push({name:"TronconDigue/all",data:res.rows});
             //
-            //    $log.debug("tree");
-            //    $log.debug(me.tree);
-            //
-            //
+            //    // Create and add the new vector layer.
+            //    me.visible.push({ name: 'TronconDigue/all', source: { type: 'Vector' } });
             //
             //    $rootScope.$broadcast("sAppLayer_LayerList_Update");
             //}).catch(function (err) {
             //    // some error
             //});
+            //
+            //
+            //
+            ////sPouch.localDb.query('$sirs', {
+            ////    include_docs : true
+            ////}).then(function (res) {
+            ////    me.tree=res.moduleDescriptions;
+            ////    angular.forEach(res.moduleDescriptions, function(v,k) {
+            ////        me.layersTreeIterator(v.layers, function (item) {
+            ////            //todo simple stack to filter layer
+            ////            me.asSimpleStack.push(item);
+            ////        });
+            ////    });
+            ////
+            ////    $log.debug("tree");
+            ////    $log.debug(me.tree);
+            ////
+            ////
+            ////
+            ////    $rootScope.$broadcast("sAppLayer_LayerList_Update");
+            ////}).catch(function (err) {
+            ////    // some error
+            ////});
 
         }
 

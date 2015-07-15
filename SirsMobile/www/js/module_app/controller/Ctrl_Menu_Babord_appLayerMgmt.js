@@ -6,7 +6,7 @@
 
 angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
 
-    .controller('cAppLayerMgmt', function cAppLayerMgmt($scope, $state, $log, sContext, sAppLayer, $timeout) {
+    .controller('cAppLayerMgmt', function cAppLayerMgmt($scope, $state, $log, sContext, sAppLayer, $timeout, sPouch,$rootScope) {
         var me = this;
 
         me.sContext = sContext;
@@ -52,6 +52,10 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
 
         me.toggleFilter= function(){
            me.search= me.search == false ? true : false;
+        }
+
+        me.loadDataLayer = function(layer){
+            if(layer.data.length==0) layer.loadData(sPouch, $rootScope); //fixme force reload?
         }
 
 //todo WORKING with list visible??

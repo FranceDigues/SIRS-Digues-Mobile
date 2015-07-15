@@ -3,7 +3,7 @@
 
         <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.sMapLayer.list|filter:{active:true}"></ol-layer>
 
-        <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.sAppLayer.visible"></ol-layer>
+        <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{visible:true}" ></ol-layer>
 
         <ol-marker ol-marker-properties="c.centreCarte"></ol-marker>
 
