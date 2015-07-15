@@ -117,7 +117,7 @@ angular.module('module_app.controllers.map', [])
          */
         function addFeaturesToAppLayers() {
             olData.getMap("map").then(function(map) {
-                angular.forEach(me.sAppLayer.list, function(layer, layerIndex) {
+                angular.forEach(me.sAppLayer.asSimpleStack, function(layer, layerIndex) {
 
                     // Retrieve the map layer from its name.
                     var olLayer = getVectorLayerByName(map, layer.name);

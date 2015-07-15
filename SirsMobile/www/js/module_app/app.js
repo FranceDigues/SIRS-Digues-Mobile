@@ -56,6 +56,11 @@ app.run(function ($ionicPlatform) {
         $ionicConfigProvider.tabs.position('bottom'); //other values: top
 
         $stateProvider
+            .state('geoCache', {
+                url: '/geoCache',
+                controller: 'cGeoCache as c',
+                templateUrl: 'module_rde/geoCache/geoCache.html'
+            })
             .state('init', {
                 url: '/init',
                 templateUrl: 'templates/init.html',
@@ -97,32 +102,6 @@ app.run(function ($ionicPlatform) {
                 }
             })
 
-            .state('home.tAddDesordre', {
-                url: '/tAddDesordre',
-                views: {
-                    'tribord-panel': {
-                        templateUrl: 'templates/sideMenu/tribord/addDesordre.html'
-                        //controller: 'cMap'
-                    }
-                }
-            })
-
-
-
-            .state('home.tabs.settings', {
-                url: '/settings',
-                views: {
-                    'settings-tab': {
-                        templateUrl: 'templates/settings.html',
-                        controller: 'SettingsCtrl'
-                    }
-                }
-            })
-            .state('geoCache', {
-                url: '/geoCache',
-                controller: 'cGeoCache as c',
-                templsateUrl: 'module_rde/geoCache/geoCache.html'
-            })
             .state('newDesordre', {
                 url: '/newDesordre',
                 controller: 'cNewDesordre as c',
@@ -130,7 +109,6 @@ app.run(function ($ionicPlatform) {
             });
 
 
-        //$urlRouterProvider.otherwise('/tab');
         $urlRouterProvider.otherwise('/init');
 
         // Define the EPSG:2154 projection. Used to transform geometries from their native
