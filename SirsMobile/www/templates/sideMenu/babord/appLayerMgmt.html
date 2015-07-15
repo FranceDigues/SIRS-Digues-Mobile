@@ -56,35 +56,7 @@
         </div>
         <div style="background-color: #003399; width: 100%; height: 15px;">
         </div>
-        <!--liste globale des layers-->
-        <!--<ion-list ng-show="true">-->
-        <!--<ion-item   style="  display: block; width: 100%;" ng-click="c.updateBaseLayer(layer.name)"-->
-        <!--ng-repeat="layer in c.sAppLayer.asSimpleStack|catFilter:c.sAppLayer.categorie"  on-swipe-left="layer.propVisible=true" ng-hide="layer.propVisible" >-->
-        <!--&lt;!&ndash;ng-hide="layer.propVisible"&ndash;&gt;-->
-        <!--&lt;!&ndash;ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:c.catFilter">&ndash;&gt;-->
 
-
-        <!--&lt;!&ndash;ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{module:c.modAct}:true">&ndash;&gt;-->
-
-        <!--|filter:{module:c.modAct}:true|catFilter:layer:c.sAppLayer.categorie"-->
-        <!--on-swipe-right="layer.propVisible=false"-->
-        <!--{{layer.propVisible}}-->
-        <!--<ion-item style="  display: block; width: 100%;" ng-show="layer.propVisible"-->
-        <!--on-swipe-right="layer.propVisible=false">-->
-        <!--<i class="material-icons  right">call_made</i>-->
-        <!--<i class="material-icons  right">call_received</i>-->
-        <!--&lt;!&ndash;bousolle like &ndash;&gt;-->
-        <!--<i class="material-icons  right">{{layers.realPosition ===true? "location_on" : "location_off" }}</i>-->
-        <!--<i class="material-icons  right">{{layers.visible ===true? "visibility" : "visibility_off" }}</i>-->
-        <!--&lt;!&ndash;edit&ndash;&gt;-->
-        <!--<i class="material-icons  right">{{layers.editable ===true? "volume_up" : "volume_off" }}</i>-->
-        <!--&lt;!&ndash;select&ndash;&gt;-->
-        <!--<i class="material-icons  right">{{layers.visible ===true? "visibility" : "visibility_off" }}</i>-->
-        <!--</ion-item>-->
-        <!--<i class="material-icons  right">done</i>-->
-        <!--Layers {{layer}}-->
-        <!--</ion-item>-->
-        <!--</ion-list>-->
 
         <!--FILTRER-->
         <ion-list
@@ -112,7 +84,7 @@
                         }}</i>
                 </ion-option-button>
                 <ion-option-button class="button-info"
-                                   ng-click="layer.visible=!layer.visible">
+                                   ng-click="layer.visible=!layer.visible; c.loadDataLayer(layer);">
                     <!--bousolle like -->
                     <i class="material-icons  right">{{layer.visible ===true? "visibility" : "visibility_off" }}</i>
                 </ion-option-button>
@@ -150,7 +122,7 @@
                     }}</i>
             </ion-option-button>
             <ion-option-button class="button-info"
-                               ng-click="layer.visible=!layer.visible">
+                               ng-click="layer.visible=!layer.visible; c.loadDataLayer(layer);">
                 <!--bousolle like -->
                 <i class="material-icons  right">{{layer.visible ===true? "visibility" : "visibility_off" }}</i>
             </ion-option-button>
