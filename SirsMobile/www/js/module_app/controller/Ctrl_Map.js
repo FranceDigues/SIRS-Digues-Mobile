@@ -15,6 +15,11 @@ angular.module('module_app.controllers.map', [])
 
         var format = new ol.format.WKT();
 
+        var white = [255, 255, 255, 1],
+            grey = [84, 84, 84, 1],
+            blue = [0, 153, 255, 1],
+            green = [0, 255, 0, 1];
+
         var selectInteraction = new ol.interaction.LongClickSelect({
             circleStyle: new ol.style.Style({
                 fill: new ol.style.Fill({
@@ -141,35 +146,19 @@ angular.module('module_app.controllers.map', [])
         }
 
         /**
-         * Updates the style of application layers (feature per feature).
+         * Iterates over features of application layers.
+         *
+         * @param callback {function(ol.Feature, Number)} the iterator function.
          */
-        function updateStyleOfAppLayers() {
+        function forEachFeatureInAppLayers(callback) {
             olData.getMap("map").then(function(map) {
                 angular.forEach(me.sAppLayer.list, function(layer, layerIndex) {
-
-                    // Retrieve the map layer from its name.
                     var olLayer = getVectorLayerByName(map, layer.name);
-
-                    // Create features from documents and display them.
-                    olLayer.getSource().getFeatures().forEach(function(feature) {
-                        setFeatureStyle(feature, layerIndex);
+                    olLayer.getSource().getFeatures().forEach(function (feature) {
+                        callback(feature, layerIndex);
                     });
                 });
             });
-        }
-
-        /**
-         * Sets/updates the style of the specified feature.
-         *
-         * @param feature {ol.Feature} the feature to style
-         * @param layerIndex {Integer} the vector layer index
-         */
-        function setFeatureStyle(feature, layerIndex) {
-            if (sContext.editionMode) {
-                feature.setStyle(sStyleFactory.create(feature.get('modified') ? 'green' : 'grey'));
-            } else {
-                feature.setStyle(sStyleFactory.createByIndex(layerIndex));
-            }
         }
 
         /**
@@ -192,12 +181,40 @@ angular.module('module_app.controllers.map', [])
         }
 
         /**
+         * Updates the style of application layers (feature per feature).
+         */
+        function updateStyleOfAppLayers() {
+            forEachFeatureInAppLayers(setFeatureStyle);
+        }
+
+        /**
+         * Sets/updates the style of the specified feature.
+         *
+         * @param feature {ol.Feature} the feature to style
+         * @param layerIndex {Integer} the vector layer index
+         */
+        function setFeatureStyle(feature, layerIndex) {
+            if (feature.get('selected')) {
+                feature.setStyle(sStyleFactory.create(blue, white));
+            } else if (sContext.editionMode) {
+                feature.setStyle(sStyleFactory.create(feature.get('edited') ? green : grey));
+            } else {
+                feature.setStyle(sStyleFactory.createByIndex(layerIndex));
+            }
+        }
+
+        /**
          * Callback for ol.interaction.LongClickSelect 'select' event.
          *
          * @param {ol.SelectEvent} event the select event.
          */
         function onFeaturesSelected(event) {
             $log.debug(event.selected.length + ' feature(s) selected');
+
+            forEachFeatureInAppLayers(function(feature, layerIndex) {
+                feature.set('selected', event.selected.indexOf(feature) !== -1);
+                setFeatureStyle(feature, layerIndex);
+            });
 
             // TODO -> handle selected features
         }

@@ -4,22 +4,22 @@ angular.module('module_app.services.style.factory', [])
     .provider('sStyleFactory', function() {
 
         var colors = [
-            '#1f77b4', '#aec7e8',
-            '#ff7f0e', '#ffbb78',
-            '#2ca02c', '#98df8a',
-            '#d62728', '#ff9896',
-            '#9467bd', '#c5b0d5',
-            '#8c564b', '#c49c94',
-            '#e377c2', '#f7b6d2',
-            '#7f7f7f', '#c7c7c7',
-            '#bcbd22', '#dbdb8d',
-            '#17becf', '#9edae5'
+            [31 , 119, 180, 1], [174, 199, 232, 1],
+            [255, 127,  14, 1], [255, 187, 120, 1],
+            [44 , 160,  44, 1], [152, 223, 138, 1],
+            [214,  39,  40, 1], [255, 152, 150, 1],
+            [148, 103, 189, 1], [197, 176, 213, 1],
+            [140,  86,  75, 1], [196, 156, 148, 1],
+            [227, 119, 194, 1], [247, 182, 210, 1],
+            [127, 127, 127, 1], [199, 199, 199, 1],
+            [188, 189,  34, 1], [219, 219, 141, 1],
+            [23 , 190, 207, 1], [158, 218, 229, 1]
         ];
 
         /**
-         * Defines the list of available colors (hex).
+         * Defines the list of available colors.
          *
-         * @param {Array} array the color array.
+         * @param {Array<Array<Number>>} array the color array.
          * @returns {Object} self.
          */
         this.setColors = function(array) {
@@ -35,31 +35,37 @@ angular.module('module_app.services.style.factory', [])
                  * Returns the factory method used to create the ol.style.Style depending
                  * on the current map resolution and using the specified color.
                  *
-                 * @param {String} color the color (hex code).
+                 * @param {Array<Number>} mainColor the main color.
+                 * @param {Array<Number>} [shadowColor] the shadow color.
                  * @returns {Function} the function that creates the ol.style.Style dynamically.
                  */
-                create: function(color) {
+                create: function(mainColor, shadowColor) {
                     return function(resolution) {
-                        var fill = new ol.style.Fill({
-                            color: color,
-                            opacity: 0.25
-                        });
+                        var styles = [],
+                            strokeWidth = 4,
+                            pointRadius = 7;
 
-                        var stroke = new ol.style.Stroke({
-                            color: color,
-                            width: 4
-                        });
+                        var fillColor = angular.copy(mainColor);
+                        fillColor[3] = fillColor[3] / 2;
+                        var fill = new ol.style.Fill({ color: fillColor });
 
-                        var image = new ol.style.Circle({
+                        // Shadow style.
+                        if (angular.isString(shadowColor) || angular.isArray(shadowColor)) {
+                            var shadowStyle = new ol.style.Style({
+                                stroke: new ol.style.Stroke({ color: shadowColor, width: strokeWidth + 2 })
+                            });
+                            styles.push(shadowStyle);
+                        }
+
+                        // Main style.
+                        var mainStyle = new ol.style.Style({
                             fill: fill,
-                            radius: 7
+                            stroke: new ol.style.Stroke({ color: mainColor, width: strokeWidth }),
+                            image: new ol.style.Circle({ fill: fill, radius: pointRadius })
                         });
+                        styles.push(mainStyle);
 
-                        return [new ol.style.Style({
-                            fill: fill,
-                            stroke: stroke,
-                            image: image
-                        })];
+                        return styles;
                     };
                 },
 

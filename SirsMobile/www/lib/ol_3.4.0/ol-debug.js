@@ -105701,53 +105701,8 @@ ol.interaction.LongClickSelect = function(opt_options) {
      * @type {function(ol.layer.Layer): boolean}
      */
     this.layerFilter_ = layerFilter;
-
-    /**
-     * @private
-     * @type {ol.FeatureOverlay}
-     */
-    this.featureOverlay_ = new ol.FeatureOverlay({
-        style: goog.isDef(options.selectStyle) ? options.selectStyle :
-            ol.interaction.Select.getDefaultStyleFunction()
-    });
-
-    var features = this.featureOverlay_.getFeatures();
-    goog.events.listen(features, ol.CollectionEventType.ADD,
-        this.addFeature_, false, this);
-    goog.events.listen(features, ol.CollectionEventType.REMOVE,
-        this.removeFeature_, false, this);
 };
 goog.inherits(ol.interaction.LongClickSelect, ol.interaction.LongClick);
-
-
-/**
- * Get the selected features.
- * @return {ol.Collection.<ol.Feature>} Features collection.
- * @api stable
- */
-ol.interaction.LongClickSelect.prototype.getFeatures = function() {
-    return this.featureOverlay_.getFeatures();
-};
-
-
-/**
- * Remove the interaction from its current map, if any,  and attach it to a new
- * map, if any. Pass `null` to just remove the interaction from the current map.
- * @param {ol.Map} map Map.
- * @api stable
- */
-ol.interaction.LongClickSelect.prototype.setMap = function(map) {
-    var currentMap = this.getMap();
-    var selectedFeatures = this.featureOverlay_.getFeatures();
-    if (!goog.isNull(currentMap)) {
-        selectedFeatures.forEach(currentMap.unskipFeature, currentMap);
-    }
-    goog.base(this, 'setMap', map);
-    this.featureOverlay_.setMap(map);
-    if (!goog.isNull(map)) {
-        selectedFeatures.forEach(map.skipFeature, map);
-    }
-};
 
 
 /**
@@ -105759,9 +105714,6 @@ ol.interaction.LongClickSelect.handleStartEvent = function(mapBrowserEvent) {
     if (!this.condition_(mapBrowserEvent)) {
         return;
     }
-
-    // Clear previous selection.
-    this.featureOverlay_.getFeatures().clear();
 
     // Draw the selection circle and setup the timeout function used to increase
     // its radius each 20 milliseconds.
@@ -105835,11 +105787,8 @@ ol.interaction.LongClickSelect.handleStopEvent = function(mapBrowserEvent) {
             });
         }, this.layerFilter_);
 
-        // Features have been selected, dispatch the event.
-        if (features.length) {
-            this.featureOverlay_.getFeatures().extend(features);
-            this.dispatchEvent(new ol.SelectEvent(ol.SelectEventType.SELECT, features, []));
-        }
+        // Dispatch the "select" event.
+        this.dispatchEvent(new ol.SelectEvent(ol.SelectEventType.SELECT, features, []));
     }
 
     // Always remove the circle.
@@ -105892,34 +105841,6 @@ ol.interaction.LongClickSelect.prototype.removeCircle_ = function() {
     this.circle_.setMap(null);
     window.clearTimeout(this.radiusTimeoutId_);
     this.radiusTimeoutId_ = null;
-};
-
-
-/**
- * @param {ol.CollectionEvent} evt Event.
- * @private
- */
-ol.interaction.LongClickSelect.prototype.addFeature_ = function(evt) {
-    var feature = evt.element;
-    var map = this.getMap();
-    goog.asserts.assertInstanceof(feature, ol.Feature);
-    if (!goog.isNull(map)) {
-        map.skipFeature(feature);
-    }
-};
-
-
-/**
- * @param {ol.CollectionEvent} evt Event.
- * @private
- */
-ol.interaction.LongClickSelect.prototype.removeFeature_ = function(evt) {
-    var feature = evt.element;
-    var map = this.getMap();
-    goog.asserts.assertInstanceof(feature, ol.Feature);
-    if (!goog.isNull(map)) {
-        map.unskipFeature(feature);
-    }
 };
 goog.provide('ol.interaction.Modify');
 
@@ -119307,16 +119228,6 @@ goog.exportSymbol(
     'ol.interaction.LongClickSelect',
     ol.interaction.LongClickSelect,
     OPENLAYERS);
-
-goog.exportProperty(
-    ol.interaction.LongClickSelect.prototype,
-    'getFeatures',
-    ol.interaction.LongClickSelect.prototype.getFeatures);
-
-goog.exportProperty(
-    ol.interaction.LongClickSelect.prototype,
-    'setMap',
-    ol.interaction.LongClickSelect.prototype.setMap);
 
 goog.exportSymbol(
     'ol.interaction.LongClickSelect.handleStartEvent',
