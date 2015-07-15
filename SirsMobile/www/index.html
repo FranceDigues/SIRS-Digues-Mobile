@@ -42,20 +42,24 @@
     <!--gulp-inject task name : jslink-->
 
     <!-- bower:js -->
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-animate/angular-animate.js"></script>
+    <script src="lib/angular-sanitize/angular-sanitize.js"></script>
+    <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="lib/jquery/dist/jquery.js"></script>
     <script src="lib/angularjs-slider/rzslider.js"></script>
-    <script src="lib/angular/angular.js"></script>
     <script src="lib/pouchdb/dist/pouchdb.js"></script>
-    <script src="lib/angular-sanitize/angular-sanitize.js"></script>
     <script src="lib/ngCordova/dist/ng-cordova.js"></script>
-    <script src="lib/angular-md5/angular-md5.js"></script>
     <script src="lib/pouchdb-quick-search/dist/pouchdb.quick-search.js"></script>
     <script src="lib/pouchdb-load/dist/pouchdb.load.js"></script>
     <script src="lib/proj4/dist/proj4.js"></script>
     <script src="lib/materialize/bin/materialize.js"></script>
     <script src="lib/lodash/lodash.js"></script>
+    <script src="lib/fabric/dist/fabric.min.js"></script>
+    <script src="lib/ionic/js/ionic.js"></script>
+    <script src="lib/ionic/js/ionic-angular.js"></script>
     <script src="lib/angular-pouchdb/angular-pouchdb.js"></script>
-    <script src="lib/angular-openlayers-directive/dist/angular-openlayers-directive.js"></script>
+    <script src="lib/angular-openlayers-directive/dist/angular-openlayers-directive.min.js"></script>
     <!-- endinject -->
 
 
@@ -109,8 +113,12 @@
     <!-- endinject -->
 
 
-    <script src="lib/fabric.js"></script>
-    <script src="lib/influxdb-latest.js"></script>
+    <!--<script src="lib/fabric.js"></script>-->
+    <!--static-->
+    <script src="staticLib/influxdb-latest.js"></script>
+
+    <!--bug jslink-->
+    <script src="lib/angular-md5/angular-md5.min.js"></script>
 
 
 </head>

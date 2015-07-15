@@ -8,6 +8,7 @@
     "ionic": "driftyco/ionic-bower#1.0.1"
   },
   "dependencies": {
+    "ionic": "driftyco/ionic-bower#1.0.1",
     "jquery": "~2.1.4",
     "angularjs-slider": "~0.1.21",
     "angular-pouchdb": "~2.1.1",
@@ -20,6 +21,7 @@
     "proj4": "~2.3.6",
     "materialize": "~0.97.0",
     "pouchdb": "~3.6.0",
-    "lodash": "~3.10.0"
+    "lodash": "~3.10.0",
+    "fabric": "~1.5.0"
   }
 }
