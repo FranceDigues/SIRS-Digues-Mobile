@@ -1,3 +1,22 @@
+.tabStampContnair{
+    width:20%;
+    display: block;
+    float: right;
+
+}
+.tabStampLine{
+    padding:0;
+}
+.tabStampTitle{
+    display: block;
+    float: left;
+}
+
+
+
+
+
+
 /* Empty. Add your own CSS if you like */
 .tabs .tab-item .icon.ol {
     background-repeat: no-repeat;

@@ -99,18 +99,18 @@
             can-swipe="c.listCanSwipe"
             ng-if="c.noFilter" class="animate-if">
         <ion-item ng-repeat="layer in c.sAppLayer.asSimpleStack ">
-            <h2> {{layer.title}}</h2>
+            <h2 class="tabStampTitle"> {{layer.title}}</h2>
 
 
-                <table name="blackBox" style="">
+                <table name="blackBox" class="tabStampContnair">
 
                     <tr>
-                        <td> <i class="material-icons  right">location_on</i></td>
-                        <td><i class="material-icons  right">visibility</i></td>
+                        <td  class="tabStampLine" ><i class="material-icons tiny  right">location_on</i></td>
+                        <td  class="tabStampLine" ><i class="material-icons tiny  right">visibility</i></td>
                     </tr>
                     <tr>
-                        <td> <i class="material-icons  right">volume_up</i></td>
-                        <td><i class="material-icons  right">volume_up</i></td>
+                        <td  class="tabStampLine" > <i class="material-icons  tiny right">volume_up</i></td>
+                        <td  class="tabStampLine" > <i class="material-icons  tiny right">volume_up</i></td>
                     </tr>
 
                 </table>
@@ -120,8 +120,7 @@
 
             <ion-option-button class="button-info"
                                ng-click="layer.realPosition=!layer.realPosition">
-                <i class="material-icons  right">{{layer.realPosition ===true? "location_on" : "location_off"
-                    }}</i>
+                <i class="material-icons  right">{{layer.realPosition ===true? "location_on" : "location_off"}}</i>
             </ion-option-button>
             <ion-option-button class="button-info"
                                ng-click="layer.visible=!layer.visible; c.loadDataLayer(layer);">
