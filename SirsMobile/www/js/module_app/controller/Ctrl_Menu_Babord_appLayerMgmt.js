@@ -68,6 +68,7 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
         }
 
     })
+
     .filter('catFilter', function() {
 
         // Create the return function

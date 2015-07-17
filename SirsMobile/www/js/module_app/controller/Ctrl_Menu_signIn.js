@@ -3,56 +3,69 @@
  */
 
 angular.module('module_app.controllers.menus.signIn', [])
-.controller('cSignIn', function cSignIn ($scope, $state, sPouch,  $log, sContext, md5, sProf) {
+    .controller('cSignIn', function cSignIn($scope, $state, sPouch, $log, sContext, md5, sProf,$timeout) {
 
-    var me = this;
-        me.user={login:"admin",password:"admin"};
+        var me = this;
+        me.user = {login: "admin", password: "admin"};
 
 
+        me.signIn = function (user) {
+            console.log('Sign-In', user);
 
-    me.signIn = function (user) {
-        console.log('Sign-In', user);
+            //TODO DEMO Comment
+            //$state.go('loading');
 
-        //TODO DEMO Comment
-        //$state.go('loading');
-
-        //TODO DEMO unComment
-        //sPouch.usr.query('name_index', {key: 'mok-sensei'}).then(function(result) {
-        //sPouch.localDb.query('Utilisateur/byLogin', {key: user.login, include_docs:true}).then(function (result) {
-
+            //TODO DEMO unComment
+            //sPouch.usr.query('name_index', {key: 'mok-sensei'}).then(function(result) {
+            //sPouch.localDb.query('Utilisateur/byLogin', {key: user.login, include_docs:true}).then(function (result) {
 
 
             //start ProfJs
-        if(sContext.logProfiling===true)  sProf.startLog("pdb_"+sPouch.localDb.adapter+"_Utilisateur/byLogin/"+user.login,Date.now());
+            if (sContext.logProfiling === true)  sProf.startLog("pdb_" + sPouch.localDb.adapter + "_Utilisateur/byLogin/" + user.login, Date.now());
 
-            sPouch.localDb.query('Utilisateur/byLogin/'+user.login, {include_docs:true}).then(function (result) {
-            // do something with result.
+            sPouch.localDb.query('Utilisateur/byLogin/' + user.login, {include_docs: true}).then(function (result) {
+                // do something with result.
 
-            // stop ProfJs
-                if(sContext.logProfiling===true) sProf.stopLog("pdb_"+sPouch.localDb.adapter+"_Utilisateur/byLogin/"+user.login,Date.now(), result.total_rows, sPouch.firstTime);
-
-
-            $log.debug(result);
-
-            $log.debug(result.rows[0].doc);
-            $log.debug(result.rows[0].doc.password);
-            $log.debug(user.password);
-            $log.debug((md5.createHash(user.password)).toUpperCase()); //TODO not int only
-
-            //FIXME verif apref mise a jour de l'encodage des mot de passe par samuel.
-            if (result.rows[0].doc.password == (md5.createHash(user.password)).toUpperCase() ) {
-            //if (0==0) {
-                sContext.auth.user = result.rows[0].doc;
-                $state.go('loading', {}, {reload: true}); //force ctrl reload
-            }
-
-        });
+                // stop ProfJs
+                if (sContext.logProfiling === true) sProf.stopLog("pdb_" + sPouch.localDb.adapter + "_Utilisateur/byLogin/" + user.login, Date.now(), result.total_rows, sPouch.firstTime);
 
 
+                $log.debug(result);
+
+                $log.debug(result.rows[0].doc);
+                $log.debug(result.rows[0].doc.password);
+                $log.debug(user.password);
+                $log.debug((md5.createHash(user.password)).toUpperCase()); //TODO not int only
+
+                //FIXME verif apref mise a jour de l'encodage des mot de passe par samuel.
+                if (result.rows[0].doc.password == (md5.createHash(user.password)).toUpperCase()) {
+                    //if (0==0) {
+                    sContext.auth.user = result.rows[0].doc;
+                    $state.go('loading', {}, {reload: true}); //force ctrl reload
+                }
+
+            });
 
 
-    };
+        };
 
+
+        //$timeout(
+        //    function (){
+        //    sPouch.confDb.put({
+        //        _id: "test-03",
+        //        data: [1, 1, 1, 1]
+        //    }).then(function () {
+        //        $log.debug("add");
+        //        sPouch.confDb.get('test-03').then(function (res) {
+        //            $log.debug("update")
+        //            $timeout(function () {
+        //                res.data.push([2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]);
+        //                sPouch.confDb.put(res);
+        //            }, 2000);
+        //        })
+        //    })
+        //    }, 2000);
 
 
 })

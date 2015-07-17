@@ -1511,8 +1511,13 @@
                 // set a layer name if given
                 if (isDefined(name)) {
                     oLayer.set('name', name);
-                } else if (isDefined(layer.name)) {
+                }else if (isDefined(layer.name)) {
                     oLayer.set('name', layer.name);
+                }
+
+                //affect buissness layer name
+                if (layer.gIndex != null) {
+                    oLayer.set('name', layer.gIndex);
                 }
 
                 return oLayer;
