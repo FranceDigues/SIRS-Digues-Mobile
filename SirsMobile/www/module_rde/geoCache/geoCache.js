@@ -36,6 +36,9 @@ angular.module('module_rde.geoCache', [
             $state.go("home.map")
         }
 
+        me.activeGeom=null;
+
+
         /***
          * ****/
 
@@ -73,14 +76,19 @@ angular.module('module_rde.geoCache', [
             enableFriends: true
         };
 
+        me.centerMap= {
+            lat: 43.5,
+                lon: 3.5,
+                zoom: 7
+        };
 
         angular.extend($scope,
             {
-                centreCarte: {
-                    lat: 43.5,
-                    lon: 3.5,
-                    zoom: 7
-                },
+            //    centreCarte: {
+            //        lat: 43.5,
+            //        lon: 3.5,
+            //        zoom: 7
+            //    },
 
                 //layers:  sMapLayer.json,
                 defaults: {
@@ -104,36 +112,37 @@ angular.module('module_rde.geoCache', [
                 $log.debug("Cache Control getMap :")
 
 
-                var myZoomSlider = new ol.control.ZoomSlider();
-                map.addControl(myZoomSlider);
+                //var myZoomSlider = new ol.control.ZoomSlider();
+                //map.addControl(myZoomSlider);
                 var myScaleLine = new ol.control.ScaleLine();
                 map.addControl(myScaleLine);
                 //var test = new ol.control.FullScreen();
                 //map.addControl(test);
 
 
-               me.dragBox = new ol.interaction.DragBoxTouch({
-                    //condition: ol.events.condition.always,
-                    style: new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                            color: [0, 0, 255, 1]
-                        })
-                    })
-                });
-
-
-                map.getInteractions().clear();
-                map.addInteraction(me.dragBox);
+               //me.dragBox = new ol.interaction.DragBoxTouch({
+               //     //condition: ol.events.condition.always,
+               //     style: new ol.style.Style({
+               //         stroke: new ol.style.Stroke({
+               //             color: [0, 0, 255, 1]
+               //         })
+               //     })
+               // });
+               //
+               //
+               // map.getInteractions().clear();
+               // map.addInteraction(me.dragBox);
 
 
                 //layer non angular
-               me.vsPoly = new ol.source.Vector({
+               me.vsActiveCache = new ol.source.Vector({
                     //create empty vector
                 });
-               me.ExistingCacheSource = new ol.source.Vector({
+
+                me.ExistingCacheSource = new ol.source.Vector({
                     //create empty vector
-                });
-                //vsPoly.addFeature(feature);
+               });
+
 
 
                 var styles = [
@@ -163,8 +172,8 @@ angular.module('module_rde.geoCache', [
                 ];
 
                 //creation du calque
-                var lPoly = new ol.layer.Vector({
-                    source:me.vsPoly,
+                var layerActiveCache = new ol.layer.Vector({
+                    source:me.vsActiveCache,
                     style: styles
                 });
 
@@ -182,7 +191,7 @@ angular.module('module_rde.geoCache', [
                 });
 
 
-                map.addLayer(lPoly);
+                map.addLayer(layerActiveCache);
                 map.addLayer(existingCacheLayer);
 
 
@@ -198,22 +207,40 @@ angular.module('module_rde.geoCache', [
                 }
 
 
+                me.popNewZone=function(){
+                    me.layerActiveCache.clear();
 
-                me.lock=function(){
-                    //map.interactions.clear();
-                    map.getInteractions().clear();
-                    map.addInteraction(me.dragBox);
-                };
-                me.unlock=function(){
-                    map.getInteractions().clear();
-                    map.addInteraction(new ol.interaction.DragPan());
-                    //map.addInteraction(new ol.interaction.DragZoom());
-                    map.addInteraction(new ol.interaction.PinchZoom());
-                    //map.addInteraction(new ol.interaction.DragRotateAndZoom());
-                };
+                    //var resolFactor =
+                    //pa=me.centerMap.lat -
 
-            }
-        );
+                       var e =  map.getView().calculateExtent(map.getSize());
+                       var w= ol.extent.getWidth(e)/3;
+                        var h = ol.extent.getHeight(e)/3;
+
+            //geom reduction
+                    e[0]=     e[0]+w;
+                    e[1]=     e[1]+h;
+                    e[2]=     e[2]-w;
+                    e[3]=     e[3]-h;
+
+                    //init geom
+
+
+
+                    //(ol.extent.getWidth(extent)/2)/4
+                     //= new new ol.geom.Polygon([[[ [,], [,], [,], [,], [,]]]]);
+                    var g = ol.geom.Polygon.fromExtent(e);
+
+                    //stock geom
+                    me.activeGeom =  new ol.Feature({
+                        geometry:me.dragBox.getGeometry()
+                    });
+
+                    /* ajout du rectangle*/
+                    me.vsActiveCache.addFeature(me.activeGeom );
+                }
+
+            });
 
 
         //maintien de la zonne a l'ecran dans un calque temporaire
@@ -225,10 +252,10 @@ angular.module('module_rde.geoCache', [
                 var tGeom =me.dragBox.getGeometry().clone(); // comportement etrange
                me.var.CoordList = tGeom.transform('EPSG:3857', 'EPSG:4326').getCoordinates();
                 /* netoyage de la couche */
-               me.vsPoly.clear();
+               me.vsActiveCache.clear();
 
                 /* ajout du rectangle*/
-               me.vsPoly.addFeature(
+               me.vsActiveCache.addFeature(
                     new ol.Feature({
                         geometry:me.dragBox.getGeometry()
 

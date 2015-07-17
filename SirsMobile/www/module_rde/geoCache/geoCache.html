@@ -1,13 +1,14 @@
-<header class="bar bar-header bar-stable">
-    <button class="col-25 button button-icon button-clear ion-arrow-left-a"
-            ng-click="c.gotoHome()"></button>
-    <a class="btn-floating btn-large waves-effect waves-light red" style="left:50%;"><i
-            class="material-icons  right" ng-click="c.popNewBox()">add</i></a>
-</header>
+
 
 <!--cache-view-->
-<ion-view class="has-header">
-    <ion-content scroll="false">
+<ion-view>
+    <header class="bar bar-header bar-stable">
+        <button class="col-25 button button-icon button-clear ion-arrow-left-a"
+                ng-click="c.gotoHome()"></button>
+        <a class="btn-floating btn-large waves-effect waves-light red" style="left:50%;"><i
+                class="material-icons  right" ng-click="c.popNewZone()">add</i></a>
+    </header>
+    <ion-content  class="has-header" scroll="false">
         <div class="row">
             <div class="col col-25 cache-form">
                 <ion-list>
@@ -16,14 +17,11 @@
                         <span class="input-label">nom du Cache</span>
                         <input type="text" ng-model="c.CacheName">
                     </label>
-                    <ion-toggle ng-model="polyOrnotPoly">
-                        Selection Polygonale
-                    </ion-toggle>
-                    <ion-checkbox ng-repeat="layer in c.sMapLayer.list|filter:{isCache:false}" ng-model="c.isChecked"> Recup
-                        {{layer.name}} ?
+                    <ion-checkbox ng-repeat="layer in c.sMapLayer.list|filter:{isCache:false}" ng-model="c.isChecked">
+                        {{layer.name}}
                     </ion-checkbox>
 
-                    <rzslider rz-slider-model="centreCarte.zoom" rz-slider-floor="0" rz-slider-ceil="18"></rzslider>
+                    <rzslider rz-slider-model="c.centerMap.zoom" rz-slider-floor="0" rz-slider-ceil="18"></rzslider>
                     <rzslider rz-slider-model="c.z.zMin" rz-slider-high="c.z.zMax" rz-slider-floor="0"
                               rz-slider-ceil="18"></rzslider>
                     <progress max="{{c.nbTileMax}}" value="{{c.nbTile}}"></progress>
@@ -35,8 +33,7 @@
                 </ion-list>
             </div>
             <div class="col col-75">
-                <openlayers id="mapCache" ol-center="centreCarte" ol-controls="controls" ol-defaults="defaults"
-                            height="400px">
+                <openlayers id="mapCache" ol-center="c.centerMap" ol-controls="controls" ol-defaults="defaults" height="400px">
                     <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.sMapLayer.list|filter:{active:true}"></ol-layer>
                 </openlayers>
 
@@ -45,21 +42,16 @@
                     <div>
                         <button class="button button-block button-positive button-yellow" ng-click="c.lock()">verr.</button>
                         <button class="button button-block button-positive button-yellow" ng-click="c.unlock()">libre</button>
-                        <!--<button class="button button-block button-positive button-yellow" ng-click="openPopover()">Pop</button>-->
                     </div>
                 </div>
 
 
 
                 <ion-list>
-                    <!--ng-click="changeColorOfFeature()"-->
                     <ion-item ng-repeat="item in  c.user.cacheGjson.features">Layer Source : {{item.properties.cacheDescriptor.layerSource}}, nom : {{item.properties.cacheDescriptor.layerSource}}
                         <button class="button button-block button-positive button-yellow" ng-click="c.clearMe(item.properties.cacheDescriptor)"> Suppr.</button>
                     </ion-item>
                 </ion-list>
-
-
-
             </div>
         </div>
     </ion-content>
