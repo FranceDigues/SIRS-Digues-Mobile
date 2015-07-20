@@ -66,33 +66,33 @@ angular.module('module_app.controllers.map', [])
 
 
 //map instance
-        olData.getMap("map").then(function (map) {
+        olData.getMap('map').then(function(map) {
             me.currentMap = map;
             me.currentMap.addInteraction(selectInteraction);
         });
 
-        $scope.$on('$destroy', function () {
+        $scope.$on('$destroy', function() {
             me.currentMap.removeInteraction(selectInteraction);
             me.currentMap = null;
         });
 
 
-        $scope.$on("enableGeoLoc", function () {
+        $scope.$on("enableGeoLoc", function() {
             //todo link cme plugin
         });
 
-        $scope.$on("disableGeoLoc", function () {
+        $scope.$on("disableGeoLoc", function() {
             //todo link cme plugin
         });
 
 
-        $rootScope.$on("sAppLayer_LayerList_Update", function () {
+        $rootScope.$on("sAppLayer_LayerList_Update", function() {
             $log.debug("testLayer return");
             $log.debug(me.sAppLayer.list);
-            $timeout(addFeaturesToAppLayers); // wait for openlayers directive update (next digest)
+            $timeout(setFeaturesOfVectorLayers); // wait for openlayers directive update (next digest)
         });
 
-        $scope.$on('editionModeChanged', updateStyleOfAppLayers);
+        $scope.$on('editionModeChanged', setFeaturesStyle);
 
 
         //get One AppLayerfor debug
@@ -102,51 +102,57 @@ angular.module('module_app.controllers.map', [])
         /**
          * Draws the features of application layers.
          */
-        function addFeaturesToAppLayers() {
-            olData.getMap("map").then(function (map) {
-                angular.forEach(me.sAppLayer.asSimpleStack.filter(function (layer) {
-                    return layer.visible === true ? true : false;
-                }), function (layer, layerIndex) {
+        function setFeaturesOfVectorLayers() {
+            forEachVectorLayer(function(layerInstance, layerIndex, layerModel) {
 
-                    // Retrieve the map layer from its name.
-                    var olLayer = getVectorLayerByName(map, layer.gIndex);
+                // Remove old features.
+                layerInstance.getSource().clear(true);
 
-                    // Remove old features.
-                    olLayer.getSource().clear(true);
+                // Create features from documents and display them.
+                var features = [];
+                angular.forEach(layerModel.data, function(item) {
+                    if (item.doc && angular.isString(item.doc.geometry)) { // it seems that some documents have no geometry
+                        var feature = format.readFeature(item.doc.geometry);
+                        feature.getGeometry().transform('EPSG:2154', 'EPSG:3857');
+                        feature.set('id', item.doc._id);
+                        feature.set('rev', item.doc._rev);
+                        feature.set('title', item.doc.libelle);
+                        setFeatureStyle(feature, layerIndex);
+                        features.push(feature);
+                    }
+                });
+                layerInstance.getSource().addFeatures(features);
 
-                    // Create features from documents and display them.
-                    var features = [];
-                    angular.forEach(layer.data, function (item) {
-                        if (item.doc && angular.isString(item.doc.geometry)) { // it seems that some documents have no geometry
-                            var feature = format.readFeature(item.doc.geometry);
-                            feature.getGeometry().transform('EPSG:2154', 'EPSG:3857');
-                            feature.set('id', item.doc._id);
-                            feature.set('rev', item.doc._rev);
-                            feature.set('title', item.doc.libelle);
-                            setFeatureStyle(feature, layerIndex);
-                            features.push(feature);
-                        }
-                    });
-                    olLayer.getSource().addFeatures(features);
+                // Log.
+                $log.debug(features.length + ' feature(s) added to the layer named "' + layerModel.gIndex + '"');
+            });
+        }
 
-                    // Log.
-                    $log.debug(features.length + ' feature(s) added to the layer named "' + layer.gIndex + '"');
+        /**
+         * Iterates over visible application layers.
+         * 
+         * @param callback {function(ol.layer.Layer, oAppLayer, Number)} the iterator function.
+         */
+        function forEachVectorLayer(callback) {
+            olData.getMap('map').then(function(map) {
+                angular.forEach(me.sAppLayer.asSimpleStack, function(layerModel, layerIndex) {
+                    if (layerModel.visible === true) {
+                        var layerInstance = getVectorLayerByName(map, layerModel.gIndex);
+                        callback(layerInstance, layerIndex, layerModel);
+                    }
                 });
             });
         }
 
         /**
-         * Iterates over features of application layers.
+         * Iterates over features of vector layers.
          *
          * @param callback {function(ol.Feature, Number)} the iterator function.
          */
-        function forEachFeatureInAppLayers(callback) {
-            olData.getMap("map").then(function (map) {
-                angular.forEach(me.sAppLayer.list, function (layer, layerIndex) {
-                    var olLayer = getVectorLayerByName(map, layer.name);
-                    olLayer.getSource().getFeatures().forEach(function (feature) {
-                        callback(feature, layerIndex);
-                    });
+        function forEachFeatureInVectorLayers(callback) {
+            forEachVectorLayer(function(layerInstance, layerIndex) {
+                layerInstance.getSource().getFeatures().forEach(function(feature) {
+                    callback(feature, layerIndex);
                 });
             });
         }
@@ -171,10 +177,10 @@ angular.module('module_app.controllers.map', [])
         }
 
         /**
-         * Updates the style of application layers (feature per feature).
+         * Sets/updates the style of all visible features (feature per feature).
          */
-        function updateStyleOfAppLayers() {
-            forEachFeatureInAppLayers(setFeatureStyle);
+        function setFeaturesStyle() {
+            forEachFeatureInVectorLayers(setFeatureStyle);
         }
 
         /**
@@ -201,7 +207,7 @@ angular.module('module_app.controllers.map', [])
         function onFeaturesSelected(event) {
             $log.debug(event.selected.length + ' feature(s) selected');
 
-            forEachFeatureInAppLayers(function (feature, layerIndex) {
+            forEachFeatureInVectorLayers(function(feature, layerIndex) {
                 feature.set('selected', event.selected.indexOf(feature) !== -1);
                 setFeatureStyle(feature, layerIndex);
             });
