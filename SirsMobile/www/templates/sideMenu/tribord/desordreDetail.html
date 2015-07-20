@@ -1,0 +1,82 @@
+<div id="disorderDetails" ng-controller="cDesordreDetail as c">
+    <header class="bar bar-header bar-stable">
+        <button class="col-25 button button-icon button-clear ion-arrow-left-a" ng-click="c.backToDisorderList()"></button>
+        <h1 class="title">Détail du désordre</h1>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs-striped tabs-top">
+        <div class="tabs tabs-sirs">
+            <a class="tab-item" ng-class="{active: c.activeTab === 'description'}" ng-click="c.setActiveTab('description')">Description</a>
+            <a class="tab-item" ng-class="{active: c.activeTab === 'observations'}" ng-click="c.setActiveTab('observations')">Observations</a>
+        </div>
+    </div>
+
+    <!-- Body -->
+    <ion-content class="has-header has-tabs-top has-fab-bottom" delegate-handle="disorderScroll" ng-switch="c.activeTab">
+
+        <!-- Description -->
+        <div ng-switch-when="description">
+            <div class="sirs-panel">
+                <div class="sirs-field-inline">
+                    <span class="sirs-field-title">Numéro de désignation :</span>
+                    <span class="sirs-field-value" ng-bind="c.document.designation"></span>
+                </div>
+                <div class="sirs-field-inline">
+                    <span class="sirs-field-title">Géométrie :</span>
+                    <span class="sirs-field-value">Désordre Linéaire</span>
+                </div>
+                <div class="sirs-field-inline">
+                    <span class="sirs-field-title">Position GPS :</span>
+                    <span class="sirs-field-value">Précision 5m</span>
+                </div>
+            </div>
+            <div class="sirs-section">
+                <div class="sirs-field">
+                    <span class="sirs-field-title">Type</span>
+                    <span class="sirs-field-value">Erosion</span>
+                </div>
+                <div class="sirs-field">
+                    <span class="sirs-field-title">Sous-type</span>
+                    <span class="sirs-field-value">Erosion dûe au fleuve</span>
+                </div>
+                <div class="sirs-field">
+                    <span class="sirs-field-title">Position</span>
+                    <span class="sirs-field-value">Talus de digue</span>
+                </div>
+                <div class="sirs-field">
+                    <span class="sirs-field-title">Côté</span>
+                    <span class="sirs-field-value">Rivière</span>
+                </div>
+                <div class="sirs-field">
+                    <span class="sirs-field-title">Description</span>
+                    <span class="sirs-field-value">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Observations -->
+        <div ng-switch-when="observations">
+            <ion-list>
+                <ion-item>20/03/2015</ion-item>
+                <ion-item>19/02/2015</ion-item>
+                <ion-item>15/12/2014</ion-item>
+                <ion-item>05/10/2014</ion-item>
+                <ion-item>04/07/2013</ion-item>
+            </ion-list>
+        </div>
+    </ion-content>
+
+    <!-- Description fixed buttons -->
+    <div class="fixed-action-btn" style="bottom: 15px; right: 85px;" ng-if="c.activeTab === 'description'">
+        <a class="btn-floating btn-large waves-effect waves-light red"><i class="large material-icons">delete</i></a>
+    </div>
+    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;" ng-if="c.activeTab === 'description'">
+        <a class="btn-floating btn-large waves-effect waves-light purple"><i class="large material-icons">edit</i></a>
+    </div>
+
+    <!-- Observations fixed button -->
+    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;" ng-if="c.activeTab === 'observations'">
+        <a class="btn-floating btn-large waves-effect waves-light red"><i class="large material-icons">add</i></a>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+<div id="disorderSelection" ng-controller="cDesordreSlct as c">
+    <header class="bar bar-header bar-stable">
+        <h1 class="title">Liste des désordres</h1>
+    </header>
+    <ion-content class="has-header" delegate-handle="selectionScroll">
+        <ion-list>
+            <ion-item ng-repeat="ft in c.sContext.selectedFeatures" ng-bind="ft.get('title')" ng-click="c.openDisorderDetails(ft)"></ion-item>
+        </ion-list>
+    </ion-content>
+</div>

@@ -30,7 +30,9 @@ angular.module('module_app.controllers',
 
 
 
+        'module_app.controllers.menus.tribord.desordreDetail',
         'module_app.controllers.menus.tribord.desordreMgmt',
+        'module_app.controllers.menus.tribord.desordreSlct',
         'module_app.controllers.menus.tribord.closableDesordre',
         'module_app.controllers.menus.tribord.editableLayer',
 

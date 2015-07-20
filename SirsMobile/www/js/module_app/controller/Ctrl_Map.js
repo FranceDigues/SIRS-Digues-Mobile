@@ -11,22 +11,21 @@ angular.module('module_app.controllers.map', [])
 /***************************************************************** --------- *****************************************************/
 
 //sMap ==> ?
-    .controller('cMap', function cMap($scope, sMapLayer, sAppLayer, $log, olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation, $timeout, sStyleFactory, sLoc) {
+    .controller('cMap', function cMap($scope, $ionicSideMenuDelegate, $ionicScrollDelegate, sMapLayer, sAppLayer, $log, olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation, $timeout, sStyleFactory, sLoc) {
 
         var format = new ol.format.WKT();
 
         var white = [255, 255, 255, 1],
             grey = [84, 84, 84, 1],
-            blue = [0, 153, 255, 1],
             green = [0, 255, 0, 1];
 
         var selectInteraction = new ol.interaction.LongClickSelect({
             circleStyle: new ol.style.Style({
                 fill: new ol.style.Fill({
-                    color: 'rgba(255, 165, 0, 0.25)'
+                    color: /* orange */ [255, 165, 0, 0.25]
                 }),
                 stroke: new ol.style.Stroke({
-                    color: 'rgba(255, 165, 0, 1)',
+                    color: /* orange */ [255, 165, 0, 1],
                     width: 2
                 })
             }),
@@ -123,6 +122,7 @@ angular.module('module_app.controllers.map', [])
                             feature.getGeometry().transform('EPSG:2154', 'EPSG:3857');
                             feature.set('id', item.doc._id);
                             feature.set('rev', item.doc._rev);
+                            feature.set('title', item.doc.libelle);
                             setFeatureStyle(feature, layerIndex);
                             features.push(feature);
                         }
@@ -185,7 +185,7 @@ angular.module('module_app.controllers.map', [])
          */
         function setFeatureStyle(feature, layerIndex) {
             if (feature.get('selected')) {
-                feature.setStyle(sStyleFactory.create(blue, white));
+                feature.setStyle(sStyleFactory.createByIndex(layerIndex, white));
             } else if (sContext.editionMode) {
                 feature.setStyle(sStyleFactory.create(feature.get('edited') ? green : grey));
             } else {
@@ -206,6 +206,16 @@ angular.module('module_app.controllers.map', [])
                 setFeatureStyle(feature, layerIndex);
             });
 
-            // TODO -> handle selected features
+            if (event.selected.length) {
+                sContext.tribordView.active = 'desordreSlct';
+                sContext.selectedFeatures = event.selected;
+                $ionicSideMenuDelegate.toggleRight();
+
+                // Scroll to top of the selection list (if already visible).
+                var ionContent = $ionicScrollDelegate.$getByHandle('selectionScroll');
+                if (angular.isDefined(ionContent)) {
+                    ionContent.scrollTop(false);
+                }
+            }
         }
     });

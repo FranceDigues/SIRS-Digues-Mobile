@@ -19,7 +19,7 @@ angular.module('module_app.services.style.factory', [])
         /**
          * Defines the list of available colors.
          *
-         * @param {Array<Array<Number>>} array the color array.
+         * @param {Array<Array<number>>} array the color array.
          * @returns {Object} self.
          */
         this.setColors = function(array) {
@@ -35,9 +35,10 @@ angular.module('module_app.services.style.factory', [])
                  * Returns the factory method used to create the ol.style.Style depending
                  * on the current map resolution and using the specified color.
                  *
-                 * @param {Array<Number>} mainColor the main color.
-                 * @param {Array<Number>} [shadowColor] the shadow color.
-                 * @returns {Function} the function that creates the ol.style.Style dynamically.
+                 * @param {Array<number>} mainColor the main color.
+                 * @param {Array<number>} [shadowColor] the shadow color.
+                 * @returns {function(number)} the function that creates the ol.style.Style
+                 * dynamically.
                  */
                 create: function(mainColor, shadowColor) {
                     return function(resolution) {
@@ -52,7 +53,7 @@ angular.module('module_app.services.style.factory', [])
                         // Shadow style.
                         if (angular.isString(shadowColor) || angular.isArray(shadowColor)) {
                             var shadowStyle = new ol.style.Style({
-                                stroke: new ol.style.Stroke({ color: shadowColor, width: strokeWidth + 2 })
+                                stroke: new ol.style.Stroke({ color: shadowColor, width: strokeWidth + 4 })
                             });
                             styles.push(shadowStyle);
                         }
@@ -74,10 +75,12 @@ angular.module('module_app.services.style.factory', [])
                  * on the current map resolution and using the color at the specified index.
                  *
                  * @param {Integer} index the color index.
-                 * @returns {Function} the function that creates the ol.style.Style dynamically.
+                 * @param {Array<number>} [shadowColor] the shadow color.
+                 * @returns {function(number)} the function that creates the ol.style.Style
+                 * dynamically.
                  */
-                createByIndex: function(index) {
-                    return this.create(colors[index]);
+                createByIndex: function(index, shadowColor) {
+                    return this.create(colors[index], shadowColor);
                 }
             };
         };
