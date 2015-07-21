@@ -35,5 +35,6 @@ angular.module('module_app.controllers',
         'module_app.controllers.menus.tribord.desordreSlct',
         'module_app.controllers.menus.tribord.closableDesordre',
         'module_app.controllers.menus.tribord.editableLayer',
+        'module_app.controllers.menus.tribord.observationDetail'
 
     ])

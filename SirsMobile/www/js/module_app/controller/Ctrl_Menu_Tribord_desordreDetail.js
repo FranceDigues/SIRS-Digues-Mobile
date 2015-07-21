@@ -1,7 +1,7 @@
 
 angular.module('module_app.controllers.menus.tribord.desordreDetail', [])
 
-    .controller('cDesordreDetail', function cDesordreDetail($ionicScrollDelegate, sContext) {
+    .controller('cDesordreDetail', function cDesordreDetail($ionicScrollDelegate, $cordovaToast, sContext) {
 
         var self = this;
 
@@ -19,4 +19,17 @@ angular.module('module_app.controllers.menus.tribord.desordreDetail', [])
         self.backToDisorderList = function() {
             sContext.tribordView.active = 'desordreSlct';
         };
+
+        self.openObservationDetails = function() {
+            onGetObservationSuccess(); // TODO -> load observation details
+        };
+
+
+        function onGetObservationSuccess() {
+            sContext.tribordView.active = 'observationDetail';
+        }
+
+        function onGetObservationError() {
+            $cordovaToast.showLongBottom('Une erreur s\'est produite.');
+        }
     });
