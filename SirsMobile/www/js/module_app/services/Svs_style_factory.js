@@ -49,35 +49,41 @@ angular.module('module_app.services.style.factory', [])
                 return new ol.style.Style({ image: circle });
             }
 
-            function createPointStyleArray(color, highligth) {
-                var fillColor = highligth === true ? color : [255, 255, 255, 0.25],
-                    strokeColor = highligth === true ? [255, 255, 255, 1] : color,
-                    strokeWidth = 2,
-                    pointRadius = 5;
-                return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius)];
+            function createPointStyleFunc(color, highligth) {
+                return function(resolution) {
+                    var fillColor = highligth === true ? color : [255, 255, 255, 0.25],
+                        strokeColor = highligth === true ? [255, 255, 255, 1] : color,
+                        strokeWidth = 2,
+                        pointRadius = 5;
+                    return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius)];
+                };
             }
 
-            function createLineStyleArray(color, highligth) {
-                var styles = [],
-                    strokeColor = color,
-                    strokeWidth = 4;
-                if (highligth === true) {
-                    styles.push(createLineStyle([255, 255, 255, 1], strokeWidth + 4));
-                }
-                styles.push(createLineStyle(strokeColor, strokeWidth));
-                return styles;
+            function createLineStyleFunc(color, highligth) {
+                return function(resolution) {
+                    var styles = [],
+                        strokeColor = color,
+                        strokeWidth = 4;
+                    if (highligth === true) {
+                        styles.push(createLineStyle([255, 255, 255, 1], strokeWidth + 4));
+                    }
+                    styles.push(createLineStyle(strokeColor, strokeWidth));
+                    return styles;
+                };
             }
 
-            function createPolygonStyleArray(color, highligth) {
-                var styles = [],
-                    fillColor = [255, 255, 255, 0.25],
-                    strokeColor = color,
-                    strokeWidth = 4;
-                if (highligth === true) {
-                    styles.push(createLineStyle([255, 255, 255, 1], strokeWidth + 4));
-                }
-                styles.push(createPolygonStyle(fillColor, strokeColor, strokeWidth));
-                return styles;
+            function createPolygonStyleFunc(color, highligth) {
+                return function(resolution) {
+                    var styles = [],
+                        fillColor = [255, 255, 255, 0.25],
+                        strokeColor = color,
+                        strokeWidth = 4;
+                    if (highligth === true) {
+                        styles.push(createLineStyle([255, 255, 255, 1], strokeWidth + 4));
+                    }
+                    styles.push(createPolygonStyle(fillColor, strokeColor, strokeWidth));
+                    return styles;
+                };
             }
 
             return {
@@ -95,13 +101,13 @@ angular.module('module_app.services.style.factory', [])
                     switch (geometryType) {
                         case 'Polygon':
                         case 'MultiPolygon':
-                            return createPolygonStyleArray(highlight);
+                            return createPolygonStyleFunc(highlight);
                         case 'LineString':
                         case 'MultiLineString':
-                            return createLineStyleArray(color, highlight);
+                            return createLineStyleFunc(color, highlight);
                         case 'Point':
                         case 'MultiPoint':
-                            return createPointStyleArray(color, highlight);
+                            return createPointStyleFunc(color, highlight);
                     }
                     return null;
                 },
