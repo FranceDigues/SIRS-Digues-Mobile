@@ -38,7 +38,8 @@ angular.module('module_rde.geoCache', [
 
         me.activeGeom=null;
         me.lastClickCoord=null;
-        me.layerToCache = null
+        me.layerToCache = [];
+        me.cacheM0 = 0;
 
 
         /***
@@ -439,31 +440,60 @@ angular.module('module_rde.geoCache', [
            $log.info("cachMe_RUN")
 
            //build cache descriptor
-           var caDeList =[{
-               "nom":"essaiWMS",
-               "idf":"1000000",
-               "source":"cstl-demo",
-               "type":"ImageWMS",
-               "zMin":"8",
-               "zMax":"9",
-               "url":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
-               "layers":["ZA_EID_Nuisance"],
-               "bbox":[[42.5,2.5],[44.0,5.0]]
-           }]
+           //var caDeList =[{
+           //    "nom":"essaiWMS",
+           //    "idf":"1000000",
+           //    "source":"cstl-demo",
+           //    "type":"ImageWMS",
+           //    "zMin": me.z.zMin,
+           //    "zMax":me.z.zMax,
+           //    "url":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
+           //    "layers":["ZA_EID_Nuisance"],
+           //    "bbox":[[42.5,2.5],[44.0,5.0]]
+           //}]
+
+
+           var e =   ol.extent.applyTransform( me.activeGeom.getGeometry().getExtent(),  ol.proj.getTransform('EPSG:3857', 'EPSG:4326'))
+
+           //round
+           var i =0;
+           while(i < e.length){
+              e[i] = e[i].toFixed(2);
+               i++
+           }
+
+           //$log.debug(e)
+           //$log.debug([[e[1],e[0]],[e[3],e[2]]])
+           //$log.debug([[42.5,2.5],[44.0,5.0]])
 
            //envoie de la requette de dl au plugin
-           CacheMapPlugin.updateCache(caDeList);
+           CacheMapPlugin.updateCache([{
+               "name":"essai_new",
+               "idf":"1000000",
+               "layerSource":"cstl-demo",
+               "typeSource":"ImageWMS",
+               "zMin": me.z.zMin,
+               "zMax":me.z.zMax,
+               "urlSource":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
+               "layers":["ZA_EID_Nuisance"],
+               "bbox":[[e[1],e[0]],[e[3],e[2]]]
+           }]);
+
+           this.setIdf(jsonCache.getInt("idf"));
+           this.setName(jsonCache.getString("name"));
+           this.setLayerSource(jsonCache.getString("layerSource"));
+           this.setTypeSource(sourceType.valueOf(jsonCache.getString("typeSource")));
+           this.setUrlSource(jsonCache.getString("urlSource"));
+           this.setzMin(jsonCache.getInt("zMin"));
+           this.setzMax(jsonCache.getInt("zMax"))
 
 
-           //save Cache descriptor dans l'user
-            var tmp =me.dragBox.getGeometry().clone();
-            $log.debug(tmp)
             //affichage de l'emprise
            me.ExistingCacheSource.addFeature(
                 new ol.Feature({
-                    geometry: tmp,
-                    nom: cacheName,
-                    origine: LayerSourceName
+                    geometry: me.activeGeom.getGeometry(),
+                    nom: "test",
+                    origine: "test"
 
                 }));
 
@@ -472,14 +502,15 @@ angular.module('module_rde.geoCache', [
 
             //eregistrement ds l'objet utilisater
             //TODO user dans le context!
-            sContext.auth.user.cacheGeom = atoGeoJson($scope.ExistingCacheSource);
+            sContext.auth.user.cacheGeom = atoGeoJson(me.ExistingCacheSource);
             //sContext.auth.user.cache.layers.push({nom: cacheName, origine: LayerSourceName});
 
             $log.debug(sContext.auth.user);
             //TODO stoker la liste des tuile pour controle au chargement
 
             //$rootScope.$broadcast("userChange"); //mise a jour de l'user dans la base
-            sContext.saveUser();
+            //sContext.saveUser();
+
 
         };
 
@@ -487,6 +518,12 @@ angular.module('module_rde.geoCache', [
         me.clearMe = function(caDe){
 
             CacheMapPlugin.clearOneCache(caDe);
+
+        }
+
+        me.clearall = function(){
+
+            CacheMapPlugin.clearAll();
 
         }
 

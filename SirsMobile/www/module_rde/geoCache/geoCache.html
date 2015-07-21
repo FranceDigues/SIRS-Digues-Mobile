@@ -15,9 +15,12 @@
                         <span class="input-label">nom du Cache</span>
                         <input type="text" ng-model="c.CacheName">
                     </label>
-                    <ion-checkbox ng-repeat="layer in c.sMapLayer.list|filter:{isCache:false}" ng-model="layer.active">
+                    <ion-checkbox ng-repeat="layer in c.sMapLayer.list|filter:{isCache:false}" ng-model="layer.needToCache"
+                                 >
                         {{layer.name}}
+                        {{layer.needToCache}}
                     </ion-checkbox>
+
 
                     <rzslider rz-slider-model="c.centerMap.zoom" rz-slider-floor="0" rz-slider-ceil="18"></rzslider>
                     <rzslider rz-slider-model="c.z.zMin" rz-slider-high="c.z.zMax" rz-slider-floor="0"
@@ -28,14 +31,20 @@
                     <!--TODO : alert volume?-->
                     <button class="button button-block button-positive" href="#/" ng-click="c.cachMe()">Mise en Cache
                     </button>
+                    <label class="item item-input">
+                        <span class="input-label">taille estimé</span>
+                        {{c.cacheM0}}
+                    </label>
+                    <button class="button button-block button-positive" href="#/" ng-click="c.clearall()">clean
+                    </button>
                 </ion-list>
             </div>
             <div class="col col-75">
                 <div>
-                    <openlayers id="mapCache" ol-center="c.centerMap" ol-controls="controls" ol-defaults="defaults"
+                    <openlayers id="mapCache" custom-layers="true" ol-center="c.centerMap" ol-controls="controls" ol-defaults="defaults"
                                 style="height:50%">
                         <ol-layer ol-layer-properties="layer"
-                                  ng-repeat="layer in c.sMapLayer.list|filter:{active:true}"></ol-layer>
+                                  ng-repeat="layer in c.sMapLayer.list|filter:{needToCache:true}"></ol-layer>
                     </openlayers>
 
                     <img src="img/viseur.png"
