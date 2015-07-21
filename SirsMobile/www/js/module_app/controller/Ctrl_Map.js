@@ -15,8 +15,7 @@ angular.module('module_app.controllers.map', [])
 
         var format = new ol.format.WKT();
 
-        var white = [255, 255, 255, 1],
-            grey = [84, 84, 84, 1],
+        var grey = [84, 84, 84, 1],
             green = [0, 255, 0, 1];
 
         var selectInteraction = new ol.interaction.LongClickSelect({
@@ -190,13 +189,19 @@ angular.module('module_app.controllers.map', [])
          * @param layerIndex {Integer} the vector layer index
          */
         function setFeatureStyle(feature, layerIndex) {
-            if (feature.get('selected')) {
-                feature.setStyle(sStyleFactory.createByIndex(layerIndex, white));
-            } else if (sContext.editionMode) {
-                feature.setStyle(sStyleFactory.create(feature.get('edited') ? green : grey));
+            var style = null;
+            if (sContext.editionMode) {
+                style = sStyleFactory.createByColor(
+                    feature.get('edited') ? green : grey,
+                    feature.getGeometry().getType(),
+                    false);
             } else {
-                feature.setStyle(sStyleFactory.createByIndex(layerIndex));
+                style = sStyleFactory.createByIndex(
+                    layerIndex,
+                    feature.getGeometry().getType(),
+                    feature.get('selected'));
             }
+            feature.setStyle(style);
         }
 
         /**

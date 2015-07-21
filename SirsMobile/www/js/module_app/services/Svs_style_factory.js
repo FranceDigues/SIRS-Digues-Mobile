@@ -30,44 +30,80 @@ angular.module('module_app.services.style.factory', [])
         };
 
         this.$get = function() {
+
+            function createPolygonStyle(fillColor, strokeColor, strokeWidth) {
+                var fill = new ol.style.Fill({ color: fillColor });
+                var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
+                return new ol.style.Style({ fill: fill, stroke: stroke });
+            }
+
+            function createLineStyle(strokeColor, strokeWidth) {
+                var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
+                return new ol.style.Style({ stroke: stroke });
+            }
+
+            function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius) {
+                var fill = new ol.style.Fill({ color: fillColor });
+                var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
+                var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
+                return new ol.style.Style({ image: circle });
+            }
+
+            function createPointStyleArray(color, highligth) {
+                var fillColor = highligth === true ? color : [255, 255, 255, 0.25],
+                    strokeColor = highligth === true ? [255, 255, 255, 1] : color,
+                    strokeWidth = 2,
+                    pointRadius = 5;
+                return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius)];
+            }
+
+            function createLineStyleArray(color, highligth) {
+                var styles = [],
+                    strokeColor = color,
+                    strokeWidth = 4;
+                if (highligth === true) {
+                    styles.push(createLineStyle([255, 255, 255, 1], strokeWidth + 4));
+                }
+                styles.push(createLineStyle(strokeColor, strokeWidth));
+                return styles;
+            }
+
+            function createPolygonStyleArray(color, highligth) {
+                var styles = [],
+                    fillColor = [255, 255, 255, 0.25],
+                    strokeColor = color,
+                    strokeWidth = 4;
+                if (highligth === true) {
+                    styles.push(createLineStyle([255, 255, 255, 1], strokeWidth + 4));
+                }
+                styles.push(createPolygonStyle(fillColor, strokeColor, strokeWidth));
+                return styles;
+            }
+
             return {
                 /**
                  * Returns the factory method used to create the ol.style.Style depending
                  * on the current map resolution and using the specified color.
                  *
-                 * @param {Array<number>} mainColor the main color.
-                 * @param {Array<number>} [shadowColor] the shadow color.
+                 * @param {Array<number>} color the color to apply.
+                 * @param {string} geometryType the geometry type.
+                 * @param {boolean} [highlight] if true, the style will be highlighted.
                  * @returns {function(number)} the function that creates the ol.style.Style
                  * dynamically.
                  */
-                create: function(mainColor, shadowColor) {
-                    return function(resolution) {
-                        var styles = [],
-                            strokeWidth = 4,
-                            pointRadius = 7;
-
-                        var fillColor = angular.copy(mainColor);
-                        fillColor[3] = fillColor[3] / 2;
-                        var fill = new ol.style.Fill({ color: fillColor });
-
-                        // Shadow style.
-                        if (angular.isString(shadowColor) || angular.isArray(shadowColor)) {
-                            var shadowStyle = new ol.style.Style({
-                                stroke: new ol.style.Stroke({ color: shadowColor, width: strokeWidth + 4 })
-                            });
-                            styles.push(shadowStyle);
-                        }
-
-                        // Main style.
-                        var mainStyle = new ol.style.Style({
-                            fill: fill,
-                            stroke: new ol.style.Stroke({ color: mainColor, width: strokeWidth }),
-                            image: new ol.style.Circle({ fill: fill, radius: pointRadius })
-                        });
-                        styles.push(mainStyle);
-
-                        return styles;
-                    };
+                createByColor: function(color, geometryType, highlight) {
+                    switch (geometryType) {
+                        case 'Polygon':
+                        case 'MultiPolygon':
+                            return createPolygonStyleArray(highlight);
+                        case 'LineString':
+                        case 'MultiLineString':
+                            return createLineStyleArray(color, highlight);
+                        case 'Point':
+                        case 'MultiPoint':
+                            return createPointStyleArray(color, highlight);
+                    }
+                    return null;
                 },
 
                 /**
@@ -75,12 +111,13 @@ angular.module('module_app.services.style.factory', [])
                  * on the current map resolution and using the color at the specified index.
                  *
                  * @param {Integer} index the color index.
-                 * @param {Array<number>} [shadowColor] the shadow color.
+                 * @param {string} geometryType the geometry type.
+                 * @param {boolean} [highlight] if true, the style will be highlighted.
                  * @returns {function(number)} the function that creates the ol.style.Style
                  * dynamically.
                  */
-                createByIndex: function(index, shadowColor) {
-                    return this.create(colors[index], shadowColor);
+                createByIndex: function(index, geometryType, highlight) {
+                    return this.createByColor(colors[index], geometryType, highlight);
                 }
             };
         };
