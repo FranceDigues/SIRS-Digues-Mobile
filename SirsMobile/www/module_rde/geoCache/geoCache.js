@@ -37,6 +37,8 @@ angular.module('module_rde.geoCache', [
         }
 
         me.activeGeom=null;
+        me.lastClickCoord=null;
+        me.layerToCache = null
 
 
         /***
@@ -196,7 +198,7 @@ angular.module('module_rde.geoCache', [
 
 
                 //init des zonne de cache
-                if (sContext.auth.user.cg != "") {
+                if (sContext.auth.user.cg != ""&&sContext.auth.user.cg != null) {
                     var gjson = new ol.format.GeoJSON();
                     var aFeatures = gjson.readFeatures(sContext.auth.user.cacheGjson);
                     $log.debug(aFeatures);
@@ -208,61 +210,228 @@ angular.module('module_rde.geoCache', [
 
 
                 me.popNewZone=function(){
-                    me.layerActiveCache.clear();
 
-                    //var resolFactor =
-                    //pa=me.centerMap.lat -
+                    //clean active :
+                     me.vsActiveCache.clear()
+
 
                        var e =  map.getView().calculateExtent(map.getSize());
                        var w= ol.extent.getWidth(e)/3;
-                        var h = ol.extent.getHeight(e)/3;
-
+                       var h = ol.extent.getHeight(e)/3;
             //geom reduction
-                    e[0]=     e[0]+w;
-                    e[1]=     e[1]+h;
-                    e[2]=     e[2]-w;
-                    e[3]=     e[3]-h;
-
-                    //init geom
+                    e[0]=      e[0]+w; //xmin
+                    e[1]=      e[1]+h; //ymin
+                    e[2]=      e[2]-w; //xmax
+                    e[3]=      e[3]-h; //ymax
 
 
 
-                    //(ol.extent.getWidth(extent)/2)/4
-                     //= new new ol.geom.Polygon([[[ [,], [,], [,], [,], [,]]]]);
-                    var g = ol.geom.Polygon.fromExtent(e);
-
+                    //var g = new ol.geom.Polygon([[ [minX,minY], [maxX,minY], [maxX,maxY], [minX,maxY], [minX,minY]]]);
+                    var g = me._polyFromExtent(e);
+                    //var g = fromExtent_ol3_7(e);
                     //stock geom
                     me.activeGeom =  new ol.Feature({
-                        geometry:me.dragBox.getGeometry()
+                        geometry: g
                     });
 
                     /* ajout du rectangle*/
                     me.vsActiveCache.addFeature(me.activeGeom );
                 }
 
+            map.on('click', function(event) {
+                $log.debug( "event");
+                $log.debug( me.selectEditCorner);
+                if(me.selectEditCorner===true){
+                    me.editingZone(event.coordinate)
+                }
+                //me.lastClickCoord =  event.coordinate;
+                //$log.debug( me.lastClickCoord);
+            });
+
+            map.getView().on('change:center', function (center){
+            //map.on('pointerdrag', function (center){
+
+
+                    $log.debug( map.getView().getCenter());
+                    //$log.debug(center.target.values.center);
+
+
+                //$log.debug(me.centerMap);
+                if(me.editingCacheZone===true && me.targetIndex != null){
+                    $log.debug("editing");
+                    me._updatePoly( map.getView().getCenter());
+
+                }
+            })
+
             });
 
 
-        //maintien de la zonne a l'ecran dans un calque temporaire
-       $scope.$on('openlayers.map.pointermove', function (e, coord) {
 
-           $scope.$apply(function () {
 
-                //recup jeux de coordonnée
-                var tGeom =me.dragBox.getGeometry().clone(); // comportement etrange
-               me.var.CoordList = tGeom.transform('EPSG:3857', 'EPSG:4326').getCoordinates();
-                /* netoyage de la couche */
-               me.vsActiveCache.clear();
+       // //maintien de la zonne a l'ecran dans un calque temporaire
+       //$scope.$on('openlayers.map.pointermove', function (e, coord) {
+       //
+       //    $scope.$apply(function () {
+       //
+       //         //recup jeux de coordonnée
+       //         var tGeom =me.dragBox.getGeometry().clone(); // comportement etrange
+       //        me.var.CoordList = tGeom.transform('EPSG:3857', 'EPSG:4326').getCoordinates();
+       //         /* netoyage de la couche */
+       //        me.vsActiveCache.clear();
+       //
+       //         /* ajout du rectangle*/
+       //        me.vsActiveCache.addFeature(
+       //             new ol.Feature({
+       //                 geometry:me.dragBox.getGeometry()
+       //
+       //             }));
+       //     });
+       // });
 
-                /* ajout du rectangle*/
-               me.vsActiveCache.addFeature(
-                    new ol.Feature({
-                        geometry:me.dragBox.getGeometry()
+        me.editingCacheZone = false;
+        me.selectEditCorner = false;
+        me.targetIndex=null;
+        me.editingZone = function(coord){
+            $log.debug(coord)
+           var g = me.activeGeom.getGeometry();
+            $log.debug(g)
 
-                    }));
+            //$log.debug(g.getCoordinates())
+          me.targetIndex =   me._getClosestPointByIndex(coord,(g.getCoordinates())[0])
+
+            e=g.getExtent();
+            $log.debug("xmin : "+e[0])
+            $log.debug("ymin : "+e[1])
+            $log.debug((g.getCoordinates())[0][ me.targetIndex]);
+
+            //relocation
+            me.centerMap.lat= (g.getCoordinates())[0][ me.targetIndex][0]
+            me.centerMap.lon= (g.getCoordinates())[0][ me.targetIndex][1]
+
+            //dirty switch
+            me.selectEditCorner=false;
+            me.editingCacheZone=true;
+        }
+
+        me._getClosestPointByIndex=function(c,arrP){
+            $log.debug("_getClosestPointByIndex  :");
+            $log.debug(arrP);
+            var dists = []
+            for(var i =0; i<4;i++){
+                $log.debug(c);
+                //$log.debug(arrP[i]);
+                dists.push(  me._calcDist(c,arrP[i]));
+                $log.debug(dists);
+            }
+
+            $log.debug(    dists.indexOf(Math.max.apply(Math, dists))  );
+
+            return dists.indexOf(Math.max.apply(Math, dists));
+        }
+
+        me._calcDist= function(p1,p2){
+            //todo gestion axes
+
+            return (p2[0]-p1[0])*(p2[0]-p1[0]) + (p2[1]-p1[1])*(p2[1]-p1[1]);
+        }
+
+        me._polyFromExtent=function(e){
+            return new ol.geom.Polygon([[ [e[0],e[1]], [ e[2],e[1]], [ e[2],e[3]], [e[0],e[3]], [e[0],e[1]]]]);
+        }
+
+        me._addCleanPoly=function(g){
+            me.vsActiveCache.clear();
+            me.activeGeom= new ol.Feature({
+                geometry: g
             });
-        });
 
+            /* ajout du rectangle*/
+            me.vsActiveCache.addFeature(me.activeGeom );
+
+        }
+
+        me._updatePoly = function(center){ //int 0 -3
+
+            //var updatedGeom
+//TODO instersection
+            var e= me.activeGeom.getGeometry().getExtent();
+            $log.debug(me.targetIndex);
+            me._switchCaseMove(me.targetIndex,center,e)
+
+        }
+
+        me._checkExtent = function(e){
+            $log.debug(e);
+            if(me.targetIndex == 0 ){
+                if(e[0]>e[2]){
+                    me.targetIndex = 1;
+                }else if(e[1]>e[3]){
+                    me.targetIndex = 3;
+                }else if(e[0]>e[2] && e[1]>e[3]){
+                    me.targetIndex = 2;
+                }
+            }
+            else if(me.targetIndex == 1 ){
+                if(e[0]>e[2]){
+                    me.targetIndex = 0;
+                }else if(e[1]>e[3]){
+                    me.targetIndex = 2;
+                }else if(e[0]>e[2] && e[1]>e[3]){
+                    me.targetIndex = 3;
+                }
+            }
+            else if(me.targetIndex == 2 ){
+                if(e[0]>e[2]){
+                    me.targetIndex = 3;
+                }else if(e[1]>e[3]){
+                    me.targetIndex = 1;
+                }else if(e[0]>e[2] && e[1]>e[3]){
+                    me.targetIndex = 0;
+                }
+            }
+            else if(me.targetIndex == 3 ){
+                if(e[0]>e[2]){
+                    me.targetIndex = 2;
+                }else if(e[1]>e[3]){
+                    me.targetIndex = 0;
+                }else if(e[0]>e[2] && e[1]>e[3]){
+                    me.targetIndex = 1;
+                }
+            }
+            return [Math.min(e[0],e[2]),Math.min(e[1],e[3]),Math.max(e[0],e[2]),Math.max(e[1],e[3])];
+        }
+
+        me._switchCaseMove = function(indexe,center,e){
+            switch (indexe){
+                case 0 :
+                    $log.debug("case 0")
+                    e[3]= center[1];
+                    e[2]= center[0];
+                    //me._addCleanPoly(me._polyFromExtent( me._checkExtent(e)));
+                    break;
+                case 1:
+                    $log.debug("case 1")
+                    e[0]= center[0];
+                    e[3]= center[1];
+                    //me._addCleanPoly(me._polyFromExtent( me._checkExtent(e)));
+                    break;
+                case 2:
+                    $log.debug("case 2")
+                    e[0]= center[0];
+                    e[1]= center[1];
+                    //me._addCleanPoly(me._polyFromExtent( me._checkExtent(e)));
+                    break;
+                case 3:
+                    $log.debug("case 3")
+                    e[2]= center[0];
+                    e[1]= center[1];
+                    //me._addCleanPoly(me._polyFromExtent( me._checkExtent(e)));
+                    break;
+            }
+
+            me._addCleanPoly(me._polyFromExtent( me._checkExtent(e)));
+        }
 
        me.cachMe = function () {
             //TODO recup LayerName et OSM automatiquement

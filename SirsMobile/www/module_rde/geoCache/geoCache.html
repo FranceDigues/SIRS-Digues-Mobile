@@ -1,5 +1,3 @@
-
-
 <!--cache-view-->
 <ion-view>
     <header class="bar bar-header bar-stable">
@@ -8,7 +6,7 @@
         <a class="btn-floating btn-large waves-effect waves-light red" style="left:50%;"><i
                 class="material-icons  right" ng-click="c.popNewZone()">add</i></a>
     </header>
-    <ion-content  class="has-header" scroll="false">
+    <ion-content class="has-header" scroll="false">
         <div class="row">
             <div class="col col-25 cache-form">
                 <ion-list>
@@ -17,7 +15,7 @@
                         <span class="input-label">nom du Cache</span>
                         <input type="text" ng-model="c.CacheName">
                     </label>
-                    <ion-checkbox ng-repeat="layer in c.sMapLayer.list|filter:{isCache:false}" ng-model="c.isChecked">
+                    <ion-checkbox ng-repeat="layer in c.sMapLayer.list|filter:{isCache:false}" ng-model="layer.active">
                         {{layer.name}}
                     </ion-checkbox>
 
@@ -33,23 +31,44 @@
                 </ion-list>
             </div>
             <div class="col col-75">
-                <openlayers id="mapCache" ol-center="c.centerMap" ol-controls="controls" ol-defaults="defaults" height="400px">
-                    <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.sMapLayer.list|filter:{active:true}"></ol-layer>
-                </openlayers>
+                <div>
+                    <openlayers id="mapCache" ol-center="c.centerMap" ol-controls="controls" ol-defaults="defaults"
+                                style="height:50%">
+                        <ol-layer ol-layer-properties="layer"
+                                  ng-repeat="layer in c.sMapLayer.list|filter:{active:true}"></ol-layer>
+                    </openlayers>
+
+                    <img src="img/viseur.png"
+                         ng-show="c.editingCacheZone"
+                         style="
+                          position: absolute;
+                          top: 35%;
+                          left: 62.5%;
+                          transform: translate(-50%, -50%);
+                          width: 5%; ">
+
+                </div>
 
 
                 <div class="action-buttons">
                     <div>
-                        <button class="button button-block button-positive button-yellow" ng-click="c.lock()">verr.</button>
-                        <button class="button button-block button-positive button-yellow" ng-click="c.unlock()">libre</button>
+                        <button class="button button-block button-positive button-yellow"
+                                ng-click="c.selectEditCorner=true">Edit
+                        </button>
+                        <button class="button button-block button-positive button-yellow"
+                                ng-click="c.editingCacheZone=false" ng-show="c.editingCacheZone">Valider
+                        </button>
                     </div>
                 </div>
 
 
-
                 <ion-list>
-                    <ion-item ng-repeat="item in  c.user.cacheGjson.features">Layer Source : {{item.properties.cacheDescriptor.layerSource}}, nom : {{item.properties.cacheDescriptor.layerSource}}
-                        <button class="button button-block button-positive button-yellow" ng-click="c.clearMe(item.properties.cacheDescriptor)"> Suppr.</button>
+                    <ion-item ng-repeat="item in  c.user.cacheGjson.features">Layer Source :
+                        {{item.properties.cacheDescriptor.layerSource}}, nom :
+                        {{item.properties.cacheDescriptor.layerSource}}
+                        <button class="button button-block button-positive button-yellow"
+                                ng-click="c.clearMe(item.properties.cacheDescriptor)"> Suppr.
+                        </button>
                     </ion-item>
                 </ion-list>
             </div>
