@@ -467,6 +467,7 @@ angular.module('module_rde.geoCache', [
            //$log.debug([[42.5,2.5],[44.0,5.0]])
 
            //envoie de la requette de dl au plugin
+
            CacheMapPlugin.updateCache([{
                "name":"essai_new",
                "idf":"1000000",
@@ -479,24 +480,23 @@ angular.module('module_rde.geoCache', [
                "bbox":[[e[1],e[0]],[e[3],e[2]]]
            }]);
 
-           this.setIdf(jsonCache.getInt("idf"));
-           this.setName(jsonCache.getString("name"));
-           this.setLayerSource(jsonCache.getString("layerSource"));
-           this.setTypeSource(sourceType.valueOf(jsonCache.getString("typeSource")));
-           this.setUrlSource(jsonCache.getString("urlSource"));
-           this.setzMin(jsonCache.getInt("zMin"));
-           this.setzMax(jsonCache.getInt("zMax"))
-
 
             //affichage de l'emprise
            me.ExistingCacheSource.addFeature(
                 new ol.Feature({
                     geometry: me.activeGeom.getGeometry(),
-                    nom: "test",
-                    origine: "test"
+
+                        "name":"essai_new",
+                        "idf":"1000000",
+                        "layerSource":"cstl-demo",
+                        "typeSource":"ImageWMS",
+                        "zMin": me.z.zMin,
+                        "zMax":me.z.zMax,
+                        "urlSource":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
+                        "layers":["ZA_EID_Nuisance"],
+                        "bbox":[[e[1],e[0]],[e[3],e[2]]]
 
                 }));
-
 
 
 
@@ -509,9 +509,7 @@ angular.module('module_rde.geoCache', [
             //TODO stoker la liste des tuile pour controle au chargement
 
             //$rootScope.$broadcast("userChange"); //mise a jour de l'user dans la base
-            //sContext.saveUser();
-
-
+            sContext.saveUser();
         };
 
 
@@ -522,9 +520,9 @@ angular.module('module_rde.geoCache', [
         }
 
         me.clearall = function(){
-
             CacheMapPlugin.clearAll();
-
+            sContext.auth.user.cacheGeom=null;
+            sContext.saveUser();
         }
 
 
