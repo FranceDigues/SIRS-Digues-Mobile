@@ -24,11 +24,11 @@ angular.module('module_rde.data.services.context', [])
 
         me.saveUser = function () {
             $log.debug("reception event UptateUser")
-            sPouch.usr.put(this.auth.user)
+            sPouch.localDb.put(me.auth.user)
                 .then(function (response) {
-                    //propagation pour remise a jour de l'user
+                    //update user doc revision
+                    me.auth.user._rev=response.rev;
                     $rootScope.$broadcast("userChange"); //TODO faire des type d'event specifique pour les notification de contexte
-
                 }).catch(function (err) {
                     $log.debug(err);
                 });
@@ -38,22 +38,6 @@ angular.module('module_rde.data.services.context', [])
             me.editionMode = !me.editionMode;
             $rootScope.$broadcast("editionModeChanged", me.editionMode);
         };
-
-
-        ////mise a jour de l'utilisateur via un event.'
-        //rscp.$on("updateUser",  function() {
-        //    $log.debug("reception event UptateUser")
-        //    sPouch.usr.put(this.auth.user)
-        //        .then(function (response) {
-        //            //propagation pour remise a jour de l'user
-        //            $rootScope.$broadcast("userChange"); //TODO faire des type d'event specifique pour les notification de contexte
-        //
-        //        }).catch(function (err) {
-        //            $log.debug(err);
-        //        });
-        //
-        //});
-        //
 
 
         // Initialisation du contexte avec les donnée de la base de conf
