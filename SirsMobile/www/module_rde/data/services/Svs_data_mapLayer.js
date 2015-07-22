@@ -3,7 +3,7 @@
  */
 
 angular.module('module_rde.data.services.maplayer', [])
-.service('sMapLayer', function sMapLayer ($ionicPlatform,sPouch, $log, $rootScope,$timeout) {
+.service('sMapLayer', function sMapLayer ($ionicPlatform,sPouch, $log, $rootScope) {
 
 
 
@@ -16,55 +16,55 @@ angular.module('module_rde.data.services.maplayer', [])
     var rscp = $rootScope.$new(); //FIXME le $on est focement dans un scope? pk route scope de la catch pas?
 
 
-    /**
-     *  FIXME les calque sorte direct de la db, du coup les variable de contexte ne doivent plus etre porter par ces objet
-     *  TODO créer un json UUID - Layer Context Value
-     *
-     */
-
-
     me.updateLayer = function(layers){
+        //init tmp array
+        var layerWithContext = [];
+
+        //apply context on each layer
         layers.forEach(function(lay){
             //typage de l'objet
             lay = new oLayer(lay);
 
             //on verifie si il existe dans la liste de reference locale
-            if(me.list !== null) {
+            if(me.list !== null && me._listLayer !== null ) {
                 for (var j = 0; j < me._listLayer.length; j++) {
-
                     //si oui on affecte la valeur.
                     if (me.list[j].idf === lay.idf) {
-                        tmpLayer.active = me._listLayer[j].active;
+                        lay.active = me._listLayer[j].active;
 
                     }
                 }
             }
-        });
-        me._listLayer = layers;
 
+            layerWithContext.push(lay);
+        });
+
+        //erase and update undelist
+        me._listLayer = layerWithContext;
+
+        //concat underlist
         me._fusionLayerList();
     };
 
 
     me._fusionLayerList = function(){
 
-        //TODO faire mieux
-
-        if(me._listCacheLayer == null) {
-            me.list =me._listLayer;
-        }   else if( me._listLayer == null && me._listCacheLayer ==null){
-            me.list=null;
+        //case of concat
+        if(me._listLayer !== null){
+            if(me._listCacheLayer !== null){
+                me.list = me._listLayer.concat( me._listCacheLayer);
+            }else{
+                me.list = me._listLayer;
+            }
         }else{
-            me.list =me._listLayer.concat( me._listCacheLayer);
+            if(me._listCacheLayer !== null){
+                me.list = me._listCacheLayer;
+            }else{
+                me.list = null;
+            }
         }
 
-        $log.error("fuisoneur");
-        $log.error(me.list);
-        $log.error(me._listLayer);
-        $log.error(me._listCacheLayer);
-
-
-        //mise a jour terminer
+        //broadcast event
         $rootScope.$broadcast("layersListUpdated");
     }
 
@@ -80,59 +80,33 @@ angular.module('module_rde.data.services.maplayer', [])
         }).catch(function (err) {
             $log.debug(err);
         });
-
     }
 
-    //recepteur d'evenement
-    //
-    rscp.$on("moskito_layer_change", function () {
-        $log.debug("event recus");
+    //listen event from base layer def update
+    rscp.$on("baseMapLayer:Change", function () {
+        $log.debug("event recus : baseMapLayer:Change");
         me.update();
     });
 
 
-    //$ionicPlatform.ready(function () {
-    //window.document.addEventListener
+ //listen event from cache map plugin
     document.addEventListener("updateListCache", function (e) {
-        $log.debug("eventListCache recus IN SERVICE");
-        $log.debug(e.aCaDe);
-        var  aLayer =[];
+        $log.debug("eventListCache intercept from mapLayer");
 
+        //RAZ var
+        me._listCacheLayer=[];
+
+        //iterate on cache descriptor
         e.aCaDe.forEach(function (item) {
-//FIXME optimise
-
-            $log.debug(item);
             //typage des object
-            var localCaDe = new oCacheDescriptor();//creation de l'objet et patch des valeur
-            localCaDe.patch(item); //TODO remove (param)
-            $log.debug(localCaDe);
-
-            aLayer.push(localCaDe.getLayer());
-
-            //convertion en layer et oublie du caDe car on est dans sMapLayer
-            //item = item.getLayer();
-            //$log.debug(item);
-
-
-
+            var localCaDe = new oCacheDescriptor(item);
+            //add to cache underList
+            me._listCacheLayer.push(localCaDe.getLayer());
         });
-        $log.debug("aLayer:");
-        $log.debug(aLayer);
 
-        //protection contre les init vide
-        if(aLayer.length !=0){
-            //affectation masterListe
-            me._listCacheLayer =aLayer;
-            //$log.error(me._listCacheLayer);
-
+        //update global layer list
             me._fusionLayerList();
-        }
-
-
     });
-
-
-    //}
 
 
     //initialisation
