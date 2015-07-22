@@ -34,6 +34,14 @@ angular.module('module_rde.data.services.dbManager', [])
 
 
 
+        //switch container
+        me.watcher={}
+        //switch changes ,
+        /**
+         * kill with me.watcher.baseLayer.cancel();
+         * */
+        me.watcher.baseLayer=null;
+
         //instancie une syncro bi-directionelle avec support de l'interuption, et propagation des evenement change
             //les evenements sont nome comme la base
 
@@ -350,7 +358,23 @@ angular.module('module_rde.data.services.dbManager', [])
        me._reSync(me.roadRunner, function(){
            me.getDbs();
            $rootScope.$broadcast("buildBaseContext"); //permet l'initialisation des variable de sContext
+
+
+           me.watcher.baseLayer = me.confDb.changes({
+               since: 'now',
+               live: true,
+               include_docs: true,
+               doc_ids:['layersList']
+           }).on('change', function(change) {
+                $log.debug("baseLayerChange")
+               //emit change event;
+               $rootScope.$broadcast('baseMapLayer:Change');
+           })
+
+
        });
+
+
 
 
 
