@@ -13,7 +13,7 @@
 
 function oSource(param){
         this.type= param.type;
-        this.url= param.uri;
+        this.url= param.url;
 
         if(param.type == "ImageWMS"){
             this.params = param.params;

@@ -24,7 +24,7 @@
 
                     <rzslider rz-slider-model="c.centerMap.zoom" rz-slider-floor="0" rz-slider-ceil="18"></rzslider>
                     <rzslider rz-slider-model="c.z.zMin" rz-slider-high="c.z.zMax" rz-slider-floor="0"
-                              rz-slider-ceil="18"></rzslider>
+                              rz-slider-ceil="18" ng-change="c.me._updateEstim()"></rzslider>
                     <progress max="{{c.nbTileMax}}" value="{{c.nbTile}}"></progress>
 
 
@@ -42,7 +42,8 @@
             <div class="col col-75">
                 <div>
                     <openlayers id="mapCache" custom-layers="true" ol-center="c.centerMap" ol-controls="controls" ol-defaults="defaults"
-                                style="height:50%">
+                            >
+                        <!--style="height:50%"-->
                         <ol-layer ol-layer-properties="layer"
                                   ng-repeat="layer in c.sMapLayer.list|filter:{needToCache:true}"></ol-layer>
                     </openlayers>
@@ -72,11 +73,11 @@
 
 
                 <ion-list>
-                    <ion-item ng-repeat="item in  c.user.cacheGjson.features">Layer Source :
-                        {{item.properties.cacheDescriptor.layerSource}}, nom :
-                        {{item.properties.cacheDescriptor.layerSource}}
+                    <ion-item ng-repeat="item in  c.sContext.auth.user.cacheGeom">Layer Source :
+                        {{item.properties.layerSource}}, nom :
+                        {{item.properties.name}}
                         <button class="button button-block button-positive button-yellow"
-                                ng-click="c.clearMe(item.properties.cacheDescriptor)"> Suppr.
+                                ng-click="c.clearMe(item.properties)"> Suppr.
                         </button>
                     </ion-item>
                 </ion-list>

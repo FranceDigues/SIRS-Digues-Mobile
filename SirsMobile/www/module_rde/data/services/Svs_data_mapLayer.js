@@ -65,6 +65,7 @@ angular.module('module_rde.data.services.maplayer', [])
         }
 
         //broadcast event
+        $log.debug(me.list)
         $rootScope.$broadcast("layersListUpdated");
     }
 

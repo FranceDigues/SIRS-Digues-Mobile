@@ -109,3 +109,36 @@ function atoGeoJson(s) {
 //
 //    recFunc(sirsDef, sirsDef.length);
 //}
+
+var ARRAY_DEF_ZOOM_LVL = [
+    {lvl: 0, deg: 360, ratio: 156412},
+
+    {lvl: 1, deg: 180, ratio: 78206},
+    {lvl: 2, deg: 90, ratio: 39103},
+
+    {lvl: 3, deg: 45, ratio: 19551},
+    {lvl: 4, deg: 22.5, ratio: 9776},
+
+    {lvl: 5, deg: 11.25, ratio: 4888},
+    {lvl: 6, deg: 5.625, ratio: 2444},
+    {lvl: 7, deg: 2.813, ratio: 1222},
+    {lvl: 8, deg: 1.406, ratio: 610},
+    {lvl: 9, deg: 0.703, ratio: 305},
+    {lvl: 10, deg: 0.352, ratio: 153},
+
+    {lvl: 11, deg: 0.176, ratio: 76},
+
+    {lvl: 12, deg: 0.088, ratio: 38},
+
+    {lvl: 13, deg: 0.044, ratio: 19},
+    {lvl: 14, deg: 0.022, ratio: 9.547},
+    {lvl: 15, deg: 0.011, ratio: 4.773},
+    {lvl: 16, deg: 0.005, ratio: 2.387},
+    {lvl: 17, deg: 0.003, ratio: 1.193},
+    {lvl: 18, deg: 0.001, ratio: 0.596},
+    {lvl: 19, deg: 0.0005, ratio: 0.298}
+]
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}

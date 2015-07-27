@@ -31,6 +31,7 @@ angular.module('module_rde.geoCache', [
     .controller('cGeoCache', function cGeoCache ($scope, sMapLayer, olData, $log, $timeout, sContext, $rootScope,$state) {
 
         var me = this;
+        me.sContext=sContext;
 
         me.gotoHome=function(){
             $state.go("home.map")
@@ -65,7 +66,7 @@ angular.module('module_rde.geoCache', [
         //TODO faire un objet cache param.
 
        me.CacheName = "";
-       me.user = sContext.auth.user;
+       //me.user = sContext.auth.user;
 
 
 
@@ -199,9 +200,11 @@ angular.module('module_rde.geoCache', [
 
 
                 //init des zonne de cache
-                if (sContext.auth.user.cg != ""&&sContext.auth.user.cg != null) {
+                if (sContext.auth.user.cacheGeom != ""&& sContext.auth.user.cacheGeom != null) {
                     var gjson = new ol.format.GeoJSON();
-                    var aFeatures = gjson.readFeatures(sContext.auth.user.cacheGjson);
+                    $log.debug(gjson);
+                    $log.debug(sContext.auth.user.cacheGeom);
+                    var aFeatures = gjson.readFeatures(sContext.auth.user.cacheGeom);
                     $log.debug(aFeatures);
 
                    me.ExistingCacheSource.addFeatures(aFeatures);
@@ -341,15 +344,40 @@ angular.module('module_rde.geoCache', [
             return new ol.geom.Polygon([[ [e[0],e[1]], [ e[2],e[1]], [ e[2],e[3]], [e[0],e[3]], [e[0],e[1]]]]);
         }
 
-        me._addCleanPoly=function(g){
+        me._addCleanPoly=function(g) {
             me.vsActiveCache.clear();
-            me.activeGeom= new ol.Feature({
+            me.activeGeom = new ol.Feature({
                 geometry: g
             });
 
             /* ajout du rectangle*/
-            me.vsActiveCache.addFeature(me.activeGeom );
+            me.vsActiveCache.addFeature(me.activeGeom);
 
+            //mise a jour de l'estim
+            me._updateEstim();
+
+        }
+
+        me._updateEstim=function(){
+            //mise a jour de l'estim
+            if(me.activeGeom !== null){
+
+            var size = ol.extent.getSize(me.activeGeom.getGeometry().getExtent());
+            $log.debug("size : ");
+            $log.debug(size);
+            var s = size[0] * size[1];
+                $log.debug(s);
+
+
+            me.cacheM0 = 0;
+            for(var i = me.z.zMin ; i <= me.z.zMax; i++){
+                $log.debug(ARRAY_DEF_ZOOM_LVL[i].ratio);
+                $log.debug(s/ARRAY_DEF_ZOOM_LVL[i].ratio);
+                me.cacheM0= me.cacheM0+(s/ARRAY_DEF_ZOOM_LVL[i].ratio);
+            }
+
+            me.cacheM0= ((me.cacheM0*0.016)/1024)/1024; //aply mo + ratio factor (0.5)
+            }
         }
 
         me._updatePoly = function(center){ //int 0 -3
@@ -434,10 +462,23 @@ angular.module('module_rde.geoCache', [
             me._addCleanPoly(me._polyFromExtent( me._checkExtent(e)));
         }
 
+
        me.cachMe = function () {
             //TODO recup LayerName et OSM automatiquement
 
            $log.info("cachMe_RUN")
+
+           var layers= me.sMapLayer.list.filter(function(layer){
+               if(layer.hasOwnProperty('needToCache')){
+                   return layer.needToCache  === true ?true:false;
+               }
+               else{
+                   return false;
+               }
+           });
+           $log.debug(layers);
+
+
 
            //build cache descriptor
            //var caDeList =[{
@@ -462,21 +503,17 @@ angular.module('module_rde.geoCache', [
                i++
            }
 
-           //$log.debug(e)
-           //$log.debug([[e[1],e[0]],[e[3],e[2]]])
-           //$log.debug([[42.5,2.5],[44.0,5.0]])
-
            //envoie de la requette de dl au plugin
-
+///TODO func in olayer pr obtenir le param ocade.
            CacheMapPlugin.updateCache([{
                "name":"essai_new",
-               "idf":"1000000",
-               "layerSource":"cstl-demo",
-               "typeSource":"ImageWMS",
+               "idf":1000000+getRandomInt(1,1000),
+               "layerSource":layers[0].name,
+               "typeSource":layers[0].source.type,
                "zMin": me.z.zMin,
                "zMax":me.z.zMax,
-               "urlSource":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
-               "layers":["ZA_EID_Nuisance"],
+               "urlSource":layers[0].source.url,
+
                "bbox":[[e[1],e[0]],[e[3],e[2]]]
            }]);
 
@@ -487,18 +524,18 @@ angular.module('module_rde.geoCache', [
                     geometry: me.activeGeom.getGeometry(),
 
                         "name":"essai_new",
-                        "idf":"1000000",
-                        "layerSource":"cstl-demo",
-                        "typeSource":"ImageWMS",
+                        "idf":1000000+getRandomInt(1,1000),
+                        "layerSource":layers[0].name,
+                        "typeSource":layers[0].source.type,
                         "zMin": me.z.zMin,
                         "zMax":me.z.zMax,
-                        "urlSource":"http://demo-cstl.geomatys.com/constellation/WS/wms/demoWMS",
-                        "layers":["ZA_EID_Nuisance"],
+                        "urlSource":layers[0].source.url,
+
                         "bbox":[[e[1],e[0]],[e[3],e[2]]]
 
                 }));
 
-
+           //"layers":["ZA_EID_Nuisance"],
 
             //eregistrement ds l'objet utilisater
             //TODO user dans le context!
@@ -523,8 +560,17 @@ angular.module('module_rde.geoCache', [
             CacheMapPlugin.clearAll();
             sContext.auth.user.cacheGeom=null;
             sContext.saveUser();
+            //TODO reload feature on user update event
+            me.ExistingCacheSource.clear();
         }
 
+
+        $scope.$on("slideEnded", function() {
+            $timeout( function(){
+                me._updateEstim()}, 200
+            )
+
+        });
 
 
 
