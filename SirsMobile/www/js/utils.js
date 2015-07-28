@@ -88,7 +88,6 @@ function atoGeoJson(s) {
     if (s.getFeatures().length > 1) {
         return new ol.format.GeoJSON().writeFeatures(s.getFeatures());
     }else {
-
         return [new ol.format.GeoJSON().writeFeatures(s.getFeatures())];
     }
 }
