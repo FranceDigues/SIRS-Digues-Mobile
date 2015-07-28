@@ -84,7 +84,13 @@ function toGeoJson(f) {
 }
 
 function atoGeoJson(s) {
-    return new ol.format.GeoJSON().writeFeatures(s.getFeatures());
+    console.log(s.getFeatures().length)
+    if (s.getFeatures().length > 1) {
+        return new ol.format.GeoJSON().writeFeatures(s.getFeatures());
+    }else {
+
+        return [new ol.format.GeoJSON().writeFeatures(s.getFeatures())];
+    }
 }
 
 //
