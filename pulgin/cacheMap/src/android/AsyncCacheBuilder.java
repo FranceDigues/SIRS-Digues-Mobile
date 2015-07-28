@@ -272,7 +272,7 @@ public class AsyncCacheBuilder extends AsyncTask {
         //TODO methode get url dans tile @param type
         DownloadManager.Request request =null;
 //        //Gestion des requete par source
-//        if(this.caDe.getTypeSource().equals("TMS")){
+//        if(this.caDe.getTypeSource().equals("OSM")){
 ////            DownloadManager.Request request = new DownloadManager.Request( Uri.parse(this.caDe.getUrlSource() +"/"+t.getTMSsampleReq()));
 //
 //        }
@@ -289,7 +289,7 @@ public class AsyncCacheBuilder extends AsyncTask {
 //        Log.d("PluginRDE_DLT", this.caDe.getTypeSource().toString());
 
         switch(this.caDe.getTypeSource()){
-            case TMS:
+            case OSM:
                 Log.d("PluginRDE_TEST",  Uri.parse(this.caDe.getUrlSource() +"/"+t.getTMSsampleReq()).toString());
 
 
@@ -357,7 +357,8 @@ public class AsyncCacheBuilder extends AsyncTask {
 
     private void putLocalPathInRequest(DownloadManager.Request r, Tile t){
 
-        r.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png"+DM_FIX);
+//        r.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png"+DM_FIX);
+        r.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png");
 
 //        return r;
     }

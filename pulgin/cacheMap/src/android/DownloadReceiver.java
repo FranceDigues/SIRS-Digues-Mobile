@@ -43,16 +43,18 @@ public class DownloadReceiver extends BroadcastReceiver {
 
                     //here you get file path so you can move
                     //it to other location if you want
-                    String downloadedPackageUriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-                    File tmp = new File(downloadedPackageUriString);
-                    File ok = new File(downloadedPackageUriString.substring(0, downloadedPackageUriString.length() - 2));
 
-                    tmp.renameTo(ok);
+                    //RENAME
+//                    String downloadedPackageUriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+//                    File tmp = new File(downloadedPackageUriString);
+//                    File ok = new File(downloadedPackageUriString.substring(0, downloadedPackageUriString.length() - 2));
+//
+//                    tmp.renameTo(ok);
 
                     mDownloadManager.remove(downloadId);
 
 
-                    Log.d("PluginRDE_DLM", "filepath : "+downloadedPackageUriString);
+//                    Log.d("PluginRDE_DLM", "filepath : "+downloadedPackageUriString);
 
 
                 }else if ( DownloadManager.STATUS_FAILED == c.getInt(columnIndex)){

@@ -3,7 +3,10 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by roch DARDIE on 22/04/15.
@@ -17,6 +20,7 @@ public class CacheDescriptor {
     private String layerSource;
     private sourceType typeSource;
     private String urlSource;
+    private String shortUrlSource;
 
     private ArrayList<String> layers;
 
@@ -29,63 +33,62 @@ public class CacheDescriptor {
     private String path;
 
 
-    public CacheDescriptor(){
-        this.path="";
+    public CacheDescriptor() {
+        this.path = "";
+        this.layers = new ArrayList<String>();
+        this.shortUrlSource = "";
+
+    }
+
+    public CacheDescriptor(JSONObject jsonCache) {
+        this.shortUrlSource = "";
+        this.path = "";
         this.layers = new ArrayList<String>();
 
-    }
-
-    public CacheDescriptor(JSONObject jsonCache){
-        this.path="";
-        this.layers = new ArrayList<String>();
-
-try{
-        this.setIdf(jsonCache.getInt("idf"));
-        this.setName(jsonCache.getString("name"));
-        this.setLayerSource(jsonCache.getString("layerSource"));
-        this.setTypeSource(sourceType.valueOf(jsonCache.getString("typeSource")));
-        this.setUrlSource(jsonCache.getString("urlSource"));
-        this.setzMin(jsonCache.getInt("zMin"));
-        this.setzMax(jsonCache.getInt("zMax"));
+        try {
+            this.setIdf(jsonCache.getInt("idf"));
+            this.setName(jsonCache.getString("name"));
+            this.setLayerSource(jsonCache.getString("layerSource"));
+            this.setTypeSource(sourceType.valueOf(jsonCache.getString("typeSource")));
+            this.setUrlSource(jsonCache.getString("urlSource"));
+            this.setzMin(jsonCache.getInt("zMin"));
+            this.setzMax(jsonCache.getInt("zMax"));
 
 
+            //FIXME stop stoker des point dans un array sale
+            if (jsonCache.has("bbox")) { //BBOX prend le pas
 
-    //FIXME stop stoker des point dans un array sale
-    if(jsonCache.has("bbox")){ //BBOX prend le pas
+                JSONArray aBbox = jsonCache.getJSONArray("bbox");
 
-        JSONArray aBbox= jsonCache.getJSONArray("bbox");
+                GeoPoint tmpMin = new GeoPoint(aBbox.getJSONArray(0).getDouble(0), aBbox.getJSONArray(0).getDouble(1));
+                GeoPoint tmpMax = new GeoPoint(aBbox.getJSONArray(1).getDouble(0), aBbox.getJSONArray(1).getDouble(1));
+                tmpMin.maxwell(tmpMax);
 
-        GeoPoint tmpMin = new GeoPoint(aBbox.getJSONArray(0).getDouble(0), aBbox.getJSONArray(0).getDouble(1) );
-        GeoPoint tmpMax = new GeoPoint(aBbox.getJSONArray(1).getDouble(0), aBbox.getJSONArray(1).getDouble(1) );
-        tmpMin.maxwell(tmpMax);
-
-        this.setpHg(tmpMin);
-        this.setpBd(tmpMax);
-
-
-    }
-    if(jsonCache.has("pHg") && jsonCache.has("pBd")){ //BBOX prend le pas
-
-        this.setpHg(new GeoPoint(jsonCache.getJSONObject("pHg")));
-        this.setpBd(new GeoPoint(jsonCache.getJSONObject("pBd")));
+                this.setpHg(tmpMin);
+                this.setpBd(tmpMax);
 
 
-    }
-
-
-
-        if(this.getTypeSource()== sourceType.ImageWMS){
-            JSONArray aLayers= jsonCache.getJSONArray("layers");
-            for(int i=0 ; i<aLayers.length();i++){
-                this.layers.add(aLayers.getString(i));
             }
+            if (jsonCache.has("pHg") && jsonCache.has("pBd")) { //BBOX prend le pas
+
+                this.setpHg(new GeoPoint(jsonCache.getJSONObject("pHg")));
+                this.setpBd(new GeoPoint(jsonCache.getJSONObject("pBd")));
+
+
+            }
+
+
+            if (this.getTypeSource() == sourceType.ImageWMS) {
+                JSONArray aLayers = jsonCache.getJSONArray("layers");
+                for (int i = 0; i < aLayers.length(); i++) {
+                    this.layers.add(aLayers.getString(i));
+                }
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-
-
-    } catch (JSONException e) {
-        e.printStackTrace();
-    }
 
     }
 
@@ -138,7 +141,29 @@ try{
     }
 
     public String getUrlSource() {
-        return urlSource;
+        // String to be scanned to find the pattern.
+        if (this.shortUrlSource == "") {
+
+            String pattern = ".*\\{([a-z]).[a-z]\\}(.*)\\/\\{z\\}\\/\\{x\\}\\/\\{y\\}.*";
+
+            // Create a Pattern object
+            Pattern r = Pattern.compile(pattern);
+
+            // Now create matcher object.
+            //TODO cas ou a indisponible??
+            Matcher m = r.matcher(this.urlSource);
+            if (m.find()) {
+                Log.d("REGEX", "http://" + m.group(1) + m.group(2));
+                shortUrlSource = "http://" + m.group(1) + m.group(2);
+                return "http://" + m.group(1) + m.group(2);
+            }else{
+                this.shortUrlSource=this.urlSource;
+                return this.urlSource;
+            }
+        }else{
+            return this.shortUrlSource;
+        }
+//        return this.urlSource;
     }
 
     public void setUrlSource(String urlSource) {
@@ -186,24 +211,24 @@ try{
 
 //methode
 
-    public ArrayList<Tile> firstLvlTileFromBb_TMS(){
+    public ArrayList<Tile> firstLvlTileFromBb_TMS() {
 
 
         ArrayList<Tile> aTile = new ArrayList<Tile>();
 
-        Log.d("PluginRDE_debug", "geoPoint Min : "+this.getpHg().toString());
-        Log.d("PluginRDE_debug", "geoPoint Max : "+this.getpBd().toString());
+        Log.d("PluginRDE_debug", "geoPoint Min : " + this.getpHg().toString());
+        Log.d("PluginRDE_debug", "geoPoint Max : " + this.getpBd().toString());
 
         Tile tHg = this.getpHg().toTileTMS(this.getzMin());
         Tile tBd = this.getpBd().toTileTMS(this.getzMin());
 
-        Log.d("PluginRDE_debug", "tile Hg : "+tHg.toString());
-        Log.d("PluginRDE_debug", "tile Bd : "+tBd.toString());
+        Log.d("PluginRDE_debug", "tile Hg : " + tHg.toString());
+        Log.d("PluginRDE_debug", "tile Bd : " + tBd.toString());
 
-        for (int x = tHg.getX();x<=tBd.getX();x++ ){
-            for (int y = tHg.getY();y<=tBd.getY();y++ ) {
-                Tile tmp = new Tile(this.getzMin(),x,y);
-                Log.d("PluginRDE_debug", "tile en cours : "+tmp.toString());
+        for (int x = tHg.getX(); x <= tBd.getX(); x++) {
+            for (int y = tHg.getY(); y <= tBd.getY(); y++) {
+                Tile tmp = new Tile(this.getzMin(), x, y);
+                Log.d("PluginRDE_debug", "tile en cours : " + tmp.toString());
                 aTile.add(tmp);
             }
         }
@@ -212,13 +237,13 @@ try{
     }
 
 
-    public String getDirPath(){
+    public String getDirPath() {
 //        Log.d("PluginRDE_debug", this.path);
-        if (this.path ==""){
-            this.path = "Tile/"+this.getLayerSource() + "/" + this.getName() + "/";
+        if (this.path == "") {
+            this.path = "Tile/" + this.getLayerSource() + "/" + this.getName() + "/";
         }
 //        Log.d("PluginRDE_debug", this.path);
-        return this.path ;
+        return this.path;
     }
 
 
@@ -283,29 +308,31 @@ try{
     }
 
 
-    public ArrayList<Tile> getDiff(CacheDescriptor caDeNew){
+    public ArrayList<Tile> getDiff(CacheDescriptor caDeNew) {
         //FIXME include?
         ArrayList<Tile> resultante = new ArrayList<Tile>();
         ArrayList<Tile> baseZone = this.firstLvlTileFromBb_TMS();
         ArrayList<Tile> novelZone = caDeNew.firstLvlTileFromBb_TMS();
 
-        for(Tile t : novelZone){
+        for (Tile t : novelZone) {
 
-            if(! baseZone.contains(t)) resultante.add(t);
+            if (!baseZone.contains(t)) resultante.add(t);
         }
 
-         return resultante;
+        return resultante;
     }
 
 
-    public String getWMSdescriptor(){
+    public String getWMSdescriptor() {
         //todo multilayers?
-        return "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image%2Fpng&TRANSPARENT=true&LAYERS="+this.layers.get(0);
+        return "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image%2Fpng&TRANSPARENT=true&LAYERS=" + this.layers.get(0);
     }
 
     //todo controle de la présence de tout les fichier
-    public boolean checkIntegrity(){
-      return true;
-    };
+    public boolean checkIntegrity() {
+        return true;
+    }
+
+    ;
 
 }
