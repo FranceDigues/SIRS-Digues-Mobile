@@ -41,7 +41,8 @@ angular.module('module_rde.geoCache', [
         me.lastClickCoord=null;
         me.layerToCache = [];
         me.cacheM0 = 0;
-
+        me.freeSpace = 0 ;
+        me.enableNewCacheControl=false;
 
         /***
          * ****/
@@ -116,27 +117,9 @@ angular.module('module_rde.geoCache', [
                 $log.debug("Cache Control getMap :")
 
 
-                //var myZoomSlider = new ol.control.ZoomSlider();
-                //map.addControl(myZoomSlider);
+
                 var myScaleLine = new ol.control.ScaleLine();
                 map.addControl(myScaleLine);
-                //var test = new ol.control.FullScreen();
-                //map.addControl(test);
-
-
-               //me.dragBox = new ol.interaction.DragBoxTouch({
-               //     //condition: ol.events.condition.always,
-               //     style: new ol.style.Style({
-               //         stroke: new ol.style.Stroke({
-               //             color: [0, 0, 255, 1]
-               //         })
-               //     })
-               // });
-               //
-               //
-               // map.getInteractions().clear();
-               // map.addInteraction(me.dragBox);
-
 
                 //layer non angular
                me.vsActiveCache = new ol.source.Vector({
@@ -212,8 +195,14 @@ angular.module('module_rde.geoCache', [
 
                 }
 
-
+                me.escape=function(){
+                    me.enableNewCacheControl=false;
+                    me.vsActiveCache.clear();
+                }
                 me.popNewZone=function(){
+
+                    //active view
+                    me.enableNewCacheControl=true;
 
                     //clean active :
                      me.vsActiveCache.clear()
@@ -270,28 +259,6 @@ angular.module('module_rde.geoCache', [
 
             });
 
-
-
-
-       // //maintien de la zonne a l'ecran dans un calque temporaire
-       //$scope.$on('openlayers.map.pointermove', function (e, coord) {
-       //
-       //    $scope.$apply(function () {
-       //
-       //         //recup jeux de coordonnée
-       //         var tGeom =me.dragBox.getGeometry().clone(); // comportement etrange
-       //        me.var.CoordList = tGeom.transform('EPSG:3857', 'EPSG:4326').getCoordinates();
-       //         /* netoyage de la couche */
-       //        me.vsActiveCache.clear();
-       //
-       //         /* ajout du rectangle*/
-       //        me.vsActiveCache.addFeature(
-       //             new ol.Feature({
-       //                 geometry:me.dragBox.getGeometry()
-       //
-       //             }));
-       //     });
-       // });
 
         me.editingCacheZone = false;
         me.selectEditCorner = false;
@@ -573,7 +540,7 @@ angular.module('module_rde.geoCache', [
         });
 
 
-
+//note invertion du parcours des arbres de tuile??
 
 
     })

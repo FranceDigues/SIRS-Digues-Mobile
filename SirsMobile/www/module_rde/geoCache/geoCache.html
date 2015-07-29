@@ -6,17 +6,20 @@
         <a class="btn-floating btn-large waves-effect waves-light red" style="left:50%;"><i
                 class="material-icons  right" ng-click="c.popNewZone()">add</i></a>
     </header>
-    <ion-content class="has-header" scroll="false">
+    <ion-content class="has-header" overflow-scroll='true'>
         <div class="row">
             <div class="col col-25 cache-form">
-                <ion-list>
+                <ion-list ng-show="c.enableNewCacheControl" >
                     <!--FIXME  validation de form-->
+                    <button class="button button-block button-positive" href="#/" ng-click="c.escape()">Annuler
+                    </button>
                     <label class="item item-input">
                         <span class="input-label">nom du Cache</span>
                         <input type="text" ng-model="c.CacheName">
                     </label>
-                    <ion-checkbox ng-repeat="layer in c.sMapLayer.list|filter:{isCache:false}" ng-model="layer.needToCache"
-                                 >
+                    <ion-checkbox ng-repeat="layer in c.sMapLayer.list|filter:{isCache:false}"
+                                  ng-model="layer.needToCache"
+                            >
                         {{layer.name}}
                         {{layer.needToCache}}
                     </ion-checkbox>
@@ -24,7 +27,7 @@
 
                     <rzslider rz-slider-model="c.centerMap.zoom" rz-slider-floor="0" rz-slider-ceil="18"></rzslider>
                     <rzslider rz-slider-model="c.z.zMin" rz-slider-high="c.z.zMax" rz-slider-floor="0"
-                              rz-slider-ceil="18" ng-change="c.me._updateEstim()"></rzslider>
+                              rz-slider-ceil="18"></rzslider>
                     <progress max="{{c.nbTileMax}}" value="{{c.nbTile}}"></progress>
 
 
@@ -33,15 +36,56 @@
                     </button>
                     <label class="item item-input">
                         <span class="input-label">taille estimé</span>
-                        {{c.cacheM0}}
+                        {{c.cacheM0}} / {{c.freeSpace}}
                     </label>
                     <button class="button button-block button-positive" href="#/" ng-click="c.clearall()">clean
                     </button>
                 </ion-list>
+
+
+                <ion-list ng-hide="c.enableNewCacheControl"
+                        show-delete="false"
+                        show-reorder="false"
+                        can-swipe="true"
+                        class="animate-if">
+                    <ion-item ng-repeat="item in c.sContext.auth.user.cacheGeom.features">
+                              <!--item-width="100%"-->
+                              <!--item-height="30px">-->
+                       Layer Source :
+                        {{item.properties.layerSource}}
+
+
+                        nom :
+                        {{item.properties.name}}
+
+
+                        {{Date.now() | date:'dd.MM.yyyy HH:mm:ss'}}
+
+                        <!--sous boutton-->
+
+                        <ion-option-button class="button-info" ng-click="c.clearMe(item)">
+                            <p class="ion-minus-circled"></p>
+                            <!--<i class="material-icons  right">visibility</i>-->
+                        </ion-option-button>
+                        <ion-option-button class="button-info" ng-click="c.edit(item)">
+                            <p class="ion-edit"></p>
+                            <!--<i class="material-icons  right">visibility_off</i>-->
+
+                        </ion-option-button>
+                        <ion-delete-button class="ion-star">
+                        </ion-delete-button>
+                        <ion-reorder-button class="ion-navicon"
+                        on-reorder="c.reorderItem(layer, $fromIndex, $toIndex)">
+                        </ion-reorder-button>
+                    </ion-item>
+                </ion-list>
+
+
             </div>
             <div class="col col-75">
                 <div>
-                    <openlayers id="mapCache" custom-layers="true" ol-center="c.centerMap" ol-controls="controls" ol-defaults="defaults"
+                    <openlayers id="mapCache" custom-layers="true" ol-center="c.centerMap" ol-controls="controls"
+                                ol-defaults="defaults"
                             >
                         <!--style="height:50%"-->
                         <ol-layer ol-layer-properties="layer"
@@ -72,15 +116,17 @@
                 </div>
 
 
-                <ion-list>
-                    <ion-item ng-repeat="item in  c.sContext.auth.user.cacheGeom">Layer Source :
-                        {{item.properties.layerSource}}, nom :
-                        {{item.properties.name}}
-                        <button class="button button-block button-positive button-yellow"
-                                ng-click="c.clearMe(item.properties)"> Suppr.
-                        </button>
-                    </ion-item>
-                </ion-list>
+                <!--<ion-list>-->
+                    <!--<ion-item ng-repeat="item in c.sContext.auth.user.cacheGeom.features">-->
+                        <!--Layer Source :-->
+                        <!--{{item.properties.layerSource}}, nom :-->
+                        <!--{{item.properties.name}}-->
+
+                    <!--</ion-item>-->
+                <!--</ion-list>-->
+
+
+
             </div>
         </div>
     </ion-content>
