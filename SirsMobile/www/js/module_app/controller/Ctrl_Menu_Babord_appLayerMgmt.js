@@ -26,6 +26,15 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
         me.shouldShowReorder=false;
         me.listCanSwipe=true;
 
+        //kill twice click
+        me.boomBitch=false;
+        me.initBoomBitch = function(){
+            me.boomBitch=true;
+            $timeout(function(){
+                me.boomBitch=false;
+            }, 800)
+        }
+
         me.reorderItem = function(item, fromIndex, toIndex) {
             //Move the item in the array
             me.sAppLayer.asSimpleStack.splice(fromIndex, 1);
