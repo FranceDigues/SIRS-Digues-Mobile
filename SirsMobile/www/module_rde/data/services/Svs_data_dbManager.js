@@ -3,7 +3,7 @@
  */
 angular.module('module_rde.data.services.dbManager', [])
 
-    .service('sPouch', function sPouch (pouchDB, $log, $rootScope, $timeout, $http,$ionicPopup,$state,$cordovaNetwork ) {
+    .service('sPouch', function sPouch (pouchDB, $log, $rootScope, $timeout, $http,$ionicPopup,$state,$cordovaNetwork,$ionicPlatform ) {
 
         var me = this;
 
@@ -326,42 +326,44 @@ angular.module('module_rde.data.services.dbManager', [])
 
 
         me.bootLoader = function(){
-            if($cordovaNetwork.isOnline()) {
-                me._reSync(me.roadRunner, function(){
-                    me.getDbs();
-                    $rootScope.$broadcast("buildBaseContext"); //permet l'initialisation des variable de sContext
+            $ionicPlatform.ready(function() {
+                if ($cordovaNetwork.isOnline()) {
+                    me._reSync(me.roadRunner, function () {
+                        me.getDbs();
+                        $rootScope.$broadcast("buildBaseContext"); //permet l'initialisation des variable de sContext
 
 
-                    me.watcher.baseLayer = me.confDb.changes({
-                        since: 'now',
-                        live: true,
-                        include_docs: true,
-                        doc_ids:['layersList']
-                    }).on('change', function(change) {
-                        $log.debug("baseLayerChange")
-                        //emit change event;
-                        $rootScope.$broadcast('baseMapLayer:Change');
+                        me.watcher.baseLayer = me.confDb.changes({
+                            since: 'now',
+                            live: true,
+                            include_docs: true,
+                            doc_ids: ['layersList']
+                        }).on('change', function (change) {
+                            $log.debug("baseLayerChange")
+                            //emit change event;
+                            $rootScope.$broadcast('baseMapLayer:Change');
+                        })
+
+
+                    });
+                } else if ($cordovaNetwork.isOffline()) {
+                    me.contextDb.get('confdb').then(function (response) {
+                        //fixme pk une var temporaire obligatoire??
+                        var dbDesc = new oUrlCouchDb(response.db);
+                        //dbDesc.patch(response.db);
+                        me.confDb = new pouchDB(dbDesc.db);
                     })
 
+                    //run sync on sirs target db
+                    me.contextDb.get('activedb').then(function (response) {
+                        var dbDesc = new oUrlCouchDb(response.db);
+                        me.localDb = new pouchDB(dbDesc.db);
+                        $state.go('signin')
+                        me.syncActive = false;
+                    })
 
-                });
-            }else   if($cordovaNetwork.isOffline()){
-                me.contextDb.get('confdb').then(function (response) {
-                    //fixme pk une var temporaire obligatoire??
-                    var dbDesc = new oUrlCouchDb(response.db);
-                    //dbDesc.patch(response.db);
-                    me.confDb = new pouchDB(dbDesc.db);
-                })
-
-                //run sync on sirs target db
-                me.contextDb.get('activedb').then(function (response) {
-                    var dbDesc = new oUrlCouchDb(response.db);
-                    me.localDb= new pouchDB(dbDesc.db);
-                    $state.go('signin')
-                    me.syncActive=false;
-                })
-
-            }
+                }
+            })
         }
 
         //get conf on contextDb and up  all db sync
