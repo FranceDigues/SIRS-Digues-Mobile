@@ -86,8 +86,14 @@ angular.module('module_app.controllers.map', [])
 
 
         $rootScope.$on("sAppLayer_LayerList_Update", function() {
+            $ionicLoading.show({
+                content: 'Loading',
+                animation: 'fade-in',
+                showBackdrop: true,
+                maxWidth: 200,
+                showDelay: 0
+            });
             $log.debug("testLayer return");
-            $log.debug(me.sAppLayer.list);
             $timeout(setFeaturesOfVectorLayers); // wait for openlayers directive update (next digest)
         });
 
@@ -140,6 +146,7 @@ angular.module('module_app.controllers.map', [])
                         callback(layerInstance, layerIndex, layerModel);
                     }
                 });
+                $ionicLoading.hide();
             });
         }
 

@@ -113,33 +113,28 @@ function atoGeoJson(s) {
 //}
 
 var ARRAY_DEF_ZOOM_LVL = [
-    {lvl: 0, deg: 360, ratio: 156412},
-
-    {lvl: 1, deg: 180, ratio: 78206},
-    {lvl: 2, deg: 90, ratio: 39103},
-
-    {lvl: 3, deg: 45, ratio: 19551},
-    {lvl: 4, deg: 22.5, ratio: 9776},
-
-    {lvl: 5, deg: 11.25, ratio: 4888},
-    {lvl: 6, deg: 5.625, ratio: 2444},
-    {lvl: 7, deg: 2.813, ratio: 1222},
-    {lvl: 8, deg: 1.406, ratio: 610},
-    {lvl: 9, deg: 0.703, ratio: 305},
-    {lvl: 10, deg: 0.352, ratio: 153},
-
-    {lvl: 11, deg: 0.176, ratio: 76},
-
-    {lvl: 12, deg: 0.088, ratio: 38},
-
-    {lvl: 13, deg: 0.044, ratio: 19},
-    {lvl: 14, deg: 0.022, ratio: 9.547},
-    {lvl: 15, deg: 0.011, ratio: 4.773},
-    {lvl: 16, deg: 0.005, ratio: 2.387},
-    {lvl: 17, deg: 0.003, ratio: 1.193},
-    {lvl: 18, deg: 0.001, ratio: 0.596},
-    {lvl: 19, deg: 0.0005, ratio: 0.298}
+    {lvl: 0, deg: 360, ratio: 156412,avgWeight:15},
+    {lvl: 1, deg: 180, ratio: 78206 ,avgWeight:11.28},
+    {lvl: 2, deg: 90, ratio: 39103,avgWeight:7.96},
+    {lvl: 3, deg: 45, ratio: 19551,avgWeight:4.75},
+    {lvl: 4, deg: 22.5, ratio: 9776,avgWeight:4.71},
+    {lvl: 5, deg: 11.25, ratio: 4888,avgWeight:5.03},
+    {lvl: 6, deg: 5.625, ratio: 2444,avgWeight:5.07},
+    {lvl: 7, deg: 2.813, ratio: 1222,avgWeight:6.47},
+    {lvl: 8, deg: 1.406, ratio: 610,avgWeight:11.51},
+    {lvl: 9, deg: 0.703, ratio: 305,avgWeight:15.27},
+    {lvl: 10, deg: 0.352, ratio: 153,avgWeight:19.12},
+    {lvl: 11, deg: 0.176, ratio: 76,avgWeight:15.84},
+    {lvl: 12, deg: 0.088, ratio: 38,avgWeight:14.82},
+    {lvl: 13, deg: 0.044, ratio: 19,avgWeight:12.71},
+    {lvl: 14, deg: 0.022, ratio: 9.547,avgWeight:12.62},
+    {lvl: 15, deg: 0.011, ratio: 4.773,avgWeight:10.16},
+    {lvl: 16, deg: 0.005, ratio: 2.387,avgWeight:8.82},
+    {lvl: 17, deg: 0.003, ratio: 1.193,avgWeight:5.94},
+    {lvl: 18, deg: 0.001, ratio: 0.596,avgWeight:3.01},
+    {lvl: 19, deg: 0.0005, ratio: 0.298,avgWeight:3.00}
 ]
+
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
