@@ -70,6 +70,19 @@
                 <h2> {{layer.title}}</h2>
 
 
+                <table name="blackBox" class="tabStampContnair">
+
+                    <tr>
+                        <td  class="tabStampLine" ><i class="material-icons tiny  right" ng-class="layer.realPosition ? 'red':white">location_on</i></td>
+                        <td  class="tabStampLine" ><i class="material-icons tiny  right" ng-class="layer.visible ? 'red':white">visibility</i></td>
+                    </tr>
+                    <tr>
+                        <td  class="tabStampLine " > <i class="material-icons  tiny right" ng-class="layer.editable ? 'red':white">volume_up</i></td>
+                        <td  class="tabStampLine" > <i class="material-icons  tiny right" ng-class="layer.editable ? 'red':white">volume_up</i></td>
+                    </tr>
+
+                </table>
+
                 <!--sous boutton-->
 
                 <ion-option-button class="button-info"
@@ -105,12 +118,12 @@
                 <table name="blackBox" class="tabStampContnair">
 
                     <tr>
-                        <td  class="tabStampLine" ><i class="material-icons tiny  right">location_on</i></td>
-                        <td  class="tabStampLine" ><i class="material-icons tiny  right">visibility</i></td>
+                        <td  class="tabStampLine" ><i class="material-icons tiny  right" ng-class="layer.realPosition ? 'red':white">location_on</i></td>
+                        <td  class="tabStampLine" ><i class="material-icons tiny  right" ng-class="layer.visible ? 'red':white">visibility</i></td>
                     </tr>
                     <tr>
-                        <td  class="tabStampLine" > <i class="material-icons  tiny right">volume_up</i></td>
-                        <td  class="tabStampLine" > <i class="material-icons  tiny right">volume_up</i></td>
+                        <td  class="tabStampLine " > <i class="material-icons  tiny right" ng-class="layer.editable ? 'red':white">volume_up</i></td>
+                        <td  class="tabStampLine" > <i class="material-icons  tiny right" ng-class="layer.editable ? 'red':white">volume_up</i></td>
                     </tr>
 
                 </table>
