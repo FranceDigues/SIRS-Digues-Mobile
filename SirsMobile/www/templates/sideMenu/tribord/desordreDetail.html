@@ -1,21 +1,20 @@
 <div id="disorderDetails" ng-controller="cDesordreDetail as c">
-    <header class="bar bar-header bar-stable">
-        <button class="col-25 button button-icon button-clear ion-arrow-left-a" ng-click="c.backToDisorderList()"></button>
+    <ion-header-bar align-title="center">
+        <button class="col-20 button button-icon button-clear ion-arrow-left-a" ng-click="c.backToDisorderList()"></button>
         <h1 class="title">Détail du désordre</h1>
-    </header>
+    </ion-header-bar>
 
-    <!-- Tabs -->
     <div class="tabs-striped tabs-top">
         <div class="tabs tabs-sirs">
+            <!-- Tab / Description -->
             <a class="tab-item" ng-class="{active: c.activeTab === 'description'}" ng-click="c.setActiveTab('description')">Description</a>
+            <!-- Tab / Observations -->
             <a class="tab-item" ng-class="{active: c.activeTab === 'observations'}" ng-click="c.setActiveTab('observations')">Observations</a>
         </div>
     </div>
 
-    <!-- Body -->
     <ion-content class="has-header has-tabs-top has-fab-bottom" delegate-handle="disorderScroll" ng-switch="c.activeTab">
-
-        <!-- Description -->
+        <!-- Content / Description -->
         <div ng-switch-when="description">
             <div class="sirs-panel">
                 <div class="sirs-field-inline">
@@ -54,8 +53,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Observations -->
+        <!-- Content / Observations -->
         <div ng-switch-when="observations">
             <ion-list>
                 <ion-item ng-click="c.openObservationDetails()">20/03/2015</ion-item>
@@ -67,15 +65,14 @@
         </div>
     </ion-content>
 
-    <!-- Description fixed buttons -->
+    <!-- FAB / Description -->
     <div class="fixed-action-btn" style="bottom: 15px; right: 85px;" ng-if="c.activeTab === 'description'">
         <a class="btn-floating btn-large waves-effect waves-light red"><i class="large material-icons">delete</i></a>
     </div>
     <div class="fixed-action-btn" style="bottom: 15px; right: 15px;" ng-if="c.activeTab === 'description'">
         <a class="btn-floating btn-large waves-effect waves-light purple"><i class="large material-icons">edit</i></a>
     </div>
-
-    <!-- Observations fixed button -->
+    <!-- FAB / Observations -->
     <div class="fixed-action-btn" style="bottom: 15px; right: 15px;" ng-if="c.activeTab === 'observations'">
         <a class="btn-floating btn-large waves-effect waves-light red"><i class="large material-icons">add</i></a>
     </div>

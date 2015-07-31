@@ -43,6 +43,12 @@
                 <img src="./img/slider2.png" id="tribordHandle"  ng-click="c.toggleRightMenu()">
                 <!--on-swipe="c.switchLock()"-->
             </div>
+
+            <div class="fixed-action-btn" style="bottom: 25px; right: 25px;">
+                <a ng-click="c.toggleRightMenu()" class="btn-floating btn-large waves-effect waves-light red">
+                    <i class="large material-icons">add</i>
+                </a>
+            </div>
         </div>
 
         <!--plus button-->
@@ -69,8 +75,3 @@
 
 
 </ion-side-menus>
-
-<div class="fixed-action-btn" style="bottom: 45px; right: 24px;" ng-show="c.addButton">
-    <a class="btn-floating btn-large waves-effect waves-light red right" ><i class="mdi-content-add" ng-click="c.toggleRightMenu();   me.addButton = !me.addButton;"></i></a>
-</div>
-<!--fixme bouton ne bouge pas avec la map-->

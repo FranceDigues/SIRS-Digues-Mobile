@@ -504,3 +504,21 @@
 ion-content.has-fab-bottom > div.scroll {
     padding-bottom: 80px;
 }
+
+/* forms */
+#forms > ion-header-bar {
+    background-color: #0098A6;
+}
+#forms > ion-header-bar {
+    background-color: #0098A6;
+}
+#forms > ion-header-bar > h1,
+#forms > ion-header-bar > .button.ion-arrow-left-a {
+    color: #FFFFFF;
+}
+#forms > ion-content ion-nav-view ion-view {
+    position: relative;
+}
+#forms > ion-content ion-nav-view select {
+    margin-top: 8px;
+}

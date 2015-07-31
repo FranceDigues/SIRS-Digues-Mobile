@@ -1,0 +1,62 @@
+<ion-view>
+    <div class="row">
+        <div class="input-field col m6 s12">
+            <mt-select class="browser-default" id="type">
+                <option value="" disabled selected>Choisir un type</option>
+                <option value="1">Érosion externe</option>
+                <option value="2">Érosion interne</option>
+                <option value="3">Désordre affectant la structure</option>
+                <option value="4">Brèche</option>
+                <option value="5">Condition d'entretient de la digue</option>
+                <option value="6">Autre</option>
+            </mt-select>
+            <label class="active" for="type">Type du désordre</label>
+        </div>
+        <div class="input-field col m6 s12">
+            <mt-select class="browser-default" id="subtype">
+                <option value="" disabled selected>Choisir un sous-type</option>
+                <option value="1">Inondation par refoulement</option>
+                <option value="2">Indéfini</option>
+            </mt-select>
+            <label class="active" for="subtype">Type du désordre</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col m6 s12">
+            <mt-select class="browser-default" id="position">
+                <option value="" disabled selected>Choisir une position</option>
+                <option value="1">Franc bord</option>
+                <option value="2">Berge</option>
+                <option value="3">Talus de risberme / Pied de digue</option>
+                <option value="4">Pied de digue</option>
+                <option value="5">Talus de risberme</option>
+                <option value="6">Sommet de risberme</option>
+                <option value="7">Talus de digue</option>
+                <option value="8">Plusieurs parties de la digue</option>
+                <option value="9">Crête</option>
+                <option value="10">Hors de la digue</option>
+                <option value="11">Indéfini</option>
+            </mt-select>
+            <label class="active" for="position">Position sur la digue</label>
+        </div>
+        <div class="input-field col m6 s12">
+            <mt-select class="browser-default" id="side">
+                <option value="" disabled selected>Choisir un côté</option>
+                <option value="1">Rivière</option>
+                <option value="2">Terre</option>
+                <option value="3">Etang</option>
+                <option value="4">Mer</option>
+                <option value="5">Deux côtés de la digue</option>
+                <option value="6">Crête</option>
+                <option value="7">Indéfini</option>
+            </mt-select>
+            <label class="active" for="side">Côté de la digue</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <label for="description">Description</label>
+            <textarea id="description" class="materialize-textarea"></textarea>
+        </div>
+    </div>
+</ion-view>

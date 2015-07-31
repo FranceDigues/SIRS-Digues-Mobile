@@ -1,0 +1,26 @@
+<ion-view id="forms">
+    <ion-header-bar>
+        <a ui-sref="home.map" class="col-10 button button-icon button-clear ion-arrow-left-a"></a>
+        <h1 class="title">Nouveau désordre</h1>
+    </ion-header-bar>
+
+    <div class="tabs-striped tabs-top">
+        <div class="tabs tabs-sirs">
+            <!-- Tab / Description -->
+            <a class="tab-item" ng-class="{active: c.activeTab === 'description'}" ng-click="c.setActiveTab('description')">Description</a>
+            <!-- Tab / Photo -->
+            <a class="tab-item" ng-class="{active: c.activeTab === 'photo'}" ng-click="c.setActiveTab('photo')">Photo</a>
+        </div>
+    </div>
+
+    <ion-content class="has-header has-tabs-top" padding="20" delegate-handle="formScroll" ng-switch="c.activeTab">
+        <!-- Content / Description -->
+        <div ng-switch-when="description" style="position:relative;">
+            <ion-nav-view></ion-nav-view>
+        </div>
+        <!-- Content / Photo -->
+        <div ng-switch-when="photo">
+            Photo!
+        </div>
+    </ion-content>
+</ion-view>

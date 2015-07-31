@@ -15,6 +15,7 @@ angular.module('module_app.controllers',
 
         'module_app.controllers.menus.hud',
 
+        'module_app.controllers.form',
         'module_app.controllers.from.newDesordre',
 
 

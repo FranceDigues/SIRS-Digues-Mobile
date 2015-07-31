@@ -1,8 +1,9 @@
 <div id="observationDetails" ng-controller="cObservationDetail as c">
-    <header class="bar bar-header bar-stable">
-        <button class="col-25 button button-icon button-clear ion-arrow-left-a" ng-click="c.backToDisorderDetails()"></button>
+    <ion-header-bar align-title="center">
+        <button class="col-20 button button-icon button-clear ion-arrow-left-a" ng-click="c.backToDisorderDetails()"></button>
         <h1 class="title">Date observation</h1>
-    </header>
+    </ion-header-bar>
+
     <ion-content class="has-header has-fab-bottom" delegate-handle="observationScroll">
         <img class="full-image" style="margin-bottom: 10px;" src="./img/u60.png"/>
         <div class="sirs-section">
@@ -20,6 +21,7 @@
             </div>
         </div>
     </ion-content>
+
     <div class="fixed-action-btn" style="bottom: 15px; right: 15px;">
         <a class="btn-floating btn-large waves-effect waves-light red"><i class="large material-icons">edit</i></a>
     </div>

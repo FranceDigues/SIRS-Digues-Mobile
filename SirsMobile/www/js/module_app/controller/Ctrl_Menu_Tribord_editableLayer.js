@@ -19,7 +19,8 @@ angular.module('module_app.controllers.menus.tribord.editableLayer', [])
 
         }
         me.runWithGps =function(){
-            $state.go('newDesordre', {layer:me.layerforAddDesordre});
+            $state.go('forms.desordre');
+            //$state.go('newDesordre', {layer:me.layerforAddDesordre});
         }
 
 

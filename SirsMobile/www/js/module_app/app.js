@@ -16,6 +16,7 @@ var app = angular.module('SirsMobile', [
 
     'module_app.controllers',
     'module_app.services',
+    'module_app.directives',
 
     'module_rde.data.services',
     'module_rde.geoCache',
@@ -103,6 +104,21 @@ app.run(function ($ionicPlatform) {
                         controller: 'cMap as c'
                     }
                 }
+            })
+
+            .state('forms', {
+                url: '/forms',
+                abstract: true,
+                templateUrl: 'templates/forms.html',
+                controller: 'cForm as c'
+            })
+            .state('forms.desordre', {
+                url: '/desordre',
+                templateUrl: 'templates/formApp/formDesordre.html'
+            })
+            .state('forms.crete', {
+                url: '/crete',
+                templateUrl: 'templates/formApp/formCrete.html'
             })
 
             .state('newDesordre', {
