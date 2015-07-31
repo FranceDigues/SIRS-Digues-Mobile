@@ -1738,6 +1738,7 @@
                     mouseWheelZoom: false
                 },
                 renderer: 'canvas'
+                //renderer: 'webgl'
             };
         };
 

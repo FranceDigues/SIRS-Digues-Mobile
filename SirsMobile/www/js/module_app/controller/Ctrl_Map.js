@@ -11,7 +11,7 @@ angular.module('module_app.controllers.map', [])
 /***************************************************************** --------- *****************************************************/
 
 //sMap ==> ?
-    .controller('cMap', function cMap($scope, $ionicSideMenuDelegate, $ionicScrollDelegate, sMapLayer, sAppLayer, $log, olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation, $timeout, sStyleFactory, sLoc) {
+    .controller('cMap', function cMap($scope,$ionicLoading, $ionicSideMenuDelegate, $ionicScrollDelegate, sMapLayer, sAppLayer, $log, olData, sEventSuperviseur, sContext, $rootScope, $cordovaGeolocation, $timeout, sStyleFactory, sLoc) {
 
         var format = new ol.format.WKT();
 
@@ -40,6 +40,75 @@ angular.module('module_app.controllers.map', [])
         me.sLoc = sLoc;
 
 
+
+        //function createIconStyle() {
+        //    return new ol.style.Style({
+        //        image: new ol.style.Icon({
+        //            anchor: [0.5, 1],
+        //            anchorXUnits: 'fraction',
+        //            anchorYUnits: 'fraction',
+        //            opacity: 0.90,
+        //            src: './icon.png'
+        //        })
+        //    });
+        //}
+        //
+        //function createPointStyle(color, text) {
+        //    var options = {
+        //        image: new ol.style.Circle({
+        //            radius: 10,
+        //            fill: new ol.style.Fill({
+        //                color: color,
+        //                opacity: 0.6
+        //            }),
+        //            stroke: new ol.style.Stroke({
+        //                color: 'white',
+        //                opacity: 0.4
+        //            })
+        //        })
+        //    };
+        //    if ( text ) {
+        //        options.text = new ol.style.Text({
+        //            text: text,
+        //            fill: new ol.style.Fill({
+        //                color: 'white'
+        //            })
+        //        });
+        //    }
+        //    return new ol.style.Style(options);
+        //}
+        //
+        //function getStyle(feature) {
+        //    $log.debug("STYLING !!")
+        //    // Take car we use clustering, thus possibly have multiple features in one
+        //    var features = feature.get('features');
+        //    var style = null;
+        //    // Icon base style ?
+        //    if ( $scope.icon ) {
+        //        style = createIconStyle();
+        //    }
+        //    // Circle + txt base style
+        //    // Add number of clustered item in this case
+        //    else if ( features && features.length > 1 ) {
+        //        style = createPointStyle('blue', features.length.toFixed());
+        //    } else {
+        //        style = createPointStyle('blue');
+        //    }
+        //    return [ style ];
+        //}
+
+        //me.clusterLayer = {
+        //    clustering: true,
+        //    clusteringDistance: 40,
+        //    source: {
+        //        type: 'KML',
+        //        projection: 'EPSG:3857',
+        //        url: './test.kml'
+        //    },
+        //
+        //    style:  getStyle
+        //}
+
 //todo add to conf db
         angular.extend(me,
             {
@@ -49,18 +118,15 @@ angular.module('module_app.controllers.map', [])
                         //map: [ 'drawend' ]
                     }
                 },
-
                 controls: [
                     {name: 'zoom', active: false},
                     {name: 'rotate', active: false},
                     {name: 'attribution', active: false}
                 ],
-
                 mouseposition: {},
                 mouseclickposition: {},
                 projection: 'EPSG:4326',
                 markers: []  //FIXME zoom impossible si marker sur la carte
-
             });
 
 
@@ -86,13 +152,13 @@ angular.module('module_app.controllers.map', [])
 
 
         $rootScope.$on("sAppLayer_LayerList_Update", function() {
-            $ionicLoading.show({
-                content: 'Loading',
-                animation: 'fade-in',
-                showBackdrop: true,
-                maxWidth: 200,
-                showDelay: 0
-            });
+            //$ionicLoading.show({
+            //    content: 'Loading',
+            //    animation: 'fade-in',
+            //    showBackdrop: true,
+            //    maxWidth: 200,
+            //    showDelay: 0
+            //});
             $log.debug("testLayer return");
             $timeout(setFeaturesOfVectorLayers); // wait for openlayers directive update (next digest)
         });
@@ -111,7 +177,13 @@ angular.module('module_app.controllers.map', [])
             forEachVectorLayer(function(layerInstance, layerIndex, layerModel) {
 
                 // Remove old features.
-                layerInstance.getSource().clear(true);
+                //layerInstance.getSource().clear(true);
+                //$log.debug("LAYER SOURCE CLUSTER ?")
+                //$log.debug(layerInstance.getSource())
+                //$log.debug(layerInstance.getSource().getSource())
+
+                var source = layerModel.clustering ===true? layerInstance.getSource().getSource() : layerInstance.getSource();
+                source.clear(true);
 
                 // Create features from documents and display them.
                 var features = [];
@@ -126,7 +198,7 @@ angular.module('module_app.controllers.map', [])
                         features.push(feature);
                     }
                 });
-                layerInstance.getSource().addFeatures(features);
+                source.addFeatures(features);
 
                 // Log.
                 $log.debug(features.length + ' feature(s) added to the layer named "' + layerModel.gIndex + '"');
@@ -146,7 +218,7 @@ angular.module('module_app.controllers.map', [])
                         callback(layerInstance, layerIndex, layerModel);
                     }
                 });
-                $ionicLoading.hide();
+                //$ionicLoading.hide();
             });
         }
 
