@@ -19,6 +19,13 @@
                                 ng-click="c.signIn(c.user)">
                             CONNEXION
                         </button>
+                        <button class="button button-primary button-block " ng-hide="c.hasUpdate" ng-click="c.checkForUpdates()">
+                            Check for updates
+                        </button>
+                        <button class="button button-stable button-block button-pulse" ng-if="c.hasUpdate" ng-click="c.doUpdate()">
+                            download update
+                        </button>
+                        <progress value="c.updateProgress" ng-if="c.hasUpdate && c.updateProgress != null && c.updateProgress != 0"></progress>
                         <p class="text-right">
                             <a href="#/forgot-password">Mot de passe oublié</a>
                         </p>

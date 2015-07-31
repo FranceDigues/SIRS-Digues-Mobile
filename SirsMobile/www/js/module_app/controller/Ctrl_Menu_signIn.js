@@ -3,10 +3,11 @@
  */
 
 angular.module('module_app.controllers.menus.signIn', [])
-    .controller('cSignIn', function cSignIn($scope, $state, sPouch, $log, sContext, md5, sProf,$timeout) {
+    .controller('cSignIn', function cSignIn($ionicDeploy,$ionicPopup, $scope, $state, sPouch, $log, sContext, md5, sProf,$timeout) {
 
         var me = this;
         me.user = {login: "admin", password: "admin"};
+        me.updateProgress = 0;
 
 
         me.signIn = function (user) {
@@ -67,5 +68,49 @@ angular.module('module_app.controllers.menus.signIn', [])
         //    })
         //    }, 2000);
 
+
+        // Update app code with new release from Ionic Deploy
+        me.doUpdate = function() {
+            $ionicDeploy.update().then(function(res) {
+                //console.log('Ionic Deploy: Update Success! ', res);
+                me.alert('Etat de mise à jour', 'mise à jour complete')
+            }, function(err) {
+                //console.log('Ionic Deploy: Update error! ', err);
+                me.alert('Etat de mise à jour', 'mise à jour echoué')
+            }, function(prog) {
+                console.log('Ionic Deploy: Progress... ', prog);
+                me.updateProgress= prog;
+            });
+        };
+
+        // Check Ionic Deploy for new code
+        me.checkForUpdates = function() {
+            console.log('Ionic Deploy: Checking for updates');
+            $ionicDeploy.check().then(function(hasUpdate) {
+                console.log('Ionic Deploy: Update available: ' + hasUpdate);
+                me.hasUpdate = hasUpdate;
+
+                var updateState = hasUpdate ===true ? 'Mise à jour Disponible' : 'Système à jour'
+                me.alert('Gestionaire de mise à jour',updateState);
+
+            }, function(err) {
+                console.error('Ionic Deploy: Unable to check for updates', err);
+            });
+        }
+
+
+        me.alert = function(title, status){
+            var alert =  function() {
+                var alertPopup = $ionicPopup.alert({
+                    title: title,
+                    template: status
+                });
+                alertPopup.then(function(res) {
+                });
+            };
+
+            alert();
+
+        }
 
 })

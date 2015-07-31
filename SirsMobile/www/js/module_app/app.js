@@ -4,6 +4,9 @@
 
 var app = angular.module('SirsMobile', [
     'ionic',
+    'ionic.service.core',
+    'ionic.service.deploy',
+
     'ngCordova',
     'angular-md5',
     'rzModule',
