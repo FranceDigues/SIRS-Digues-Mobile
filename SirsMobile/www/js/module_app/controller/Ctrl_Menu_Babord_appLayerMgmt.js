@@ -101,4 +101,48 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
         }
 
 
+    })  .filter('modularFilter', function() {
+
+        // Create the return function
+        // set the required parameter name to **number**
+        return function(layersArray,filterControlObject ) {
+            ////todo think to mapfor reflist
+
+            tmp.arrayFiltered = [];
+
+            if(filterControlObject.module===true){ //filtre sur les module
+                tmp.arrayFiltered = layersArray.filter(function(layer){
+                    return layer.module == me.modAct ? true: false;
+                });
+            }else if(filterControlObject.categorie===true){ //filtre sur les categorie
+                if(tmp.arrayFiltered.length <1)  tmp.arrayFiltered = layersArray; //si on à pas de filtre sur le module
+
+                tmp.arrayFiltered =  tmp.arrayFiltered.filter(function(layer){
+                    var _bool = false;
+                    for(var i=0;i < refList.length;i++){
+                        if (filterControlObject.categorieList[i].checked === true) {
+                            if (layer.categorie == filterControlObject.categorieList[i].title) {
+                                _bool =  true;
+                                break;
+                            }
+                        }
+                    };
+                    return _bool;
+                });
+            }else if(filterControlObject.nameRegex===true){ //filtre sur les categorie
+                if(tmp.arrayFiltered.length <1)  tmp.arrayFiltered = layersArray; //si on à pas de filtre sur le module
+
+                var patt = new RegExp("."+filterControlObject.searchOnName+".","i");
+
+                tmp.arrayFiltered =  tmp.arrayFiltered.filter(function(layer){
+                   return patt.test(layer.name);
+                });
+            }
+
+
+            return tmp.arrayFiltered;
+
+        }
+
+
     });
