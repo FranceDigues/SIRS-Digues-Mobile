@@ -3,6 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <!--FIXME do not leave the castle who protect the big diamond with the door open ...-->
+    <!--<meta http-equiv="Content-Security-Policy" content="default-src *; style-src * &apos;unsafe-inline&apos;; script-src * &apos;unsafe-inline&apos; &apos;unsafe-eval&apos;">-->
+    <meta http-equiv="Content-Security-Policy" content="default-src *; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos; *; style-src  &apos;self&apos; &apos;unsafe-inline&apos; *">
     <title></title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
@@ -24,22 +27,30 @@
     <link href="css/hud.css" rel="stylesheet">
 
 
-    <!--configuration statique-->
-    <script src="data/staticCfg.js"></script>
+    <!--&lt;!&ndash;configuration statique&ndash;&gt;-->
+    <!--<script src="data/staticCfg.js"></script>-->
 
 
     <!--lib local Ol3-->
     <!--<script src="lib/ol_3.2.1/ol.js"></script>-->
-    <script src="lib/ol_3.4.0/ol-debug.js"></script>
 
-    <!-- cordova script (this will be a 404 during development) -->
-    <script src="cordova.js"></script>
+    <!--<script src="lib/es6-promise/promise.min.js"></script>-->
+    <!--<script>var Promise = require('es6-promise').Promise;</script>-->
 
+
+    <!-- Cordova is bootstrapped by ionic-service-core, uncomment this if you remove ionic-service-core... -->
+<!-- <script src="cordova.js"></script> -->
+
+    <!--<script src="lib/angular/angular.min.js"></script>-->
     <!--ionic -->
     <script src="lib/ionic/js/ionic.bundle.min.js"></script>
+    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
     <script src="lib/ionic-service-core/ionic-core.js"></script>
     <script src="lib/ionic-service-deploy/ionic-deploy.js"></script>
 
+
+
+    <script src="lib/ol_3.4.0/ol-debug.js"></script>
     <!--gulp-inject task name : jslink-->
 
     <!-- bower:js -->
@@ -47,7 +58,7 @@
     <script src="lib/materialize/bin/materialize.js"></script>
     <script src="lib/angularjs-slider/rzslider.js"></script>
     <script src="lib/pouchdb/dist/pouchdb.min.js"></script>
-    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
+
     <script src="lib/pouchdb-quick-search/dist/pouchdb.quick-search.min.js"></script>
     <script src="lib/pouchdb-load/dist/pouchdb.load.min.js"></script>
     <script src="lib/proj4/dist/proj4.js"></script>
@@ -57,8 +68,8 @@
     <!-- endinject -->
 
 
-    <script src="lib/ionic-service-core/ionic-core.js"></script>
-    <script src="lib/ionic-service-deploy/ionic-deploy.js"></script>
+    <!--<script src="lib/ionic-service-core/ionic-core.js"></script>-->
+    <!--<script src="lib/ionic-service-deploy/ionic-deploy.js"></script>-->
 
     <!-- module_rde:js -->
     <script src="module_rde/Class/oAppLayer.js"></script>
@@ -80,7 +91,7 @@
     <!-- inject:js -->
     <script src="js/bboxFilter.js"></script>
     <script src="js/utils.js"></script>
-    <script src="js/module_app/app.js"></script>
+    <script src="js/app.js"></script>
     <script src="js/module_app/controller/Ctrl_Form.js"></script>
     <script src="js/module_app/controller/Ctrl_Form_newDesordre.js"></script>
     <script src="js/module_app/controller/Ctrl_Loader.js"></script>
@@ -118,12 +129,11 @@
 
     <!--<script src="lib/fabric.js"></script>-->
     <!--static-->
-    <script src="staticLib/influxdb-latest.js"></script>
+    <!--<script src="staticLib/influxdb-latest.js"></script>-->
     <script src="staticLib/angular-openlayers-directive.js"></script>
 
     <!--bug jslink-->
     <script src="lib/angular-md5/angular-md5.min.js"></script>
-
 
 </head>
 

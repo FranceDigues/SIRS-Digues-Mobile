@@ -5,6 +5,8 @@
 angular.module('module_app.controllers.menus.signIn', [])
     .controller('cSignIn', function cSignIn($ionicDeploy,$ionicPopup, $scope, $state, sPouch, $log, sContext, md5, sProf,$timeout) {
 
+
+
         var me = this;
         me.user = {login: "admin", password: "admin"};
         me.updateProgress = 0;
@@ -78,9 +80,40 @@ angular.module('module_app.controllers.menus.signIn', [])
                 //console.log('Ionic Deploy: Update error! ', err);
                 me.alert('Etat de mise à jour', 'mise à jour echoué')
             }, function(prog) {
-                console.log('Ionic Deploy: Progress... ', prog);
+                //console.log('Ionic Deploy: Progress... ', prog);
                 me.updateProgress= prog;
+                //$log.debug(me.updateProgress)
             });
+            //$ionicDeploy.download().then(function() {
+            //    // called when the download has completed successfully
+            //    me.updateProgress = 0;
+            //
+            //    $ionicDeploy.extract().then(function() {
+            //        // called when the extraction completes succesfully
+            //
+            //        $window.location.reload(true);//reload all
+            //
+            //    }, function(error) {
+            //        // called when an error occurs
+            //    }, function(deployExtractionProgress) {
+            //        // this is a progress callback, so it will be called a lot
+            //        // deployExtractionProgress will be an Integer representing the current
+            //        // completion percentage.
+            //        me.updateProgress= deployExtractionProgress;
+            //    });
+            //
+            //
+            //}, function(deployDownloadError) {
+            //    // called when an error occurs
+            //}, function(deployDownloadProgress) {
+            //    // this is a progress callback, so it will be called a lot
+            //    // deployDownloadProgress will be an Integer representing the current
+            //    // completion percentage.
+            //    me.updateProgress= deployDownloadProgress;
+            //});
+
+
+
         };
 
         // Check Ionic Deploy for new code
@@ -112,5 +145,12 @@ angular.module('module_app.controllers.menus.signIn', [])
             alert();
 
         }
+
+        $log.debug("INFO IONIC DEPLOY")
+
+        //SET Chanel deploy
+        $ionicDeploy.setChannel("dev");
+        $log.debug($ionicDeploy.info())
+        $log.debug($ionicDeploy)
 
 })

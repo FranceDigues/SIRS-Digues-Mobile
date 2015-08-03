@@ -6,8 +6,11 @@ var app = angular.module('SirsMobile', [
     'ionic',
     'ionic.service.core',
     'ionic.service.deploy',
-
     'ngCordova',
+    
+    
+
+
     'angular-md5',
     'rzModule',
     'pouchdb',
@@ -55,7 +58,12 @@ app.run(function ($ionicPlatform) {
         }
     });
 })
+
     .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+
+              //$ionicAccountProvider.identify({
+              //      app_id: '1bb2cb28'
+              //});
 
         $ionicConfigProvider.tabs.position('bottom'); //other values: top
 

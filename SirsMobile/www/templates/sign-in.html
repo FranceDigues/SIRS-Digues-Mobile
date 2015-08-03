@@ -20,12 +20,12 @@
                             CONNEXION
                         </button>
                         <button class="button button-primary button-block " ng-hide="c.hasUpdate" ng-click="c.checkForUpdates()">
-                            Check for updates
+                            Rechercher les mises à jour
                         </button>
                         <button class="button button-stable button-block button-pulse" ng-if="c.hasUpdate" ng-click="c.doUpdate()">
-                            download update
+                            Mise à Jour
                         </button>
-                        <progress value="c.updateProgress" ng-if="c.hasUpdate && c.updateProgress != null && c.updateProgress != 0"></progress>
+                        <progress value="{{c.updateProgress}}" max="100" ng-if="c.hasUpdate && c.updateProgress != null && c.updateProgress != 0"></progress>
                         <p class="text-right">
                             <a href="#/forgot-password">Mot de passe oublié</a>
                         </p>
