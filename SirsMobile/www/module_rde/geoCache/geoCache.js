@@ -31,6 +31,7 @@ angular.module('module_rde.geoCache', [
     .controller('cGeoCache', function cGeoCache ($scope, sMapLayer, olData, $log, $timeout, sContext, $rootScope,$state) {
 
         var me = this;
+        me.Dt= Date.now();
         me.sContext=sContext;
 
         me.gotoHome=function(){
@@ -516,6 +517,28 @@ angular.module('module_rde.geoCache', [
             sContext.saveUser();
         };
 
+
+        me.editLayer = function(item){
+            //TODO center on item!
+            //init
+            me.enableNewCacheControl= true;
+            me.vsActiveCache.clear();
+
+            //write values
+            $log.debug(item)
+           var gjson= new ol.format.GeoJSON();
+
+            me.vsActiveCache.addFeatures(gjson.readFeature(item))
+            me.z.zMin=item.properties.zMin;
+            me.z.zMax=item.properties.zMax;
+            me.CacheName=item.properties.name;
+
+
+            angular.forEach( me.sMapLayer.list, function(layer) {
+                    layer.needToCache = item.properties.layerSource === layer.name?true:false;
+            });
+
+        }
 
         me.clearMe = function(caDe){
 

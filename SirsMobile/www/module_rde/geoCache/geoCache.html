@@ -48,18 +48,12 @@
                         show-reorder="false"
                         can-swipe="true"
                         class="animate-if">
-                    <ion-item ng-repeat="item in c.sContext.auth.user.cacheGeom.features">
-                              <!--item-width="100%"-->
-                              <!--item-height="30px">-->
-                       Layer Source :
-                        {{item.properties.layerSource}}
-
-
-                        nom :
-                        {{item.properties.name}}
-
-
-                        {{Date.now() | date:'dd.MM.yyyy HH:mm:ss'}}
+                    <ion-item ng-repeat="item in c.sContext.auth.user.cacheGeom.features" on-tap="c.editLayer(item)">
+                       <p> Source : {{item.properties.layerSource}}</p>
+                        <!--{{" "}}/ {{" "}}-->
+                        <p> Nom : {{item.properties.name}}</p>
+                        <!--{{" "}}/ {{" "}}-->
+                        <p> Date : {{c.Dt | date:'dd.MM.yyyy HH:mm:ss'}}</p>
 
                         <!--sous boutton-->
 
