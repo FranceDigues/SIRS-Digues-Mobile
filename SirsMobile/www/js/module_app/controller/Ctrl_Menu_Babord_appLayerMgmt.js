@@ -12,7 +12,9 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
         me.sContext = sContext;
         me.sAppLayer = sAppLayer;
         me.activeBranch = me.sAppLayer.tree;
-        me.modAct="";
+        me.key="";
+        me.filterConf = {module:true,categorie:true,nameRegex:true}
+        //if (me.sAppLayer.modules[0] != null) me.sAppLayer.modules[0].checked = true;
         me.branchAct=null;
         me.displayStack=false;
         me.search=false
@@ -56,8 +58,8 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
            me.modAct= me.modAct != m ? m : "";
         }
 
-        me.toggleFilter= function(){
-           me.search= me.search == false ? true : false;
+        me.toggleSearch= function(){
+           me.search= !me.search;
         }
 
         me.loadDataLayer = function(layer){
@@ -74,6 +76,21 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
             $log.debug(index);
             me.sAppLayer.asSimpleStack.splice(index, 1);
             me.sAppLayer.asSimpleStack.splice(index-1, 0, item);
+        }
+
+
+        me.toggleFilter = function(){
+            me.filterConf.module = !me.noFilter;
+            me.filterConf.categorie = !me.noFilter;
+            me.filterConf.nameRegex = !me.noFilter;
+        }
+
+        me.updateFilterConf = function(key){
+            //{module:true,modAct:c.sAppLayer.modules,categorie:true,categorieList:c.sAppLayer.categories,nameRegex:true,searchOnName:c.key}
+            //filterConf.key=me.key
+            $log.debug(me.filterConf)
+
+            return me.filterConf;
         }
 
     })
@@ -101,42 +118,110 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
         }
 
 
+    })
+    .filter('ModuleFilter', function() {
+
+        // Create the return function
+        // set the required parameter name to **number**
+        return function(layersArray,refList ) {
+            ////todo think to mapfor reflist
+
+            return layersArray.filter(function(cat){
+                //console.log(cat)
+                var _bool = false;
+                for(var i=0;i < refList.length;i++){
+                    if (refList[i].checked === true) {
+                        if (cat.mother == refList[i].title) {
+                            _bool =  true;
+                            break;
+                        }
+                    }
+                };
+                return _bool;
+            });
+
+        }
+
+
     })  .filter('modularFilter', function() {
 
         // Create the return function
         // set the required parameter name to **number**
-        return function(layersArray,filterControlObject ) {
+        return function(layersArray,filterControl, FilterOption ) {
             ////todo think to mapfor reflist
 
-            tmp.arrayFiltered = [];
+            var tmp={arrayFiltered : []};
+            console.log("start")
+            console.log(tmp.arrayFiltered)
+            console.log(layersArray)
 
-            if(filterControlObject.module===true){ //filtre sur les module
+            if(filterControl.module===true){ //filtre sur les module
                 tmp.arrayFiltered = layersArray.filter(function(layer){
-                    return layer.module == me.modAct ? true: false;
-                });
-            }else if(filterControlObject.categorie===true){ //filtre sur les categorie
-                if(tmp.arrayFiltered.length <1)  tmp.arrayFiltered = layersArray; //si on à pas de filtre sur le module
-
-                tmp.arrayFiltered =  tmp.arrayFiltered.filter(function(layer){
+                    //return layer.module == FilterOption.modAct ? true: false;
                     var _bool = false;
-                    for(var i=0;i < refList.length;i++){
-                        if (filterControlObject.categorieList[i].checked === true) {
-                            if (layer.categorie == filterControlObject.categorieList[i].title) {
+                    for(var i=0;i < FilterOption.modules.length;i++){
+                        if (FilterOption.modules[i].checked === true) {
+                            if (layer.module == FilterOption.modules[i].title) {
                                 _bool =  true;
                                 break;
                             }
                         }
                     };
                     return _bool;
+
                 });
-            }else if(filterControlObject.nameRegex===true){ //filtre sur les categorie
+
+                console.log("module")
+                console.log(tmp.arrayFiltered)
+                console.log(layersArray)
+            }
+            if(filterControl.categorie===true){ //filtre sur les categorie
                 if(tmp.arrayFiltered.length <1)  tmp.arrayFiltered = layersArray; //si on à pas de filtre sur le module
 
-                var patt = new RegExp("."+filterControlObject.searchOnName+".","i");
+                tmp.arrayFiltered =  tmp.arrayFiltered.filter(function(layer){
+                    var _bool = false;
+                    angular.forEach(
+                        FilterOption.categorieList.filter(function(c){return c.checked;}),
+                        function(cat) {
+                        if (layer.categorie == cat.title) {
+                            _bool =  true;
+                        }
+                    })
+                    //for(var i=0;i < FilterOption.categorieList.length;i++){
+                    //    if (FilterOption.categorieList[i].checked === true) {
+                    //        if (layer.categorie == FilterOption.categorieList[i].title) {
+                    //            _bool =  true;
+                    //            break;
+                    //        }
+                    //    }
+                    //};
+                    return _bool;
+                });
+
+                console.log("categorie")
+                console.log(tmp.arrayFiltered)
+                console.log(layersArray)
+            }
+            if(filterControl.nameRegex===true){ //filtre sur les categorie
+                if(tmp.arrayFiltered.length <1)  tmp.arrayFiltered = layersArray; //si on à pas de filtre sur le module
+
+                var patt = new RegExp("."+FilterOption.searchOnName+".","i");
 
                 tmp.arrayFiltered =  tmp.arrayFiltered.filter(function(layer){
                    return patt.test(layer.name);
                 });
+
+
+                console.log("regex")
+                console.log(tmp.arrayFiltered)
+                console.log(layersArray)
+            }
+            if (tmp.arrayFiltered.length <1){
+                tmp.arrayFiltered = layersArray;
+
+                console.log("default")
+                console.log(tmp.arrayFiltered)
+                console.log(layersArray)
             }
 
 

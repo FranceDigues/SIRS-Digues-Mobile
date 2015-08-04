@@ -6,8 +6,8 @@ angular.module('module_app.data.services.applayer', [])
 .service('sAppLayer', function sMapLayer ($ionicPlatform,sPouch, $log, $rootScope,$timeout) {
         var me = this;
         me.list=[]; //todo kill
-        me.module=[];
-        me.categorie=[];
+        me.modules=[];
+        me.categories=[];
         me.visible = []; //todo kill
 
 
@@ -113,7 +113,7 @@ angular.module('module_app.data.services.applayer', [])
 
                     angular.forEach(res.moduleDescriptions, function(v,k) {
                         //$log.debug(v.layers);
-                        me.module.push(v.title);
+                        me.modules.push({title:v.title,checked:true});
                         me.layersTreeIterator(v.layers,
                             //leafFunction
                             function (item, cat) {
@@ -126,7 +126,7 @@ angular.module('module_app.data.services.applayer', [])
                         },
                             //node function
                             function(item){
-                                me.categorie.push({title:item.title,mother: v.title,checked:false});
+                                me.categories.push({title:item.title,mother: v.title,checked:false});
                             }
                         );
 
