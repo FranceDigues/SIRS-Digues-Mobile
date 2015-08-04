@@ -5,7 +5,7 @@
 
     <ion-content class="has-header" delegate-handle="selectionScroll">
         <ion-list>
-            <ion-item ng-repeat="ft in c.sContext.selectedFeatures" ng-bind="ft.get('title')" ng-click="c.openDisorderDetails(ft)"></ion-item>
+            <ion-item ng-repeat="ft in c.sContext.selectedFeatures" ng-bind="ft.get('title')" on-tap="c.openDisorderDetails(ft)"></ion-item>
         </ion-list>
     </ion-content>
 </div>

@@ -2,8 +2,8 @@
 
     <header class="bar bar-header bar-stable">
         <button class="col-25 button button-icon button-clear ion-arrow-left-a"
-                ng-click="c.sContext.backBabordMenus()"></button>
-        <a class="btn-floating btn-large waves-effect waves-light red"><i class="mdi-content-add" ng-click="c.viewAddSourceForm = true"></i></a>
+                on-tap="c.sContext.backBabordMenus()"></button>
+        <a class="btn-floating btn-large waves-effect waves-light red"><i class="mdi-content-add" on-tap="c.viewAddSourceForm = true"></i></a>
     </header>
 
 
@@ -11,11 +11,11 @@
 
         <div ng-hide="c.viewAddSourceForm">
             <ion-list>
-                <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" ng-click="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sMapLayer.list">  <i ng-show="layer.active"   class="material-icons  right" >offline_pin</i>Layers {{layer.name}}</ion-item>
+                <ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" on-tap="c.updateBaseLayer(layer.name)" ng-repeat="layer in c.sMapLayer.list">  <i ng-show="layer.active"   class="material-icons  right" >offline_pin</i>Layers {{layer.name}}</ion-item>
             </ion-list>
 
 
-            <a class="waves-effect waves-light btn-large"  ng-click="c.goToGeoCache()"><i class="mdi-content-cloud right"> </i>Gestion du Cache</a>
+            <a class="waves-effect waves-light btn-large"  on-tap="c.goToGeoCache()"><i class="mdi-content-cloud right"> </i>Gestion du Cache</a>
         </div>
 
 
@@ -52,7 +52,7 @@
                 </label>
             </div>
 
-            <button class="btn waves-effect waves-light" type="submit" name="action" ng-click="c.addSource(c.newSource)">AJOUTER LA SOURCE
+            <button class="btn waves-effect waves-light" type="submit" name="action" on-tap="c.addSource(c.newSource)">AJOUTER LA SOURCE
                 <i class="mdi-content-send" ></i>
             </button>
 

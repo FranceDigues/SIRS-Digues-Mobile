@@ -22,7 +22,7 @@
                     {{nbTileDownloaded}}
                     <progress max="{{nbTile}}" value="{{nbTileDownloaded}}"></progress>
 
-                    <button class="button button-block button-positive" href="#/" ng-click="cachMe()">Lancer la recherche
+                    <button class="button button-block button-positive" href="#/" on-tap="cachMe()">Lancer la recherche
                     </button>
                 </ion-list>
             </div>
@@ -32,7 +32,7 @@
                     <ol-layer ol-layer-properties="layer" ng-repeat="layer in layers|filter:{active:true}"></ol-layer>
                 </openlayers>
                 <ion-list>
-                    <!--ng-click="changeColorOfFeature()"-->
+                    <!--on-tap="changeColorOfFeature()"-->
                     <ion-item ng-repeat="item in  user.cache.layers">Source en Cache : {{item.origine}} , Nom Du Cache :
                         {{item.nom}}
                     </ion-item>

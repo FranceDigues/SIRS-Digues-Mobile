@@ -3,7 +3,7 @@
     <ion-list>
         <ion-item class="waves-effect waves-teal btn-flat"
                   style="  display: block; width: 100%;"
-                  ng-click="c.UpdateView('b',menu.file)"
+                  on-tap="c.UpdateView('b',menu.file)"
                   ng-repeat="menu in c.sConf.BabordMenu">
             <i ng-show="layer.active"   class="material-icons  right" >offline_pin</i>
             {{menu.name}}

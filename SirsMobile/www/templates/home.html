@@ -8,23 +8,23 @@
         <!--//NAV-->
         <ion-nav-bar>
             <ion-nav-buttons side="left">
-                <!--<button class="button button-icon button-clear ion-navicon" ng-click="c.openLeftMenu()"></button>-->
-                <button class="col-25 button button-icon button-clear ion-home" ng-click="c.home()"></button>
+                <!--<button class="button button-icon button-clear ion-navicon" on-tap="c.openLeftMenu()"></button>-->
+                <button class="col-25 button button-icon button-clear ion-home" on-tap="c.home()"></button>
             </ion-nav-buttons>
 
 
             <!--<div class="buttons">-->
-            <!--<button class="col-25 button button-icon button-clear ion-home" ng-click="c.home()"></button>-->
+            <!--<button class="col-25 button button-icon button-clear ion-home" on-tap="c.home()"></button>-->
             <!--</div>-->
             <!--<h1 class="col-50  title">{{}}</h1>-->
 
             <!--<div class="buttons">-->
-            <!--<button class=" col-75 button button-icon button-clear ion-power" ng-click="c.logout()"></button>-->
+            <!--<button class=" col-75 button button-icon button-clear ion-power" on-tap="c.logout()"></button>-->
             <!--</div>-->
 
             <ion-nav-buttons side="right">
-                <!--<button class="button button-icon button-clear ion-navicon" ng-click="c.openRightMenu()"></button>-->
-                <button class=" col-75 button button-icon button-clear ion-power" ng-click="c.logout()"></button>
+                <!--<button class="button button-icon button-clear ion-navicon" on-tap="c.openRightMenu()"></button>-->
+                <button class=" col-75 button button-icon button-clear ion-power" on-tap="c.logout()"></button>
             </ion-nav-buttons>
         </ion-nav-bar>
 
@@ -32,20 +32,20 @@
         <!--//PANEL-->
         <div class="cargo">
             <div name="babord" class=" inline side babord">
-                <img src="./img/slider1.png" ng-click="c.toggleLeftMenu()">
-                <!--ng-click="c.toggleLeftMenu()"-->
+                <img src="./img/slider1.png" on-tap="c.toggleLeftMenu()">
+                <!--on-tap="c.toggleLeftMenu()"-->
                 <!--on-swipe="c.switchLock()"-->
             </div>
 
             <ion-nav-view name="home-panel" class="inline container"></ion-nav-view>
 
             <div name="tribord" class="inline side tribord">
-                <img src="./img/slider2.png" id="tribordHandle"  ng-click="c.toggleRightMenu()">
+                <img src="./img/slider2.png" id="tribordHandle"  on-tap="c.toggleRightMenu()">
                 <!--on-swipe="c.switchLock()"-->
             </div>
 
             <div class="fixed-action-btn" style="bottom: 25px; right: 25px;">
-                <a ng-click="c.toggleRightMenu()" class="btn-floating btn-large waves-effect waves-light red">
+                <a on-tap="c.toggleRightMenu()" class="btn-floating btn-large waves-effect waves-light red">
                     <i class="large material-icons">add</i>
                 </a>
             </div>
@@ -53,7 +53,7 @@
 
         <!--plus button-->
         <div>
-            <button class="button button-icon button-clear ion-power" ng-click="c.logout()"></button>
+            <button class="button button-icon button-clear ion-power" on-tap="c.logout()"></button>
         </div>
 
 

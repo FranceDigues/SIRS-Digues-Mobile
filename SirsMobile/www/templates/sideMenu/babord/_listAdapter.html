@@ -3,31 +3,31 @@
 
 <!--sous boutton-->
 <ion-option-button class="button-positive">
-    <i class="material-icons  right" ng-click="c.up(layer)">call_made</i>
+    <i class="material-icons  right" on-tap="c.up(layer)">call_made</i>
 </ion-option-button>
 <ion-option-button class="button-positive">
-    <i class="material-icons  right" ng-click="c.down(layer)">call_received</i>
+    <i class="material-icons  right" on-tap="c.down(layer)">call_received</i>
 </ion-option-button>
 
 <ion-option-button class="button-info"
-                   ng-click="layer.realPosition=!layer.realPosition">
+                   on-tap="layer.realPosition=!layer.realPosition">
     <i class="material-icons  right">{{layer.realPosition ===true? "location_on" : "location_off"
         }}</i>
 </ion-option-button>
 <ion-option-button class="button-info"
-                   ng-click="layer.visible=!layer.visible">
+                   on-tap="layer.visible=!layer.visible">
     <!--bousolle like -->
     <i class="material-icons  right">{{layer.visible ===true? "visibility" : "visibility_off" }}</i>
 </ion-option-button>
 <ion-option-button class="button-info"
-                   ng-click="layer.editable=!layer.editable">
+                   on-tap="layer.editable=!layer.editable">
     <!--edit-->
     <i class="material-icons  right">{{layer.editable ===true? "volume_up" : "volume_off" }}</i>
 </ion-option-button>
 
 
 <ion-delete-button class="ion-minus-circled"
-                   ng-click="c.sAppLayer.asSimpleStack.splice($index, 1)">
+                   on-tap="c.sAppLayer.asSimpleStack.splice($index, 1)">
 </ion-delete-button>
 <ion-reorder-button class="ion-navicon"
                     on-reorder="c.reorderItem(layer, $fromIndex, $toIndex)">

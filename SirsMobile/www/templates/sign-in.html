@@ -16,13 +16,13 @@
                     </div>
                     <div class="signin-valid-button">
                         <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
-                                ng-click="c.signIn(c.user)">
+                                on-tap="c.signIn(c.user)">
                             CONNEXION
                         </button>
-                        <button class="button button-primary button-block " ng-hide="c.hasUpdate" ng-click="c.checkForUpdates()">
+                        <button class="button button-primary button-block " ng-hide="c.hasUpdate" on-tap="c.checkForUpdates()">
                             Rechercher les mises à jour
                         </button>
-                        <button class="button button-stable button-block button-pulse" ng-if="c.hasUpdate" ng-click="c.doUpdate()">
+                        <button class="button button-stable button-block button-pulse" ng-if="c.hasUpdate" on-tap="c.doUpdate()">
                             Mise à Jour
                         </button>
                         <progress value="{{c.updateProgress}}" max="100" ng-if="c.hasUpdate && c.updateProgress != null && c.updateProgress != 0"></progress>
