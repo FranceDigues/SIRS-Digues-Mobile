@@ -118,61 +118,6 @@
 
             </ion-item>
         </ion-list>
-
-
-    <!--&lt;!&ndash;non filtrer&ndash;&gt;-->
-    <!--<ion-list-->
-            <!--show-delete="c.shouldShowDelete"-->
-            <!--show-reorder="c.shouldShowReorder"-->
-            <!--can-swipe="c.listCanSwipe"-->
-            <!--ng-if="c.noFilter" class="animate-if">-->
-        <!--<ion-item ng-repeat="layer in c.sAppLayer.asSimpleStack ">-->
-            <!--<h2 class="tabStampTitle"> {{layer.title}}</h2>-->
-
-
-                <!--<table name="blackBox" class="tabStampContnair">-->
-
-                    <!--<tr>-->
-                        <!--<td  class="tabStampLine" ><i class="material-icons tiny  right" ng-class="layer.realPosition ? 'red':white">location_on</i></td>-->
-                        <!--<td  class="tabStampLine" ><i class="material-icons tiny  right" ng-class="layer.visible ? 'red':white">visibility</i></td>-->
-                    <!--</tr>-->
-                    <!--<tr>-->
-                        <!--<td  class="tabStampLine " > <i class="material-icons  tiny right" ng-class="layer.editable ? 'red':white">volume_up</i></td>-->
-                        <!--<td  class="tabStampLine" > <i class="material-icons  tiny right" ng-class="layer.editable ? 'red':white">volume_up</i></td>-->
-                    <!--</tr>-->
-
-                <!--</table>-->
-
-
-            <!--&lt;!&ndash;sous boutton&ndash;&gt;-->
-
-            <!--<ion-option-button class="button-info"-->
-                               <!--on-tap="layer.realPosition=!layer.realPosition">-->
-                <!--<i class="material-icons  right">{{layer.realPosition ===true? "location_on" : "location_off"}}</i>-->
-            <!--</ion-option-button>-->
-            <!--<ion-option-button class="button-info"-->
-                               <!--on-tap="layer.visible=!layer.visible; c.loadDataLayer(layer);">-->
-                <!--&lt;!&ndash;bousolle like &ndash;&gt;-->
-                <!--<i class="material-icons  right">{{layer.visible ===true? "visibility" : "visibility_off" }}</i>-->
-            <!--</ion-option-button>-->
-            <!--<ion-option-button class="button-info"-->
-                               <!--on-tap="layer.editable=!layer.editable">-->
-                <!--&lt;!&ndash;edit&ndash;&gt;-->
-                <!--<i class="material-icons  right">{{layer.editable ===true? "volume_up" : "volume_off" }}</i>-->
-            <!--</ion-option-button>-->
-
-
-            <!--<ion-delete-button ng-class="layer.fav ? 'ion-star' : 'ion-ios-star-outline' "-->
-                               <!--fav-->
-                               <!--on-tap="layer.fav= !layer.fav">-->
-            <!--</ion-delete-button>-->
-            <!--<ion-reorder-button class="ion-navicon"-->
-                                <!--on-reorder="c.reorderItem(layer, $fromIndex, $toIndex)">-->
-            <!--</ion-reorder-button>-->
-        <!--</ion-item>-->
-    <!--</ion-list>-->
-
-
     </ion-content>
 
 
