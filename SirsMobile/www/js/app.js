@@ -117,12 +117,27 @@ app.run(function ($ionicPlatform) {
             .state('forms', {
                 url: '/forms',
                 abstract: true,
-                templateUrl: 'templates/forms.html',
+                templateUrl: 'templates/formApp/forms.html',
                 controller: 'cForm as c'
             })
             .state('forms.desordre', {
                 url: '/desordre',
-                templateUrl: 'templates/formApp/formDesordre.html'
+                //templateUrl: 'templates/formApp/formDesordre.html'
+                views: {
+                    'central-panel': {
+                        templateUrl: 'templates/formApp/formDesordre.html',
+                        //controller: 'cPhoto as c'
+                    }
+                }
+            })
+            .state('forms.photo', {
+                url: '/photo',
+                views: {
+                    'central-panel': {
+                        templateUrl: 'templates/formApp/photo.html',
+                        controller: 'cPhoto as c'
+                    }
+                }
             })
             .state('forms.crete', {
                 url: '/crete',

@@ -7,20 +7,16 @@
     <div class="tabs-striped tabs-top">
         <div class="tabs tabs-sirs">
             <!-- Tab / Description -->
-            <a class="tab-item" ng-class="{active: c.activeTab === 'description'}" on-tap="c.setActiveTab('description')">Description</a>
+            <a class="tab-item" ng-class="{active: c.activeTab === 'description'}" on-tap="c.setActiveTab('description'); c.state.go('forms.desordre');">Description</a>
             <!-- Tab / Photo -->
-            <a class="tab-item" ng-class="{active: c.activeTab === 'photo'}" on-tap="c.setActiveTab('photo')">Photo</a>
+            <a class="tab-item" ng-class="{active: c.activeTab === 'photo'}" on-tap="c.setActiveTab('photo'); c.state.go('forms.photo');">Photo</a>
         </div>
     </div>
 
     <ion-content class="has-header has-tabs-top" padding="20" delegate-handle="formScroll" ng-switch="c.activeTab">
         <!-- Content / Description -->
-        <div ng-switch-when="description" style="position:relative;">
-            <ion-nav-view></ion-nav-view>
-        </div>
-        <!-- Content / Photo -->
-        <div ng-switch-when="photo">
-            Photo!
+        <div  style="position:relative;">
+            <ion-nav-view name="central-panel"></ion-nav-view>
         </div>
     </ion-content>
 </ion-view>

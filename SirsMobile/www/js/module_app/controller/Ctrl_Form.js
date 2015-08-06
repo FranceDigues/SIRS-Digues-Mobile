@@ -1,9 +1,10 @@
 
 angular.module('module_app.controllers.form', [])
 
-    .controller('cForm', function cForm($ionicScrollDelegate) {
+    .controller('cForm', function cForm($ionicScrollDelegate,$state) {
 
         var self = this;
+        self.state =$state;
 
         self.activeTab = 'description';
 
