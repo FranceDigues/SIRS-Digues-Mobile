@@ -3,57 +3,32 @@
     <header class="bar bar-header bar-stable">
         <button class="col-25 button button-icon button-clear ion-arrow-left-a"
                 on-tap="c.sContext.backBabordMenus()"></button>
-        <a class="btn-floating btn-large waves-effect waves-light yellow" style="left:50%;"><i
-                class="material-icons  right" on-tap="c.toggleSearch()">search</i></a>
+        <a class="btn-floating btn-large waves-effect waves-light yellow" ng-class="c.search === true? 'green':'yellow'" style="left:50%;"><i
+                class="material-icons  right" on-tap="c.toggleSearch()">{{(c.search === true? 'close':'add')}}</i></a>
     </header>
 
     <ion-content class="has-header" overflow-scroll="true">
 
         <!--searchview-->
         <div ng-show="c.search">
-            <!--//Liste des module-->
-
-
-            <label class="item item-input signin-item">
-                <input type="text" placeholder="recherche" ng-model="c.key">
-            </label>
-
-
-            <ion-item class="waves-effect waves-teal btn-flat" style="  display: block; width: 100%;"
-                      on-tap="c.modList= c.modList===false?true:false"> MODULE :
-            </ion-item>
-
-            <ion-list ng-show="c.modList">
-                <!--class="waves-effect waves-teal btn-flat"-->
-                <ion-checkbox class="waves-effect waves-teal" ng-model="mod.checked" ng-repeat="mod in c.sAppLayer.modules"
-                              style="  display: block; width: 100%;">
-                    <!--on-tap="c.toggleMod(mod)"-->
-                    <!--<i ng-show="c.modAct===mod" class="material-icons  right" >done</i>-->
-                    Module : {{mod.title}}
-                </ion-checkbox>
-
-                <!--</ion-item>-->
+            <!--//Liste expensive layer-->
+            <!--//fixme calque sans theme?-->
+            <ion-list>
+                <ion-item ng-repeat="cat in c.sAppLayer.categories" class="waves-effect waves-teal"
+                          style="  display: block; width: 100%;"
+                          ng-click="c.justeOneOpen(cat)">
+                    <p style="padding-bottom: 10px;">{{cat.title}} :</p>
+                    <ion-checkbox class="waves-effect waves-teal"
+                                  ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{categorie:cat.title}:true|filter:{favori:false}"
+                                  on-tap="layer.favori=true;"
+                                  ion-stop-event="click"
+                                  style="  display: block; width: 100%;"
+                                  ng-if="cat.visible">
+                        {{layer.title}}
+                    </ion-checkbox>
+                </ion-item>
             </ion-list>
 
-            <ion-item class="waves-effect waves-teal btn-flat" style="  display: block; width: 100%;"
-                      on-tap="c.catList= c.catList===false?true:false"> CATEGORIE :
-            </ion-item>
-
-            <!--Liste des categorie-->
-            <ion-list ng-show='c.catList'>
-                <!--<ion-item class="waves-effect waves-teal btn-flat"  style="  display: block; width: 100%;" on-tap="c.deepBranch(node)" ng-repeat="node in c.sAppLayer.categorie | filter:{mother:c.modAct}:true">-->
-                <!--<i    class="material-icons  right" >done</i>-->
-                <!--CAT {{node.title}}-->
-                <!--</ion-item>-->
-
-                <ion-checkbox class="waves-effect waves-teal"
-                              ng-repeat="cat in c.sAppLayer.categories | ModuleFilter:c.sAppLayer.modules"
-                              style="  display: block; width: 100%;" ng-model="cat.checked">
-                    Module : {{cat.title}}
-                </ion-checkbox>
-
-            </ion-list>
-            <!--{{c.sAppLayer.categorie}}-->
         </div>
         <div style="background-color: #003399; width: 100%; height: 15px;">
         </div>
@@ -65,26 +40,24 @@
                 show-reorder="c.shouldShowReorder"
                 can-swipe="c.listCanSwipe"
                 class="animate-if">
-            <!--//todo why?-->
-            <!--ng-include="'templates/sideMenu/babord/_listAdapter.html'"-->
-            <!--<ion-item ng-repeat="layer in c.sAppLayer.asSimpleStack|catFilter:c.sAppLayer.categories ">-->
-            <!--<ion-item ng-repeat="layer in c.sAppLayer.asSimpleStack|modularFilter:c.updateFilterConf(c.key) ">-->
 
-            {{}}
-            <ion-item ng-repeat="layer in filtered=( c.sAppLayer.asSimpleStack|modularFilter:c.filterConf:{modules:c.sAppLayer.modules,categorieList:c.sAppLayer.categories,searchOnName: c.key})">
+            <ion-item ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{favori:true}">
                 <h2> {{layer.title}}</h2>
-                {{filtered.length}}
 
 
                 <table name="blackBox" class="tabStampContnair">
 
                     <tr>
-                        <td  class="tabStampLine" ><i class="material-icons tiny  right" ng-class="layer.realPosition ? 'red':white">location_on</i></td>
-                        <td  class="tabStampLine" ><i class="material-icons tiny  right" ng-class="layer.visible ? 'red':white">visibility</i></td>
+                        <td class="tabStampLine"><i class="material-icons tiny  right"
+                                                    ng-class="layer.realPosition ? 'red':white">location_on</i></td>
+                        <td class="tabStampLine"><i class="material-icons tiny  right"
+                                                    ng-class="layer.visible ? 'red':white">visibility</i></td>
                     </tr>
                     <tr>
-                        <td  class="tabStampLine " > <i class="material-icons  tiny right" ng-class="layer.editable ? 'red':white">volume_up</i></td>
-                        <td  class="tabStampLine" > <i class="material-icons  tiny right" ng-class="layer.editable ? 'red':white">volume_up</i></td>
+                        <td class="tabStampLine "><i class="material-icons  tiny right"
+                                                     ng-class="layer.editable ? 'red':white">volume_up</i></td>
+                        <td class="tabStampLine"><i class="material-icons  tiny right"
+                                                    ng-class="layer.editable ? 'red':white">volume_up</i></td>
                     </tr>
 
                 </table>
@@ -108,12 +81,11 @@
                 </ion-option-button>
 
 
-                <ion-delete-button ng-class="layer.fav ? 'ion-star' : 'ion-ios-star-outline' "
-                fav
-                on-tap="layer.fav= !layer.fav">
+                <ion-delete-button class="ion-minus-circled"
+                                   on-tap="layer.favori=false;layer.visible=false;">
                 </ion-delete-button>
                 <ion-reorder-button class="ion-navicon"
-                on-reorder="c.reorderItem(layer, $fromIndex, $toIndex)">
+                                    on-reorder="c.reorderItem(layer, $fromIndex, $toIndex)">
                 </ion-reorder-button>
 
             </ion-item>
@@ -124,18 +96,9 @@
     <!--bar bar-footer-->
     <ion-footer-bar class=" bar-positive ">
         <div class="buttons">
-            <button class="button button-icon icon ion-star"
+            <button class="button button-icon icon ion-minus-circled"
                     on-tap="c.shouldShowDelete = !c.shouldShowDelete; c.shouldShowReorder = false"></button>
         </div>
-        <!--<h1 class="title">gestion calques</h1>-->
-
-        <div class="buttons">
-            <button class="button" on-tap="c.noFilter = !c.noFilter; c.toggleFilter();">
-                <span ng-if="c.noFilter" class="animate-if">non Filtré </span>
-                <span ng-if="!c.noFilter" class="animate-if">Filtré</span>
-            </button>
-        </div>
-
         <div class="buttons right" ng-if="c.noFilter" class="animate-if">
             <button class="button" on-tap="c.shouldShowDelete = false; c.shouldShowReorder = !c.shouldShowReorder">
                 Reorder

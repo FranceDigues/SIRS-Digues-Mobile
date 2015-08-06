@@ -93,6 +93,18 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
             return me.filterConf;
         }
 
+        //check there are only one menu open
+        me.justeOneOpen= function(cat){
+            if(cat.visible === false){
+                me.sAppLayer.categories.forEach(function(item){
+                     item.visible = (item.title === cat.title);
+                })
+            }else{
+                cat.visible = false;
+            }
+
+        }
+
     })
 
     .filter('catFilter', function() {

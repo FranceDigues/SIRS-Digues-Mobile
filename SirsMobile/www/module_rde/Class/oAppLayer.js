@@ -84,6 +84,7 @@ function oAppLayer(param){
     this.propVisible=param.propVisible != null ? param.propVisible : false;
     this.realPosition= param.realPosition != null ? param.realPosition : true;
     this.fav= param.fav != null ? param.fav : false;
+    this.favori= false; //TODO inject user Data
     this.visible= param.visible;
     this.editable= param.editable;
     this.selectable= param.selectable;

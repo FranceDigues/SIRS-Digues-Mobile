@@ -126,7 +126,7 @@ angular.module('module_app.data.services.applayer', [])
                         },
                             //node function
                             function(item){
-                                me.categories.push({title:item.title,mother: v.title,checked:false});
+                                me.categories.push({title:item.title,mother: v.title,checked:false,visible:false});
                             }
                         );
 
