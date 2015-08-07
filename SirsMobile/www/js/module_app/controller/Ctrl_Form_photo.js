@@ -5,16 +5,16 @@
 
 
 angular.module('module_app.controllers.from.photo', [])
-    .factory('Camera', ['$q', function($q) {
+    .factory('Camera', ['$q', function ($q) {
 
         return {
-            getPicture: function(options) {
+            getPicture: function (options) {
                 var q = $q.defer();
 
-                navigator.camera.getPicture(function(result) {
+                navigator.camera.getPicture(function (result) {
                     // Do any magic you need
                     q.resolve(result);
-                }, function(err) {
+                }, function (err) {
                     q.reject(err);
                 }, options);
 
@@ -22,34 +22,35 @@ angular.module('module_app.controllers.from.photo', [])
             }
         }
     }])
-    .controller('cPhoto', function cPhoto($scope, $state,$stateParams, $log, sContext, sLoc,$cordovaCapture,Camera) {
+    .controller('cPhoto', function cPhoto($scope, $state, $stateParams, $log, sContext, sLoc, $cordovaCapture, Camera) {
         var me = this;
         me.sContext = sContext;
         me.sLoc = sLoc;
         me.layerActif = $stateParams.layer;
 
-        me.lastPhoto= null;
+        me.newPhotos = [];
 
-        me.getNewImage = function() {
+        //me.getNewImage = function() {
+        //
+        //    // $cordovaCapture.captureAudio(options).then(function(audioData) {
+        //    $cordovaCapture.captureImage({limit:1}).then(function(imageURI) {
+        //        $log.debug("Imagedata recup");
+        //        $log.debug(imageURI);
+        //        $scope.lastPhoto = imageURI;
+        //    }, function(err) {
+        //        $log.error(err);
+        //        // An error occurred. Show a message to the user
+        //    });
+        //
+        //};
 
-            // $cordovaCapture.captureAudio(options).then(function(audioData) {
-            $cordovaCapture.captureImage({limit:1}).then(function(imageURI) {
-                $log.debug("Imagedata recup");
-                $log.debug(imageURI);
-                $scope.lastPhoto = imageURI;
-            }, function(err) {
-                $log.error(err);
-                // An error occurred. Show a message to the user
-            });
-
-        };
-
-        me.getPhoto = function() {
-            Camera.getPicture().then(function(imageURI) {
+        //todo add file dir
+        me.getPhoto = function () {
+            Camera.getPicture().then(function (imageURI) {
                 console.log(imageURI);
-                $scope.lastPhoto = imageURI;
+                me.newPhotos.push(imageURI);
 
-            }, function(err) {
+            }, function (err) {
                 console.err(err);
             }, {
                 quality: 75,
@@ -58,5 +59,17 @@ angular.module('module_app.controllers.from.photo', [])
                 saveToPhotoAlbum: false
             });
         };
+
+        me.runNotePad = function () {
+            $state.go('note');
+        }
+
+        me.deletePhoto = function (index) {
+            $log.debug(index)
+            var file = me.newPhotos.splice(index,1);
+            $log.debug(file);
+            //todo kill file;
+        }
+
 
     })

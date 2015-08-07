@@ -3,10 +3,12 @@
 <!--Module de dessin-->
 
 <!--<script type="text/javascript" src="../lib/fabric.js"></script>-->
+<ion-header-bar>
+    Module de note :
+</ion-header-bar>
 
 <div id="bd-wrapper" >
     <!--ng-controller="CanvasControls"-->
-    <h2><span>Fabric.js demos</span> &middot; Free drawing</h2>
 
     <style>
         #drawing-mode {
@@ -44,7 +46,7 @@
         </button>
     </div>
 
-    <canvas id="canvasFabric" width="500" height="500" style="border:1px solid #aaa"></canvas>
+    <canvas id="canvasFabric" width="100%" height="100%" style="border:1px solid #aaa"></canvas>
 
     <div style="display: inline-block; margin-left: 10px">
         <button id="drawing-mode" class="btn btn-info">Cancel drawing mode</button><br>

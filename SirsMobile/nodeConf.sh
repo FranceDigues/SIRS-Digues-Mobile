@@ -15,10 +15,7 @@ npm install q
 npm install --save-dev main-bower-files
 npm install --save-dev event-
 
-bower install
-
-
-
+bower install --allow-root
 
 ionic platfrom add android
 ionic browser add crosswalk

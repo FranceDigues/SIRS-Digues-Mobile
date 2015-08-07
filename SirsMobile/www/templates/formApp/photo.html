@@ -1,4 +1,3 @@
-
 <ion-view>
     <a class="waves-effect waves-light btn-large"
        on-tap="c.getPhoto()"
@@ -6,6 +5,39 @@
         Prendre Une Photo
         <i class="ion-camera"></i>
     </a>
+    <a class="waves-effect waves-light btn-large"
+       on-tap="c.runNotePad()"
+       style="  display: inline-block; width: 49%;">
+        Prendre une note
+        <i class="ion-edit"></i>
+    </a>
 
-    <img ng-src="{{c.lastPhoto}}" style="max-width: 100%">
+    <div class="right col-33">
+        <ion-list
+                show-delete="true"
+                can-swipe="true"
+                class="animate-if ">
+            <ion-item ng-repeat="photo in c.newPhotos">
+                <img ng-src="{{photo}}" style="display:block;width: 100%">
+                <ion-option-button class="button-info"
+                                   on-tap="c.runNotePad(photo)">
+                    EDITION
+                </ion-option-button>
+                <ion-delete-button class="ion-minus-circled"
+                                   on-tap="c.deletePhoto($index)">
+                </ion-delete-button>
+            </ion-item>
+        </ion-list>
+        <!--<ion-footer-bar class=" bar-positive ">-->
+            <!--<div class="buttons">-->
+                <!--<button class="button button-icon icon ion-minus-circled"-->
+                        <!--on-tap="c.shouldShowDelete = !c.shouldShowDelete; c.shouldShowReorder = false"></button>-->
+            <!--</div>-->
+            <!--<div class="buttons right" ng-if="c.noFilter" class="animate-if">-->
+                <!--<button class="button" on-tap="c.shouldShowDelete = false; c.shouldShowReorder = !c.shouldShowReorder">-->
+                    <!--Reorder-->
+                <!--</button>-->
+            <!--</div>-->
+        <!--</ion-footer-bar>-->
+    </div>
 </ion-view>
