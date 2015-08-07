@@ -1,4 +1,11 @@
 
 <ion-view>
-    Photo!
+    <a class="waves-effect waves-light btn-large"
+       on-tap="c.getPhoto()"
+       style="  display: inline-block; width: 49%;">
+        Prendre Une Photo
+        <i class="ion-camera"></i>
+    </a>
+
+    <img ng-src="{{c.lastPhoto}}" style="max-width: 100%">
 </ion-view>

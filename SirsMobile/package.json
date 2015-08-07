@@ -17,7 +17,26 @@
   },
   "cordovaPlugins": [
     "ionic-plugin-deploy",
-    "cordova-plugin-whitelist@1.1.0"
+    "cordova-plugin-whitelist@1.1.0",
+    "org.apache.cordova.media",
+    "cordova-plugin-file",
+    "com.ionic.keyboard",
+    "cordova-plugin-console",
+    "cordova-plugin-crosswalk-webview",
+    "cordova-plugin-device",
+    "cordova-plugin-dialogs",
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-geolocation",
+    "cordova-plugin-media",
+    "cordova-plugin-media-capture",
+    "cordova-plugin-network-information",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-whitelist",
+    "org.apache.cordova.camera",
+    {
+      "locator": "../../EXTERNAL_GIT_DEP/cordova-plugin-file-opener2",
+      "id": "io.github.pwlin.cordova.plugins.fileopener2"
+    }
   ],
   "cordovaPlatforms": [
     "android"

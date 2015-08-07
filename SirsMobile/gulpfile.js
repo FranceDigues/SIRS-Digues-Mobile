@@ -48,3 +48,64 @@ gulp.task('git-check', function(done) {
   }
   done();
 });
+
+
+
+
+
+var cordovaPlugins = [
+  'com.ionic.deploy',
+  'com.ionic.keyboard',
+  'cordova-plugin-console',
+  'cordova-plugin-crosswalk-webview',
+  'cordova-plugin-device',
+  'cordova-plugin-dialogs',
+  'cordova-plugin-file',
+  'cordova-plugin-file-transfer',
+  'cordova-plugin-geolocation',
+  'cordova-plugin-media',
+  'cordova-plugin-media-capture',
+  'cordova-plugin-network-information',
+  'cordova-plugin-splashscreen',
+  'cordova-plugin-whitelist',
+  'io.github.pwlin.cordova.plugins.fileopener2',
+  'org.apache.cordova.camera',
+];
+// can define this in some config file
+/*
+ var config = require('ionic.config');
+ var .cordovaPlugins = config.cordovaPlugins
+ */
+
+gulp.task('addPlg', function() {
+
+  exec('ionic plugin add '+'../pulgin/cacheMap/');
+  var d = Q.defer();
+  // execute ionic plugin add for each of the plugins
+  var addPromises = cordovaPlugins.map(function(plugin) {
+    return exec('ionic plugin add '+plugin+'com.rde.cachemap');
+  });
+  // wait for all shell actions to complete
+  Q.all(addPromises).then(function() {
+    d.resolve();
+  });
+  return d.promise;
+});
+
+gulp.task('rmPlg', function() {
+  exec('ionic plugin add '+'com.rde.cachemap"');
+
+  var d = Q.defer();
+  // fetch list of all installed plugins
+  var installedPlugins = require('./plugins/android.json').installed_plugins;
+  // execute ionic plugin rm for each installed plugin
+  var rmPromises = [];
+  for(var plugin in installedPlugins) {
+    rmPromises.push(exec('ionic plugin rm '+plugin));
+  };
+  // wait for all shell actions to complete
+  Q.all(rmPromises).then(function() {
+    d.resolve();
+  });
+  return d.promise;
+});
