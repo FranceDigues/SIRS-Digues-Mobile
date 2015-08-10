@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#android sdk need 32bit lib
+apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0
+
 npm install -g cordova
 npm install -g ionic
 npm install -g bower
@@ -16,6 +19,9 @@ npm install --save-dev main-bower-files
 npm install --save-dev event-
 
 bower install --allow-root
+#rm fabric js gz (not extention analisis on building. gz init a conflict...)
+rm ./www/lib/fabric/dist/fabric.min.js.gz
+
 
 ionic platfrom add android
 ionic browser add crosswalk
