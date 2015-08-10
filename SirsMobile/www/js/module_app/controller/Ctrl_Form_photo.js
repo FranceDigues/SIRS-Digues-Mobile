@@ -22,7 +22,7 @@ angular.module('module_app.controllers.from.photo', [])
             }
         }
     }])
-    .controller('cPhoto', function cPhoto($scope, $state, $stateParams, $log, sContext, sLoc, $cordovaCapture, Camera) {
+    .controller('cPhoto', function cPhoto($scope, $state, $stateParams, $log, sContext, sLoc, $cordovaCapture, Camera,$cordovaFile) {
         var me = this;
         me.sContext = sContext;
         me.sLoc = sLoc;
@@ -30,25 +30,25 @@ angular.module('module_app.controllers.from.photo', [])
 
         me.newPhotos = [];
 
-        //me.getNewImage = function() {
-        //
-        //    // $cordovaCapture.captureAudio(options).then(function(audioData) {
-        //    $cordovaCapture.captureImage({limit:1}).then(function(imageURI) {
-        //        $log.debug("Imagedata recup");
-        //        $log.debug(imageURI);
-        //        $scope.lastPhoto = imageURI;
-        //    }, function(err) {
-        //        $log.error(err);
-        //        // An error occurred. Show a message to the user
-        //    });
-        //
-        //};
-
         //todo add file dir
         me.getPhoto = function () {
             Camera.getPicture().then(function (imageURI) {
                 console.log(imageURI);
-                me.newPhotos.push(imageURI);
+
+                $log.debug(imageURI)
+                var patern = /(.*\/)(.*\.jpg)/
+
+                imageURI
+
+
+                if(patern.test(imageURI)){
+                    //$log.debug(RegExp.$1);
+
+                    $cordovaFile.copyFile(RegExp.$2,  RegExp.$2,  sContext.photoDir, sContext.activeDesordreId+"_"+sContext.getLinearIndex())
+                }
+
+
+                me.newPhotos.push({selected:false,path:imageURI}); //Param Obj.
 
             }, function (err) {
                 console.err(err);
@@ -70,6 +70,4 @@ angular.module('module_app.controllers.from.photo', [])
             $log.debug(file);
             //todo kill file;
         }
-
-
     })

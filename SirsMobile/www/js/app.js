@@ -40,7 +40,7 @@ var app = angular.module('SirsMobile', [
 
      ]);
 
-app.run(function ($ionicPlatform) {
+app.run(function ($ionicPlatform,$cordovaFile,$log,sContext) {
     //sMapLayer
     $ionicPlatform.ready(function () {
 
@@ -56,6 +56,22 @@ app.run(function ($ionicPlatform) {
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
+
+
+
+        //init File Directory on SD card
+        //todo add support for multi storage capabilities (sd/internal)
+        $log.debug("CORDOVA FILE INIT")
+        var test= $cordovaFile.checkDir(cordova.file.externalDataDirectory , "nouvellesPhotos").then(function (success) {
+            // success
+            //alert("status " + success);
+        }, function (error) {
+            // error
+            $cordovaFile.createDir(cordova.file.externalDataDirectory , "nouvellesPhotos");
+        });
+
+        sContext.photoDir=cordova.file.externalDataDirectory+ "nouvellesPhotos";
+
     });
 })
 

@@ -7,7 +7,7 @@
 
 angular.module('module_app.controllers.menus.tribord.editableLayer', [])
 
-    .controller('cEditableLayer', function cEditableLayer ($scope, $log, sContext,sAppLayer, $state) {
+    .controller('cEditableLayer', function cEditableLayer ($scope, $log, sContext,sAppLayer, $state, sPouch) {
 
         var me = this;
         me.sContext = sContext;
@@ -19,7 +19,16 @@ angular.module('module_app.controllers.menus.tribord.editableLayer', [])
 
         }
         me.runWithGps =function(){
-            $state.go('forms.desordre');
+
+            sPouch.localDb.post(new oSampleSirsObj()).then(function (response) {
+               $log.debug("POST DONE")
+               $log.debug(response)
+                sContext.activeDesordreId =response.id;
+                $log.debug(sContext.activeDesordreId)
+                $state.go('forms.desordre');
+            }).catch(function (err) {
+                console.log(err);
+            });
             //$state.go('newDesordre', {layer:me.layerforAddDesordre});
         }
 

@@ -11,15 +11,41 @@ angular.module('module_rde.data.services.context', [])
 
         var rscp = $rootScope.$new();
 
-        me.tribordView = {active: "desordreMgmt"  , last:[]};
-        me.babordView = {active: "menu" , last:[]};
-        me.logProfiling=false;
+    //variable d'environement
+        //path :
+            me.photoDir=null;
+
+        //conf
+            me.logProfiling=false;
+
+        //
+
+
+    //variable d'etat
+        //vue
+            me.tribordView = {active: "desordreMgmt"  , last:[]};
+            me.babordView = {active: "menu" , last:[]};
+        //variable d'ajout de desordre
+            me.activeDesordreId=null;
+
+        //variable globale utilitaire
+        me.linearIndex=0;
 
         me.editionMode = false;
 
 
         this.param = {action: null, mskUUID: null}
         this.auth = {user: null}
+
+        //serialisation pour reprise à chaud.
+        //todo
+        //save static conf
+        //todo
+        //utilities function:
+        me.getLinearIndex = function(){
+            me.linearIndex = me.linearIndex + 1;
+            return me.linearIndex;
+        }
 
 
         me.saveUser = function () {

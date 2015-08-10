@@ -18,7 +18,8 @@
                 can-swipe="true"
                 class="animate-if ">
             <ion-item ng-repeat="photo in c.newPhotos">
-                <img ng-src="{{photo}}" style="display:block;width: 100%">
+                <ion-checkbox ng-model="photo.selected" ng-change="c."></ion-checkbox>
+                <img ng-src="{{photo.path}}" style="display:block;width: 100%">
                 <ion-option-button class="button-info"
                                    on-tap="c.runNotePad(photo)">
                     EDITION
