@@ -20,7 +20,7 @@ angular.module('module_rde.data.services.context', [])
             me.logProfiling=false;
 
         //version
-            me.version = "v0.2.1 -u08 "
+            me.version = "v0.2.1 -u09 "
 
 
     //variable d'etat
