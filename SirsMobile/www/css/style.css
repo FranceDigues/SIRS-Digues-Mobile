@@ -82,6 +82,13 @@
 .loading-view .scroll-content {
     position: initial;
 }
+.loading-view progress, .loading-view p{
+    color: #666;
+}
+.loading-view .password{
+    padding:10px;
+    margin-bottom:0;
+}
 
 /* Sign in page */
 .signin-view {
