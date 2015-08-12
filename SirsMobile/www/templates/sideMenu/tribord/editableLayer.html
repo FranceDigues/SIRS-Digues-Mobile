@@ -3,15 +3,16 @@
 
     <ion-list>
 
-        <ion-radio ng-model="c.layerforAddDesordre" ng-value="item" ng-repeat="item in c.sAppLayer.visible">
-            {{item.name}}
+        <ion-radio ng-model="c.layerforAddDesordre" ng-value="layer" ng-repeat="layer in c.sAppLayer.asSimpleStack | filter:{editable:true}">
+            {{layer.title}}
         </ion-radio>
 
 
     </ion-list>
 
     <!--action-->
-    <div>
+    <!--<div class="col-bottom">-->
+        <ion-footer-bar>
         <a class="waves-effect waves-light btn-large"
            on-tap="c.drawOnMap()"
            style="  display: inline-block; width: 49%;">
@@ -22,6 +23,7 @@
            style="  display: inline-block; width: 49%;">
             CONTINUER
         </a>
-    </div>
+        </ion-footer-bar>
+    <!--</div>-->
 
 </div>

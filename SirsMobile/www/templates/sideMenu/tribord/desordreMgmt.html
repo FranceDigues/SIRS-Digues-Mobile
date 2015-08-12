@@ -6,21 +6,29 @@
     </header>
 
 
-    <ion-content class="has-header">
-        i'm cAppLayerMgmt
+    <!--<ion-content class="has-header">-->
         <!--tab-->
-        <div>
-            <a class="waves-effect waves-light btn-large"
-               on-tap="c.underView='editableLayer'"
-               style="  display: inline-block; width: 49%;">
-                SELECTION DE COUCHE
-            </a>
-            <a class="waves-effect waves-light btn-large"
-               on-tap="c.underView='closableDesordre'"
-               style="  display: inline-block; width: 49%;">
-                FERMER UN LINEAIRE
-            </a>
+        <!--<div>-->
+            <!--<a class="waves-effect waves-light btn-large"-->
+               <!--on-tap="c.underView='editableLayer'"-->
+               <!--style="  display: inline-block; width: 49%;">-->
+                <!--SELECTION DE COUCHE-->
+            <!--</a>-->
+            <!--<a class="waves-effect waves-light btn-large"-->
+               <!--on-tap="c.underView='closableDesordre'"-->
+               <!--style="  display: inline-block; width: 49%;">-->
+                <!--FERMER UN LINEAIRE-->
+            <!--</a>-->
+        <!--</div>-->
+        <div class="tabs-striped tabs-top">
+            <div class="tabs tabs-sirs">
+                <!-- Tab / Description -->
+                <a class="tab-item" ng-class="{active: c.underView === 'editableLayer'}" on-tap="c.underView='editableLayer'">SELECTION DE COUCHE</a>
+                <!-- Tab / Photo -->
+                <a class="tab-item" ng-class="{active: c.underView === 'closableDesordre'}" on-tap="c.underView='closableDesordre'">FERMER UN LINEAIRE</a>
+            </div>
         </div>
+
         <!--view-->
         <div>
             <div ng-include="'templates/sideMenu/tribord/'+c.underView+'.html'"></div>

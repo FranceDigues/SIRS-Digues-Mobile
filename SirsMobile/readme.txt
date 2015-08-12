@@ -38,4 +38,7 @@ ionic upload --note "v0.2.1 -u07 new App Layer Menu" --deploy=dev
 
 #NB : you need to set up your ionic.io account first.
 
+#Version :
+les versions doivent etre renseigné a la mains dans contexte. version  avants publication sur ionic deploy
+
 
