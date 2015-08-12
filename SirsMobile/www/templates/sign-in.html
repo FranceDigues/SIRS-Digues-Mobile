@@ -22,9 +22,16 @@
                         <button class="button button-primary button-block " ng-hide="c.hasUpdate" on-tap="c.checkForUpdates()">
                             Rechercher les mises à jour
                         </button>
+                        <button class="button button-stable button-block button-pulse" on-tap="c.channelChooser=!c.channelChooser">
+                            Choix du canal de mise à jour
+                        </button>
+                        <ion-checkbox ng-repeat="chanel in c.deployChanel"  ng-show="c.channelChooser" on-tap="c.updateChanel(chanel.tag)">
+                            {{chanel.name}}
+                        </ion-checkbox>
                         <button class="button button-stable button-block button-pulse" ng-if="c.hasUpdate" on-tap="c.doUpdate()">
                             Mise à Jour
                         </button>
+
                         <progress value="{{c.updateProgress}}" max="100" ng-if="c.hasUpdate && c.updateProgress != null && c.updateProgress != 0"></progress>
                         <p class="text-right">
                             <a href="#/forgot-password">Mot de passe oublié</a>

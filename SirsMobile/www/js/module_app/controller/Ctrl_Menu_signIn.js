@@ -3,8 +3,7 @@
  */
 
 angular.module('module_app.controllers.menus.signIn', [])
-    .controller('cSignIn', function cSignIn($ionicDeploy,$ionicPopup, $scope, $state, sPouch, $log, sContext, md5, sProf,$timeout) {
-
+    .controller('cSignIn', function cSignIn($ionicDeploy, $ionicPopup, $scope, $state, sPouch, $log, sContext, md5, sProf, $timeout) {
 
 
         var me = this;
@@ -52,93 +51,45 @@ angular.module('module_app.controllers.menus.signIn', [])
 
         };
 
-
-        //$timeout(
-        //    function (){
-        //    sPouch.confDb.put({
-        //        _id: "test-03",
-        //        data: [1, 1, 1, 1]
-        //    }).then(function () {
-        //        $log.debug("add");
-        //        sPouch.confDb.get('test-03').then(function (res) {
-        //            $log.debug("update")
-        //            $timeout(function () {
-        //                res.data.push([2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]);
-        //                sPouch.confDb.put(res);
-        //            }, 2000);
-        //        })
-        //    })
-        //    }, 2000);
-
-
         // Update app code with new release from Ionic Deploy
-        me.doUpdate = function() {
-            $ionicDeploy.update().then(function(res) {
+        me.doUpdate = function () {
+            $ionicDeploy.update().then(function (res) {
                 //console.log('Ionic Deploy: Update Success! ', res);
                 me.alert('Etat de mise à jour', 'mise à jour complete')
-            }, function(err) {
+            }, function (err) {
                 //console.log('Ionic Deploy: Update error! ', err);
                 me.alert('Etat de mise à jour', 'mise à jour echoué')
-            }, function(prog) {
+            }, function (prog) {
                 //console.log('Ionic Deploy: Progress... ', prog);
-                me.updateProgress= prog;
+                me.updateProgress = prog;
                 //$log.debug(me.updateProgress)
             });
-            //$ionicDeploy.download().then(function() {
-            //    // called when the download has completed successfully
-            //    me.updateProgress = 0;
-            //
-            //    $ionicDeploy.extract().then(function() {
-            //        // called when the extraction completes succesfully
-            //
-            //        $window.location.reload(true);//reload all
-            //
-            //    }, function(error) {
-            //        // called when an error occurs
-            //    }, function(deployExtractionProgress) {
-            //        // this is a progress callback, so it will be called a lot
-            //        // deployExtractionProgress will be an Integer representing the current
-            //        // completion percentage.
-            //        me.updateProgress= deployExtractionProgress;
-            //    });
-            //
-            //
-            //}, function(deployDownloadError) {
-            //    // called when an error occurs
-            //}, function(deployDownloadProgress) {
-            //    // this is a progress callback, so it will be called a lot
-            //    // deployDownloadProgress will be an Integer representing the current
-            //    // completion percentage.
-            //    me.updateProgress= deployDownloadProgress;
-            //});
-
-
 
         };
 
         // Check Ionic Deploy for new code
-        me.checkForUpdates = function() {
+        me.checkForUpdates = function () {
             console.log('Ionic Deploy: Checking for updates');
-            $ionicDeploy.check().then(function(hasUpdate) {
+            $ionicDeploy.check().then(function (hasUpdate) {
                 console.log('Ionic Deploy: Update available: ' + hasUpdate);
                 me.hasUpdate = hasUpdate;
 
-                var updateState = hasUpdate ===true ? 'Mise à jour Disponible' : 'Système à jour'
-                me.alert('Gestionaire de mise à jour',updateState);
+                var updateState = hasUpdate === true ? 'Mise à jour Disponible' : 'Système à jour'
+                me.alert('Gestionaire de mise à jour', updateState);
 
-            }, function(err) {
+            }, function (err) {
                 console.error('Ionic Deploy: Unable to check for updates', err);
             });
         }
 
 
-        me.alert = function(title, status){
-            var alert =  function() {
+        me.alert = function (title, status) {
+            var alert = function () {
                 var alertPopup = $ionicPopup.alert({
                     title: title,
                     template: status
                 });
-                alertPopup.then(function(res) {
+                alertPopup.then(function (res) {
                 });
             };
 
@@ -146,11 +97,32 @@ angular.module('module_app.controllers.menus.signIn', [])
 
         }
 
-        $log.debug("INFO IONIC DEPLOY")
 
         //SET Chanel deploy
         $ionicDeploy.setChannel("dev");
-        $log.debug($ionicDeploy.info())
-        $log.debug($ionicDeploy)
+        me.channelChooser = false;
+        me.updateChanel=function(tag){
+            me.channelChooser=false;
+            $ionicDeploy.setChannel(tag);
+            //todo save to user
+        }
+        me.deployChanel = [
+            {
+                name: "production",
+                tag: "production",
+            },
+            {
+                name: "developpeur",
+                tag: "dev",
+            },
+            {
+                name: "release stable",
+                tag: "stable",
+            },
+            {
+                name: "release beta",
+                tag: "beta",
+            }
+        ]
 
-})
+    })
