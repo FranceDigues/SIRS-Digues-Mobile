@@ -103,6 +103,7 @@ angular.module('module_app.controllers.menus.signIn', [])
         me.channelChooser = false;
         me.updateChanel=function(tag){
             me.channelChooser=false;
+            me.hasUpdate = false;
             $ionicDeploy.setChannel(tag);
             //todo save to user
         }
@@ -124,5 +125,8 @@ angular.module('module_app.controllers.menus.signIn', [])
                 tag: "beta",
             }
         ]
+
+        //auto check update
+        me.checkForUpdates();
 
     })
