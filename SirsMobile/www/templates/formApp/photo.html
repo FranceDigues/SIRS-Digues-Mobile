@@ -17,28 +17,17 @@
                 show-delete="true"
                 can-swipe="true"
                 class="animate-if ">
-            <ion-item ng-repeat="photo in c.newPhotos">
-                <ion-checkbox ng-model="photo.selected" ng-change="c."></ion-checkbox>
-                <img ng-src="{{photo.path}}" style="display:block;width: 100%">
+            <ion-item ng-repeat="photo in c.newPhotos" >
+                <!--<ion-checkbox ng-model="photo.selected" ng-change="c."></ion-checkbox>-->
+                <img ng-src="{{photo.path+photo.file}}" style="display:block;width: 100%">
                 <ion-option-button class="button-info"
                                    on-tap="c.runNotePad(photo)">
                     EDITION
                 </ion-option-button>
                 <ion-delete-button class="ion-minus-circled"
-                                   on-tap="c.deletePhoto($index)">
+                                   on-tap="c.deletePhoto($index,photo.path+photo.file)">
                 </ion-delete-button>
             </ion-item>
         </ion-list>
-        <!--<ion-footer-bar class=" bar-positive ">-->
-            <!--<div class="buttons">-->
-                <!--<button class="button button-icon icon ion-minus-circled"-->
-                        <!--on-tap="c.shouldShowDelete = !c.shouldShowDelete; c.shouldShowReorder = false"></button>-->
-            <!--</div>-->
-            <!--<div class="buttons right" ng-if="c.noFilter" class="animate-if">-->
-                <!--<button class="button" on-tap="c.shouldShowDelete = false; c.shouldShowReorder = !c.shouldShowReorder">-->
-                    <!--Reorder-->
-                <!--</button>-->
-            <!--</div>-->
-        <!--</ion-footer-bar>-->
     </div>
 </ion-view>

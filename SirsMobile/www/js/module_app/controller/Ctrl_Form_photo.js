@@ -22,7 +22,7 @@ angular.module('module_app.controllers.from.photo', [])
             }
         }
     }])
-    .controller('cPhoto', function cPhoto($scope, $state, $stateParams, $log, sContext, sLoc, $cordovaCapture, Camera,$cordovaFile) {
+    .controller('cPhoto', function cPhoto($scope, $state, $stateParams, $log, sContext, sLoc, $cordovaCapture, Camera, $cordovaFile) {
         var me = this;
         me.sContext = sContext;
         me.sLoc = sLoc;
@@ -33,25 +33,10 @@ angular.module('module_app.controllers.from.photo', [])
         //todo add file dir
         me.getPhoto = function () {
             Camera.getPicture().then(function (imageURI) {
-                console.log(imageURI);
-
-                $log.debug(imageURI)
-                var patern = /(.*\/)(.*\.jpg)/
-
-                imageURI
-
-
-                if(patern.test(imageURI)){
-                    //$log.debug(RegExp.$1);
-
-                    $cordovaFile.copyFile(RegExp.$2,  RegExp.$2,  sContext.photoDir, sContext.activeDesordreId+"_"+sContext.getLinearIndex())
-                }
-
-
-                me.newPhotos.push({selected:false,path:imageURI}); //Param Obj.
-
+                //var patern = /(.*\/)(.*\.jpg)/
+                window.resolveLocalFileSystemURL(imageURI, me._copyFile, me._onCopyFail);
             }, function (err) {
-                console.err(err);
+               $log.error(err);
             }, {
                 quality: 75,
                 targetWidth: 320,
@@ -60,14 +45,44 @@ angular.module('module_app.controllers.from.photo', [])
             });
         };
 
+
+
+
+       me._copyFile= function(fileEntry) {
+            me.tmpFileImg = sContext.activeDesordreId + "_" + sContext.getLinearIndex() + '.jpg';
+
+            window.resolveLocalFileSystemURL(sContext.photoDir, function(fileSystem2) {
+                    fileEntry.copyTo(
+                        fileSystem2,
+                        me.tmpFileImg,
+                        me._onCopySuccess,
+                        me._onCopyFail
+                    );
+                },
+                me._onCopyFail);
+        }
+
+      me._onCopySuccess= function () {
+          me.newPhotos.push({selected: false, path: sContext.photoDir, file:  me.tmpFileImg});
+          $scope.$digest()
+        }
+
+       me._onCopyFail = function fail(error) {
+            console.log("fail: " + error.code);
+        }
+
+
+
+
         me.runNotePad = function () {
             $state.go('note');
         }
 
-        me.deletePhoto = function (index) {
+        me.deletePhoto = function (index, photo) {
             $log.debug(index)
-            var file = me.newPhotos.splice(index,1);
+            var file = me.newPhotos.splice(index, 1);
             $log.debug(file);
             //todo kill file;
+            $cordovaFile.removeFile(photo.path);
         }
     })
