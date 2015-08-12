@@ -53,9 +53,18 @@ angular.module('module_app.controllers.menus.hud', [])
 
         me.toggleRightMenu = function () {
             $ionicSideMenuDelegate.toggleRight();
-            $state.go("home.tAddDesordre");
+            //$state.go("home.tAddDesordre");
             me.addButton = !me.addButton;
         }
+
+        me.OpenDesordreOverView = function () {
+            $ionicSideMenuDelegate.toggleRight();
+            //$state.go("home.tAddDesordre");
+            me.addButton = !me.addButton;
+            me.sContext.tribordView.active = "desordreMgmt";
+        }
+
+
 
 
         //$ionicSideMenuDelegate.$getByHandle('babordHandle').toggleLeft();
