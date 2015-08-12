@@ -23,9 +23,13 @@
         <div class="tabs-striped tabs-top">
             <div class="tabs tabs-sirs">
                 <!-- Tab / Description -->
-                <a class="tab-item" ng-class="{active: c.underView === 'editableLayer'}" on-tap="c.underView='editableLayer'">SELECTION DE COUCHE</a>
+                <a class="tab-item" ng-class="{active: c.underView === 'editableLayer'}" on-tap="c.underView='editableLayer'">
+                    <p>Layer Editable </p>
+                </a>
                 <!-- Tab / Photo -->
-                <a class="tab-item" ng-class="{active: c.underView === 'closableDesordre'}" on-tap="c.underView='closableDesordre'">FERMER UN LINEAIRE</a>
+                <a class="tab-item" ng-class="{active: c.underView === 'closableDesordre'}" on-tap="c.underView='closableDesordre'">
+                    <p>Levé non clos </p>
+                </a>
             </div>
         </div>
 
