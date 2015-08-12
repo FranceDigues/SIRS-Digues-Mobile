@@ -3,11 +3,11 @@
     <header class="bar bar-header bar-stable">
         <button class="col-25 button button-icon button-clear ion-arrow-left-a"
                 on-tap="c.sContext.backBabordMenus()"></button>
-        <a class="btn-floating btn-large waves-effect waves-light yellow" ng-class="c.search === true? 'green':'yellow'" style="left:50%;"><i
+        <a class="btn-floating btn-large waves-effect waves-light pink" ng-class="c.search === true? 'yellow':'pink'" style="left:50%;"><i
                 class="material-icons  right" on-tap="c.toggleSearch()">{{(c.search === true? 'close':'add')}}</i></a>
     </header>
 
-    <ion-content class="has-header" overflow-scroll="true">
+    <ion-content class="has-header affichage-content" overflow-scroll="true" style="padding-top:15px;">
 
         <!--searchview-->
         <div ng-show="c.search">
@@ -30,9 +30,6 @@
             </ion-list>
 
         </div>
-        <div style="background-color: #003399; width: 100%; height: 15px;">
-        </div>
-
 
         <!--FILTRER-->
         <ion-list
@@ -41,47 +38,51 @@
                 can-swipe="c.listCanSwipe"
                 class="animate-if">
 
-            <ion-item ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{favori:true}">
+            <ion-item class="affichage-list" ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{favori:true}">
                 <h2> {{layer.title}}</h2>
 
 
                 <table name="blackBox" class="tabStampContnair">
-
                     <tr>
-                        <td class="tabStampLine"><i class="material-icons tiny  right"
-                                                    ng-class="layer.realPosition ? 'red':white">location_on</i></td>
-                        <td class="tabStampLine"><i class="material-icons tiny  right"
-                                                    ng-class="layer.visible ? 'red':white">visibility</i></td>
+                        <td class="tabStampLine"><i class="material-icons tiny-icon-affichage right"
+                                                    ng-class="layer.realPosition ? 'icon-layer-unselected':'icon-layer-selected'">call_merge</i></td>
+                        <td class="tabStampLine"><i class="icon ion-eye tiny-icon-affichage right"
+                                                    ng-class="layer.visible ? 'icon-layer-selected':'icon-layer-unselected'"></i></td>
+                        <td class="tabStampLine "><i class="icon ion-edit tiny-icon-affichage right"
+                                                     ng-class="layer.editable ? 'icon-layer-selected':'icon-layer-unselected'"></i></td>
+                        <td class="tabStampLine"><i class="icon ion-android-hand tiny-icon-affichage right"
+                                                    ng-class="layer.editable ? 'icon-layer-selected':'icon-layer-unselected'"></i></td>
                     </tr>
-                    <tr>
-                        <td class="tabStampLine "><i class="material-icons  tiny right"
-                                                     ng-class="layer.editable ? 'red':white">volume_up</i></td>
-                        <td class="tabStampLine"><i class="material-icons  tiny right"
-                                                    ng-class="layer.editable ? 'red':white">volume_up</i></td>
-                    </tr>
-
                 </table>
 
                 <!--sous boutton-->
 
                 <ion-option-button class="button-info"
                                    on-tap="layer.realPosition=!layer.realPosition">
-                    <i class="material-icons  right">{{layer.realPosition ===true? "location_on" : "location_off"
-                        }}</i>
+                    <i class="material-icons right"
+                       ng-class="layer.realPosition ? 'icon-layer-unselected':'icon-layer-selected'">call_merge</i>
                 </ion-option-button>
                 <ion-option-button class="button-info"
                                    on-tap="layer.visible=!layer.visible; c.loadDataLayer(layer);">
                     <!--bousolle like -->
-                    <i class="material-icons  right">{{layer.visible ===true? "visibility" : "visibility_off" }}</i>
+                    <i class="icon ion-eye right"
+                        ng-class="layer.visible ? 'icon-layer-selected':'icon-layer-unselected'"></i>
                 </ion-option-button>
                 <ion-option-button class="button-info"
                                    on-tap="layer.editable=!layer.editable">
                     <!--edit-->
-                    <i class="material-icons  right">{{layer.editable ===true? "volume_up" : "volume_off" }}</i>
+                    <i class="icon ion-edit right"
+                       ng-class="layer.editable ? 'icon-layer-selected':'icon-layer-unselected'"></i>
+                </ion-option-button>
+                <ion-option-button class="button-info"
+                                   on-tap="layer.selectable=!layer.selectable">
+                    <!--select-->
+                    <i class="icon ion-android-hand right"
+                       ng-class="layer.selectable ? 'icon-layer-selected':'icon-layer-unselected'"></i>
                 </ion-option-button>
 
 
-                <ion-delete-button class="ion-minus-circled"
+                <ion-delete-button class="ion-trash-b icon-delete-layer"
                                    on-tap="layer.favori=false;layer.visible=false;">
                 </ion-delete-button>
                 <ion-reorder-button class="ion-navicon"
@@ -94,9 +95,9 @@
 
 
     <!--bar bar-footer-->
-    <ion-footer-bar class=" bar-positive ">
+    <ion-footer-bar class=" bar-positive cyan">
         <div class="buttons">
-            <button class="button button-icon icon ion-minus-circled"
+            <button class="button button-icon icon ion-trash-b"
                     on-tap="c.shouldShowDelete = !c.shouldShowDelete; c.shouldShowReorder = false"></button>
         </div>
         <div class="buttons right" ng-if="c.noFilter" class="animate-if">

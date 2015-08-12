@@ -3,11 +3,11 @@
     <header class="bar bar-header bar-stable">
         <button class="col-25 button button-icon button-clear ion-arrow-left-a"
                 on-tap="c.sContext.backBabordMenus()"></button>
-        <a class="btn-floating btn-large waves-effect waves-light red"><i class="mdi-content-add" on-tap="c.viewAddSourceForm = true"></i></a>
+        <a class="btn-floating btn-large waves-effect waves-light pink" style="margin-left: 135px;"><i class="mdi-content-add" on-tap="c.viewAddSourceForm = true"></i></a>
     </header>
 
 
-    <ion-content class="has-header">
+    <ion-content class="has-header" style="padding-top:15px;">
 
         <div ng-hide="c.viewAddSourceForm">
             <ion-list>
@@ -15,7 +15,7 @@
             </ion-list>
 
 
-            <a class="waves-effect waves-light btn-large"  on-tap="c.goToGeoCache()"><i class="mdi-content-cloud right"> </i>Gestion du Cache</a>
+            <a class="waves-effect waves-light btn-large bouton-cache"  on-tap="c.goToGeoCache()"><i class="mdi-content-cloud right"> </i>Gestion du Cache</a>
         </div>
 
 

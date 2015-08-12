@@ -6,8 +6,9 @@
 
     <ion-content class="has-header">
 
-        <ion-toggle ng-model="c.sPouch.syncActive" ng-change="c.sPouch.switchSync()">
-            Syncronisation automatique de la base
+        <ion-toggle ng-model="c.sPouch.syncActive" class="synchro-toggle" ng-change="c.sPouch.switchSync()">
+            Syncronisation automatique <br/>
+            de la base
         </ion-toggle>
         <ion-toggle ng-model="c.sLoc.enable" ng-change="c.sLoc.toggleEnable()">
             Positionement GPS
@@ -24,7 +25,7 @@
             version : {{c.sContext.version}}
         </ion-item>
 
-        <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
+        <button class="btn btn-large waves-effect waves-cyan button button-clear button-calm button-settings-menu signin-valid-button"
                 on-tap="c.goToInit()">
             Gestion de base
         </button>
