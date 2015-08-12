@@ -2,6 +2,8 @@
  * Created by Roch Dardie on 15/03/15.
  */
 
+
+
 var app = angular.module('SirsMobile', [
     'ionic',
     'ionic.service.core',
@@ -62,15 +64,25 @@ app.run(function ($ionicPlatform,$cordovaFile,$log,sContext) {
         //init File Directory on SD card
         //todo add support for multi storage capabilities (sd/internal)
         $log.debug("CORDOVA FILE INIT")
-        var test= $cordovaFile.checkDir(cordova.file.externalDataDirectory , "nouvellesPhotos").then(function (success) {
+        //repertoire des photo nouvellement aqcise et non encore syncronisé.
+        $cordovaFile.checkDir(cordova.file.externalDataDirectory , "nouvellesPhotos").then(function (success) {
             // success
-            //alert("status " + success);
         }, function (error) {
             // error
             $cordovaFile.createDir(cordova.file.externalDataDirectory , "nouvellesPhotos");
         });
 
-        sContext.photoDir=cordova.file.externalDataDirectory+ "nouvellesPhotos";
+        sContext.photoDir = cordova.file.externalDataDirectory + "nouvellesPhotos/";
+
+//repertoire de notes
+        $cordovaFile.checkDir(cordova.file.externalDataDirectory , "notes").then(function (success) {
+            // success
+        }, function (error) {
+            // error
+            $cordovaFile.createDir(cordova.file.externalDataDirectory , "notes");
+        });
+
+        sContext.notesDir = cordova.file.externalDataDirectory + "notes/";
 
     });
 })

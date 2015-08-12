@@ -14,11 +14,13 @@ angular.module('module_rde.data.services.context', [])
     //variable d'environement
         //path :
             me.photoDir=null;
+            me.notesDir=null;
 
         //conf
             me.logProfiling=false;
 
-        //
+        //version
+            me.version = "v0.2.1 -u08 "
 
 
     //variable d'etat
