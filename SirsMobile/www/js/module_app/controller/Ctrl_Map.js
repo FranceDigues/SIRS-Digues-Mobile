@@ -119,9 +119,9 @@ angular.module('module_app.controllers.map', [])
                     }
                 },
                 controls: [
-                    {name: 'zoom', active: false},
-                    {name: 'rotate', active: false},
-                    {name: 'attribution', active: false}
+                    //{name: 'zoom', active: false},
+                    //{name: 'rotate', active: false},
+                    //{name: 'attribution', active: false}
                 ],
                 mouseposition: {},
                 mouseclickposition: {},
@@ -132,6 +132,7 @@ angular.module('module_app.controllers.map', [])
 
 //map instance
         olData.getMap('map').then(function(map) {
+            map.contr
             me.currentMap = map;
             me.currentMap.addInteraction(selectInteraction);
         });
