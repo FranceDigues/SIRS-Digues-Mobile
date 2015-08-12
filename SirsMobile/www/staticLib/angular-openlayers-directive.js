@@ -1730,9 +1730,9 @@
                     layers: []
                 },
                 controls: {
-                    attribution: true,
+                    attribution: false,
                     rotate: false,
-                    zoom: true
+                    zoom: false
                 },
                 interactions: {
                     mouseWheelZoom: false
