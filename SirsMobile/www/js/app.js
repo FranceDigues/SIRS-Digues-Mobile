@@ -70,6 +70,7 @@ app.run(function ($ionicPlatform,$cordovaFile,$log,sContext) {
         }, function (error) {
             // error
             $cordovaFile.createDir(cordova.file.externalDataDirectory , "nouvellesPhotos");
+            $cordovaFile.createFile(  cordova.file.externalDataDirectory + "nouvellesPhotos/" ,"_keepMtpOpen");
         });
 
         sContext.photoDir = cordova.file.externalDataDirectory + "nouvellesPhotos/";
@@ -80,9 +81,21 @@ app.run(function ($ionicPlatform,$cordovaFile,$log,sContext) {
         }, function (error) {
             // error
             $cordovaFile.createDir(cordova.file.externalDataDirectory , "notes");
+            $cordovaFile.createFile(  cordova.file.externalDataDirectory + "notes/" ,"_keepMtpOpen");
         });
 
         sContext.notesDir = cordova.file.externalDataDirectory + "notes/";
+
+        //repertoire de notes
+        $cordovaFile.checkDir(cordova.file.externalDataDirectory , "documents").then(function (success) {
+            // success
+        }, function (error) {
+            // error
+            $cordovaFile.createDir(cordova.file.externalDataDirectory , "documents");
+            $cordovaFile.createFile(  cordova.file.externalDataDirectory + "documents/" ,"_keepMtpOpen");
+        });
+
+        sContext.docDir = cordova.file.externalDataDirectory + "documents/";
 
     });
 })

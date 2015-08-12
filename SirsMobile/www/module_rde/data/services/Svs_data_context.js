@@ -15,6 +15,7 @@ angular.module('module_rde.data.services.context', [])
         //path :
             me.photoDir=null;
             me.notesDir=null;
+            me.docDir=null;
 
         //conf
             me.logProfiling=false;

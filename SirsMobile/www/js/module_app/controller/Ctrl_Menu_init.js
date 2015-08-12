@@ -30,7 +30,7 @@ angular.module('module_app.controllers.menus.init', [])
 
         me.replicationInitiale = function(){
             //var tmp = new oUrlCouchDb(me.activeDbDesc) ;
-            var tmp = new oUrlCouchDb({id:"geouser",psw:"geopw",adress:"5.196.17.92",port:5984,db:"sirs_rhone2"}) ; //fixme radio button
+            var tmp = new oUrlCouchDb({id:"geouser",psw:"geopw",adress:"5.196.17.92",port:5984,db:"sirs_sym"}) ; //fixme radio button
                 //sPouch.dbInit( new oUrlCouchDb(me.activeDbDesc.id,me.activeDbDesc.psw, me.activeDbDesc.adress, me.activeDbDesc.port,me.activeDbDesc.db) ); //FIXME persistance de l'objet au travert du select
                 sPouch.dbInit(tmp); //FIXME persistance de l'objet au travert du select
         };
