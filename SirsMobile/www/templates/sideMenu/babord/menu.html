@@ -5,8 +5,8 @@
                   style="  display: block; width: 100%;"
                   on-tap="c.UpdateView('b',menu.file)"
                   ng-repeat="menu in c.sConf.BabordMenu">
-            <!--i class="material-icons icon-menu-babord">{{menu.iconname}}</i-->
-            <i ng-show="layer.active"   class="material-icons  right" >offline_pin</i>
+            <i class="material-icons icon-menu-babord">{{menu.icon}}</i>
+            <i ng-show="layer.active" class="material-icons  right" >offline_pin</i>
             {{menu.name}}
         </ion-item>
 

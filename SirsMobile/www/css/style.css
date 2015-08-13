@@ -577,9 +577,15 @@ ion-content.has-fab-bottom > div.scroll {
     line-height: 20px;
 }
 
-.menu-left .bouton-cache.btn-large{
-    margin-left: 28px;
+.menu-left .bouton-cache.btn{
+    margin-left: 25px;
     margin-top: 10px;
+    background-color: #00BCD4;
+}
+
+.menu-left .button-settings-menu{
+    margin-left: 40px;
+    margin-top: 15px;
     background-color: #00BCD4;
 }
 
