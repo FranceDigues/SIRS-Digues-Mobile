@@ -417,6 +417,16 @@
     left: 300px;
     background-color: #FF4081;
 }
+.form-entete .toggle-lineaire{
+    position: absolute;
+    left: 100px;
+    top: 38px;
+}
+
+.form-colonnes-50{
+    width: 50%;
+    padding: 0 10px;
+}
 
 /* Cache page */
 .cache-view{

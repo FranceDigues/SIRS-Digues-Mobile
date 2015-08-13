@@ -16,46 +16,52 @@
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="type">
+            <mt-select class="browser-default" id="materiauH">
                 <option value="" disabled selected></option>
-                <option value="1">Érosion externe</option>
-                <option value="2">Érosion interne</option>
-                <option value="3">Désordre affectant la structure</option>
-                <option value="4">Brèche</option>
-                <option value="5">Condition d'entretient de la digue</option>
-                <option value="6">Autre</option>
             </mt-select>
-            <label class="active" for="type">Type du désordre</label>
+            <label class="active" for="materiauH">Matériau haut</label>
+        </div>
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="materiauB">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="materiauB">Matériau bas</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="natureH">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="natureH">Nature haut</label>
+        </div>
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="natureB">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="natureB">Nature bas</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field form-colonnes-50">
+            <input  id="hauteurMurette" type="text" class="validate">
+            <label class="active" for="hauteurMurette">Hauteur de la murette</label>
+        </div>
+        <div class="input-field form-colonnes-50">
+            <input  id="largeur" type="text" class="validate">
+            <label class="active" for="largeur">Largeur</label>
         </div>
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
             <mt-select class="browser-default" id="position">
                 <option value="" disabled selected></option>
-                <option value="1">Franc bord</option>
-                <option value="2">Berge</option>
-                <option value="3">Talus de risberme / Pied de digue</option>
-                <option value="4">Pied de digue</option>
-                <option value="5">Talus de risberme</option>
-                <option value="6">Sommet de risberme</option>
-                <option value="7">Talus de digue</option>
-                <option value="8">Plusieurs parties de la digue</option>
-                <option value="9">Crête</option>
-                <option value="10">Hors de la digue</option>
-                <option value="11">Indéfini</option>
             </mt-select>
             <label class="active" for="position">Position sur la digue</label>
         </div>
         <div class="input-field form-colonnes-50">
             <mt-select class="browser-default" id="side">
                 <option value="" disabled selected></option>
-                <option value="1">Rivière</option>
-                <option value="2">Terre</option>
-                <option value="3">Etang</option>
-                <option value="4">Mer</option>
-                <option value="5">Deux côtés de la digue</option>
-                <option value="6">Crête</option>
-                <option value="7">Indéfini</option>
             </mt-select>
             <label class="active" for="side">Côté de la digue</label>
         </div>
