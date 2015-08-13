@@ -399,6 +399,24 @@
     background-color: #FFEB3B;
     color: #666;
 }
+.form-entete{
+    background-color:#B2EBF2;
+    padding-top: 10px;
+}
+.form-entete .position-gps{
+    margin-bottom: 0;
+}
+.form-entete .qualite-signal{
+    font-style: italic;
+    color: #888;
+    font-size: 12px;
+}
+.form-entete .btn-mettreajour{
+    position: absolute;
+    top: 70px;
+    left: 300px;
+    background-color: #FF4081;
+}
 
 /* Cache page */
 .cache-view{
