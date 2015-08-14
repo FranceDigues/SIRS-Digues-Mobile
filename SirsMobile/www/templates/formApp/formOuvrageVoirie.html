@@ -1,0 +1,49 @@
+<ion-view>
+    <div class="row form-entete">
+        <div class="col s12">
+            <p>Désignation : #numDesignation</p>
+            <p>Objet linéaire :</p>
+            <div class="switch toggle-lineaire">
+                <label>
+                    <input type="checkbox">
+                    <span class="lever"></span>
+                </label>
+            </div>
+            <p class="position-gps">Position GPS enregistrée : #posGPS</p>
+            <p class="qualite-signal">Qualité du signal lors de l'enregistrement : #qual</p>
+            <button class="btn btn-mettreajour waves-effect waves-light">Mettre à jour</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field form-colonnes-50">
+            <input  id="libelle" type="text" class="validate">
+            <label class="active" for="libelle">Libellé</label>
+        </div>
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="typeOuvrage">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="typeOuvrage">Type d'ouvrage</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="position">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="position">Position sur la digue</label>
+        </div>
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="side">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="side">Côté de la digue</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <label for="description">Description</label>
+            <textarea id="description" class="materialize-textarea"></textarea>
+        </div>
+    </div>
+</ion-view>
