@@ -1,0 +1,81 @@
+<ion-view>
+    <div class="row form-entete">
+        <div class="col s12">
+            <p>Désignation : #numDesignation</p>
+            <p>Objet linéaire :</p>
+            <div class="switch toggle-lineaire">
+                <label>
+                    <input type="checkbox">
+                    <span class="lever"></span>
+                </label>
+            </div>
+            <p class="position-gps">Position GPS enregistrée : #posGPS</p>
+            <p class="qualite-signal">Qualité du signal lors de l'enregistrement : #qual</p>
+            <button class="btn btn-mettreajour waves-effect waves-light">Mettre à jour</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input  id="libelle" type="text" class="validate">
+            <label class="active" for="libelle">Libellé</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field form-colonnes-50">
+            <input  id="diametre" type="text" class="validate">
+            <label class="active" for="diametre">Diamètre</label>
+        </div>
+        <p style="padding-top: 20px; padding-left: 10px;">
+            <input type="checkbox" class="filled-in" id="autorise" checked="checked" />
+            <label for="autorise">Autorisé</label>
+        </p>
+    </div>
+    <div class="row">
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="ecoulement">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="ecoulement">Ecoulement</label>
+        </div>
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="implantation">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="implantation">Implantation</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="typeReseau">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="typeReseau">Type de réseau</label>
+        </div>
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="utilisation">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="utilisation">Utilisation</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="position">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="position">Position sur la digue</label>
+        </div>
+        <div class="input-field form-colonnes-50">
+            <mt-select class="browser-default" id="side">
+                <option value="" disabled selected></option>
+            </mt-select>
+            <label class="active" for="side">Côté de la digue</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <label for="description">Description</label>
+            <textarea id="description" class="materialize-textarea"></textarea>
+        </div>
+    </div>
+</ion-view>
