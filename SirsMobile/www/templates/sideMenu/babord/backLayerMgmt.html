@@ -2,8 +2,11 @@
 
     <header class="bar bar-header bar-stable">
         <button class="col-25 button button-icon button-clear ion-arrow-left-a"
-                on-tap="c.sContext.backBabordMenus()"></button>
-        <a class="btn-floating btn-large waves-effect waves-light pink" style="margin-left: 135px;"><i class="mdi-content-add" on-tap="c.viewAddSourceForm = true"></i></a>
+                on-tap="c.sContext.backBabordMenus()" ></button>
+        <a class="btn-floating btn-large waves-effect waves-light pink" ng-class="c.viewAddSourceForm ? 'yellow':'pink' " style="margin-left: 135px;">
+            <i class="material-icons right" on-tap="c.viewAddSourceForm = !c.viewAddSourceForm">{{(c.viewAddSourceForm === true ? 'close':'add')}}
+            </i>
+        </a>
     </header>
 
 
@@ -23,12 +26,11 @@
         <div ng-show="c.viewAddSourceForm">
 
 
-            <label class="item item-input signin-item">
-                Nom :
+            <label class="item item-input signin-item backLayer-items">
                 <input type="text" placeholder="nom du layer" ng-model="c.newSource.name">
             </label>
 
-            <label class="item item-input signin-item">
+            <label class="item item-input signin-item backLayer-items">
 
                 <!--<select ng-model="c.newSource.type"-->
                 <!--ng-options="item.name in c.typeServeur">-->
@@ -40,19 +42,19 @@
 
             </label>
 
-            <label class="item item-input signin-item">
+            <label class="item item-input signin-item backLayer-items">
                 <input type="text" placeholder="url" ng-model="c.newSource.url">
             </label>
 
 
             <!--WMS-->
             <div ng-show="c.newSource.type=='ImageWMS'">
-                <label class="item item-input signin-item">
+                <label class="item item-input signin-item backLayer-items">
                     <input type="text" placeholder="nom du layer WMS" ng-model="c.newSource.layers">
                 </label>
             </div>
 
-            <button class="btn waves-effect waves-light" type="submit" name="action" on-tap="c.addSource(c.newSource)">AJOUTER LA SOURCE
+            <button class="waves-effect waves-light btn bouton-cache" type="submit" name="action" on-tap="c.addSource(c.newSource)">AJOUTER LA SOURCE
                 <i class="mdi-content-send" ></i>
             </button>
 
