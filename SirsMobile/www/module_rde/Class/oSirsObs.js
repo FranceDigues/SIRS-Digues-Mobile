@@ -13,7 +13,7 @@ function oSirsObs(param){
     this.observateurId= null;
     this.author= param.author;
     this.photos =[];
-    this.id=uuid4.generate();
+    this.id= window.uuid4.generate();
     this.date = Date.now();
 
 

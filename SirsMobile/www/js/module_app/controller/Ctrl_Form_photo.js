@@ -22,7 +22,7 @@ angular.module('module_app.controllers.from.photo', [])
             }
         }
     }])
-    .controller('cPhoto', function cPhoto($scope, $state, $stateParams, $log, sContext, sLoc, $cordovaCapture, Camera, $cordovaFile) {
+    .controller('cPhoto', function cPhoto($scope, $state, $stateParams, $log, sContext, sLoc, $cordovaCapture, Camera, $cordovaFile,sPouch) {
         var me = this;
         me.sContext = sContext;
         me.sLoc = sLoc;
@@ -49,12 +49,13 @@ angular.module('module_app.controllers.from.photo', [])
 
 
        me._copyFile= function(fileEntry) {
-            me.tmpFileImg = sContext.activeDesordreId + "_" + sContext.getLinearIndex() + '.jpg';
+            me._tmpSirsPhoto = new oSirsPhoto({author:sContext.auth.user._id,commentaire:""})
+                //uuid4.generate() + '.jpg';
 
             window.resolveLocalFileSystemURL(sContext.photoDir, function(fileSystem2) {
                     fileEntry.copyTo(
                         fileSystem2,
-                        me.tmpFileImg,
+                        me._tmpSirsPhoto.chemin,
                         me._onCopySuccess,
                         me._onCopyFail
                     );
@@ -63,7 +64,64 @@ angular.module('module_app.controllers.from.photo', [])
         }
 
       me._onCopySuccess= function () {
-          me.newPhotos.push({selected: false, path: sContext.photoDir, file:  me.tmpFileImg});
+          me.newPhotos.push(me._tmpSirsPhoto );  //{selected: false, path: sContext.photoDir, file:  me._tmpSirsPhoto.chemin}
+
+          sPouch.localDb.get(sContext.activeDesordreId).then(function (doc){
+
+
+              doc.observations.photos.push(me._tmpSirsPhoto);
+              $log.debug(doc);
+              $log.debug(doc.observations);
+
+              sPouch.localDb.put(doc);
+
+
+              //
+              //"observations": [
+              //    {
+              //        "@class": "fr.sirs.core.model.Observation",
+              //        "nombreDesordres": 1,
+              //        "designation": "4",
+              //        "valid": true,
+              //        "observateurId": "dbf7020b90a871e68dd51ba99c001b84",
+              //        "photos": [
+              //            {
+              //                "@class": "fr.sirs.core.model.Photo",
+              //                "borne_debut_aval": false,
+              //                "borne_debut_distance": 0,
+              //                "prDebut": 283.0174,
+              //                "borne_fin_aval": false,
+              //                "borne_fin_distance": 0,
+              //                "prFin": 283.0174,
+              //                "valid": true,
+              //                "designation": "3",
+              //                "longitudeMin": 4.589586845598048,
+              //                "longitudeMax": 4.589586845598048,
+              //                "latitudeMin": 43.688331794628915,
+              //                "latitudeMax": 43.688331794628915,
+              //                "chemin": "\\Photos\\2.JPG",
+              //                "commentaire": "Passage sur talus",
+              //                "orientationPhoto": "RefOrientationPhoto:7",
+              //                "coteId": "RefCote:2",
+              //                "photographeId": "dbf7020b90a871e68dd51ba99c001b84",
+              //                "positionDebut": "POINT (828183.4417727306 6288989.939847441)",
+              //                "positionFin": "POINT (828183.4417727306 6288989.939847441)",
+              //                "geometry": "LINESTRING (828183.2535037622 6288990, 828183.2535037622 6288990)",
+              //                "id": "76e6b9fc-4fe0-467c-b670-bf50ddf66549",
+              //                "date": "2006-12-15"
+              //            }
+              //        ],
+              //        "id": "53686a9c-2457-477f-9de6-9b8a6a4d992f",
+              //        "date": "2006-12-15"
+              //    }
+              //]
+
+
+
+          }).catch(function (err) {
+              console.log(err);
+          });
+
           $scope.$digest()
         }
 
@@ -78,11 +136,11 @@ angular.module('module_app.controllers.from.photo', [])
             $state.go('note');
         }
 
-        me.deletePhoto = function (index, photo) {
+        me.deletePhoto = function (index, filePhoto) {
             $log.debug(index)
             var file = me.newPhotos.splice(index, 1);
             $log.debug(file);
             //todo kill file;
-            $cordovaFile.removeFile(photo.path);
+            $cordovaFile.removeFile(sContext.photoDir,filePhoto);
         }
     })

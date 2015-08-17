@@ -19,13 +19,13 @@
                 class="animate-if ">
             <ion-item ng-repeat="photo in c.newPhotos" >
                 <!--<ion-checkbox ng-model="photo.selected" ng-change="c."></ion-checkbox>-->
-                <img ng-src="{{photo.path+photo.file}}" style="display:block;width: 100%">
+                <img ng-src="{{c.sContext.photoDir+photo.chemin}}" style="display:block;width: 100%">
                 <ion-option-button class="button-info"
                                    on-tap="c.runNotePad(photo)">
                     EDITION
                 </ion-option-button>
                 <ion-delete-button class="ion-minus-circled"
-                                   on-tap="c.deletePhoto($index,photo.path+photo.file)">
+                                   on-tap="c.deletePhoto($index,photo.chemin)">
                 </ion-delete-button>
             </ion-item>
         </ion-list>

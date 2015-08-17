@@ -16,6 +16,6 @@ function oSirsDesordre(param){
     this.author=param.author;
     this.date = Date.now();
     //this.observations = param.observations !=null ? param.observations : new oSirsObs();
-    this.observations = new oSirsObs();
+    this.observations = new oSirsObs(param);
 }
 

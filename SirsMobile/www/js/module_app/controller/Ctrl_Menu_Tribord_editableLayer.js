@@ -20,10 +20,16 @@ angular.module('module_app.controllers.menus.tribord.editableLayer', [])
         }
         me.runWithGps =function(){
 
-            sPouch.localDb.post(new oSampleSirsObj()).then(function (response) {
+            $log.debug(sContext.auth)
+            $log.debug(sContext.auth.user)
+            $log.debug(sContext.auth.user._id)
+
+            sPouch.localDb.post(new oSirsDesordre({author:sContext.auth.user._id})).then(function (response) {
                $log.debug("POST DONE")
                $log.debug(response)
                 sContext.activeDesordreId =response.id;
+
+
                 $log.debug(sContext.activeDesordreId)
                 $state.go('forms.desordre');
             }).catch(function (err) {

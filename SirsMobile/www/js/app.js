@@ -12,7 +12,7 @@ var app = angular.module('SirsMobile', [
     
     
 
-
+    'uuid4',
     'angular-md5',
     'rzModule',
     'pouchdb',
@@ -42,7 +42,7 @@ var app = angular.module('SirsMobile', [
 
      ]);
 
-app.run(function ($ionicPlatform,$cordovaFile,$log,sContext) {
+app.run(function ($ionicPlatform,$cordovaFile,$log,sContext,uuid4) {
     //sMapLayer
     $ionicPlatform.ready(function () {
 
@@ -96,6 +96,10 @@ app.run(function ($ionicPlatform,$cordovaFile,$log,sContext) {
         });
 
         sContext.docDir = cordova.file.externalDataDirectory + "documents/";
+
+
+        //TODO à gerber :
+        window.uuid4 = uuid4;
 
     });
 })
