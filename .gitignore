@@ -636,3 +636,13 @@ SirsMobile/www/lib/promise-polyfill/package.json
 SirsMobile/www/lib/promise-polyfill/Promise.js
 SirsMobile/www/lib/promise-polyfill/Promise.min.js
 SirsMobile/www/lib/promise-polyfill/README.md
+SirsMobile/www/lib/angular/index.js
+SirsMobile/www/lib/angular-animate/index.js
+SirsMobile/www/lib/angular-sanitize/index.js
+SirsMobile/www/lib/angular-uuid4/.bower.json
+SirsMobile/www/lib/angular-uuid4/angular-uuid4.js
+SirsMobile/www/lib/angular-uuid4/angular-uuid4.min.js
+SirsMobile/www/lib/angular-uuid4/bower.json
+SirsMobile/www/lib/angular-uuid4/Gruntfile.js
+SirsMobile/www/lib/angular-uuid4/LICENCSE.txt
+SirsMobile/www/lib/angular-uuid4/README.md
