@@ -643,3 +643,11 @@ ion-content.has-fab-bottom > div.scroll {
 .menu-left .backLayer-items{
     border:none;
 }
+
+/* Menu tribord */
+.menu-right .bar.bar-header{
+    background-color: #0097A7;
+}
+.menu-right .bar.bar-header h1, .menu-right .bar.bar-header .ion-arrow-left-a{
+    color:white;
+}
