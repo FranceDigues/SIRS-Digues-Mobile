@@ -1,7 +1,10 @@
 <ion-view>
     <div class="row form-entete">
         <div class="col s12">
-            <p>Désignation : #numDesignation</p>
+            <div class="input-field form-colonnes-50" style="padding-left:0;">
+                <input  id="designation" type="text" class="validate">
+                <label class="active" for="designation" style="left:0;">Désignation</label>
+            </div>
             <p>Objet linéaire :</p>
             <div class="switch toggle-lineaire">
                 <label>
@@ -26,51 +29,37 @@
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="orientation">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="orientation" ng-options="c.sRef.RefOrientationOuvrage"></mt-select>
             <label class="active" for="orientation">Orientation de l'ouvrage</label>
         </div>
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="usage">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="usage" ng-options="c.sRef.RefUsageVoie"></mt-select>
             <label class="active" for="usage">Usage</label>
         </div>
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="revetement">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="revetement" ng-options="c.sRef.RefRevetement"></mt-select>
             <label class="active" for="revetement">Revêtement</label>
         </div>
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="typeOuvrage">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="typeOuvrage" ng-options="c.sRef.RefOuvrageFranchissement"></mt-select>
             <label class="active" for="typeOuvrage">Type d'ouvrage</label>
         </div>
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="positionH">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="positionH" ng-options="c.sRef.RefPosition"></mt-select>
             <label class="active" for="positionH">Position haut</label>
         </div>
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="positionB">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="positionB" ng-options="c.sRef.RefPosition"></mt-select>
             <label class="active" for="positionB">Position bas</label>
         </div>
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="side">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="side" ng-options="c.sRef.RefCote"></mt-select>
             <label class="active" for="side">Côté de la digue</label>
         </div>
     </div>

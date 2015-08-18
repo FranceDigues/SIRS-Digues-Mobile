@@ -1,7 +1,10 @@
 <ion-view>
     <div class="row form-entete">
         <div class="col s12">
-            <p>Désignation : #numDesignation</p>
+            <div class="input-field form-colonnes-50" style="padding-left:0;">
+                <input  id="designation" type="text" class="validate">
+                <label class="active" for="designation" style="left:0;">Désignation</label>
+            </div>
             <p>Objet linéaire :</p>
             <div class="switch toggle-lineaire">
                 <label>
@@ -16,29 +19,21 @@
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="materiauH">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="materiauH" ng-options="c.sRef.RefMateriau"></mt-select>
             <label class="active" for="materiauH">Matériau haut</label>
         </div>
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="materiauB">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="materiauB" ng-options="c.sRef.RefMateriau"></mt-select>
             <label class="active" for="materiauB">Matériau bas</label>
         </div>
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="natureH">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="natureH" ng-options="c.sRef.RefNature"></mt-select>
             <label class="active" for="natureH">Nature haut</label>
         </div>
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="natureB">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="natureB" ng-options="c.sRef.RefNature"></mt-select>
             <label class="active" for="natureB">Nature bas</label>
         </div>
     </div>
@@ -64,15 +59,11 @@
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="fonction">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="fonction" ng-options="c.sRef.RefFonction"></mt-select>
             <label class="active" for="fonction">Fonction</label>
         </div>
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="side">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="side" ng-options="c.sRef.RefCote"></mt-select>
             <label class="active" for="side">Côté de la digue</label>
         </div>
     </div>

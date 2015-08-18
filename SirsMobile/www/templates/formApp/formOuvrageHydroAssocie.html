@@ -1,7 +1,10 @@
 <ion-view>
     <div class="row form-entete">
         <div class="col s12">
-            <p>Désignation : #numDesignation</p>
+            <div class="input-field form-colonnes-50" style="padding-left:0;">
+                <input  id="designation" type="text" class="validate">
+                <label class="active" for="designation" style="left:0;">Désignation</label>
+            </div>
             <p>Objet linéaire :</p>
             <div class="switch toggle-lineaire">
                 <label>
@@ -22,29 +25,21 @@
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="typeOuvrage">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="typeOuvrage" ng-options="c.sRef.RefOuvrageHydrauliqueAssocie"></mt-select>
             <label class="active" for="typeOuvrage">Type d'ouvrage</label>
         </div>
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="resHydroAssoc">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="resHydroAssoc" ng-options=""></mt-select>
             <label class="active" for="resHydroAssoc">Réseau hydraulique associé</label>
         </div>
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="position">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="position" ng-options="c.sRef.RefPosition"></mt-select>
             <label class="active" for="position">Position sur la digue</label>
         </div>
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="side">
-                <option value="" disabled selected></option>
-            </mt-select>
+            <mt-select class="browser-default" id="side"  ng-options="c.sRef.RefCote"></mt-select>
             <label class="active" for="side">Côté de la digue</label>
         </div>
     </div>

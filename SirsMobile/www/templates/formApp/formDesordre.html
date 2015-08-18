@@ -1,7 +1,10 @@
 <ion-view>
     <div class="row form-entete">
         <div class="col s12">
-            <p>Désignation : #numDesignation</p>
+            <div class="input-field form-colonnes-50" style="padding-left:0;">
+                <input  id="designation" type="text" class="validate">
+                <label class="active" for="designation" style="left:0;">Désignation</label>
+            </div>
             <p>Objet linéaire :</p>
             <div class="switch toggle-lineaire">
                 <label>
@@ -16,47 +19,17 @@
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="type">
-                <option value="" disabled selected></option>
-                <option value="1">Érosion externe</option>
-                <option value="2">Érosion interne</option>
-                <option value="3">Désordre affectant la structure</option>
-                <option value="4">Brèche</option>
-                <option value="5">Condition d'entretient de la digue</option>
-                <option value="6">Autre</option>
-            </mt-select>
+            <mt-select class="browser-default" id="type" ng-options="c.sRef.RefTypeDesordre"></mt-select>
             <label class="active" for="type">Type du désordre</label>
         </div>
     </div>
     <div class="row">
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="position">
-                <option value="" disabled selected></option>
-                <option value="1">Franc bord</option>
-                <option value="2">Berge</option>
-                <option value="3">Talus de risberme / Pied de digue</option>
-                <option value="4">Pied de digue</option>
-                <option value="5">Talus de risberme</option>
-                <option value="6">Sommet de risberme</option>
-                <option value="7">Talus de digue</option>
-                <option value="8">Plusieurs parties de la digue</option>
-                <option value="9">Crête</option>
-                <option value="10">Hors de la digue</option>
-                <option value="11">Indéfini</option>
-            </mt-select>
+            <mt-select class="browser-default" id="position" ng-options="c.sRef.RefPosition"></mt-select>
             <label class="active" for="position">Position sur la digue</label>
         </div>
         <div class="input-field form-colonnes-50">
-            <mt-select class="browser-default" id="side">
-                <option value="" disabled selected></option>
-                <option value="1">Rivière</option>
-                <option value="2">Terre</option>
-                <option value="3">Etang</option>
-                <option value="4">Mer</option>
-                <option value="5">Deux côtés de la digue</option>
-                <option value="6">Crête</option>
-                <option value="7">Indéfini</option>
-            </mt-select>
+            <mt-select class="browser-default" id="side" ng-options="c.sRef.RefCote"></mt-select>
             <label class="active" for="side">Côté de la digue</label>
         </div>
     </div>

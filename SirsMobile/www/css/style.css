@@ -413,14 +413,14 @@
 }
 .form-entete .btn-mettreajour{
     position: absolute;
-    top: 70px;
+    top: 110px;
     left: 300px;
     background-color: #FF4081;
 }
 .form-entete .toggle-lineaire{
     position: absolute;
     left: 100px;
-    top: 38px;
+    top: 78px;
 }
 
 .form-colonnes-50{
