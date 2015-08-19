@@ -20,12 +20,12 @@ angular.module('module_app.services.pipe.ref', [])
                      me.refList[k.key] = [];
                  }else {
                      me.refList[k.key].push(
-                         {libelle:k.value.libelle,abrege:k.value.abrege}
+                         {libelle:k.value.libelle,abrege:k.value.abrege,id: k.id}
                      );
                  }
             })
 
-
+$log. debug(me.refList)
 
         }).catch(function (err) {
             // some error
