@@ -3,10 +3,14 @@
  */
 
 angular.module('module_app.controllers.menus.signIn', [])
-    .controller('cSignIn', function cSignIn($ionicDeploy, $ionicPopup, $scope, $state, sPouch, $log, sContext, md5, sProf, $timeout) {
+    .controller('cSignIn', function cSignIn($ionicDeploy, $ionicPopup, $scope, $state, sPouch, $log, sContext, md5, sProf, $timeout,sRef) {
+
 
 
         var me = this;
+        me.sRef=sRef;
+
+
         me.user = {login: "admin", password: "admin"};
         me.updateProgress = 0;
 
