@@ -670,3 +670,30 @@ ion-content.has-fab-bottom > div.scroll {
     position: absolute;
     right: 20px;
 }
+.cache-panel .cache-panel-content .cache-panel-left{
+    padding: 0;
+    height: 100%;
+}
+.cache-panel .cache-panel-content .cache-panel-left>.cache-form{
+    padding: 0;
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.50);
+}
+.cache-panel .cache-panel-content .cache-panel-left>.cache-form h2{
+    color:#666;
+    font-size: 17px;
+    margin: 15px 0 10px 10px;
+}
+.cache-panel .cache-panel-content .cache-form .list{
+    width:99%;
+}
+.cache-panel .cache-panel-content .cache-form .list .item{
+    border-left:0;
+    border-right:0;
+}
+.cache-panel .cache-panel-content .cache-panel-left .cache-right-panel{
+    height:100%;
+    padding:0;
+}
+.cache-panel .cache-panel-content .cache-panel-left .cache-right-panel>div, .cache-panel .cache-panel-content .cache-panel-left .cache-right-panel>div>.angular-openlayers-map{
+    height:100%;
+}
