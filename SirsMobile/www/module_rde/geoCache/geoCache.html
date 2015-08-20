@@ -1,10 +1,12 @@
 <!--cache-view-->
-<ion-view>
-    <header class="bar bar-header bar-stable">
-        <button class="col-25 button button-icon button-clear ion-arrow-left-a"
+<ion-view class="cache-panel">
+    <header class="bar bar-header bar-stable cacheHeader">
+        <button class="button button-icon button-clear ion-arrow-left-a"
                 ng-click="c.gotoHome()"></button>
-        <a class="btn-floating btn-large waves-effect waves-light red" style="left:50%;"><i
-                class="material-icons  right" ng-click="c.popNewZone()">add</i></a>
+        <span>Mise en cache</span>
+        <a class="btn-floating btn-large waves-effect waves-light pink" style="left:20px;">
+            <i class="material-icons  right" ng-click="c.popNewZone()">add</i>
+        </a>
     </header>
     <ion-content class="has-header" overflow-scroll='true'>
         <div class="row">

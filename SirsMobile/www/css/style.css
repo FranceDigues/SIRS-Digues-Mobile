@@ -651,3 +651,22 @@ ion-content.has-fab-bottom > div.scroll {
 .menu-right .bar.bar-header h1, .menu-right .bar.bar-header .ion-arrow-left-a{
     color:white;
 }
+
+/* Cache */
+.cache-panel .bar.bar-header.cacheHeader{
+    background-color: #0097A7;
+}
+.cache-panel .bar.bar-header.cacheHeader button{
+    color: #fff;
+    margin-left: 15px;
+}
+.cache-panel .bar.bar-header.cacheHeader span{
+    color: #fff;
+    font-size: 17px;
+    margin-left: 10px;
+    margin-top: 6px;
+}
+.cache-panel .bar.bar-header.cacheHeader a{
+    position: absolute;
+    right: 20px;
+}
