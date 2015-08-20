@@ -4,8 +4,11 @@
         <button class="button button-icon button-clear ion-arrow-left-a"
                 ng-click="c.gotoHome()"></button>
         <span>Mise en cache</span>
-        <a class="btn-floating btn-large waves-effect waves-light pink">
+        <a ng-if="!c.enableNewCacheControl" class="btn-floating btn-large waves-effect waves-light pink">
             <i class="material-icons  right" ng-click="c.popNewZone()">add</i>
+        </a>
+        <a ng-if="c.enableNewCacheControl" class="btn-floating btn-large waves-effect waves-light yellow">
+            <i class="material-icons  right" ng-click="c.escape()">close</i>
         </a>
     </header>
     <ion-content class="has-header cache-panel-content" overflow-scroll='true'>
@@ -13,35 +16,36 @@
             <div class="col col-25 cache-form">
                 <ion-list ng-show="c.enableNewCacheControl" >
                     <!--FIXME  validation de form-->
-                    <button class="button button-block button-positive" href="#/" ng-click="c.escape()">Annuler
-                    </button>
-                    <label class="item item-input">
-                        <span class="input-label">nom du Cache</span>
-                        <input type="text" ng-model="c.CacheName">
-                    </label>
+                    <div class="row" style="margin-bottom:0;">
+                        <div class="input-field col s12">
+                            <input ng-model="c.CacheName" id="cacheName" type="text" class="validate" style="margin-bottom: 0;">
+                            <label class="active" for="cacheName">nom du Cache</label>
+                        </div>
+                    </div>
+                    <p class="paragraphTitle">Fonds de carte</p>
                     <ion-checkbox ng-repeat="layer in c.sMapLayer.list|filter:{isCache:false}"
                                   ng-model="layer.needToCache"
                             >
                         {{layer.name}}
-                        {{layer.needToCache}}
+                        <!--{{layer.needToCache}}-->
                     </ion-checkbox>
 
-
-                    <rzslider rz-slider-model="c.centerMap.zoom" rz-slider-floor="0" rz-slider-ceil="18"></rzslider>
-                    <rzslider rz-slider-model="c.z.zMin" rz-slider-high="c.z.zMax" rz-slider-floor="0"
+                    <p class="paragraphTitle">Etendue et zoom</p>
+                    <rzslider class="cacheSlider" rz-slider-model="c.centerMap.zoom" rz-slider-floor="0" rz-slider-ceil="18"></rzslider>
+                    <rzslider class="cacheSlider" rz-slider-model="c.z.zMin" rz-slider-high="c.z.zMax" rz-slider-floor="0"
                               rz-slider-ceil="18"></rzslider>
-                    <progress max="{{c.nbTileMax}}" value="{{c.nbTile}}"></progress>
+                    <!--progress max="{{c.nbTileMax}}" value="{{c.nbTile}}"></progress-->
 
-
+                    <p class="paragraphTitle" style="margin-bottom: 5px;">Taille estimée</p>
+                    <p style="margin-left: 15px; margin-bottom: 0;">{{c.cacheM0}} / {{c.freeSpace}}</p>
                     <!--TODO : alert volume?-->
-                    <button class="button button-block button-positive" href="#/" ng-click="c.cachMe()">Mise en Cache
+
+
+                    <button class="waves-effect waves-light btn bouton-cache" href="#/" ng-click="c.cachMe()">Mise en Cache
                     </button>
-                    <label class="item item-input">
-                        <span class="input-label">taille estimé</span>
-                        {{c.cacheM0}} / {{c.freeSpace}}
-                    </label>
-                    <button class="button button-block button-positive" href="#/" ng-click="c.clearall()">clean
-                    </button>
+
+
+                    <!--button class="waves-effect waves-light btn bouton-cache" href="#/" ng-click="c.clearall()">clean</button-->
                 </ion-list>
 
 
@@ -57,6 +61,8 @@
                         <p> Nom : {{item.properties.name}}</p>
                         <!--{{" "}}/ {{" "}}-->
                         <p> Date : {{c.Dt | date:'dd.MM.yyyy HH:mm:ss'}}</p>
+
+
 
                         <!--sous boutton-->
 
@@ -75,7 +81,10 @@
                         on-reorder="c.reorderItem(layer, $fromIndex, $toIndex)">
                         </ion-reorder-button>
                     </ion-item>
+                    <button class="waves-effect waves-light btn bouton-cache" ng-if="c.sContext.auth.user.cacheGeom.features.length>0" href="#/" ng-click="c.clearall()">clean</button>
+
                 </ion-list>
+
 
 
             </div>
@@ -102,12 +111,13 @@
 
 
                 <div class="action-buttons" ng-show="c.enableNewCacheControl">
-                    <div>
-                        <a class="btn-floating btn-large waves-effect waves-light pink" ng-click="c.selectEditCorner=true">
+                    <div style="position:absolute; bottom:20px; right: 10px;">
+                        <button class="btn-floating btn-large waves-effect waves-light pink btn-edit" ng-class="{'yellow':c.editingCacheZone}"  ng-click="c.selectEditCorner=true">
                             <i class="large material-icons">edit</i>
-                        </a>
-                        <button class="button button-block button-positive button-yellow"
-                                ng-click="c.editingCacheZone=false" ng-show="c.editingCacheZone">Valider
+                        </button>
+                        <button class="btn-floating btn-large waves-effect waves-light pink btn-done"
+                           ng-click="c.editingCacheZone=false" ng-show="c.editingCacheZone">
+                            <i class="large material-icons">done</i>
                         </button>
                     </div>
                 </div>

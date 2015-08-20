@@ -673,6 +673,7 @@ ion-content.has-fab-bottom > div.scroll {
 .cache-panel .cache-panel-content .cache-panel-left{
     padding: 0;
     height: 100%;
+    margin-bottom:0;
 }
 .cache-panel .cache-panel-content .cache-panel-left>.cache-form{
     padding: 0;
@@ -696,4 +697,55 @@ ion-content.has-fab-bottom > div.scroll {
 }
 .cache-panel .cache-panel-content .cache-panel-left .cache-right-panel>div, .cache-panel .cache-panel-content .cache-panel-left .cache-right-panel>div>.angular-openlayers-map{
     height:100%;
+}
+.cache-panel .cache-panel-content .cache-panel-left .cache-right-panel .action-buttons .btn-done{
+    position: absolute;
+    bottom: 0px;
+    right: 67px;
+}
+
+.cache-panel .cache-panel-content .cache-form .list .item.item-checkbox{
+    padding-top: 0;
+    border:none;
+    padding-bottom: 10px;
+    padding-left: 50px;
+}
+.cache-panel .cache-panel-content .cache-form .list .item.item-checkbox .checkbox{
+    padding-top: 2px;
+}
+
+.cache-panel .cache-panel-content .cache-form p.paragraphTitle{
+    font-weight: bold;
+    margin-left: 15px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.cache-panel .cache-panel-content .cache-form rzslider.cacheSlider{
+    margin: 30px 0 15px 0;
+    padding-left: 5%;
+}
+.cache-panel .cache-panel-content .cache-form rzslider.cacheSlider .rz-pointer{
+    top: -9px;
+    width: 20px;
+    height: 20px;
+    border-radius: 24px;
+    background-color: #00BCD4;
+}
+.cache-panel .cache-panel-content .cache-form rzslider.cacheSlider .rz-pointer:after{
+    top: 6px;
+    left: 6px;
+}
+.cache-panel .cache-panel-content .cache-form rzslider.cacheSlider .rz-pointer.rz-selected:after{
+    background:#0097A7;
+}
+
+.cache-panel .cache-panel-content .cache-form rzslider.cacheSlider span.rz-bar.rz-selection{
+    background: #00BCD4;
+}
+
+.cache-panel .cache-panel-content .cache-form .bouton-cache.btn{
+    margin-left: 25px;
+    margin-top: 10px;
+    background-color: #00BCD4;
 }
