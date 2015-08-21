@@ -684,6 +684,24 @@ ion-content.has-fab-bottom > div.scroll {
     font-size: 17px;
     margin: 15px 0 10px 10px;
 }
+.cache-panel .cache-panel-content .cache-panel-left>.cache-form .list .item-content .left-arrow{
+    width: 0;
+    height: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-right: 15px solid rgb(238, 238, 238);
+    position: absolute;
+    top: 26px;
+    right: 0px;
+    z-index: 20;
+}
+
+.cache-panel .cache-panel-content .cache-panel-left>.cache-form .list .item-options .button-info p.icon-action{
+    padding-left:8px;
+    font-size: 20px;
+    color:#FF4081;
+}
+
 .cache-panel .cache-panel-content .cache-form .list{
     width:99%;
 }
@@ -702,6 +720,15 @@ ion-content.has-fab-bottom > div.scroll {
     position: absolute;
     bottom: 0px;
     right: 67px;
+}
+.cache-panel .cache-panel-content .cache-panel-left .cache-right-panel .action-buttons .btn-coin{
+    right: 10px;
+    bottom: 65px;
+    position: absolute;
+}
+.cache-panel .cache-panel-content .cache-panel-left .cache-right-panel .action-buttons .btn-coin img{
+    width: 21px;
+    margin-top: 8px;
 }
 
 .cache-panel .cache-panel-content .cache-form .list .item.item-checkbox{
@@ -724,6 +751,7 @@ ion-content.has-fab-bottom > div.scroll {
 .cache-panel .cache-panel-content .cache-form rzslider.cacheSlider{
     margin: 30px 0 15px 0;
     padding-left: 5%;
+    width: 90%;
 }
 .cache-panel .cache-panel-content .cache-form rzslider.cacheSlider .rz-pointer{
     top: -9px;

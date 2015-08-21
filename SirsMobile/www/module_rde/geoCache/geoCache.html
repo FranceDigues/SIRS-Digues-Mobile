@@ -62,16 +62,15 @@
                         <!--{{" "}}/ {{" "}}-->
                         <p> Date : {{c.Dt | date:'dd.MM.yyyy HH:mm:ss'}}</p>
 
-
-
+                        <div class="left-arrow"></div>
                         <!--sous boutton-->
 
                         <ion-option-button class="button-info" ng-click="c.clearMe(item)">
-                            <p class="ion-minus-circled"></p>
+                            <p class="ion-trash-b icon-action"></p>
                             <!--<i class="material-icons  right">visibility</i>-->
                         </ion-option-button>
                         <ion-option-button class="button-info" ng-click="c.edit(item)">
-                            <p class="ion-edit"></p>
+                            <p class="ion-edit icon-action"></p>
                             <!--<i class="material-icons  right">visibility_off</i>-->
 
                         </ion-option-button>
@@ -81,7 +80,7 @@
                         on-reorder="c.reorderItem(layer, $fromIndex, $toIndex)">
                         </ion-reorder-button>
                     </ion-item>
-                    <button class="waves-effect waves-light btn bouton-cache" ng-if="c.sContext.auth.user.cacheGeom.features.length>0" href="#/" ng-click="c.clearall()">clean</button>
+                    <button class="waves-effect waves-light btn bouton-cache" ng-if="c.sContext.auth.user.cacheGeom.features.length>0" href="#/" ng-click="c.clearall()">Vider les caches</button>
 
                 </ion-list>
 
@@ -119,6 +118,24 @@
                            ng-click="c.editingCacheZone=false" ng-show="c.editingCacheZone">
                             <i class="large material-icons">done</i>
                         </button>
+
+                        <button class="btn-floating btn waves-effect waves-light white btn-coin"
+                                style="bottom:200px" ng-click="" ng-show="c.editingCacheZone">
+                            <img src="img/cache-topleft.png" />
+                        </button>
+                        <button class="btn-floating btn waves-effect waves-light white btn-coin"
+                                style="bottom:155px" ng-click="" ng-show="c.editingCacheZone">
+                            <img src="img/cache-topright.png" />
+                        </button>
+                        <button class="btn-floating btn waves-effect waves-light white btn-coin"
+                                style="bottom:110px" ng-click="" ng-show="c.editingCacheZone">
+                            <img src="img/cache-bottomright.png" />
+                        </button>
+                        <button class="btn-floating btn waves-effect waves-light white btn-coin"
+                                ng-click="" ng-show="c.editingCacheZone">
+                            <img src="img/cache-bottomleft.png" />
+                        </button>
+
                     </div>
                 </div>
 
