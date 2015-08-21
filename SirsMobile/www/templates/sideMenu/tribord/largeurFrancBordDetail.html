@@ -1,21 +1,11 @@
-<div id="disorderDetails" ng-controller="cDesordreDetail as c">
+<div id="disorderDetails" ng-controller="cCreteDetail as c">
     <ion-header-bar align-title="center">
         <button class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="c.backToDisorderList()"></button>
         <h1 class="title">Détail de l'objet</h1>
     </ion-header-bar>
 
-    <div class="tabs-striped tabs-top">
-        <div class="tabs tabs-sirs">
-            <!-- Tab / Description -->
-            <a class="tab-item" ng-class="{active: c.activeTab === 'description'}" on-tap="c.setActiveTab('description')">Description</a>
-            <!-- Tab / Observations -->
-            <a class="tab-item" ng-class="{active: c.activeTab === 'observations'}" on-tap="c.setActiveTab('observations')">Observations</a>
-        </div>
-    </div>
-
     <ion-content class="has-header has-tabs-top has-fab-bottom" delegate-handle="disorderScroll" ng-switch="c.activeTab">
         <!-- Content / Description -->
-        <div ng-switch-when="description">
             <div class="sirs-panel">
                 <div class="sirs-field-inline">
                     <span class="sirs-field-title">Numéro de désignation :</span>
@@ -32,34 +22,14 @@
             </div>
             <div class="sirs-section">
                 <div class="sirs-field">
-                    <span class="sirs-field-title">Type de désordre</span>
-                    <span class="sirs-field-value" ng-bind="c.abstract.typeDesordre"></span>
-                </div>
-
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Position</span>
-                    <span class="sirs-field-value" ng-bind="c.abstract.position"></span>
-                </div>
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Côté</span>
-                    <span class="sirs-field-value" ng-bind="c.abstract.cote"></span>
+                    <span class="sirs-field-title">Largeur</span>
+                    <span class="sirs-field-value" ng-bind="c.document.largeur"></span>
                 </div>
                 <div class="sirs-field">
                     <span class="sirs-field-title">Description</span>
                     <span class="sirs-field-value"ng-bind="c.document.commentaire"></span>
                 </div>
             </div>
-        </div>
-        <!-- Content / Observations -->
-        <div ng-switch-when="observations">
-            <ion-list>
-                <ion-item on-tap="c.openObservationDetails()">20/03/2015</ion-item>
-                <ion-item on-tap="c.openObservationDetails()">19/02/2015</ion-item>
-                <ion-item on-tap="c.openObservationDetails()">15/12/2014</ion-item>
-                <ion-item on-tap="c.openObservationDetails()">05/10/2014</ion-item>
-                <ion-item on-tap="c.openObservationDetails()">04/07/2013</ion-item>
-            </ion-list>
-        </div>
     </ion-content>
 
     <!-- FAB / Description -->
