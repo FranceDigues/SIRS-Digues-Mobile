@@ -4,85 +4,76 @@
 
 <!--<script type="text/javascript" src="../lib/fabric.js"></script>-->
 <ion-header-bar>
-    Module de note :
+    <header class="bar bar-header bar-stable noteHeader">
+        <button class="button button-icon button-clear ion-arrow-left-a"
+                ng-click="c.gotoHome()"></button>
+        <span>Prise de note</span>
+    </header>
 </ion-header-bar>
 
 <div id="bd-wrapper" >
     <!--ng-controller="CanvasControls"-->
 
-    <style>
-        #drawing-mode {
-            margin-bottom: 10px;
-            vertical-align: top;
-        }
-        #drawing-mode-options {
-            display: inline-block;
-            vertical-align: top;
-            margin-bottom: 10px;
-            margin-top: 10px;
-            background: #f5f2f0;
-            padding: 10px;
-        }
-        label {
-            display: inline-block; width: 130px;
-        }
-        .info {
-            display: inline-block;
-            width: 25px;
-            background: #ffc;
-        }
-        #bd-wrapper {
-            min-width: 1500px;
-        }
-    </style>
-    <div class="list">
-        <label class="item item-input signin-item">
-            <!--<input type="text" placeholder="Identifiant" ng-model="user.username">-->
-                <textarea rows="4" cols="50" ng-model="c.currentText"></textarea>
-        </label>
-        <button class="button button-clear button-calm signin-valid-button" style="color: #00BCD0;"
-                ng-click="c.write(c.currentText)">
-            Ecrire du texte
-        </button>
-    </div>
+    <div class="left-bloc">
+        <div class="header-bloc">
+            <div class="waves-effect waves-light img-action" id="drawing-mode" style="background:#FFEB3B;">
+                <img src="img/note-dessin.png"/>
+            </div>
+            <div class="waves-effect waves-light img-action" id="text-mode">
+                <img src="img/note-text.png"/>
+            </div>
+            <div class="waves-effect waves-light img-action" id="clear-canvas">
+                <img src="img/note-gomme.png"/>
+            </div>
 
-    <canvas id="canvasFabric" width="100%" height="100%" style="border:1px solid #aaa"></canvas>
 
-    <div style="display: inline-block; margin-left: 10px">
-        <button id="drawing-mode" class="btn btn-info">Cancel drawing mode</button><br>
-        <button id="clear-canvas" class="btn btn-info">Clear</button><br>
-
-        <div id="drawing-mode-options">
-            <label for="drawing-mode-selector">Mode:</label>
-            <select id="drawing-mode-selector">
-                <option>Pencil</option>
-                <option>Circle</option>
-                <option>Spray</option>
-                <option>Pattern</option>
-
-                <option>hline</option>
-                <option>vline</option>
-                <option>square</option>
-                <option>diamond</option>
-                <option>texture</option>
-            </select><br>
-
-            <label for="drawing-line-width">Line width:</label>
-            <span class="info">30</span><input type="range" value="30" min="0" max="150" id="drawing-line-width"><br>
-
-            <label for="drawing-color">Line color:</label>
-            <input type="color" value="#005E7A" id="drawing-color"><br>
-
-            <label for="drawing-shadow-color">Shadow color:</label>
-            <input type="color" value="#005E7A" id="drawing-shadow-color"><br>
-
-            <label for="drawing-shadow-width">Shadow width:</label>
-            <span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-width"><br>
-
-            <label for="drawing-shadow-offset">Shadow offset:</label>
-            <span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-offset"><br>
         </div>
+
+            <div class="list" id="text-mode-options" style="display:none;">
+                <label class="item item-input signin-item">
+                    <!--<input type="text" placeholder="Identifiant" ng-model="user.username">-->
+                    <textarea rows="10" cols="50" ng-model="c.currentText"></textarea>
+                </label>
+                <button class="waves-effect waves-light btn bouton-cache" ng-click="c.write(c.currentText)">
+                    Ecrire du texte
+                </button>
+            </div>
+
+            <div id="drawing-mode-options">
+                <label for="drawing-mode-selector">Mode:</label>
+                <select id="drawing-mode-selector">
+                    <option>Pencil</option>
+                    <option>Circle</option>
+                    <option>Spray</option>
+                    <option>Pattern</option>
+
+                    <option>hline</option>
+                    <option>vline</option>
+                    <option>square</option>
+                    <option>diamond</option>
+                    <option>texture</option>
+                </select><br>
+
+                <label for="drawing-line-width">Line width:</label>
+                <span class="info">30</span><input type="range" value="30" min="0" max="150" id="drawing-line-width"><br>
+
+                <label for="drawing-color">Line color:</label>
+                <input type="color" value="#005E7A" id="drawing-color"><br>
+
+                <label for="drawing-shadow-color">Shadow color:</label>
+                <input type="color" value="#005E7A" id="drawing-shadow-color"><br>
+
+                <label for="drawing-shadow-width">Shadow width:</label>
+                <span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-width"><br>
+
+                <label for="drawing-shadow-offset">Shadow offset:</label>
+                <span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-offset"><br>
+            </div>
     </div>
+    <div class="right-bloc">
+        <canvas id="canvasFabric" width="100%" height="100%" style="border:1px solid #aaa"></canvas>
+    </div>
+
     <script id="main">
     </script>
 

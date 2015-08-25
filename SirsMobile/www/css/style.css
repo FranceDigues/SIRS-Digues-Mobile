@@ -777,3 +777,100 @@ ion-content.has-fab-bottom > div.scroll {
     margin-top: 10px;
     background-color: #00BCD4;
 }
+
+
+.bar.bar-header.noteHeader{
+    background-color: #0097A7;
+}
+.bar.bar-header.noteHeader button{
+    color: #fff;
+    margin-left: 15px;
+}
+.bar.bar-header.noteHeader span{
+    color: #fff;
+    font-size: 17px;
+    margin-left: 10px;
+    margin-top: 6px;
+}
+.bar.bar-header.noteHeader a{
+    position: absolute;
+    right: 20px;
+}
+#bd-wrapper{
+    padding-top:43px;
+    min-width: 1500px;
+}
+#bd-wrapper .left-bloc{
+    position:absolute;
+    left:0;
+    width:25%;
+    height:100%;
+}
+#bd-wrapper .right-bloc{
+    position:absolute;
+    right:0;
+    width:75%;
+    height:100%;
+}
+#bd-wrapper .canvas-container{
+    width:100% !important;
+    height: 100% !important;
+}
+#bd-wrapper .canvas-container #canvasFabric{
+    width:100% !important;
+    height: 100% !important;
+}
+#bd-wrapper .canvas-container .upper-canvas{
+    width:100% !important;
+    height: 100% !important;
+}
+#bd-wrapper .right-bloc .list .item.item-input.signin-item textarea{
+    resize:none;
+}
+#bd-wrapper .bouton-cache.btn{
+    margin-left: 25px;
+    margin-top: 10px;
+    background-color: #00BCD4;
+}
+#bd-wrapper .left-bloc .header-bloc{
+    height: 44px;
+    background-color: #00BCD4;
+}
+#bd-wrapper .left-bloc .header-bloc .img-action{
+    display: inline-block;
+    height: 44px;
+    width: 44px;
+}
+#bd-wrapper .left-bloc .header-bloc .img-action img{
+    border: 0;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+}
+#drawing-mode-options {
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 10px;
+    padding: 15px 10px 10px 10px;
+}
+#text-mode-options {
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 10px;
+    padding: 15px 10px 10px 10px;
+}
+#text-mode-options label {
+    padding: 5px;
+    width:100%;
+}
+#text-mode-options label textarea{
+    height: auto;
+}
+#text-mode-options .bouton-cache{
+    color:white;
+}
+#drawing-mode-options .info{
+    display: inline-block;
+    width: 25px;
+    color: #A9A9A9;
+}
