@@ -3,19 +3,20 @@
  */
 
 
-
-
-
-
-
 angular.module('module_rde.note', [])
 
-    .controller('cNote', function ($scope, $log, $ionicPlatform) {
+    .controller('cNote', function ($scope, $log, $ionicPlatform,$state,sContext,$timeout) {
 
         var me = this;
         var canvas =  null;
 
+        me.gotoHome=function(){
+            $state.go("forms.photo")
+        }
+
         me.currentText = "";
+
+
 
         $ionicPlatform.ready(function () {
 
@@ -29,6 +30,14 @@ angular.module('module_rde.note', [])
                     isDrawingMode: true,
                     isTextMode: false
                 });
+
+                $timeout(function(){
+                    canvas.setHeight(window.innerHeight-(window.innerHeight/30));
+                    canvas.setWidth( window.innerWidth-(window.innerWidth*0.25));
+                    canvas.calcOffset();
+                    canvas.renderAll();
+                },300)
+
 
                 fabric.Object.prototype.transparentCorners = false;
 
@@ -151,11 +160,11 @@ angular.module('module_rde.note', [])
                         return patternCanvas;
                     };
 
-                    var img = new Image();
-                    img.src = '../assets/honey_im_subtle.png';
-
-                    var texturePatternBrush = new fabric.PatternBrush(canvas);
-                    texturePatternBrush.source = img;
+                    //var img = new Image();
+                    //img.src = sContext.noteImg;
+                    //
+                    //var texturePatternBrush = new fabric.PatternBrush(canvas);
+                    //texturePatternBrush.source = img;
                 }
 
                 $('drawing-mode-selector').onchange = function () {
@@ -172,9 +181,9 @@ angular.module('module_rde.note', [])
                     else if (this.value === 'diamond') {
                         canvas.freeDrawingBrush = diamondPatternBrush;
                     }
-                    else if (this.value === 'texture') {
-                        canvas.freeDrawingBrush = texturePatternBrush;
-                    }
+                    //else if (this.value === 'texture') {
+                    //    canvas.freeDrawingBrush = texturePatternBrush;
+                    //}
                     else {
                         canvas.freeDrawingBrush = new fabric[this.value + 'Brush'](canvas);
                     }

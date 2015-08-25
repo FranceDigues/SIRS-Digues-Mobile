@@ -812,15 +812,19 @@ ion-content.has-fab-bottom > div.scroll {
     width:75%;
     height:100%;
 }
-#bd-wrapper .canvas-container{
+/*.canvas-container*/
+#bd-wrapper {
     width:100% !important;
     height: 100% !important;
 }
-#bd-wrapper .canvas-container #canvasFabric{
+/*#canvasFabric*/
+/*.canvas-container*/
+#bd-wrapper  {
     width:100% !important;
     height: 100% !important;
 }
-#bd-wrapper .canvas-container .upper-canvas{
+/*.canvas-container*/
+#bd-wrapper {
     width:100% !important;
     height: 100% !important;
 }

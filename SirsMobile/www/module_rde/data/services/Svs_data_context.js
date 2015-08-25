@@ -25,6 +25,8 @@ angular.module('module_rde.data.services.context', [])
 
 
     //variable d'etat
+        //note
+        me.noteImg = null;
         //vue
             me.tribordView = {active: "desordreMgmt"  , last:[]};
             me.babordView = {active: "menu" , last:[]};
