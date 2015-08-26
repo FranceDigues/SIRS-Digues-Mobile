@@ -17,7 +17,9 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
         //if (me.sAppLayer.modules[0] != null) me.sAppLayer.modules[0].checked = true;
         me.branchAct=null;
         me.displayStack=false;
-        me.search=false
+        me.search=false;
+
+        me.sansCat=false;
 
         me.modList=false;
         me.catList=false;
