@@ -14,19 +14,19 @@
 
     <div class="right col-33">
         <ion-list
-                show-delete="true"
+                show-delete="false"
                 can-swipe="true"
                 class="animate-if ">
             <ion-item ng-repeat="photo in c.newPhotos" >
                 <!--<ion-checkbox ng-model="photo.selected" ng-change="c."></ion-checkbox>-->
                 <img ng-src="{{c.sContext.photoDir+photo.chemin}}" style="display:block;width: 100%">
                 <ion-option-button class="button-info"
-                                   on-tap="c.runNotePad(photo)">
+                                   on-tap="c.runNotePad(c.sContext.photoDir+photo.chemin)">
                     EDITION
                 </ion-option-button>
-                <ion-delete-button class="ion-minus-circled"
+                <ion-option-button class="ion-minus-circled"
                                    on-tap="c.deletePhoto($index,photo.chemin)">
-                </ion-delete-button>
+                </ion-option-button>
             </ion-item>
         </ion-list>
     </div>

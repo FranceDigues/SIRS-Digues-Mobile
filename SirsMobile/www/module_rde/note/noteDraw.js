@@ -5,13 +5,22 @@
 
 angular.module('module_rde.note', [])
 
-    .controller('cNote', function ($scope, $log, $ionicPlatform,$state,sContext,$timeout) {
+    .controller('cNote', function ($scope, $log, $ionicPlatform,$state,sContext,$timeout,$stateParams) {
 
         var me = this;
         var canvas =  null;
 
+        //recuperration de l'image d'arriere plans dans les paramettre.
+        //me.fond=$stateParams.fond;
+        //$log.debug("FOND");
+        //$log.debug(me.fond);
+        //$log.debug($stateParams);
+
+
         me.gotoHome=function(){
+            sContext.noteImg=null;
             $state.go("forms.photo")
+
         }
 
         me.currentText = "";
@@ -36,6 +45,16 @@ angular.module('module_rde.note', [])
                     canvas.setWidth( window.innerWidth-(window.innerWidth*0.25));
                     canvas.calcOffset();
                     canvas.renderAll();
+
+                    //affectation de l'image en arriere plans pour edition
+                    if (sContext.noteImg != null){
+
+                        $log.debug("noteImage")
+                        $log.debug(sContext.noteImg)
+
+                        canvas.setBackgroundImage(sContext.noteImg, canvas.renderAll.bind(canvas));
+                    }
+
                 },300)
 
 

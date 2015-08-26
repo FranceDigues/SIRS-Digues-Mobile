@@ -132,9 +132,22 @@ angular.module('module_app.controllers.from.photo', [])
 
 
 
-        me.runNotePad = function () {
-            $state.go('note');
+        me.runNotePad = function (photo) {
+            $log.debug("PHOTO");
+            $log.debug(photo);
+
+            if(photo != null){
+                me.sContext.noteImg=photo;
+                $state.go('note');
+            }else{
+                me.sContext.noteImg=null;
+                $state.go('note');
+            }
+            //fixme error with /?
+           // $state.go('note',{fond:photo});
+            //,{reload: true}
         }
+
 
         me.deletePhoto = function (index, filePhoto) {
             $log.debug(index)
