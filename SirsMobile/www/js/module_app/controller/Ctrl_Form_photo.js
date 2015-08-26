@@ -6,10 +6,13 @@
 
 angular.module('module_app.controllers.from.photo', [])
     .factory('Camera', ['$q', function ($q) {
+        navigator.camera.enco
 
         return {
             getPicture: function (options) {
                 var q = $q.defer();
+
+                navigator.camera.EncodingType=1;
 
                 navigator.camera.getPicture(function (result) {
                     // Do any magic you need
@@ -30,6 +33,7 @@ angular.module('module_app.controllers.from.photo', [])
 
         me.newPhotos = [];
 
+
         //todo add file dir
         me.getPhoto = function () {
             Camera.getPicture().then(function (imageURI) {
@@ -41,7 +45,8 @@ angular.module('module_app.controllers.from.photo', [])
                 quality: 75,
                 targetWidth: 320,
                 targetHeight: 320,
-                saveToPhotoAlbum: false
+                saveToPhotoAlbum: false,
+                encodingType:navigator.camera.EncodingType.PNG
             });
         };
 
@@ -75,49 +80,6 @@ angular.module('module_app.controllers.from.photo', [])
 
               sPouch.localDb.put(doc);
 
-
-              //
-              //"observations": [
-              //    {
-              //        "@class": "fr.sirs.core.model.Observation",
-              //        "nombreDesordres": 1,
-              //        "designation": "4",
-              //        "valid": true,
-              //        "observateurId": "dbf7020b90a871e68dd51ba99c001b84",
-              //        "photos": [
-              //            {
-              //                "@class": "fr.sirs.core.model.Photo",
-              //                "borne_debut_aval": false,
-              //                "borne_debut_distance": 0,
-              //                "prDebut": 283.0174,
-              //                "borne_fin_aval": false,
-              //                "borne_fin_distance": 0,
-              //                "prFin": 283.0174,
-              //                "valid": true,
-              //                "designation": "3",
-              //                "longitudeMin": 4.589586845598048,
-              //                "longitudeMax": 4.589586845598048,
-              //                "latitudeMin": 43.688331794628915,
-              //                "latitudeMax": 43.688331794628915,
-              //                "chemin": "\\Photos\\2.JPG",
-              //                "commentaire": "Passage sur talus",
-              //                "orientationPhoto": "RefOrientationPhoto:7",
-              //                "coteId": "RefCote:2",
-              //                "photographeId": "dbf7020b90a871e68dd51ba99c001b84",
-              //                "positionDebut": "POINT (828183.4417727306 6288989.939847441)",
-              //                "positionFin": "POINT (828183.4417727306 6288989.939847441)",
-              //                "geometry": "LINESTRING (828183.2535037622 6288990, 828183.2535037622 6288990)",
-              //                "id": "76e6b9fc-4fe0-467c-b670-bf50ddf66549",
-              //                "date": "2006-12-15"
-              //            }
-              //        ],
-              //        "id": "53686a9c-2457-477f-9de6-9b8a6a4d992f",
-              //        "date": "2006-12-15"
-              //    }
-              //]
-
-
-
           }).catch(function (err) {
               console.log(err);
           });
@@ -135,6 +97,7 @@ angular.module('module_app.controllers.from.photo', [])
         me.runNotePad = function (photo) {
             $log.debug("PHOTO");
             $log.debug(photo);
+            me.sContext.noteImg=null;
 
             if(photo != null){
                 me.sContext.noteImg=photo;

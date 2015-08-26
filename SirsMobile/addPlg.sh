@@ -31,5 +31,6 @@ ionic plugin add org.apache.cordova.camera ;
 
 #add external plugin
 ionic plugin add ../pulgin/cacheMap/ ;
-ionic plugin add ../../EXTERNAL_GIT_DEP/ionic-plugins-deploy  ;
-ionic plugin add ../../EXTERNAL_GIT_DEP/cordova-plugin-file-opener2   ;
+ionic plugin add ../../EXTERNAL_GIT_DEP/ionic-plugins-deploy ;
+ionic plugin add ../../EXTERNAL_GIT_DEP/Canvas2ImagePlugin ;
+

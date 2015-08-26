@@ -18,13 +18,13 @@ angular.module('module_rde.note', [])
 
 
         me.gotoHome=function(){
-            sContext.noteImg=null;
+
             $state.go("forms.photo")
 
         }
 
         me.currentText = "";
-
+        me.tmpFileName=null;
 
 
         $ionicPlatform.ready(function () {
@@ -40,6 +40,54 @@ angular.module('module_rde.note', [])
                     isTextMode: false
                 });
 
+
+                me.save=function(){
+
+                    window.canvas2ImagePlugin.saveImageDataToLibrary(
+                        function(msg){
+                            console.log(msg);
+
+                            window.resolveLocalFileSystemURL("file://"+msg, me._copyFile, me._onCopyFail);
+                        },
+                        function(err){
+                            console.log(err);
+                        },
+                        //document.getElementById('myCanvas')
+                        canvas
+                    );
+                }
+
+                //write on good file
+                me._copyFile= function(fileEntry) {
+                   $log.debug("resolve good file.")
+                   $log.debug(  sContext.noteImg)
+                   $log.debug(  sContext.noteImg.substring(0,sContext.noteImg.length-3 )+"png")
+
+                    window.resolveLocalFileSystemURL(sContext.photoDir, function(fs2) {
+
+                            fileEntry.copyTo(
+                                fs2,
+                                sContext.noteImg.substring(0,sContext.noteImg.length-3 )+"png",
+                                me._onCopySuccess,
+                                me._onCopyFail
+                            );
+                        },
+                        me._onCopyFail);
+                }
+
+                //kill not edited file
+                me._onCopySuccess= function (msg) {
+                    $log.debug(msg)
+                    sContext.noteImg=null;
+
+                }
+
+                me._onCopyFail = function fail(error) {
+                    $log.debug(error)
+                    console.log("fail: " + error.code);
+                }
+
+
                 $timeout(function(){
                     canvas.setHeight(window.innerHeight-(window.innerHeight/30));
                     canvas.setWidth( window.innerWidth-(window.innerWidth*0.25));
@@ -52,7 +100,7 @@ angular.module('module_rde.note', [])
                         $log.debug("noteImage")
                         $log.debug(sContext.noteImg)
 
-                        canvas.setBackgroundImage(sContext.noteImg, canvas.renderAll.bind(canvas));
+                        canvas.setBackgroundImage(sContext.photoDir+sContext.noteImg, canvas.renderAll.bind(canvas));
                     }
 
                 },300)

@@ -22,7 +22,7 @@ function oSirsPhoto(param){
 
 
     this.designation = null;
-    this.chemin =param.chemin !=null?param.chemin: this.id+"_.jpg"; //pour les nouvelle photo le chemin n'est autre que le nom de fichier
+    this.chemin =param.chemin !=null?param.chemin: this.id+"_.png"; //pour les nouvelle photo le chemin n'est autre que le nom de fichier
     this.commentaire =  param.commentaire;
     this.orientationPhoto = null;
     this.coteId = null;

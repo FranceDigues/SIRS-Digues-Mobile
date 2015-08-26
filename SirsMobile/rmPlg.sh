@@ -16,3 +16,4 @@ ionic plugin rm org.apache.cordova.camera   ;
 ionic plugin rm com.rde.cachemap    ;
 ionic plugin rm com.ionic.deploy     ;
 ionic plugin rm cordova-plugin-file  ;
+ionic plugin rm org.apache.cordova.camera ;

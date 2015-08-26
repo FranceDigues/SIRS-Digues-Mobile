@@ -21,7 +21,7 @@
                 <!--<ion-checkbox ng-model="photo.selected" ng-change="c."></ion-checkbox>-->
                 <img ng-src="{{c.sContext.photoDir+photo.chemin}}" style="display:block;width: 100%">
                 <ion-option-button class="button-info"
-                                   on-tap="c.runNotePad(c.sContext.photoDir+photo.chemin)">
+                                   on-tap="c.runNotePad(photo.chemin)">
                     EDITION
                 </ion-option-button>
                 <ion-option-button class="ion-minus-circled"
