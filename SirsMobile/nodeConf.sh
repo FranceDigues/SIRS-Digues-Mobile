@@ -12,7 +12,7 @@ sudo npm install -g gulp-sass
 sudo npm install -g gulp-rename
 sudo npm install -g gulp-minify-css
 sudo npm install -g gulp-concat
-sudo npm install q
+sudo npm install -g q
 
 
 sudo npm install --save-dev main-bower-files
