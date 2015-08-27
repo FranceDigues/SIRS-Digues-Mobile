@@ -88,6 +88,16 @@ angular.module('module_app.services.style.factory', [])
 
             return {
                 /**
+                 * Returns the color defined at the specified index.
+                 *
+                 * @param {Integer} index the color index.
+                 * @returns {Array<number>} the color.
+                 */
+                getColorAtIndex: function(index) {
+                    return colors[index];
+                },
+
+                /**
                  * Returns the factory method used to create the ol.style.Style depending
                  * on the current map resolution and using the specified color.
                  *
@@ -123,7 +133,7 @@ angular.module('module_app.services.style.factory', [])
                  * dynamically.
                  */
                 createByIndex: function(index, geometryType, highlight) {
-                    return this.createByColor(colors[index], geometryType, highlight);
+                    return this.createByColor(this.getColorAtIndex(index), geometryType, highlight);
                 }
             };
         };

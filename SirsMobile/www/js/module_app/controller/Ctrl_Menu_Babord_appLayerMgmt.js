@@ -6,7 +6,7 @@
 
 angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
 
-    .controller('cAppLayerMgmt', function cAppLayerMgmt($scope, $state, $log, sContext, sAppLayer, $timeout, sPouch,$rootScope) {
+    .controller('cAppLayerMgmt', function cAppLayerMgmt($scope, $state, $log, sContext, sAppLayer, $timeout, sPouch, sStyleFactory, $rootScope) {
         var me = this;
 
         me.sContext = sContext;
@@ -107,6 +107,14 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
 
         }
 
+        me.getLayerColor = function(layer) {
+            if (angular.isArray(me.sAppLayer.asSimpleStack)) {
+                var index = me.sAppLayer.asSimpleStack.indexOf(layer);
+                var rgba = sStyleFactory.getColorAtIndex(index);
+                return 'rgb(' + rgba[0] + ',' + rgba[1] + ',' + rgba[2] + ')';
+            }
+            return null;
+        };
     })
 
     .filter('catFilter', function() {

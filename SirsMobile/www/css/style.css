@@ -640,6 +640,16 @@ ion-content.has-fab-bottom > div.scroll {
 .menu-left .affichage-content .affichage-list h2{
     margin-bottom:5px;
 }
+.menu-left .affichage-content .affichage-list h2 span {
+    display: inline-block;
+    line-height: 18px;
+    vertical-align: middle;
+}
+.menu-left .affichage-content .affichage-list h2 span.layer-color {
+    height: 18px;
+    width: 18px;
+    margin-right: 5px;
+}
 .menu-left .backLayer-items{
     border:none;
 }
