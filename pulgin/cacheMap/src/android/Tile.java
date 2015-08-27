@@ -80,10 +80,11 @@ public class Tile {
 
     public ArrayList<Tile> subServientTile_TMS(){
         ArrayList<Tile> aTile = new ArrayList<Tile>();
-        final int Z = this.getZ()+1;
-        final int X = (this.getX())*2;
-        final int Y = (this.getY())*2;
+        final int Z = this.getZ()-1;
+        final int X = (this.getX())/2;
+        final int Y = (this.getY())/2;
 
+        //detection
         aTile.add(new Tile(Z,X,Y));
         aTile.add(new Tile(Z,X+1,Y));
         aTile.add(new Tile(Z,X+1,Y+1));

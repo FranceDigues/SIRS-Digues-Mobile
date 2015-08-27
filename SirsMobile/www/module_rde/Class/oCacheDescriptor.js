@@ -8,7 +8,7 @@
 //estampiller les donnée
 //FIXME a reflechir !
 
-var NON_AUTO_FILE_SYSTEM = "file:///storage/emulated/0/Android/data/com.ionic.Map03/files/";
+var NON_AUTO_FILE_SYSTEM = "file:///storage/emulated/0/Android/data/com.rdardie.sirsMobile/files/";
 
 /**
  * @constructor

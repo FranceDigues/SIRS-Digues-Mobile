@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="com.rde.cachemap"
-        version="0.0.3">
+        version="0.0.9">
     <name>CacheMapPlugin</name>
     <description> Autonomous Cache Map Slave</description>
     <license>Roch Dardie</license>

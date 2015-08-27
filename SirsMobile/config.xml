@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.rdardie.sirsMobile" version="0.2.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.rdardie.sirsMobile" version="0.2.7" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>SirsMobile</name>
   <description>
-        SirsMobile V0.1
+        SirsMobile V0.2.3
     </description>
   <author email="r.dardie@gmail.com">
         Roch Dardie

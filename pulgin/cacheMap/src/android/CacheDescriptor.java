@@ -211,6 +211,8 @@ public class CacheDescriptor {
 
 //methode
 
+
+
     public ArrayList<Tile> firstLvlTileFromBb_TMS() {
 
 
@@ -219,16 +221,44 @@ public class CacheDescriptor {
         Log.d("PluginRDE_debug", "geoPoint Min : " + this.getpHg().toString());
         Log.d("PluginRDE_debug", "geoPoint Max : " + this.getpBd().toString());
 
-        Tile tHg = this.getpHg().toTileTMS(this.getzMin());
-        Tile tBd = this.getpBd().toTileTMS(this.getzMin());
+        //switch to init from zoom max
+        Tile tHg = this.getpHg().toTileTMS(this.getzMax());
+        Tile tBd = this.getpBd().toTileTMS(this.getzMax());
 
         Log.d("PluginRDE_debug", "tile Hg : " + tHg.toString());
         Log.d("PluginRDE_debug", "tile Bd : " + tBd.toString());
 
         for (int x = tHg.getX(); x <= tBd.getX(); x++) {
             for (int y = tHg.getY(); y <= tBd.getY(); y++) {
-                Tile tmp = new Tile(this.getzMin(), x, y);
+                Tile tmp = new Tile(this.getzMax(), x, y);
                 Log.d("PluginRDE_debug", "tile en cours : " + tmp.toString());
+                aTile.add(tmp);
+            }
+        }
+        return aTile;
+
+    }
+
+public ArrayList<Tile> getaTileFromZoomLvl_TMS(int z) {
+    Log.d("NN", "ZZZZ: " + z);
+
+        ArrayList<Tile> aTile = new ArrayList<Tile>();
+
+        Log.d("PluginRDE_debug", "geoPoint Min : " + this.getpHg().toString());
+        Log.d("PluginRDE_debug", "geoPoint Max : " + this.getpBd().toString());
+
+        //switch to init from zoom max
+        Tile tHg = this.getpHg().toTileTMS(z);
+        Tile tBd = this.getpBd().toTileTMS(z);
+
+    Log.d("PluginRDE_debug", "tile Hg : " + tHg.toString());
+        Log.d("PluginRDE_debug", "tile Bd : " + tBd.toString());
+
+        for (int x = tHg.getX(); x <= tBd.getX(); x++) {
+            for (int y = tHg.getY(); y <= tBd.getY(); y++) {
+                Tile tmp = new Tile(z, x, y);
+                Log.d("NN", "z en cours : " + z);
+                Log.d("NN", "tile en cours : " + tmp.toString());
                 aTile.add(tmp);
             }
         }

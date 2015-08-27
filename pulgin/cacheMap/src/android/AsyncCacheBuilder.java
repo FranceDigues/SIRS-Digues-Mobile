@@ -159,7 +159,17 @@ public class AsyncCacheBuilder extends AsyncTask {
         //chargement des tuiles si inexistant
         if(caDeLocal == null){
             Log.d("PluginRDE_DEBUG","CREATETILE");
-                this.aTileDownload( this.caDe.firstLvlTileFromBb_TMS());
+//                this.aTileDownload( this.caDe.firstLvlTileFromBb_TMS());
+
+            for(int i=0; i <= this.caDe.getzMax() ; i++){
+                Log.d("NN","BOUCLETTE : " +i);
+//                Log.d("NN","BOUCLE : " +this.caDe.getaTileFromZoomLvl_TMS(i).toString());
+                for(Tile t  :this.caDe.getaTileFromZoomLvl_TMS(i)){
+                    this.launchTileDl(t);
+                }
+            }
+
+
         }
         //Cas d'une mise a jour :
         if(! (caDeLocal==null) && (! caDeLocal.equals(caDe))){
@@ -167,10 +177,8 @@ public class AsyncCacheBuilder extends AsyncTask {
             /**
              * TODO comment on gere la fraicheur des donnée?
              */
-//            Log.d("PluginRDE_DEBUG","MAJTILE");
-//            Log.d("PluginRDE_DEBUG","CADELOCAL : " + caDeLocal.toString());
-//            Log.d("PluginRDE_DEBUG","CADE : "+caDe.toString());
-                this.aTileDownload( caDeLocal.getDiff(caDe)); //recupere les tuiles et leur sous tuile non encore presente
+
+//                this.aTileDownload( caDeLocal.getDiff(caDe)); //recupere les tuiles et leur sous tuile non encore presente
 
         }
 
@@ -254,12 +262,11 @@ public class AsyncCacheBuilder extends AsyncTask {
             this.launchTileDl(t);
 
             //recur : sur la sous tuile
-            if(t.getZ()< caDe.getzMax()) {
+            if(t.getZ()> caDe.getzMin()) {
                 aTileDownload(t.subServientTile_TMS());
             }
 //            Log.d("PluginRDE_DEBUG_DLT", t.toString());
         }
-
     }
 
 
@@ -357,8 +364,8 @@ public class AsyncCacheBuilder extends AsyncTask {
 
     private void putLocalPathInRequest(DownloadManager.Request r, Tile t){
 
-//        r.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png"+DM_FIX);
-        r.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png");
+        r.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png"+DM_FIX);
+//        r.setDestinationInExternalFilesDir(myContext, this.caDe.getDirPath() + t.getZ() + "/" + t.getX()+"/" , t.getY()+".png");
 
 //        return r;
     }

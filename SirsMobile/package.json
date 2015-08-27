@@ -19,6 +19,10 @@
     "ionic-plugin-deploy",
     "cordova-plugin-whitelist@1.1.0",
     "org.apache.cordova.media",
+    {
+      "locator": "../../EXTERNAL_GIT_DEP/Canvas2ImagePlugin",
+      "id": "org.devgeeks.Canvas2ImagePlugin"
+    },
     "cordova-plugin-file",
     "com.ionic.keyboard",
     "cordova-plugin-console",
@@ -32,11 +36,7 @@
     "cordova-plugin-network-information",
     "cordova-plugin-splashscreen",
     "cordova-plugin-whitelist",
-    "org.apache.cordova.camera",
-    {
-      "locator": "../../EXTERNAL_GIT_DEP/cordova-plugin-file-opener2",
-      "id": "io.github.pwlin.cordova.plugins.fileopener2"
-    }
+    "org.apache.cordova.camera"
   ],
   "cordovaPlatforms": [
     "android"

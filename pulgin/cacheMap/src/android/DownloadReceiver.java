@@ -45,11 +45,11 @@ public class DownloadReceiver extends BroadcastReceiver {
                     //it to other location if you want
 
                     //RENAME
-//                    String downloadedPackageUriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-//                    File tmp = new File(downloadedPackageUriString);
-//                    File ok = new File(downloadedPackageUriString.substring(0, downloadedPackageUriString.length() - 2));
-//
-//                    tmp.renameTo(ok);
+                    String downloadedPackageUriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+                    File tmp = new File(downloadedPackageUriString);
+                    File ok = new File(downloadedPackageUriString.substring(0, downloadedPackageUriString.length() - 2));
+
+                    tmp.renameTo(ok);
 
                     mDownloadManager.remove(downloadId);
 
