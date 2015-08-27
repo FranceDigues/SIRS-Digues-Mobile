@@ -1309,7 +1309,10 @@
                     });
                     break;
                 case 'Vector':
-                    oSource = new ol.source.Vector();
+                    oSource = new ol.source.Vector({
+                        useSpatialIndex: false,
+                        wrapX: false
+                    });
                     break;
             }
 
