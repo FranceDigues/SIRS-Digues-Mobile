@@ -19,7 +19,7 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
         me.displayStack=false;
         me.search=false;
 
-        me.sansCat=false;
+        me.a=false;
 
         me.modList=false;
         me.catList=false;

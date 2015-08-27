@@ -232,15 +232,15 @@ angular.module('module_rde.geoCache', [
                     me.vsActiveCache.addFeature(me.activeGeom );
                 }
 
-            map.on('click', function(event) {
-                $log.debug( "event");
-                $log.debug( me.selectEditCorner);
-                if(me.selectEditCorner===true){
-                    me.editingZone(event.coordinate)
-                }
-                //me.lastClickCoord =  event.coordinate;
-                //$log.debug( me.lastClickCoord);
-            });
+            //map.on('click', function(event) {
+            //    $log.debug( "event");
+            //    $log.debug( me.selectEditCorner);
+            //    if(me.selectEditCorner===true){
+            //        me.editingZone(event.coordinate)
+            //    }
+            //    //me.lastClickCoord =  event.coordinate;
+            //    //$log.debug( me.lastClickCoord);
+            //});
 
             map.getView().on('change:center', function (center){
             //map.on('pointerdrag', function (center){
@@ -264,13 +264,15 @@ angular.module('module_rde.geoCache', [
         me.editingCacheZone = false;
         me.selectEditCorner = false;
         me.targetIndex=null;
-        me.editingZone = function(coord){
+        me.editingZone = function(index){
             $log.debug(coord)
            var g = me.activeGeom.getGeometry();
             $log.debug(g)
 
             //$log.debug(g.getCoordinates())
-          me.targetIndex =   me._getClosestPointByIndex(coord,(g.getCoordinates())[0])
+            //me._getClosestPointByIndex(coord,(g.getCoordinates())[0])
+            //fixme ordre
+          me.targetIndex =  index;
 
             e=g.getExtent();
             $log.debug("xmin : "+e[0])
@@ -286,27 +288,27 @@ angular.module('module_rde.geoCache', [
             me.editingCacheZone=true;
         }
 
-        me._getClosestPointByIndex=function(c,arrP){
-            $log.debug("_getClosestPointByIndex  :");
-            $log.debug(arrP);
-            var dists = []
-            for(var i =0; i<4;i++){
-                $log.debug(c);
-                //$log.debug(arrP[i]);
-                dists.push(  me._calcDist(c,arrP[i]));
-                $log.debug(dists);
-            }
+        //me._getClosestPointByIndex=function(c,arrP){
+        //    $log.debug("_getClosestPointByIndex  :");
+        //    $log.debug(arrP);
+        //    var dists = []
+        //    for(var i =0; i<4;i++){
+        //        $log.debug(c);
+        //        //$log.debug(arrP[i]);
+        //        dists.push(  me._calcDist(c,arrP[i]));
+        //        $log.debug(dists);
+        //    }
+        //
+        //    $log.debug(    dists.indexOf(Math.max.apply(Math, dists))  );
+        //
+        //    return dists.indexOf(Math.max.apply(Math, dists));
+        //}
 
-            $log.debug(    dists.indexOf(Math.max.apply(Math, dists))  );
-
-            return dists.indexOf(Math.max.apply(Math, dists));
-        }
-
-        me._calcDist= function(p1,p2){
-            //todo gestion axes
-
-            return (p2[0]-p1[0])*(p2[0]-p1[0]) + (p2[1]-p1[1])*(p2[1]-p1[1]);
-        }
+        //me._calcDist= function(p1,p2){
+        //    //todo gestion axes
+        //
+        //    return (p2[0]-p1[0])*(p2[0]-p1[0]) + (p2[1]-p1[1])*(p2[1]-p1[1]);
+        //}
 
         me._polyFromExtent=function(e){
             return new ol.geom.Polygon([[ [e[0],e[1]], [ e[2],e[1]], [ e[2],e[3]], [e[0],e[3]], [e[0],e[1]]]]);
@@ -474,7 +476,7 @@ angular.module('module_rde.geoCache', [
            //envoie de la requette de dl au plugin
 ///TODO func in olayer pr obtenir le param ocade.
            CacheMapPlugin.updateCache([{
-               "name":"essai_new",
+               "name": me.CacheName,
                "idf":1000000+getRandomInt(1,1000),
                "layerSource":layers[0].name,
                "typeSource":layers[0].source.type,
@@ -491,7 +493,7 @@ angular.module('module_rde.geoCache', [
                 new ol.Feature({
                     geometry: me.activeGeom.getGeometry(),
 
-                        "name":"essai_new",
+                        "name":me.CacheName,
                         "idf":1000000+getRandomInt(1,1000),
                         "layerSource":layers[0].name,
                         "typeSource":layers[0].source.type,

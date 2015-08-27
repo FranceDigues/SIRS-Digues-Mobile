@@ -111,28 +111,28 @@
 
                 <div class="action-buttons" ng-show="c.enableNewCacheControl">
                     <div style="position:absolute; bottom:20px; right: 10px;">
-                        <button class="btn-floating btn-large waves-effect waves-light pink btn-edit" ng-class="{'yellow':c.editingCacheZone}"  ng-click="c.selectEditCorner=true">
+                        <button class="btn-floating btn-large waves-effect waves-light pink btn-edit" ng-class="{'yellow':c.editingCacheZone}"  on-tap="c.selectEditCorner=true;">
                             <i class="large material-icons">edit</i>
                         </button>
                         <button class="btn-floating btn-large waves-effect waves-light pink btn-done"
-                           ng-click="c.editingCacheZone=false" ng-show="c.editingCacheZone">
+                           on-tap="c.editingCacheZone=false;c.editingCacheZone=false" ng-show="c.editingCacheZone">
                             <i class="large material-icons">done</i>
                         </button>
 
                         <button class="btn-floating btn waves-effect waves-light white btn-coin"
-                                style="bottom:200px" ng-click="" ng-show="c.editingCacheZone">
+                                style="bottom:200px" on-tap="c.editingZone(0)" ng-show="c.selectEditCorner">
                             <img src="img/cache-topleft.png" />
                         </button>
                         <button class="btn-floating btn waves-effect waves-light white btn-coin"
-                                style="bottom:155px" ng-click="" ng-show="c.editingCacheZone">
+                                style="bottom:155px" on-tap="c.editingZone(1)" ng-show="c.selectEditCorner">
                             <img src="img/cache-topright.png" />
                         </button>
                         <button class="btn-floating btn waves-effect waves-light white btn-coin"
-                                style="bottom:110px" ng-click="" ng-show="c.editingCacheZone">
+                                style="bottom:110px" on-tap="c.editingZone(2)" ng-show="c.selectEditCorner">
                             <img src="img/cache-bottomright.png" />
                         </button>
                         <button class="btn-floating btn waves-effect waves-light white btn-coin"
-                                ng-click="" ng-show="c.editingCacheZone">
+                                on-tap="c.editingZone(3)" ng-show="c.selectEditCorner">
                             <img src="img/cache-bottomleft.png" />
                         </button>
 
