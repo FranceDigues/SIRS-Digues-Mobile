@@ -637,18 +637,19 @@ ion-content.has-fab-bottom > div.scroll {
 .menu-left .affichage-content .affichage-list .item-content{
     padding:10px 15px;
 }
-.menu-left .affichage-content .affichage-list h2{
-    margin-bottom:5px;
-}
-.menu-left .affichage-content .affichage-list h2 span {
-    display: inline-block;
+.menu-left .affichage-content .affichage-list .layer-heading {
+    margin-bottom: 5px;
+    position: relative;
+    padding-left: 24px;
     line-height: 18px;
-    vertical-align: middle;
 }
-.menu-left .affichage-content .affichage-list h2 span.layer-color {
+.menu-left .affichage-content .affichage-list .layer-heading .layer-color {
+    position: absolute;
+    left: 0;
+    top: 0;
     height: 18px;
     width: 18px;
-    margin-right: 5px;
+    border: 1px solid #DDDDDD;
 }
 .menu-left .backLayer-items{
     border:none;

@@ -104,7 +104,7 @@ app.run(function ($ionicPlatform,$cordovaFile,$log,sContext,uuid4) {
     });
 })
 
-    .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider, sStyleFactoryProvider) {
 
               //$ionicAccountProvider.identify({
               //      app_id: '1bb2cb28'
@@ -197,6 +197,18 @@ app.run(function ($ionicPlatform,$cordovaFile,$log,sContext,uuid4) {
 
 
         $urlRouterProvider.otherwise('/init');
+
+        // Setup layer colors.
+        var colors = [];
+        for (var i = 0; i < 100; i++) {
+            colors.push([
+                Math.floor(Math.random() * 256),
+                Math.floor(Math.random() * 256),
+                Math.floor(Math.random() * 256),
+                1
+            ]);
+        }
+        sStyleFactoryProvider.setColors(colors);
 
         // Define the EPSG:2154 projection. Used to transform geometries from their native
         // projection (EPSG:2154) to the map projection (EPSG:3857, no definition is needed

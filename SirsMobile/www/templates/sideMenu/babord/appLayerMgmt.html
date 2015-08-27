@@ -55,8 +55,8 @@
 
             <ion-item class="affichage-list" ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{favori:true}">
                 <h2 class="layer-heading">
-                    <span class="layer-color" ng-style="{'background-color': c.getLayerColor(layer)}"></span>
-                    <span class="layer-title">{{layer.title}}</span>
+                    <i class="layer-color" ng-style="{'background-color': c.getLayerColor(layer)}"></i>
+                    {{layer.title}}
                 </h2>
 
                 <table name="blackBox" class="tabStampContnair">
