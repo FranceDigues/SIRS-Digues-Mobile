@@ -101,10 +101,10 @@ angular.module('module_app.controllers.from.photo', [])
 
             if(photo != null){
                 me.sContext.noteImg=photo;
-                $state.go('note');
+                $state.go('note',{}, {reload: true});
             }else{
                 me.sContext.noteImg=null;
-                $state.go('note');
+                $state.go('note',{}, {reload: true});
             }
             //fixme error with /?
            // $state.go('note',{fond:photo});

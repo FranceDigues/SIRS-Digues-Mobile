@@ -130,6 +130,7 @@ app.run(function ($ionicPlatform,$cordovaFile,$log,sContext,uuid4) {
             })
             .state('note', {
                 url: '/note',
+                cache: false,
                 templateUrl: 'module_rde/note/note.html',
                 controller: 'cNote as c'
             })
@@ -177,6 +178,7 @@ app.run(function ($ionicPlatform,$cordovaFile,$log,sContext,uuid4) {
             })
             .state('forms.photo', {
                 url: '/photo',
+                cache: false,
                 views: {
                     'central-panel': {
                         templateUrl: 'templates/formApp/photo.html',

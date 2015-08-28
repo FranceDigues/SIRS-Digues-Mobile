@@ -19,7 +19,7 @@ angular.module('module_rde.note', [])
 
         me.gotoHome=function(){
 
-            $state.go("forms.photo")
+            $state.go("forms.photo",{}, {reload: true})
 
         }
 
