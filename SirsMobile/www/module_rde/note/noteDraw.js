@@ -117,7 +117,8 @@ angular.module('module_rde.note', [])
                     drawingShadowOffset = $('drawing-shadow-offset'),
                     clearEl = $('clear-canvas'),
                     textModeEl = $('text-mode'),
-                    textModeOptionEl = $('text-mode-options');
+                    textModeOptionEl = $('text-mode-options'),
+                    editModeEl = $('edit-mode');
 
                 clearEl.onclick = function () {
                     canvas.clear()
@@ -129,8 +130,10 @@ angular.module('module_rde.note', [])
                         textModeOptionEl.style.display = 'none';
                         drawingOptionsEl.style.display = '';
                         canvas.isTextMode = false;
+                        canvas.isEditingMode = false;
                         drawingModeEl.style.backgroundColor="#FFEB3B";
                         textModeEl.style.backgroundColor="transparent";
+                        editModeEl.style.backgroundColor="transparent";
                     }
                     else {
                         drawingOptionsEl.style.display = 'none';
@@ -143,12 +146,30 @@ angular.module('module_rde.note', [])
                         drawingOptionsEl.style.display = 'none';
                         textModeOptionEl.style.display = '';
                         canvas.isDrawingMode = false;
+                        canvas.isEditingMode = false;
                         textModeEl.style.backgroundColor="#FFEB3B";
                         drawingModeEl.style.backgroundColor="transparent";
+                        editModeEl.style.backgroundColor="transparent";
+
                     }
                     else {
                         textModeOptionEl.style.display = 'none';
                         textModeEl.style.backgroundColor="transparent";
+                    }
+                };
+                editModeEl.onclick = function () {
+                    canvas.isEditingMode = !canvas.isEditingMode;
+                    if (canvas.isEditingMode) {
+                        textModeOptionEl.style.display = 'none';
+                        drawingOptionsEl.style.display = 'none';
+                        canvas.isTextMode = false;
+                        canvas.isDrawingMode = false;
+                        editModeEl.style.backgroundColor="#FFEB3B";
+                        textModeEl.style.backgroundColor="transparent";
+                        drawingModeEl.style.backgroundColor="transparent";
+                    }
+                    else {
+                        drawingModeEl.style.backgroundColor="transparent";
                     }
                 };
 
