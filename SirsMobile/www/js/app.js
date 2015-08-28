@@ -178,7 +178,7 @@ app.run(function ($ionicPlatform,$cordovaFile,$log,sContext,uuid4) {
             })
             .state('forms.photo', {
                 url: '/photo',
-                cache: false,
+                //cache: false,
                 views: {
                     'central-panel': {
                         templateUrl: 'templates/formApp/photo.html',

@@ -6,7 +6,7 @@
 
 angular.module('module_app.controllers.from.photo', [])
     .factory('Camera', ['$q', function ($q) {
-        navigator.camera.enco
+        //navigator.camera.enco
 
         return {
             getPicture: function (options) {
@@ -107,7 +107,7 @@ angular.module('module_app.controllers.from.photo', [])
                 $state.go('note',{}, {reload: true});
             }
             //fixme error with /?
-           // $state.go('note',{fond:photo});
+            // $state.go('note',{fond:photo});
             //,{reload: true}
         }
 
@@ -119,4 +119,26 @@ angular.module('module_app.controllers.from.photo', [])
             //todo kill file;
             $cordovaFile.removeFile(sContext.photoDir,filePhoto);
         }
+
+
+
+
+        //me.load= function(){
+        //    sPouch.localDb.get(sContext.activeDesordreId).then(function (doc){
+        //
+        //
+        //        if(doc.hasOwnProperty("observations")){
+        //            if(doc.observations.hasOwnProperty("photos")){
+        //                me.newPhotos.concat(doc.observations.photos);
+        //            }
+        //        }
+        //
+        //    }).catch(function (err) {
+        //        console.log(err);
+        //    });
+        //}
+        //
+        ////init
+        //me.load();
+
     })
