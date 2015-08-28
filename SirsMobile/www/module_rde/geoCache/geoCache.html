@@ -101,7 +101,7 @@
                          ng-show="c.editingCacheZone"
                          style="
                           position: absolute;
-                          top: 35%;
+                          top: 50%;
                           left: 62.5%;
                           transform: translate(-50%, -50%);
                           width: 5%; ">
@@ -120,19 +120,19 @@
                         </button>
 
                         <button class="btn-floating btn waves-effect waves-light white btn-coin"
-                                style="bottom:200px" on-tap="c.editingZone(0)" ng-show="c.selectEditCorner">
+                                style="bottom:200px" on-tap="c.editingZone(1)" ng-show="c.selectEditCorner">
                             <img src="img/cache-topleft.png" />
                         </button>
                         <button class="btn-floating btn waves-effect waves-light white btn-coin"
-                                style="bottom:155px" on-tap="c.editingZone(1)" ng-show="c.selectEditCorner">
+                                style="bottom:155px" on-tap="c.editingZone(0)" ng-show="c.selectEditCorner">
                             <img src="img/cache-topright.png" />
                         </button>
                         <button class="btn-floating btn waves-effect waves-light white btn-coin"
-                                style="bottom:110px" on-tap="c.editingZone(2)" ng-show="c.selectEditCorner">
+                                style="bottom:110px" on-tap="c.editingZone(3)" ng-show="c.selectEditCorner">
                             <img src="img/cache-bottomright.png" />
                         </button>
                         <button class="btn-floating btn waves-effect waves-light white btn-coin"
-                                on-tap="c.editingZone(3)" ng-show="c.selectEditCorner">
+                                on-tap="c.editingZone(2)" ng-show="c.selectEditCorner">
                             <img src="img/cache-bottomleft.png" />
                         </button>
 

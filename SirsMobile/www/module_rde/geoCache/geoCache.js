@@ -265,27 +265,52 @@ angular.module('module_rde.geoCache', [
         me.selectEditCorner = false;
         me.targetIndex=null;
         me.editingZone = function(index){
-            $log.debug(coord)
-           var g = me.activeGeom.getGeometry();
-            $log.debug(g)
 
-            //$log.debug(g.getCoordinates())
-            //me._getClosestPointByIndex(coord,(g.getCoordinates())[0])
-            //fixme ordre
+//get coordinate
+           var g = me.activeGeom.getGeometry();
+
+//get index
           me.targetIndex =  index;
 
-            e=g.getExtent();
-            $log.debug("xmin : "+e[0])
-            $log.debug("ymin : "+e[1])
-            $log.debug((g.getCoordinates())[0][ me.targetIndex]);
+            //
+            //$log.debug(index)
+            //
+            //var p = g.getCoordinates();
 
-            //relocation
-            me.centerMap.lat= (g.getCoordinates())[0][ me.targetIndex][0]
-            me.centerMap.lon= (g.getCoordinates())[0][ me.targetIndex][1]
 
-            //dirty switch
+
+            var redress = function(index){
+
+                if(index==0){
+                    return 2;
+                }
+                if(index==1){
+                    return 3;
+                }
+                if(index==2){
+                    return 0;
+                }
+                if(index==3){
+                    return 1;
+                }
+            }
+
+            //redress
+            var indexRedress = redress(me.targetIndex);
+
+            //reproj
+            var x = ol.proj.transform( [g.flatCoordinates[(indexRedress*2)],g.flatCoordinates[((indexRedress*2)+1)]], 'EPSG:3857','EPSG:4326');
+
+            //move to point
+            me.centerMap.lat=x[1]
+            me.centerMap.lon=x[0]
+
+            //run edit change event
             me.selectEditCorner=false;
-            me.editingCacheZone=true;
+            $timeout(function(){
+                me.editingCacheZone=true;
+            },200)
+
         }
 
         //me._getClosestPointByIndex=function(c,arrP){
