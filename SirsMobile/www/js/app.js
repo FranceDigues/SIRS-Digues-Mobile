@@ -191,6 +191,11 @@ app.run(function ($ionicPlatform,$cordovaFile,$log,sContext,uuid4) {
                 templateUrl: 'templates/formApp/formCrete.html'
             })
 
+            .state('porteDocument', {
+                url: '/documents',
+                templateUrl: 'templates/porteDocument.html'
+            })
+
             .state('newDesordre', {
                 url: '/newDesordre',
                 controller: 'cNewDesordre as c',

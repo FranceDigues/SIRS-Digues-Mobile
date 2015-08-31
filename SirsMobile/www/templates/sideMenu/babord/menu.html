@@ -1,17 +1,10 @@
 <div ng-controller="cBabordMenu as c">
-
     <ion-list>
-        <ion-item class="waves-effect waves-cyan btn-flat"
-                  style="  display: block; width: 100%;"
-                  on-tap="c.UpdateView('b',menu.file)"
-                  ng-repeat="menu in c.sConf.BabordMenu">
+        <ion-item style="display: block;width:100%;" class="waves-effect waves-cyan btn-flat"
+                  ng-repeat="menu in c.sConf.BabordMenu" on-tap="c.setView(menu)">
             <i class="material-icons icon-menu-babord">{{menu.icon}}</i>
-            <i ng-show="layer.active" class="material-icons  right" >offline_pin</i>
+            <i class="material-icons right" ng-show="layer.active">offline_pin</i>
             {{menu.name}}
         </ion-item>
-
-
-
     </ion-list>
-
 </div>

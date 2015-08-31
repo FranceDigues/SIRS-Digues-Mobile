@@ -1,20 +1,25 @@
-/**
- * Created by roch dardie on 19/06/15.
- */
-
-
 angular.module('module_app.controllers.menus.babord.menu', [])
 
-    .controller('cBabordMenu', function cBabordMenu($scope,$rootScope, $state, $log, sContext, sConf) {
-        var me = this;
-        me.sConf = sConf;
-        me.sContext = sContext;
+    .controller('cBabordMenu', function cBabordMenu($rootScope, $scope, $state, sContext, sConf) {
 
+        var self = this;
 
-        me.UpdateView = function(t,f) {
-            $rootScope.$broadcast("viewUpdateRequest", {"target": t, "file": f});
-        }
+        self.sConf = sConf;
 
+        self.sContext = sContext;
 
+        self.setView = function(menu) {
+            switch (menu.target) {
 
+                // Display the view in a new page.
+                case 'main':
+                    $state.go(menu.file);
+                    break;
+
+                // Display the view in the babord menu.
+                case 'babord':
+                    sContext.setBabordView(menu);
+                    break;
+            }
+        };
     });

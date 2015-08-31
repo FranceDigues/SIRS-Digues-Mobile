@@ -86,38 +86,20 @@ angular.module('module_rde.data.services.context', [])
 
         });
 
-        rscp.$on("viewUpdateRequest",  function(event, viewDesc) {
-            $log.debug("EVENT RECEIVE VIEW UPDATE");
-            $log.debug(viewDesc);
+        me.setBabordView = function(menu) {
+            $log.debug('Update babord view from "' + me.babordView.active + '" to "' + menu.file + '".');
 
-
-
-
-
-            if(viewDesc.target == "b"){
-
-                //res si menu de base
-                if(viewDesc.file=="menu"){ //TODO metre tout les string hardcodé dans un fichier recap.
-                    me.babordView.last = [];
-                }else{
-                    me.babordView.last.push(  me.babordView.active);
-                }
-
-
-
-                me.babordView.active = viewDesc.file ; //babord
+            if (menu.file === 'menu') {
+                me.babordView.last = [];
+            } else {
+                me.babordView.last.push(me.babordView.active);
             }
-            if(viewDesc.target == "t")  me.tribordView.active = viewDesc.file ; //tribord
-            //if(viewDesc.target == "c")  me.centerActiveView = viewDesc.file ; //center
+            me.babordView.active = menu.file;
+        };
 
-
-        });
-
-
-        me.backBabordMenus= function(){
-
+        me.backToBabordMenu= function(){
             me.babordView.active = me.babordView.last.pop();
-        }
+        };
 
         //TODO gestion reprise a chaud
 
