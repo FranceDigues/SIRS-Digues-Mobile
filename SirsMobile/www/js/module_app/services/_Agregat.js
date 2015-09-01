@@ -9,5 +9,6 @@ angular.module('module_app.services',
         'module_app.data.services.applayer',
         'module_app.data.services.conf',
         'module_app.services.style.factory',
-        'module_app.services.pipe.ref'
-    ])
+        'module_app.services.pipe.ref',
+        'module_app.services.geolocation'
+    ]);
