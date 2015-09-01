@@ -36,7 +36,11 @@
     "cordova-plugin-network-information",
     "cordova-plugin-splashscreen",
     "cordova-plugin-whitelist",
-    "org.apache.cordova.camera"
+    "org.apache.cordova.camera",
+    {
+      "locator": "../../EXTERNAL_GIT_DEP/geolocation-cordova",
+      "id": "com.geomatys.android.cordova.geo"
+    }
   ],
   "cordovaPlatforms": [
     "android"
