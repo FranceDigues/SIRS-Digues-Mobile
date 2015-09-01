@@ -42,7 +42,7 @@ var app = angular.module('SirsMobile', [
 
      ]);
 
-app.run(function ($rootScope, $ionicPlatform, $cordovaFile, $log, sContext, uuid4, sGeolocation) {
+app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, sGeolocation) {
     //sMapLayer
     $ionicPlatform.ready(function () {
 
