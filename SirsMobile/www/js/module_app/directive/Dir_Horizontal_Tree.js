@@ -1,8 +1,8 @@
 angular.module('module_app.directives.horizontal_tree', [])
 
-    .directive('horizontalTree', function($q, $timeout) {
+    .directive('hTree', function($q, $timeout) {
         return {
-            restrict: 'ECA',
+            restrict: 'EA',
             scope: {
                 size: '=',
                 tops: '=',
@@ -97,19 +97,23 @@ angular.module('module_app.directives.horizontal_tree', [])
             },
             replace: true,
             template:
-                '<div class="tree-h">' +
-                    '<div class="tree-h-inner">' +
-                        '<div class="tree-h-body">' +
-                            '<ul class="tree-h-column" ng-repeat="column in columns" ng-style="style($index)">' +
-                                '<li class="tree-h-node" ng-repeat="node in column" ng-class="{active:path[$parent.$index]==node}" ng-click="select($parent.$index,$index)">' +
-                                    '<span class="node-label">{{node.prefLabel[lang] || node.altLabels[lang][0] || node.uri}}</span>' +
-                                    '<span class="node-count" ng-show="node.childCount">{{node.childCount}}</span>' +
-                                '</li>' +
-                            '</ul>' +
+                '<div class="h-tree">' +
+                    '<div class="h-tree-content">' +
+                        '<div class="h-tree-columns">' +
+                            '<div class="h-tree-column" ng-repeat="column in columns" ng-style="style($index)">' +
+                                '<ion-scroll direction="y">' +
+                                    '<ul>' +
+                                        '<li class="h-tree-node" ng-repeat="node in column" ng-class="{active:path[$parent.$index]==node}" on-tap="select($parent.$index,$index)">' +
+                                            '<span class="node-label">{{node.label}}</span>' +
+                                            '<span class="node-count" ng-show="node.childCount">{{node.childCount}}</span>' +
+                                        '</li>' +
+                                    '</ul>' +
+                                '</ion-scroll>' +
+                            '</div>' +
                         '</div>' +
                     '</div>' +
-                    '<div class="tree-h-prev" ng-click="move(-1)"><i class="fa fa-chevron-left"></i></div>' +
-                    '<div class="tree-h-next" ng-click="move(+1)"><i class="fa fa-chevron-right"></i></div>' +
+                    '<div class="h-tree-prev" ng-click="move(-1)"><i class="ion-chevron-left"></i></div>' +
+                    '<div class="h-tree-next" ng-click="move(+1)"><i class="ion-chevron-right"></i></div>' +
                 '</div>'
         };
     });

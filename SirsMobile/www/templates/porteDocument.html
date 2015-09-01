@@ -4,10 +4,10 @@
         <h1 class="title">Annuler</h1>
     </ion-header-bar>
 
-    <ion-content class="has-header has-tabs-top" padding="20" delegate-handle="formScroll" ng-switch="c.activeTab">
+    <ion-content class="has-header">
         <!-- Content / Description -->
         <div style="position:relative;">
-            <horizontal-tree></horizontal-tree>
+            <h-tree size="2" tops="c.tops" children="c.children()"></h-tree>
         </div>
     </ion-content>
 </ion-view>
