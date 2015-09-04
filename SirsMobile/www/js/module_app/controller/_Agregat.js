@@ -23,7 +23,7 @@ angular.module('module_app.controllers',
 
 
         'module_app.controllers.menus.babord.appLayerMgmt',
-        'module_app.controllers.menus.babord.globalSettings',
+        'module_app.controllers.menus.babord.settings',
         'module_app.controllers.menus.babord.helpMe',
         'module_app.controllers.menus.babord.menu',
         'module_app.controllers.menus.babord.newObjectSummary',

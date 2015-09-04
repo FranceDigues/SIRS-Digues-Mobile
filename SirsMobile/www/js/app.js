@@ -101,6 +101,7 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, sGeolocat
         //TODO à gerber :
         window.uuid4 = uuid4;
 
+        // Open connection to Google Geolocation API.
         sGeolocation.setup();
     });
 })

@@ -895,3 +895,7 @@ ion-content.has-fab-bottom > div.scroll {
 #documents > ion-content > div.scroll > div > .h-tree {
     height: 100%;
 }
+
+#settings > ion-content > ion-toggle p.help-block {
+    white-space: normal;
+}

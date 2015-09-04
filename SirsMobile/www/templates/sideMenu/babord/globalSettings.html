@@ -1,34 +1,22 @@
-<div ng-controller="cGlobalSettings as c">
+<div id="settings" ng-controller="SettingsController as c">
     <header class="bar bar-header bar-stable">
-        <button class="col-25 button button-icon button-clear ion-arrow-left-a"
-                on-tap="c.sContext.backToBabordMenu()"></button>
+        <button class="col-25 button button-icon button-clear ion-arrow-left-a" on-tap="c.sContext.backToBabordMenu()"></button>
     </header>
-
     <ion-content class="has-header">
 
-        <ion-toggle ng-model="c.sPouch.syncActive" class="synchro-toggle" ng-change="c.sPouch.switchSync()">
-            Syncronisation automatique <br/>
-            de la base
-        </ion-toggle>
-        <ion-toggle ng-model="c.sLoc.enable" ng-change="c.sLoc.toggleEnable()">
-            Positionement GPS
-        </ion-toggle>
-        <ion-toggle disabled="{{c.sLoc.enable}}" ng-model="c.sLoc.highAccuracy">
-           Haute précision
+        <!-- Auto. synchronization -->
+        <ion-toggle ng-model="c.user.prefs.autoSync" ng-change="c.save()">
+            Syncronisation auto.
         </ion-toggle>
 
-        <ion-toggle ng-value="c.sContext.editionMode" on-tap="c.sContext.switchEditionMode()">
-            Mode édition
+        <!-- Auto. geolocation -->
+        <ion-toggle ng-model="c.user.prefs.geolocation" ng-change="c.save()">
+            Géolocalisation auto.
         </ion-toggle>
 
+        <!-- App. version -->
         <ion-item>
-            version : {{c.sContext.version}}
+            Version:<p>{{c.sContext.version}}</p>
         </ion-item>
-
-        <button class="btn waves-effect waves-light button-settings-menu signin-valid-button"
-                on-tap="c.goToInit()">
-            Gestion de base
-        </button>
-
     </ion-content>
 </div>
