@@ -28,7 +28,7 @@ angular.module('module_rde.data.services.context', [])
         //note
         me.noteImg = null;
         //vue
-            me.tribordView = {active: "desordreMgmt"  , last:[]};
+            me.tribordView = {active: "editObject"  , last:[]};
             me.babordView = {active: "menu" , last:[]};
         //variable d'ajout de desordre
             me.activeDesordreId=null;

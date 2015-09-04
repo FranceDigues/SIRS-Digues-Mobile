@@ -41,8 +41,8 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
 
         me.reorderItem = function(item, fromIndex, toIndex) {
             //Move the item in the array
-            me.sAppLayer.asSimpleStack.splice(fromIndex, 1);
-            me.sAppLayer.asSimpleStack.splice(toIndex, 0, item);
+            me.sAppLayer.leaves.splice(fromIndex, 1);
+            me.sAppLayer.leaves.splice(toIndex, 0, item);
 
         };
 
@@ -70,14 +70,14 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
 
         me.upLayer =function(item, index){
             $log.debug(index);
-                me.sAppLayer.asSimpleStack.splice(index, 1);
-                me.sAppLayer.asSimpleStack.splice(index+1, 0, item);
+                me.sAppLayer.leaves.splice(index, 1);
+                me.sAppLayer.leaves.splice(index+1, 0, item);
         }
 
         me.downLayer = function(item, index){
             $log.debug(index);
-            me.sAppLayer.asSimpleStack.splice(index, 1);
-            me.sAppLayer.asSimpleStack.splice(index-1, 0, item);
+            me.sAppLayer.leaves.splice(index, 1);
+            me.sAppLayer.leaves.splice(index-1, 0, item);
         }
 
 
@@ -108,8 +108,8 @@ angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
         }
 
         me.getLayerColor = function(layer) {
-            if (angular.isArray(me.sAppLayer.asSimpleStack)) {
-                var index = me.sAppLayer.asSimpleStack.indexOf(layer);
+            if (angular.isArray(me.sAppLayer.leaves)) {
+                var index = me.sAppLayer.leaves.indexOf(layer);
                 var rgba = sStyleFactory.getColorAtIndex(index);
                 return 'rgb(' + rgba[0] + ',' + rgba[1] + ',' + rgba[2] + ')';
             }

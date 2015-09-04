@@ -18,10 +18,10 @@
                 <ion-item ng-repeat="cat in c.sAppLayer.categories" class="waves-effect waves-teal"
                           style="  display: block; width: 100%;"
                           ng-click="c.justeOneOpen(cat)"
-                          ng-show="(c.sAppLayer.asSimpleStack|filter:{categorie:cat.title}:true|filter:{favori:false}).length>0">
+                          ng-show="(c.sAppLayer.leaves|filter:{categorie:cat.title}:true|filter:{favori:false}).length>0">
                     <p style="padding-bottom: 10px;">{{cat.title}} :</p>
                     <ion-checkbox class="waves-effect waves-teal"
-                                  ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{categorie:cat.title}:true|filter:{favori:false}"
+                                  ng-repeat="layer in c.sAppLayer.leaves|filter:{categorie:cat.title}:true|filter:{favori:false}"
                                   on-tap="layer.favori=true;"
                                   ion-stop-event="click"
                                   style="  display: block; width: 100%;"
@@ -34,7 +34,7 @@
                           ng-click="c.sansCat=!c.sansCat">
                     <p style="padding-bottom: 10px;">SANS CATEGORIE</p>
                     <ion-checkbox class="waves-effect waves-teal"
-                                  ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{categorie:'!!'}:true|filter:{favori:false}"
+                                  ng-repeat="layer in c.sAppLayer.leaves|filter:{categorie:'!!'}:true|filter:{favori:false}"
                                   on-tap="layer.favori=true;"
                                   ion-stop-event="click"
                                   style="  display: block; width: 100%;"
@@ -53,7 +53,7 @@
                 can-swipe="c.listCanSwipe"
                 class="animate-if">
 
-            <ion-item class="affichage-list" ng-repeat="layer in c.sAppLayer.asSimpleStack|filter:{favori:true}">
+            <ion-item class="affichage-list" ng-repeat="layer in c.sAppLayer.leaves|filter:{favori:true}">
                 <h2 class="layer-heading">
                     <i class="layer-color" ng-style="{'background-color': c.getLayerColor(layer)}"></i>
                     {{layer.title}}

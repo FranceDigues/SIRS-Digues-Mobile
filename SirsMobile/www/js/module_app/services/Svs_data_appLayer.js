@@ -41,7 +41,7 @@ angular.module('module_app.data.services.applayer', [])
             ////    angular.forEach(res.moduleDescriptions, function(v,k) {
             ////        me.layersTreeIterator(v.layers, function (item) {
             ////            //todo simple stack to filter layer
-            ////            me.asSimpleStack.push(item);
+            ////            me.leaves.push(item);
             ////        });
             ////    });
             ////
@@ -65,7 +65,7 @@ angular.module('module_app.data.services.applayer', [])
         //}
 
         me.indexeTabObj={};
-        me.asSimpleStack=[];
+        me.leaves=[];
 
         me.updateHachMapclassIndex=function(){
             $log.debug("build reverseIndexe");
@@ -122,7 +122,7 @@ angular.module('module_app.data.services.applayer', [])
                             //we affect into obj a property for found faster the global indexe associated.
                             item["gIndex"] = me.indexeTabObj[tmp];
                             //todo simple stack to filter layer
-                            me.asSimpleStack.push((new oAppLayer({title:item.title,module:v.title,categorie:cat,filterValue:item.filterValue,gIndex:item.gIndex,visible:false,editable:false, selectable:false,order:me.asSimpleStack.length+1,data:null})));
+                            me.leaves.push((new oAppLayer({title:item.title,module:v.title,categorie:cat,filterValue:item.filterValue,gIndex:item.gIndex,visible:false,editable:false, selectable:false,order:me.leaves.length+1,data:null})));
                         },
                             //node function
                             function(item){
@@ -189,7 +189,7 @@ me.layersTreeIterator = function(sirsDef, leafCallBack, NodeCallBack){
         //                    //we affect into obj a property for found faster the global indexe associated.
         //                    item["gIndex"] = me.indexeTabObj[tmp];
         //                    //todo simple stack to filter layer
-        //                    me.asSimpleStack.push(item);
+        //                    me.leaves.push(item);
         //                };
         //        });
         //    }

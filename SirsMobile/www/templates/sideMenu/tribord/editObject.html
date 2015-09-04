@@ -1,0 +1,39 @@
+<div id="editObject" ng-controller="EditObjectController as c">
+    <ion-header-bar align-title="center">
+        <h1 class="title">Edition d'objets</h1>
+    </ion-header-bar>
+
+    <div class="tabs-striped tabs-top">
+        <div class="tabs tabs-sirs">
+            <!-- Tab / Editable Layers -->
+            <a class="tab-item" ng-class="{active: c.activeTab === 'layers'}" on-tap="c.setActiveTab('layers')">Couches éditables</a>
+            <!-- Tab / Closable Objects -->
+            <a class="tab-item" ng-class="{active: c.activeTab === 'closable'}" on-tap="c.setActiveTab('closable')">Objets non clos</a>
+        </div>
+    </div>
+
+    <ion-content class="has-header has-tabs-top has-fbb-bottom" delegate-handle="editScroll" ng-switch="c.activeTab">
+        <!-- Content / Editable Layers -->
+        <div ng-switch-when="layers">
+            <ion-list>
+                <ion-radio ng-model="c.selectedLayer" ng-value="layer" ng-repeat="layer in (c.allLayers|filter:{editable:true})">
+                    {{layer.title}}
+                </ion-radio>
+            </ion-list>
+        </div>
+        <!-- Content / Closable Closable -->
+        <div ng-switch-when="closable">
+            <ion-list>
+                <!-- TODO -->
+            </ion-list>
+        </div>
+    </ion-content>
+
+    <div class="fixed-button-bar text-center">
+        <!-- FBB / Editable Layers -->
+        <button class="btn btn-large waves-effect waves-light" type="button"
+                ng-if="c.activeTab === 'layers'" ng-disabled="!c.selectedLayer">Tracer</button>
+        <button class="btn btn-large waves-effect waves-light" type="button"
+                ng-if="c.activeTab === 'layers'" ng-disabled="!c.selectedLayer" on-tap="c.newObject()">Commencer</button>
+    </div>
+</div>

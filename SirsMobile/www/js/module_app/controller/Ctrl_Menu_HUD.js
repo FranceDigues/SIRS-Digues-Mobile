@@ -61,7 +61,7 @@ angular.module('module_app.controllers.menus.hud', [])
             $ionicSideMenuDelegate.toggleRight();
             //$state.go("home.tAddDesordre");
             me.addButton = !me.addButton;
-            me.sContext.tribordView.active = "desordreMgmt";
+            me.sContext.tribordView.active = "editObject";
         }
 
 

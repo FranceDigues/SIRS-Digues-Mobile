@@ -213,7 +213,7 @@ angular.module('module_app.controllers.map', [])
          */
         function forEachVectorLayer(callback) {
             olData.getMap('map').then(function(map) {
-                angular.forEach(me.sAppLayer.asSimpleStack, function(layerModel, layerIndex) {
+                angular.forEach(me.sAppLayer.leaves, function(layerModel, layerIndex) {
                     if (layerModel.visible === true) {
                         var layerInstance = getVectorLayerByName(map, layerModel.gIndex);
                         callback(layerInstance, layerIndex, layerModel);
