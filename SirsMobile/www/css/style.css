@@ -419,8 +419,8 @@
 }
 .form-entete .toggle-lineaire{
     position: absolute;
-    left: 100px;
-    top: 78px;
+    left: 120px;
+    top: 90px;
 }
 
 .form-colonnes-50{
@@ -556,19 +556,16 @@ ion-content.has-fbb-bottom > div.scroll {
 
 /* forms */
 #documents > ion-header-bar,
-#forms > ion-header-bar {
+#objectEdition > ion-header-bar {
     background-color: #0098A6;
 }
 #documents > ion-header-bar > h1,
 #documents > ion-header-bar > .button.ion-arrow-left-a,
-#forms > ion-header-bar > h1,
-#forms > ion-header-bar > .button.ion-arrow-left-a {
+#objectEdition > ion-header-bar > h1,
+#objectEdition > ion-header-bar > .button.ion-arrow-left-a {
     color: #FFFFFF;
 }
-#forms > ion-content ion-nav-view ion-view {
-    position: relative;
-}
-#forms > ion-content ion-nav-view select {
+#objectEdition > ion-content select {
     margin-top: 8px;
 }
 

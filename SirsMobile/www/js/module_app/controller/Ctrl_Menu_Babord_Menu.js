@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.menus.babord.menu', [])
 
-    .controller('cBabordMenu', function cBabordMenu($rootScope, $scope, $state, sContext, sConf) {
+    .controller('cBabordMenu', function cBabordMenu($rootScope, $scope, $location, sContext, sConf) {
 
         var self = this;
 
@@ -13,7 +13,7 @@ angular.module('module_app.controllers.menus.babord.menu', [])
 
                 // Display the view in a new page.
                 case 'main':
-                    $state.go(menu.file);
+                    $location.path('/' + menu.file);
                     break;
 
                 // Display the view in the babord menu.

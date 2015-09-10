@@ -10,6 +10,8 @@ angular.module('module_app.services.authentication', [])
 
         self.queryOne = function(fun, options, callback) {
             var deferred = $q.defer();
+            options = options || {};
+            callback = callback || angular.noop;
 
             sPouch.localDb.query(fun, options, callback).then(
                 function onSuccess(result) {
@@ -25,9 +27,27 @@ angular.module('module_app.services.authentication', [])
 
             return deferred.promise;
         };
+
+        self.create = function(doc, options, callback) {
+            var deferred = $q.defer();
+            options = options || {};
+            callback = callback || angular.noop;
+
+            sPouch.localDb.post(doc, options, callback).then(
+                function onSuccess(response) {
+                    doc.id = response.id;
+                    doc._rev = response.rev;
+                    deferred.resolve(doc);
+                },
+                function onError() {
+                    deferred.reject();
+                });
+
+            return deferred.promise;
+        }
     })
 
-    .service('PouchUser', function PouchUser($q, sPouch, PouchHelper) {
+    .service('PouchUser', function PouchUser(sPouch, PouchHelper) {
 
         var self = this;
 
@@ -39,8 +59,12 @@ angular.module('module_app.services.authentication', [])
             return PouchHelper.queryOne('Utilisateur/byLogin', { key: login, include_docs: true });
         };
 
-        self.put = function(document) {
-            return sPouch.localDb.put(document);
+        self.save = function(doc) {
+            return sPouch.localDb.put(doc);
+        };
+
+        self.create = function(doc) {
+            return PouchHelper.create(doc);
         };
     })
 

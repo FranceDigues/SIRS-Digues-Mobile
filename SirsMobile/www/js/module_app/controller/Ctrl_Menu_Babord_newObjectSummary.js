@@ -6,7 +6,7 @@
 
 angular.module('module_app.controllers.menus.babord.newObjectSummary', [])
 
-    .controller('cNewObjectSummary', function cNewObjectSummary($scope, $state, $log, sContext) {
+    .controller('cNewObjectSummary', function cNewObjectSummary($scope, $log, sContext) {
         var me = this;
         me.sContext = sContext;
         me.desordreSelected = null;

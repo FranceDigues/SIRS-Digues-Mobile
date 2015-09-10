@@ -4,7 +4,7 @@
 
 angular.module('module_app.controllers.menus.babord.porteDoc', [])
 
-    .controller('cPorteDoc', function cPorteDoc($scope, $state, $log, sContext) {
+    .controller('cPorteDoc', function cPorteDoc($scope, $log, sContext) {
         var me = this;
         me.sContext = sContext;
 

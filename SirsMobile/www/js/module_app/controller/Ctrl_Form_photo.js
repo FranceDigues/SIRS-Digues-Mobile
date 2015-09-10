@@ -25,11 +25,11 @@ angular.module('module_app.controllers.from.photo', [])
             }
         }
     }])
-    .controller('cPhoto', function cPhoto($scope, $state, $stateParams, $log, sContext, sLoc, $cordovaCapture, Camera, $cordovaFile,sPouch) {
+    .controller('cPhoto', function cPhoto($scope, $location, $routeParams, $log, sContext, sLoc, $cordovaCapture, Camera, $cordovaFile,sPouch) {
         var me = this;
         me.sContext = sContext;
         me.sLoc = sLoc;
-        me.layerActif = $stateParams.layer;
+        me.layerActif = $routeParams.layer;
 
         me.newPhotos = [];
 
@@ -101,10 +101,10 @@ angular.module('module_app.controllers.from.photo', [])
 
             if(photo != null){
                 me.sContext.noteImg=photo;
-                $state.go('note',{}, {reload: true});
+                $location.path('/note');
             }else{
                 me.sContext.noteImg=null;
-                $state.go('note',{}, {reload: true});
+                $location.path('/note');
             }
             //fixme error with /?
             // $state.go('note',{fond:photo});

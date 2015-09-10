@@ -1,0 +1,26 @@
+<ion-view id="objectEdition">
+    <ion-header-bar>
+        <a href="#/home" class="col-10 button button-icon button-clear ion-arrow-left-a"></a>
+        <h1 class="title">Annuler</h1>
+    </ion-header-bar>
+
+    <div class="tabs-striped tabs-top">
+        <div class="tabs tabs-sirs">
+            <!-- Tab / Description -->
+            <a class="tab-item" ng-class="{active: c.tab === 'description'}" on-tap="c.setTab('description')">Description</a>
+            <!-- Tab / Photo -->
+            <a class="tab-item" ng-class="{active: c.tab === 'photo'}" on-tap="c.setTab('photo')">Photo</a>
+        </div>
+    </div>
+
+    <ion-content class="has-header has-tabs-top" padding="true" delegate-handle="formScroll" ng-switch="c.tab">
+        <!-- Content / Description -->
+        <div ng-switch-when="description">
+            <div ng-include="'templates/formApp/form' + c.params.type + '.html'"></div>
+        </div>
+        <!-- Content / Photo -->
+        <div ng-switch-when="photo">
+            <div ng-include="'templates/formApp/photo.html'"></div>
+        </div>
+    </ion-content>
+</ion-view>

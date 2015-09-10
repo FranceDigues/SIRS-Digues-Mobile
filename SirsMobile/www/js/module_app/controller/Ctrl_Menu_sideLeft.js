@@ -11,7 +11,7 @@
 /***************************************************************** --------- *****************************************************/
 angular.module('module_app.controllers.menus.sideLeft', [])
 
-.controller('cSideLeft', function  cSideLeft ($scope, $state, $ionicSideMenuDelegate, sMapLayer, $log, sEventSuperviseur, $rootScope) { //kifkif un global controler non?
+.controller('cSideLeft', function  cSideLeft ($scope, $ionicSideMenuDelegate, sMapLayer, $log, sEventSuperviseur, $rootScope) { //kifkif un global controler non?
 
     //$log.debug("sideMenu");
     ////$log.debug(doc.layers);

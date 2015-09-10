@@ -6,7 +6,7 @@
 
 angular.module('module_app.controllers.menus.babord.backLayerMgmt', [])
 
-    .controller('cBackLayerMgmt', function cBackLayerMgmt($scope, $state, $log, sContext, sMapLayer, sPouch) {
+    .controller('cBackLayerMgmt', function cBackLayerMgmt($scope, $location, $log, sContext, sMapLayer, sPouch) {
         var me = this;
 
         me.sContext = sContext;
@@ -23,7 +23,7 @@ angular.module('module_app.controllers.menus.babord.backLayerMgmt', [])
 
         me.goToGeoCache = function(){
             $log.debug("goto geoCache")
-            $state.go('geoCache')
+            $location.path('/geoCache');
         }
 
         me.goToAddSource = function(){

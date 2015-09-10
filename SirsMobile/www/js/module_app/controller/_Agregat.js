@@ -8,7 +8,6 @@ angular.module('module_app.controllers',
         'module_app.controllers.documents',
         'module_app.controllers.loader',
         'module_app.controllers.map',
-        'module_app.controllers.menus.home',
         'module_app.controllers.menus.init',
         'module_app.controllers.menus.sideLeft',
         'module_app.controllers.menus.signIn',
@@ -16,8 +15,7 @@ angular.module('module_app.controllers',
 
         'module_app.controllers.menus.hud',
 
-        'module_app.controllers.form',
-        'module_app.controllers.from.newDesordre',
+        'module_app.controllers.objectEdition',
         'module_app.controllers.from.photo',
 
 
@@ -35,10 +33,9 @@ angular.module('module_app.controllers',
 
         'module_app.controllers.menus.tribord.desordreDetail',
         'module_app.controllers.menus.tribord.desordreMgmt',
-        'module_app.controllers.menus.tribord.editObject',
+        'module_app.controllers.menus.tribord.objectManagement',
         'module_app.controllers.menus.tribord.desordreSlct',
         'module_app.controllers.menus.tribord.closableDesordre',
-        'module_app.controllers.menus.tribord.editableLayer',
         'module_app.controllers.menus.tribord.observationDetail'
 
     ])

@@ -6,7 +6,7 @@
 
 angular.module('module_app.controllers.menus.babord.appLayerMgmt', [])
 
-    .controller('cAppLayerMgmt', function cAppLayerMgmt($scope, $state, $log, sContext, sAppLayer, $timeout, sPouch, sStyleFactory, $rootScope) {
+    .controller('cAppLayerMgmt', function cAppLayerMgmt($scope, $log, sContext, sAppLayer, $timeout, sPouch, sStyleFactory, $rootScope) {
         var me = this;
 
         me.sContext = sContext;

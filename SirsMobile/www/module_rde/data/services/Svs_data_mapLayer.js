@@ -114,7 +114,7 @@ angular.module('module_rde.data.services.maplayer', [])
 
     me.update();
 
-    CacheMapPlugin.CaDeListReQuest();
+    //CacheMapPlugin.CaDeListReQuest();
 
 
 

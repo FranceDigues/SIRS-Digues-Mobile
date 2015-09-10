@@ -9,6 +9,7 @@ var app = angular.module('SirsMobile', [
     'ionic.service.core',
     'ionic.service.deploy',
     'ngCordova',
+    'ngRoute',
     
     
 
@@ -42,7 +43,7 @@ var app = angular.module('SirsMobile', [
 
      ]);
 
-app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, sGeolocation) {
+app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
     //sMapLayer
     $ionicPlatform.ready(function () {
 
@@ -100,13 +101,10 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, sGeolocat
 
         //TODO à gerber :
         window.uuid4 = uuid4;
-
-        // Open connection to Google Geolocation API.
-        sGeolocation.setup();
     });
 })
 
-    .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider, sStyleFactoryProvider) {
+    .config(function ($routeProvider, $ionicConfigProvider, sStyleFactoryProvider) {
 
               //$ionicAccountProvider.identify({
               //      app_id: '1bb2cb28'
@@ -114,99 +112,56 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, sGeolocat
 
         $ionicConfigProvider.tabs.position('bottom'); //other values: top
 
-        $stateProvider
-            .state('geoCache', {
-                url: '/geoCache',
-                controller: 'cGeoCache as c',
-                templateUrl: 'module_rde/geoCache/geoCache.html'
+        $routeProvider
+            .when('/geoCache', {
+                templateUrl: 'module_rde/geoCache/geoCache.html',
+                controller: 'cGeoCache as c'
             })
-            .state('init', {
-                url: '/init',
+            .when('/init', {
                 templateUrl: 'templates/init.html',
                 controller: 'cInit as c'
             })
-            .state('signin', {
-                url: '/sign-in',
+            .when('/sign-in', {
                 templateUrl: 'templates/sign-in.html',
                 controller: 'cSignIn as c'
             })
-            .state('note', {
-                url: '/note',
+            .when('/note', {
                 cache: false,
                 templateUrl: 'module_rde/note/note.html',
                 controller: 'cNote as c'
             })
-
-            .state('home', {
-                url: '/home',
-                abstract: true,
+            .when('/home', {
                 templateUrl: 'templates/home.html',
                 controller: 'cHud as c'
             })
-            .state('loading', {
-                url: '/loading',
+            .when('/loading', {
                 templateUrl: 'templates/loading.html',
                 controller: 'cLoader as c'
             })
-            .state('forgotpassword', {
-                url: '/forgot-password',
+            .when('/forgot-password', {
                 templateUrl: 'templates/forgot-password.html'
             })
-            .state('home.map', {
-                url: '/map',
-                views: {
-                    'home-panel': {
-                        templateUrl: 'templates/map.html',
-                        controller: 'cMap as c'
+            .when('/edition/:type/:id?', {
+                templateUrl: 'templates/objectEdition.html',
+                controller: 'ObjectEditionController as c',
+                reloadOnSearch : false,
+                resolve: {
+                    objectDoc: function($log, $route, PouchObject) {
+                        var params = $route.current.params;
+                        if (params.id && params.id !== '') {
+                            return PouchObject.get(params.id);
+                        } else {
+                            return PouchObject.create({ /* Empty */ });
+                        }
                     }
                 }
             })
-
-            .state('forms', {
-                url: '/forms',
-                abstract: true,
-                templateUrl: 'templates/formApp/forms.html',
-                controller: 'cForm as c'
-            })
-            .state('forms.desordre', {
-                url: '/desordre',
-                //templateUrl: 'templates/formApp/formDesordre.html'
-                views: {
-                    'central-panel': {
-                        templateUrl: 'templates/formApp/formDesordre.html',
-                        //controller: 'cPhoto as c'
-                    }
-                }
-            })
-            .state('forms.photo', {
-                url: '/photo',
-                //cache: false,
-                views: {
-                    'central-panel': {
-                        templateUrl: 'templates/formApp/photo.html',
-                        controller: 'cPhoto as c'
-                    }
-                }
-            })
-            .state('forms.crete', {
-                url: '/crete',
-                templateUrl: 'templates/formApp/formCrete.html'
-            })
-
-            .state('porteDocument', {
-                url: '/documents',
-                templateUrl: 'templates/porteDocument.html',
+            .when('/documents', {
+                templateUrl: 'templates/documents.html',
                 controller: 'cPorteDocument as c'
-            })
-
-            .state('newDesordre', {
-                url: '/newDesordre',
-                controller: 'cNewDesordre as c',
-                templateUrl: 'templates/formApp/newDesordre.html'
             });
 
-
-        $urlRouterProvider.otherwise('/init');
+        $routeProvider.otherwise('/init');
 
         // Setup layer colors.
         var colors = [];

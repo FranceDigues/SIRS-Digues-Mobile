@@ -1,30 +1,27 @@
 angular.module('module_app.controllers.menus.babord.settings', [])
 
-    .controller('SettingsController', function SettingsCtrl($state, PouchUser, AuthStorage, AuthService, sContext) {
+    .constant('defaultPreferences', {
+        autoSync: true,
+        autoGeoloc: false
+    })
+
+    .controller('SettingsController', function SettingsCtrl(PouchUser, AuthStorage, AuthService, sContext, defaultPreferences) {
 
         var self = this;
 
+        var userDoc = angular.extend({ prefs: defaultPreferences }, AuthService.getAuthenticatedUser());
+
         self.sContext = sContext;
 
-        self.user = angular.extend({
-            // Default user preferences.
-            prefs: {
-                autoSync: true,
-                geolocation: false
-            }
-        }, AuthService.getAuthenticatedUser());
+        self.prefs = userDoc.prefs;
 
         self.save = function() {
-            // Update user in database.
-            PouchUser.put(self.user).then(function authUserHook(result) {
-                // We've modified the authenticated user, we need to update its
-                // properties in the local storage.
-                self.user._rev = result.rev;
-                AuthStorage.set(self.user);
+            // Update user in database. TODO → should be automated ?
+            PouchUser.save(userDoc).then(function authUserHook(response) {
+                // We've modified the authenticated user, so we need to update its properties
+                // in the local storage.
+                userDoc._rev = response.rev;
+                AuthStorage.set(userDoc);
             });
-        };
-
-        self.restart = function() {
-            $state.go('init');
         };
     });

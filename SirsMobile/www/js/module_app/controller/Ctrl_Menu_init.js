@@ -6,7 +6,7 @@
 //TODO créer la doc pas default
 
 angular.module('module_app.controllers.menus.init', [])
-    .controller('cInit', function cInit($scope, $log, sPouch,$state, sContext) {
+    .controller('cInit', function cInit($scope, $log, sPouch, $location, sContext) {
 
         var me = this;
 
@@ -40,7 +40,7 @@ angular.module('module_app.controllers.menus.init', [])
         };
 
         me.note= function(note){
-            $state.go('note');
+            $location.path('/note');
         }
 
 

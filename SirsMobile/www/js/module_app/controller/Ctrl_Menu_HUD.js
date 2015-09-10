@@ -3,7 +3,7 @@
  */
 angular.module('module_app.controllers.menus.hud', [])
 
-    .controller('cHud', function cHud ($scope, $state,  $log,sMapLayer, sContext,sPouch, $rootScope,$ionicSideMenuDelegate, $timeout) {
+    .controller('cHud', function cHud ($scope, $location,  $log,sMapLayer, sContext,sPouch, $rootScope,$ionicSideMenuDelegate, $timeout) {
 
         var me = this;
         me.swipeProxy= false;
@@ -16,13 +16,8 @@ angular.module('module_app.controllers.menus.hud', [])
 
             //TODO clear context
 
-            $state.go('signin');
+            $location.path('/sign-in');
         };
-
-        me.home = function () {
-            $state.go('menu.home');
-        };
-
 
         me.swipeProxy= false;
 
@@ -61,7 +56,7 @@ angular.module('module_app.controllers.menus.hud', [])
             $ionicSideMenuDelegate.toggleRight();
             //$state.go("home.tAddDesordre");
             me.addButton = !me.addButton;
-            me.sContext.tribordView.active = "editObject";
+            me.sContext.tribordView.active = "objectManagement";
         }
 
 

@@ -3,7 +3,7 @@
  */
 angular.module('module_rde.data.services.dbManager', [])
 
-    .service('sPouch', function sPouch (pouchDB, $log, $rootScope, $timeout, $http,$ionicPopup,$state,$cordovaNetwork,$ionicPlatform ) {
+    .service('sPouch', function sPouch (pouchDB, $log, $rootScope, $timeout, $http,$ionicPopup,$location,$cordovaNetwork,$ionicPlatform ) {
 
         var me = this;
 
@@ -215,7 +215,7 @@ angular.module('module_rde.data.services.dbManager', [])
 
         me.roadRunner = function(){
             //$log.debug('GOTO SIGN IN')
-            $state.go('signin')
+            $location.path('/sign-in')
         };
 
 
@@ -358,7 +358,7 @@ angular.module('module_rde.data.services.dbManager', [])
                     me.contextDb.get('activedb').then(function (response) {
                         var dbDesc = new oUrlCouchDb(response.db);
                         me.localDb = new pouchDB(dbDesc.db);
-                        $state.go('signin')
+                        $location.path('/sign-in')
                         me.syncActive = false;
                     })
 

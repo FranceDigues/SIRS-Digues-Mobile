@@ -5,7 +5,7 @@
 
 angular.module('module_rde.note', [])
 
-    .controller('cNote', function ($scope, $log, $ionicPlatform,$state,sContext,$timeout,$stateParams) {
+    .controller('cNote', function ($scope, $log, $ionicPlatform,$location,sContext,$timeout,$stateParams) {
 
         var me = this;
         var canvas =  null;
@@ -19,7 +19,7 @@ angular.module('module_rde.note', [])
 
         me.gotoHome=function(){
 
-            $state.go("forms.photo",{}, {reload: true})
+            $location.path("/home");
 
         }
 

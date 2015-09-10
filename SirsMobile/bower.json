@@ -13,6 +13,7 @@
     "jquery": "~2.1.4",
     "angularjs-slider": "~0.1.21",
     "angular-pouchdb": "~2.1.1",
+    "angular-route": "~1.4.3",
     "ng-cordova": "~0.0.3",
     "ngCordova": "~0.1.17-alpha",
     "angular-md5": "~0.1.7",

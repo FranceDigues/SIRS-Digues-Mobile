@@ -3,7 +3,7 @@
  */
 
 angular.module('module_app.controllers.menus.signIn', [])
-    .controller('cSignIn', function cSignIn($ionicDeploy, $ionicPopup, $scope, $state, sPouch, $log, sContext, md5, sProf, $timeout,sRef, AuthService) {
+    .controller('cSignIn', function cSignIn($ionicDeploy, $ionicPopup, $scope, $location, sPouch, $log, sContext, md5, sProf, $timeout,sRef, AuthService) {
 
 
 
@@ -54,7 +54,7 @@ angular.module('module_app.controllers.menus.signIn', [])
 
             AuthService.login(user.login, user.password).then(function(authUser) {
                 sContext.auth.user = authUser;
-                $state.go('loading', {}, { reload: true }); // force reload
+                $location.path('/loading'); // force reload
             });
         };
 

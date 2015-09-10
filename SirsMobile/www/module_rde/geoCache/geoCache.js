@@ -28,14 +28,14 @@ angular.module('module_rde.geoCache', [
     'pouchdb'
 ])
 
-    .controller('cGeoCache', function cGeoCache ($scope, sMapLayer, olData, $log, $timeout, sContext, $rootScope,$state) {
+    .controller('cGeoCache', function cGeoCache ($scope, sMapLayer, olData, $log, $timeout, sContext, $rootScope,$location) {
 
         var me = this;
         me.Dt= Date.now();
         me.sContext=sContext;
 
         me.gotoHome=function(){
-            $state.go("home.map")
+            $location.path("home")
         }
 
         me.activeGeom=null;

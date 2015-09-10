@@ -8,7 +8,7 @@
 /***************************************************************** --------- *****************************************************/
 
 angular.module('module_app.controllers.loader', [])
-    .controller('cLoader', function cLoader ($scope,$timeout, $log, $state, sPouch, sMapLayer, sProf, sContext) {
+    .controller('cLoader', function cLoader ($scope,$timeout, $log, $location, sPouch, sMapLayer, sProf, sContext) {
         var me = this;
 
         me.sContext =sContext;
@@ -123,7 +123,7 @@ angular.module('module_app.controllers.loader', [])
                         me.actual=  75;
                         $timeout(function () {
                             me.actual=  100;
-                            $state.go("home.map");
+                            $location.path("/home");
                         }, 350);
                     }, 350);
                 }, 350);
