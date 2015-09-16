@@ -16,7 +16,7 @@
     <ion-content class="has-header has-tabs-top" padding="true" delegate-handle="formScroll" ng-switch="c.tab">
         <!-- Content / Description -->
         <div ng-switch-when="description">
-            <div ng-include="'templates/formApp/form' + c.params.type + '.html'"></div>
+            <div ng-include="'templates/formApp/form' + c.objectType + '.html'"></div>
         </div>
         <!-- Content / Photo -->
         <div ng-switch-when="photo">

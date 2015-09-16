@@ -43,7 +43,7 @@ var app = angular.module('SirsMobile', [
 
      ]);
 
-app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
+app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, PouchDocument) {
     //sMapLayer
     $ionicPlatform.ready(function () {
 
@@ -146,12 +146,12 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
                 controller: 'ObjectEditionController as c',
                 reloadOnSearch : false,
                 resolve: {
-                    objectDoc: function($log, $route, PouchObject) {
+                    objectDoc: function($log, $route, PouchDocument, EditionService) {
                         var params = $route.current.params;
                         if (params.id && params.id !== '') {
-                            return PouchObject.get(params.id);
+                            return PouchDocument.get(params.id);
                         } else {
-                            return PouchObject.create({ /* Empty */ });
+                            return PouchDocument.create(EditionService.newObject(params.type));
                         }
                     }
                 }
@@ -159,9 +159,8 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
             .when('/documents', {
                 templateUrl: 'templates/documents.html',
                 controller: 'cPorteDocument as c'
-            });
-
-        $routeProvider.otherwise('/init');
+            })
+            .otherwise('/init');
 
         // Setup layer colors.
         var colors = [];

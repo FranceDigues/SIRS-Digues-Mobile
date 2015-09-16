@@ -1,108 +1,27 @@
-angular.module('module_app.services.authentication', [])
+angular.module('module_app.services.authentication', ['module_app.services.dao'])
 
     // -------------------------------------------------------------------------
     //  DAOs
     // -------------------------------------------------------------------------
 
-    .service('PouchHelper', function PouchHelper($q, sPouch) {
-
-        var self = this;
-
-        self.queryOne = function(fun, options, callback) {
-            var deferred = $q.defer();
-            options = options || {};
-            callback = callback || angular.noop;
-
-            sPouch.localDb.query(fun, options, callback).then(
-                function onSuccess(result) {
-                    if (result.rows.length === 1) {
-                        deferred.resolve(result.rows[0].doc);
-                    } else {
-                        deferred.reject();
-                    }
-                },
-                function onError() {
-                    deferred.reject();
-                });
-
-            return deferred.promise;
-        };
-
-        self.create = function(doc, options, callback) {
-            var deferred = $q.defer();
-            options = options || {};
-            callback = callback || angular.noop;
-
-            sPouch.localDb.post(doc, options, callback).then(
-                function onSuccess(response) {
-                    doc.id = response.id;
-                    doc._rev = response.rev;
-                    deferred.resolve(doc);
-                },
-                function onError() {
-                    deferred.reject();
-                });
-
-            return deferred.promise;
-        }
-    })
-
-    .service('PouchUser', function PouchUser(sPouch, PouchHelper) {
-
-        var self = this;
-
-        self.get = function(id) {
-            return sPouch.localDb.get(id);
-        };
-
-        self.getByLogin = function(login) {
-            return PouchHelper.queryOne('Utilisateur/byLogin', { key: login, include_docs: true });
-        };
-
-        self.save = function(doc) {
-            return sPouch.localDb.put(doc);
-        };
-
-        self.create = function(doc) {
-            return PouchHelper.create(doc);
-        };
-    })
-
-    .service('AuthStorage', function AuthStorage() {
-
-        var self = this;
-
-        self.get = function() {
-            return angular.fromJson(window.localStorage.getItem('authUser'));
-        };
-
-        self.set = function(value) {
-            window.localStorage.setItem('authUser', angular.toJson(value));
-        };
-
-        self.clear = function() {
-            window.localStorage.removeItem('authUser');
-        };
-
-        self.isEmpty = function() {
-            return angular.isUndefined(window.localStorage.getItem('authUser'));
-        };
+    .factory('AuthStorage', function AuthStorage(LocalStorageItem) {
+        return new LocalStorageItem('authUser');
     })
 
     // -------------------------------------------------------------------------
     //  BOs
     // -------------------------------------------------------------------------
 
-    .service('AuthService', function AuthService($rootScope, $q, md5, PouchUser, AuthStorage) {
+    .service('AuthService', function AuthService($rootScope, $q, md5, PouchDocument, AuthStorage) {
 
         var self = this;
 
-        self.isAuthenticated = function() {
+        self.hasUser = function() {
             return !AuthStorage.isEmpty();
         };
 
-        self.getAuthenticatedUser = function() {
-            return self.isAuthenticated() ? AuthStorage.get() : undefined;
+        self.getUser = function() {
+            return self.hasUser() ? AuthStorage.get() : undefined;
         };
 
         self.login = function(login, password) {
@@ -112,7 +31,7 @@ angular.module('module_app.services.authentication', [])
 
             $rootScope.$broadcast('loginStart', login);
 
-            PouchUser.getByLogin(login).then(
+            PouchDocument.queryOne('Utilisateur/byLogin', login).then(
                 function onGetUserSuccess(doc) {
                     if (doc.password === md5.createHash(password).toUpperCase()) {
                         AuthStorage.set(doc);
@@ -132,7 +51,7 @@ angular.module('module_app.services.authentication', [])
         };
 
         self.logout = function() {
-            if (self.isAuthenticated()) {
+            if (self.hasUser()) {
                 return;
             }
 

@@ -1,10 +1,12 @@
 angular.module('module_app.controllers.objectEdition', [])
 
-    .controller('ObjectEditionController', function ObjectEditionController($scope, $location, $ionicScrollDelegate, $routeParams, GeolocationService, PouchObject, objectDoc) {
+    .controller('ObjectEditionController', function ObjectEditionController($scope, $q, $location, $ionicLoading, $ionicScrollDelegate, $routeParams, GeolocationService, PouchDocument, ContextService, objectDoc) {
 
         var self = this;
 
         var isNewObject = !$routeParams.id;
+
+        var isClosed = !!objectDoc.positionFin;
 
         var initialRevision = objectDoc._rev;
 
@@ -13,9 +15,13 @@ angular.module('module_app.controllers.objectEdition', [])
 
         self.tab = $location.search().tab || 'description';
 
-        self.params = $routeParams;
+        self.objectType = $routeParams.type;
 
         self.objectDoc = objectDoc;
+
+        self.geoloc = undefined;
+
+        self.isLinear = true;
 
         self.setTab = function(name) {
             if (name !== self.tab) {
@@ -25,20 +31,49 @@ angular.module('module_app.controllers.objectEdition', [])
             }
         };
 
+        self.updateLoc = function() {
+            waitForLocation(GeolocationService.getLocationPromise());
+        };
 
-        // Force the geolocation service activation.
-        GeolocationService.start().then(function(position) {
-            console.log(position);
-        });
+        self.save = function() {
+            var coordinate = ol.proj.transform([self.geoloc.longitude, self.geoloc.latitude], 'EPSG:4326', 'EPSG:2154');
 
+            // Set position(s).
+            if (isNewObject) {
+                self.objectDoc.positionDebut = 'POINT(' + coordinate[0] + ',' + coordinate[1] + ')';
+            }
+            if (!self.isLinear || (!isNewObject && !isClosed)) {
+                self.objectDoc.positionFin = 'POINT(' + coordinate[0] + ',' + coordinate[1] + ')';
+            }
+
+            // Save document.
+            PouchDocument.save(self.objectDoc).then(function() {
+                $location.path('/home');
+            });
+        };
+
+
+        // Force geolocation service activation and wait for first location.
+        waitForLocation(GeolocationService.start());
+
+        // Callback for page exit.
         $scope.$on('$destroy', function() {
             // Remove the document if it's new and non saved.
             if (isNewObject && objectDoc._rev === initialRevision) {
-                PouchObject.remove(objectDoc);
+                PouchDocument.remove(objectDoc);
             }
             // Restore the geolocation service state.
             if (!geolocWasEnabled) {
                 GeolocationService.stop();
             }
         });
+
+
+        function waitForLocation(locationPromise) {
+            $ionicLoading.show({ template: 'En attente de localisation...' });
+            locationPromise.then(function handleLocation(location) {
+                self.geoloc = location.coords;
+                $ionicLoading.hide();
+            });
+        }
     });

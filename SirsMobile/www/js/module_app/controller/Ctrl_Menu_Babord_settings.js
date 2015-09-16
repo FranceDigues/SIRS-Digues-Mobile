@@ -5,11 +5,11 @@ angular.module('module_app.controllers.menus.babord.settings', [])
         autoGeoloc: false
     })
 
-    .controller('SettingsController', function SettingsCtrl(PouchUser, AuthStorage, AuthService, sContext, defaultPreferences) {
+    .controller('SettingsController', function SettingsController(PouchDocument, AuthStorage, AuthService, sContext, defaultPreferences) {
 
         var self = this;
 
-        var userDoc = angular.extend({ prefs: defaultPreferences }, AuthService.getAuthenticatedUser());
+        var userDoc = angular.extend({ prefs: defaultPreferences }, AuthService.getUser());
 
         self.sContext = sContext;
 
@@ -17,10 +17,9 @@ angular.module('module_app.controllers.menus.babord.settings', [])
 
         self.save = function() {
             // Update user in database. TODO → should be automated ?
-            PouchUser.save(userDoc).then(function authUserHook(response) {
+            PouchDocument.save(userDoc).then(function() {
                 // We've modified the authenticated user, so we need to update its properties
                 // in the local storage.
-                userDoc._rev = response.rev;
                 AuthStorage.set(userDoc);
             });
         };

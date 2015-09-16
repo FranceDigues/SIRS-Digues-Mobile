@@ -1,27 +1,6 @@
 angular.module('module_app.controllers.menus.tribord.objectManagement', [])
 
-    .service('PouchObject', function PouchUser(sPouch, PouchHelper) {
-
-        var self = this;
-
-        self.get = function(id) {
-            return sPouch.localDb.get(id);
-        };
-
-        self.save = function(doc) {
-            return sPouch.localDb.put(doc);
-        };
-
-        self.create = function(doc) {
-            return PouchHelper.create(doc);
-        };
-
-        self.remove = function(doc) {
-            return sPouch.localDb.remove(doc);
-        };
-    })
-
-    .controller('ObjectManagementController', function ObjectManagementController($filter, $location, $ionicScrollDelegate, sAppLayer) {
+    .controller('ObjectManagementController', function ObjectManagementController($filter, $location, $ionicScrollDelegate, PouchDocument, AuthService, GeolocationService, EditionService, sAppLayer) {
 
         var self = this;
 
@@ -29,7 +8,11 @@ angular.module('module_app.controllers.menus.tribord.objectManagement', [])
 
         self.allLayers = sAppLayer.leaves;
 
+        self.closable = [];
+
         self.selectedLayer = undefined;
+
+        self.selectedClosable = undefined;
 
         self.setTab = function(name) {
             if (name !== self.tab) {
@@ -45,4 +28,17 @@ angular.module('module_app.controllers.menus.tribord.objectManagement', [])
                 $location.path('/edition/' + encodeURIComponent(type));
             }
         };
+
+        self.closeObject = function() {
+            if (angular.isDefined(self.selectedClosable)) {
+                var type = self.selectedClosable['@class'].substring(
+                    self.selectedClosable['@class'].lastIndexOf('.') + 1); // TODO → improve type detection
+                $location.path('/edition/' + encodeURIComponent(type) + '/' + self.selectedClosable._id);
+            }
+        };
+
+
+        EditionService.getClosableObjects().then(function(result) {
+            self.closable = result;
+        });
     });

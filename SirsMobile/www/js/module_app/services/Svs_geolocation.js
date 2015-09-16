@@ -2,7 +2,9 @@ angular.module('module_app.services.geolocation', [])
 
     .provider('GeolocationService', function() {
 
-        this.$get = function($q, $timeout, $log, $rootScope) {
+        // TODO → should be configured
+
+        this.$get = function($rootScope, $log, $q, $timeout) {
 
             var STOPPED = -1,
                 STOPPING = 0,
@@ -11,15 +13,16 @@ angular.module('module_app.services.geolocation', [])
                 STARTING = 4,
                 STARTED = 5;
 
-            var status = -1,            // the last service status
-                promise = undefined,    // the last command promise
-                position = undefined;   // the last known position
+            var status = -1,                    // the last service status
+                promise = undefined,            // the last command promise
+                lastLocation = undefined,    // the last known position
+                nextLocation = $q.defer();      // the next location deferred
 
 
             function initCmd(callback) {
                 $log.debug('[GeolocationService] Connecting...');
                 geoloc.initLoc(angular.noop, []);
-                $timeout(callback, 1000); // TODO → find a way to handle setup success
+                $timeout(callback, 2000); // TODO → find a way to handle setup success
             }
 
             function startCmd(callback) {
@@ -38,7 +41,7 @@ angular.module('module_app.services.geolocation', [])
                     status = INITIALIZED;
                 }
                 $log.debug('[GeolocationService] Connected.');
-                $rootScope.$broadcast('geoLocationReady', result);
+                $rootScope.$broadcast('geolocationReady', result);
             }
 
             function onChanged(result) {
@@ -46,9 +49,11 @@ angular.module('module_app.services.geolocation', [])
                     status = STARTED;
                     $log.debug('[GeolocationService] Started.');
                 }
-                position = result;
+                lastLocation = result;
+                nextLocation.resolve(result);
+                nextLocation = $q.defer();
                 $log.debug('[GeolocationService] Position changed.');
-                $rootScope.$broadcast('geoLocationChanged', result);
+                $rootScope.$broadcast('geolocationChanged', result);
             }
 
             function onStopped(result) {
@@ -56,7 +61,7 @@ angular.module('module_app.services.geolocation', [])
                     status = STOPPED;
                 }
                 $log.debug('[GeolocationService] Stopped.');
-                $rootScope.$broadcast('geoLocationStopped', result);
+                $rootScope.$broadcast('geolocationStopped', result);
             }
 
             function exec(cmd, callback) {
@@ -70,7 +75,7 @@ angular.module('module_app.services.geolocation', [])
                 return newDeferred.promise;
             }
 
-            function init() {
+            function initialize() {
                 if (status === STOPPED || status === STOPPING) {
                     status = INITIALIZING;
                     promise = exec(initCmd, onInitialized);
@@ -78,29 +83,35 @@ angular.module('module_app.services.geolocation', [])
                 return promise;
             }
 
-            function start() {
-                if (status === STOPPED || status === STOPPING) {
-                    init();
-                }
-                if (status === INITIALIZED || status === INITIALIZING) {
-                    status = STARTING;
-                    promise = exec(startCmd, onChanged);
-                }
-                return promise;
-            }
-
-            function stop() {
-                if (status !== STOPPED && status !== STOPPING) {
-                    status = STOPPING;
-                    promise = exec(stopCmd, onStopped);
-                }
-                return promise;
-            }
-
 
             return {
-                start: start,
-                stop: stop,
+                start: function() {
+                    if (status === STOPPED || status === STOPPING) {
+                        initialize();
+                    }
+                    if (status === INITIALIZED || status === INITIALIZING) {
+                        status = STARTING;
+                        promise = exec(startCmd, onChanged);
+                    }
+                    return promise;
+                },
+
+                stop: function() {
+                    if (status !== STOPPED && status !== STOPPING) {
+                        status = STOPPING;
+                        promise = exec(stopCmd, onStopped);
+                    }
+                    return promise;
+                },
+
+                getLastLocation: function() {
+                    return lastLocation;
+                },
+
+                getLocationPromise: function() {
+                    return nextLocation.promise;
+                },
+
                 isEnabled: function() {
                     return (status === STARTED || status === STARTING);
                 }

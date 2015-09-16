@@ -8,7 +8,7 @@
             <!-- Tab / Editable Layers -->
             <a class="tab-item" ng-class="{active: c.tab === 'layers'}" on-tap="c.setTab('layers')">Couches éditables</a>
             <!-- Tab / Closable Objects -->
-            <a class="tab-item" ng-class="{active: c.tab === 'closable'}" on-tap="c.setTab('closable')">Objets non clos</a>
+            <a class="tab-item" ng-class="{active: c.tab === 'closable'}" on-tap="c.setTab('closable')">Objets non-clos</a>
         </div>
     </div>
 
@@ -24,7 +24,9 @@
         <!-- Content / Closable Closable -->
         <div ng-switch-when="closable">
             <ion-list>
-                <!-- TODO -->
+                <ion-radio ng-model="c.selectedClosable" ng-value="closable" ng-repeat="closable in c.closable">
+                    {{closable._id}}
+                </ion-radio>
             </ion-list>
         </div>
     </ion-content>
@@ -35,5 +37,10 @@
                 ng-if="c.tab === 'layers'" ng-disabled="!c.selectedLayer">Tracer</button>
         <button class="btn btn-large waves-effect waves-light" type="button"
                 ng-if="c.tab === 'layers'" ng-disabled="!c.selectedLayer" ng-click="c.newObject()">Commencer</button>
+        <!-- FBB / Editable Layers -->
+        <button class="btn btn-large waves-effect waves-light" type="button"
+                ng-if="c.tab === 'closable'" ng-disabled="!c.selectedClosable">Tracer</button>
+        <button class="btn btn-large waves-effect waves-light" type="button"
+                ng-if="c.tab === 'closable'" ng-disabled="!c.selectedClosable" ng-click="c.closeObject()">Fermer</button>
     </div>
 </div>
