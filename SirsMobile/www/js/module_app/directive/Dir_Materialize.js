@@ -1,7 +1,7 @@
 
 angular.module('module_app.directives.materialize', [])
 
-    .directive('mtSelect', function mtSelectDirective($ionicScrollDelegate) {
+    .directive('mtSelect', function mtSelectDirective() {
         return {
             restrict: 'AE',
             link: function(scope, $element) {

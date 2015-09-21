@@ -5,18 +5,18 @@
     <ion-content class="has-header">
 
         <!-- Auto. synchronization -->
-        <ion-toggle ng-model="c.prefs.autoSync" ng-change="c.save()">
+        <ion-toggle ng-model="c.settings.autoSync">
             Syncronisation auto.
         </ion-toggle>
 
         <!-- Auto. geolocation -->
-        <ion-toggle ng-model="c.prefs.autoGeoloc" ng-change="c.save()">
+        <ion-toggle ng-model="c.settings.autoGeoloc">
             Géolocalisation auto.
         </ion-toggle>
 
         <!-- App. version -->
         <ion-item>
-            Version:<p>{{c.sContext.version}}</p>
+            Version:<p>{{c.version}}</p>
         </ion-item>
     </ion-content>
 </div>

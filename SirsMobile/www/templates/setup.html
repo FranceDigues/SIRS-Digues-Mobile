@@ -1,0 +1,35 @@
+<ion-view id="setup">
+    <ion-content>
+        <div class="row">
+            <div class="col col-80 col-offset-10">
+                <div class="sirs-card">
+                    <div class="sirs-card-content">
+                        <h2 class="sirs-card-title">Choix de la base de données</h2>
+                        <p>Sélectionnez une base de données puis appuyez sur "connexion".</p>
+                        <ul class="collection">
+                            <li class="collection-item avatar" ng-repeat="remote in c.remotes" ng-class="{selected: (c.selected === remote)}" on-tap="c.selected = remote">
+                                <i class="circle pink">{{remote.name.toUpperCase()[0]}}</i>
+                                <span class="title">{{remote.name}}</span>
+                                <p>{{remote.url}}</p>
+                                <span class="secondary-content" ng-show="c.selected === remote"><i class="material-icons">check</i></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="sirs-card-action text-right">
+                        <a href="#/new_db" class="btn-flat waves-effect waves-teal left">
+                            <i class="material-icons left">playlist_add</i>Ajouter une base
+                        </a>
+                        <button type="button" class="btn-flat waves-effect waves-light"
+                                ng-class="{disabled: dbForm.$invalid}" ng-disabled="!c.selected" ng-click="c.remove()">
+                            <i class="material-icons left">delete</i>Supprimer
+                        </button>
+                        <button type="button" class="btn pink waves-effect waves-light"
+                                ng-class="{disabled: dbForm.$invalid}" ng-disabled="!c.selected" ng-click="c.replicate()">
+                            <i class="material-icons left">launch</i>Connexion
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -5,7 +5,6 @@
 
 angular.module('module_app.services',
     [
-        'module_app.services.authentication',
         'module_app.services.context',
         'module_app.services.dao',
         'module_app.services.device',

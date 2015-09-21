@@ -17,6 +17,8 @@ angular.module('module_app.controllers',
 
         'module_app.controllers.objectEdition',
         'module_app.controllers.from.photo',
+        'module_app.controllers.setup',
+        'module_app.controllers.new_db',
 
 
 

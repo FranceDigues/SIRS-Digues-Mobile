@@ -1,4 +1,4 @@
-angular.module('module_app.services.edition', ['module_app.services.dao', 'module_app.services.authentication'])
+angular.module('module_app.services.edition', ['module_app.services.context'])
 
     .provider('EditionService', function EditionService() {
 
@@ -9,13 +9,17 @@ angular.module('module_app.services.edition', ['module_app.services.dao', 'modul
                 newObject: function(type) {
                     return {
                         '@class': 'fr.sirs.core.model.' + type,
-                        'author': AuthService.hasUser() ? AuthService.getUser()._id : null,
+                        'author': AuthService.getValue()._id,
                         'valid': false
                     };
                 },
 
                 getClosableObjects: function() {
-                    return PouchDocument.query('objetsNonClos/byLogin', AuthService.getUser()._id);
+                    return PouchDocument.query('objetsNonClos/byLogin', AuthService.getValue()._id);
+                },
+
+                getClosedObjects: function() {
+                    return PouchDocument.query('objetsClos/byLogin', AuthService.getValue()._id);
                 }
             };
         };

@@ -110,16 +110,20 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, PouchDocu
               //      app_id: '1bb2cb28'
               //});
 
-        $ionicConfigProvider.tabs.position('bottom'); //other values: top
+        $ionicConfigProvider.tabs.position('bottom'); // other values: top
 
         $routeProvider
             .when('/geoCache', {
                 templateUrl: 'module_rde/geoCache/geoCache.html',
                 controller: 'cGeoCache as c'
             })
-            .when('/init', {
-                templateUrl: 'templates/init.html',
-                controller: 'cInit as c'
+            .when('/setup', {
+                templateUrl: 'templates/setup.html',
+                controller: 'SetupController as c'
+            })
+            .when('/new_db', {
+                templateUrl: 'templates/new_db.html',
+                controller: 'NewDatabaseController as c'
             })
             .when('/sign-in', {
                 templateUrl: 'templates/sign-in.html',
@@ -160,7 +164,7 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, PouchDocu
                 templateUrl: 'templates/documents.html',
                 controller: 'cPorteDocument as c'
             })
-            .otherwise('/init');
+            .otherwise('/setup');
 
         // Setup layer colors.
         var colors = [];

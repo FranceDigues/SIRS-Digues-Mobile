@@ -1,0 +1,15 @@
+#setup {
+    background-color: #00bcd0;
+}
+
+#setup .collection > .collection-item.avatar {
+    min-height: 62px;
+}
+
+#setup .collection > .collection-item.avatar.selected {
+    background-color: #f5f5f5;
+}
+
+#setup .collection > .collection-item.avatar > p {
+    color: #777777;
+}
