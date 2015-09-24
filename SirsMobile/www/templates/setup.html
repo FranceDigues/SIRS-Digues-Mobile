@@ -1,6 +1,6 @@
 <ion-view id="setup">
     <ion-content>
-        <div class="row">
+        <div class="row responsive-md">
             <div class="col col-80 col-offset-10">
                 <div class="sirs-card">
                     <div class="sirs-card-content">
@@ -8,7 +8,7 @@
                         <p>Sélectionnez une base de données puis appuyez sur "connexion".</p>
                         <ul class="collection">
                             <li class="collection-item avatar" ng-repeat="remote in c.remotes" ng-class="{selected: (c.selected === remote)}" on-tap="c.selected = remote">
-                                <i class="circle pink">{{remote.name.toUpperCase()[0]}}</i>
+                                <i class="circle pink">{{remote.name[0].toUpperCase()}}</i>
                                 <span class="title">{{remote.name}}</span>
                                 <p>{{remote.url}}</p>
                                 <span class="secondary-content" ng-show="c.selected === remote"><i class="material-icons">check</i></span>
@@ -17,7 +17,8 @@
                     </div>
                     <div class="sirs-card-action text-right">
                         <a href="#/new_db" class="btn-flat waves-effect waves-teal left">
-                            <i class="material-icons left">playlist_add</i>Ajouter une base
+                            <i class="material-icons left">playlist_add</i>
+                            Ajouter<span class="hide-on-small-and-down"> une base</span>
                         </a>
                         <button type="button" class="btn-flat waves-effect waves-light"
                                 ng-class="{disabled: dbForm.$invalid}" ng-disabled="!c.selected" ng-click="c.remove()">
@@ -25,7 +26,7 @@
                         </button>
                         <button type="button" class="btn pink waves-effect waves-light"
                                 ng-class="{disabled: dbForm.$invalid}" ng-disabled="!c.selected" ng-click="c.replicate()">
-                            <i class="material-icons left">launch</i>Connexion
+                            <i class="material-icons left">check</i>Valider
                         </button>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.setup', ['module_app.services.context'])
 
-    .controller('SetupController', function SetupController($location, DsService) {
+    .controller('SetupController', function SetupController($location, DsService, AuthService) {
 
         var self = this;
 
@@ -22,11 +22,18 @@ angular.module('module_app.controllers.setup', ['module_app.services.context'])
         };
 
         self.replicate = function() {
-            if (self.selected) {
+            if (!self.selected) {
                 return;
             }
 
             DsService.setActiveRemote(self.selected.name);
-            $location.path('/replication');
+
+            if (!self.selected.replicated) {
+                $location.path('/replicate');
+            } else if (AuthService.isNull()) {
+                $location.path('/login');
+            } else {
+                $location.path('/home');
+            }
         };
     });

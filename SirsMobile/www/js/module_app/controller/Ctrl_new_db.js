@@ -13,7 +13,7 @@ angular.module('module_app.controllers.new_db', ['module_app.services.context'])
         };
 
         self.add = function() {
-            DsService.addRemote(self.db);
+            DsService.addRemote(self.remote);
             $location.path('/setup');
         };
     });

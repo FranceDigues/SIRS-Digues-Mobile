@@ -1,17 +1,54 @@
-angular.module('module_app.services.dao', ['module_app.services.utils'])
+angular.module('module_app.services.dao', ['module_app.services.context'])
 
-    .service('PouchDocument', function PouchDocument($q, sPouch) {
+    .service('DbService', function DbService($rootScope, DsService) {
+
+        var self = this;
+
+        var remoteDB = null;
+
+        var localDB = null;
+
+        var activeRemote = DsService.getActiveRemote();
+
+
+        self.getRemote = function() {
+            if (!remoteDB && activeRemote) {
+                remoteDB = new PouchDB(activeRemote.url, {
+                    auth: {
+                        username: activeRemote.username,
+                        password: activeRemote.password
+                    }
+                })
+            }
+            return remoteDB;
+        };
+
+        self.getLocal = function() {
+            if (!localDB && activeRemote) {
+                localDB = new PouchDB(activeRemote.name);
+            }
+            return localDB;
+        };
+
+
+        $rootScope.$on('remoteChanged', function(event, newRemote) {
+            remoteDB = localDB = null;
+            activeRemote = newRemote;
+        });
+    })
+
+    .service('PouchDocument', function PouchDocument($q, DbService) {
 
         var self = this;
 
         self.get = function(id) {
-            return sPouch.localDb.get(id);
+            return DbService.getLocal().get(id);
         };
 
         self.queryOne = function(fun, key) {
             var deferred = $q.defer();
 
-            sPouch.localDb.query(fun, { key: key, include_docs: true }).then(
+            DbService.getLocal().query(fun, { key: key, include_docs: true }).then(
                 function onSuccess(result) {
                     if (result.rows.length === 1) {
                         deferred.resolve(result.rows[0].doc);
@@ -29,7 +66,7 @@ angular.module('module_app.services.dao', ['module_app.services.utils'])
         self.query = function(fun, key) {
             var deferred = $q.defer();
 
-            sPouch.localDb.query(fun, { key: key, include_docs: true }).then(
+            DbService.getLocal().query(fun, { key: key, include_docs: true }).then(
                 function onSuccess(result) {
                     deferred.resolve(result.rows.map(function(row) {
                         return row.doc;
@@ -45,7 +82,7 @@ angular.module('module_app.services.dao', ['module_app.services.utils'])
         self.save = function(doc) {
             var deferred = $q.defer();
 
-            sPouch.localDb.put(doc).then(
+            DbService.getLocal().put(doc).then(
                 function onSuccess(response) {
                     doc._rev = response.rev;
                     deferred.resolve(doc);
@@ -60,7 +97,7 @@ angular.module('module_app.services.dao', ['module_app.services.utils'])
         self.create = function(doc) {
             var deferred = $q.defer();
 
-            sPouch.localDb.post(doc).then(
+            DbService.getLocal().post(doc).then(
                 function onSuccess(result) {
                     doc._id = result.id;
                     doc._rev = result.rev;
@@ -74,6 +111,6 @@ angular.module('module_app.services.dao', ['module_app.services.utils'])
         };
 
         self.remove = function(doc) {
-            return sPouch.localDb.remove(doc);
+            return DbService.getLocal().remove(doc);
         };
     });

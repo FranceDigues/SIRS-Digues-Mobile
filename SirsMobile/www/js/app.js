@@ -113,10 +113,6 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, PouchDocu
         $ionicConfigProvider.tabs.position('bottom'); // other values: top
 
         $routeProvider
-            .when('/geoCache', {
-                templateUrl: 'module_rde/geoCache/geoCache.html',
-                controller: 'cGeoCache as c'
-            })
             .when('/setup', {
                 templateUrl: 'templates/setup.html',
                 controller: 'SetupController as c'
@@ -124,6 +120,18 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, PouchDocu
             .when('/new_db', {
                 templateUrl: 'templates/new_db.html',
                 controller: 'NewDatabaseController as c'
+            })
+            .when('/replicate', {
+                templateUrl: 'templates/replicate.html',
+                controller: 'ReplicateController as c'
+            })
+            .when('/login', {
+                templateUrl: 'templates/login.html',
+                controller: 'LoginController as c'
+            })
+            .when('/geoCache', {
+                templateUrl: 'module_rde/geoCache/geoCache.html',
+                controller: 'cGeoCache as c'
             })
             .when('/sign-in', {
                 templateUrl: 'templates/sign-in.html',

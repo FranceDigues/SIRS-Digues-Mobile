@@ -7,12 +7,25 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
         // Data sources.
         ds: {
-            local: 'sirs_rhone2',
+            active: 'test',
             remotes: [{
-                name: 'sirs_rhone2',
-                url: 'http://5.196.17.92:5984/sirs_rhone2',
+                name: 'test',
+                url: 'http://5.196.17.92:5984/sirs_symadrem',
                 username: 'geouser',
-                password: 'geopw'
+                password: 'geopw',
+                replicated: false
+            },{
+                name: 'azerty',
+                url: 'http://localhost:5984/azerty',
+                username: 'username',
+                password: 'password',
+                replicated: false
+            },{
+                name: 'qwerty',
+                url: 'http://localhost:5984/qwerty',
+                username: 'username',
+                password: 'password',
+                replicated: false
             }]
         },
 
@@ -66,23 +79,6 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
             return config.remotes;
         };
 
-        self.getActiveRemote = function() {
-            var i = config.remotes.length;
-            while(i--) {
-                var remote = config.remotes[i];
-                if (remote.name === config.local) {
-                    return remote;
-                }
-            }
-            return null;
-        };
-
-        self.setActiveRemote = function(name) {
-            var oldValue = config.local;
-            config.local = name;
-            $rootScope.$broadcast('remoteChanged', name, oldValue);
-        };
-
         self.addRemote = function(remote) {
             config.remotes.push(remote);
             $rootScope.$broadcast('remoteAdded', remote);
@@ -94,11 +90,32 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
                 template: 'Voulez vous vraiment supprimer cette base de données ?'
             }).then(function(confirmed) {
                 if (confirmed) {
+                    // Destroy the local database (if exists).
+                    new PouchDB(remote.name).destroy();
+                    // Unregister the remove database.
                     config.remotes.splice(config.remotes.indexOf(remote), 1);
+                    // Broadcast application event.
                     $rootScope.$broadcast('remoteRemoved', remote);
                 }
                 return confirmed;
             });
+        };
+
+        self.getActiveRemote = function() {
+            var i = config.remotes.length;
+            while(i--) {
+                var remote = config.remotes[i];
+                if (remote.name === config.active) {
+                    return remote;
+                }
+            }
+            return null;
+        };
+
+        self.setActiveRemote = function(name) {
+            var oldValue = config.active;
+            config.active = name;
+            $rootScope.$broadcast('remoteChanged', self.getActiveRemote(), oldValue);
         };
     })
 
@@ -108,6 +125,10 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
         var context = ContextService.getValue();
 
+
+        self.isNull = function() {
+            return !context.auth;
+        };
 
         self.getValue = function() {
             return context.auth;
@@ -135,6 +156,10 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
                     deferred.reject();
                     $rootScope.$broadcast('loginError', login);
                 });
+
+            PouchDocument.query('Utilisateur/all').then(function(result) {
+                console.log(result);
+            });
 
             return deferred.promise;
         };

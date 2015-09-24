@@ -1,0 +1,36 @@
+<ion-view id="login">
+    <ion-content>
+        <div class="row responsive-md">
+            <div class="col col-50 col-offset-25">
+                <div class="sirs-card">
+                    <div class="sirs-card-content">
+                        <h2 class="sirs-card-title">Authentification</h2>
+                        <ng-form name="loginForm">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="username" type="text" class="validate" required ng-model="c.username">
+                                    <label for="username">Identifiant</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="password" type="password" class="validate" required ng-model="c.password">
+                                    <label for="password">Mot de passe</label>
+                                </div>
+                            </div>
+                       </ng-form>
+                    </div>
+                    <div class="sirs-card-action">
+                        <a href="#/setup" class="btn-flat waves-effect waves-teal">
+                            <i class="material-icons left">arrow_back</i>Changer de base
+                        </a>
+                        <button type="button" class="btn pink waves-effect waves-teal right"
+                                ng-class="{disabled: loginForm.$invalid}" ng-disabled="loginForm.$invalid" ng-click="c.login()">
+                            <i class="material-icons left">launch</i>Connexion
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
