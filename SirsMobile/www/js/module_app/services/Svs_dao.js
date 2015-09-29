@@ -1,6 +1,6 @@
 angular.module('module_app.services.dao', ['module_app.services.context'])
 
-    .service('DbService', function DbService($rootScope, DsService) {
+    .service('PouchService', function PouchService($rootScope, DatabaseService) {
 
         var self = this;
 
@@ -8,47 +8,47 @@ angular.module('module_app.services.dao', ['module_app.services.context'])
 
         var localDB = null;
 
-        var activeRemote = DsService.getActiveRemote();
+        var activeDb = DatabaseService.getActive();
 
 
-        self.getRemote = function() {
-            if (!remoteDB && activeRemote) {
-                remoteDB = new PouchDB(activeRemote.url, {
+        self.getRemoteDB = function() {
+            if (!remoteDB && activeDb) {
+                remoteDB = new PouchDB(activeDb.url, {
                     auth: {
-                        username: activeRemote.username,
-                        password: activeRemote.password
+                        username: activeDb.username,
+                        password: activeDb.password
                     }
                 })
             }
             return remoteDB;
         };
 
-        self.getLocal = function() {
-            if (!localDB && activeRemote) {
-                localDB = new PouchDB(activeRemote.name);
+        self.getLocalDB = function() {
+            if (!localDB && activeDb) {
+                localDB = new PouchDB(activeDb.name);
             }
             return localDB;
         };
 
 
-        $rootScope.$on('remoteChanged', function(event, newRemote) {
+        $rootScope.$on('databaseChanged', function(event, newRemote) {
             remoteDB = localDB = null;
-            activeRemote = newRemote;
+            activeDb = newRemote;
         });
     })
 
-    .service('PouchDocument', function PouchDocument($q, DbService) {
+    .service('PouchDocument', function PouchDocument($q, PouchService) {
 
         var self = this;
 
         self.get = function(id) {
-            return DbService.getLocal().get(id);
+            return PouchService.getLocalDB().get(id);
         };
 
         self.queryOne = function(fun, key) {
             var deferred = $q.defer();
 
-            DbService.getLocal().query(fun, { key: key, include_docs: true }).then(
+            PouchService.getLocalDB().query(fun, { key: key, include_docs: true }).then(
                 function onSuccess(result) {
                     if (result.rows.length === 1) {
                         deferred.resolve(result.rows[0].doc);
@@ -66,7 +66,7 @@ angular.module('module_app.services.dao', ['module_app.services.context'])
         self.query = function(fun, key) {
             var deferred = $q.defer();
 
-            DbService.getLocal().query(fun, { key: key, include_docs: true }).then(
+            PouchService.getLocalDB().query(fun, { key: key, include_docs: true }).then(
                 function onSuccess(result) {
                     deferred.resolve(result.rows.map(function(row) {
                         return row.doc;
@@ -82,7 +82,7 @@ angular.module('module_app.services.dao', ['module_app.services.context'])
         self.save = function(doc) {
             var deferred = $q.defer();
 
-            DbService.getLocal().put(doc).then(
+            PouchService.getLocalDB().put(doc).then(
                 function onSuccess(response) {
                     doc._rev = response.rev;
                     deferred.resolve(doc);
@@ -97,7 +97,7 @@ angular.module('module_app.services.dao', ['module_app.services.context'])
         self.create = function(doc) {
             var deferred = $q.defer();
 
-            DbService.getLocal().post(doc).then(
+            PouchService.getLocalDB().post(doc).then(
                 function onSuccess(result) {
                     doc._id = result.id;
                     doc._rev = result.rev;
@@ -111,6 +111,6 @@ angular.module('module_app.services.dao', ['module_app.services.context'])
         };
 
         self.remove = function(doc) {
-            return DbService.getLocal().remove(doc);
+            return PouchService.getLocalDB().remove(doc);
         };
     });

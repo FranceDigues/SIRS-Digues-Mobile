@@ -1,0 +1,32 @@
+#backLayer > ion-header-bar {
+    background-color: #0097A7;
+}
+
+#backLayer > ion-header-bar > h1,
+#backLayer > ion-header-bar > button {
+    color: #FFFFFF;
+}
+
+#backLayer > .btn-floating {
+    z-index: 10;
+    position: absolute;
+}
+
+#backLayer ion-list ion-item ion-option-button {
+    min-width: inherit;
+}
+
+#backLayer ion-list ion-item.activated,
+#backLayer ion-list ion-item.activated .item-content {
+    background-color: #FFFFFF;
+}
+
+#backLayer ion-list ion-item .item-content .material-icons {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 3;
+    padding: 14px;
+    height: 100%;
+    font-size: 24px;
+}

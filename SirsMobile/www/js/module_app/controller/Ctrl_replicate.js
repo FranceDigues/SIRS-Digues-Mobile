@@ -1,20 +1,20 @@
 angular.module('module_app.controllers.replicate', ['module_app.services.context'])
 
-    .constant('replicationViews', [
-        'Utilisateur/byLogin',
-        'Element/byClassAndLinear'
-    ])
-
-    .controller('ReplicateController', function ReplicateController($log, $q, $timeout, $location, AuthService, DsService, DbService, replicationViews) {
+    .controller('ReplicateController', function ReplicateController($q, $timeout, $location, AuthService, DatabaseService, PouchService) {
 
         var self = this;
 
-        var localDB = DbService.getLocal();
+        var localDB = PouchService.getLocalDB();
 
-        var remoteDB = DbService.getRemote();
+        var remoteDB = PouchService.getRemoteDB();
+
+        var indexedViews = [
+            'Utilisateur/byLogin',
+            'Element/byClassAndLinear'
+        ]; // TODO → make it configurable ?
 
 
-        function step1() {
+        (function firstStep() {
             self.step = 1;
             self.description = 'Connexion à la base de données...';
             self.percent = 0;
@@ -25,26 +25,27 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
             remoteDB.info()
                 .then(function(result) {
                     deferred.resolve(result.doc_count);
-                }).catch(function(error) {
+                })
+                .catch(function(error) {
                     deferred.reject(error);
                 });
 
-            deferred.promise.then(step1Complete, step1Error);
-        }
+            deferred.promise.then(firstStepComplete, firstStepError);
+        })(); // run it
 
-        function step1Complete(docCount) {
+        function firstStepComplete(docCount) {
             // Update step completion percent.
             self.percent = 100;
 
             // Wait 1000ms before launching the second step.
-            $timeout(function() { step2(docCount); }, 1000);
+            $timeout(function() { secondStep(docCount); }, 1000);
         }
 
-        function step1Error(error) {
+        function firstStepError(error) {
             // TODO → handle errors
         }
 
-        function step2(docCount) {
+        function secondStep(docCount) {
             self.step = 2;
             self.description = 'Téléchargement des documents...';
             self.percent = 0;
@@ -66,32 +67,32 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
                     deferred.reject(error);
                 });
 
-            deferred.promise.then(step2Complete, step2Error, step2Progress);
+            deferred.promise.then(secondStepComplete, secondStepError, secondStepProgress);
         }
 
-        function step2Progress(info) {
-            self.percent = (info.repCount / info.docCount) * 100;
-            self.completion = info.repCount + '/' + info.docCount;
+        function secondStepProgress(state) {
+            self.percent = (state.repCount / state.docCount) * 100;
+            self.completion = state.repCount + '/' + state.docCount;
         }
 
-        function step2Complete() {
+        function secondStepComplete() {
             // Wait 1000ms before launching the third step.
-            $timeout(step3, 1000);
+            $timeout(thirdStep, 1000);
         }
 
-        function step2Error(error) {
+        function secondStepError(error) {
             // TODO → handle errors
         }
 
-        function step3() {
+        function thirdStep() {
             self.step = 3;
-            self.description = 'Indexation...';
+            self.description = 'Indexation des documents...';
             self.percent = 0;
-            self.completion = '0/' + replicationViews.length;
+            self.completion = '0/' + indexedViews.length;
 
-            var promise = $q.when(0);
+            var promise = $q.when(); // empty promise for chaining
 
-            angular.forEach(replicationViews, function(view, i) {
+            angular.forEach(indexedViews, function(view, i) {
                 promise = promise.then(function() {
                     var deferred = $q.defer();
 
@@ -108,16 +109,16 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
                 });
             });
 
-            promise.then(step3Complete, step3Error, step3Progress);
+            promise.then(thirdStepComplete, thirdStepError, thirdStepProgress);
         }
 
-        function step3Progress(proceedViews) {
-            self.percent = (proceedViews / replicationViews.length) * 100;
-            self.completion = proceedViews + '/' + replicationViews.length;
+        function thirdStepProgress(proceedViews) {
+            self.percent = (proceedViews / indexedViews.length) * 100;
+            self.completion = proceedViews + '/' + indexedViews.length;
         }
         
-        function step3Complete() {
-            DsService.getActiveRemote().replicated = true;
+        function thirdStepComplete() {
+            DatabaseService.getActive().replicated = true;
             if (AuthService.isNull()) {
                 $location.path('/login');
             } else {
@@ -125,10 +126,7 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
             }
         }
 
-        function step3Error(error) {
+        function thirdStepError(error) {
             // TODO → handle errors
         }
-
-
-        step1();
     });

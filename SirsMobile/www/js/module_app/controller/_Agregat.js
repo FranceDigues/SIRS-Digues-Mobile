@@ -31,6 +31,7 @@ angular.module('module_app.controllers',
         'module_app.controllers.menus.babord.newObjectSummary',
         'module_app.controllers.menus.babord.porteDoc',
         'module_app.controllers.menus.babord.backLayerMgmt',
+        'module_app.controllers.addBackLayer',
 
 
 

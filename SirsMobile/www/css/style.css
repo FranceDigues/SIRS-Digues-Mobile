@@ -571,12 +571,6 @@ ion-content.has-fbb-bottom > div.scroll {
 
 
 /* menu-babord */
-.menu-left .list{
-    margin-top: 10px;
-}
-.menu-left .list .item{
-    margin-bottom: 5px;
-}
 .menu-left .list .item .material-icons.icon-menu-babord{
     margin-right: 10px;
 }

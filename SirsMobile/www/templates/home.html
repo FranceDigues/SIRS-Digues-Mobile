@@ -1,13 +1,11 @@
 <ion-side-menus>
     <ion-side-menu-content drag-content="false">
-
         <ion-nav-bar>
             <!-- Button / Logout -->
             <ion-nav-buttons side="right">
                 <button class=" col-75 button button-icon button-clear ion-power" on-tap="c.logout()"></button>
             </ion-nav-buttons>
         </ion-nav-bar>
-
         <div class="cargo">
             <!-- Button / Babord menu -->
             <div name="babord" class=" inline side babord">
@@ -19,11 +17,7 @@
             </div>
             <!-- Content / Map -->
             <div class="map-div" ng-controller="cMap as c">
-                <openlayers id="map"  height="100%" width="100%" custom-layers="true" ol-center="c.sLoc.geoloc" ol-controls="c.controls" ol-defaults="c.defaults" >
-                    <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.sMapLayer.list|filter:{active:true}"></ol-layer>
-                    <ol-layer ol-layer-properties="layer" ng-repeat="layer in c.sAppLayer.leaves|filter:{visible:true}" ></ol-layer>
-                    <ol-marker ol-marker-properties="c.centreCarte"></ol-marker>
-                </openlayers>
+                <div id="map" ol-map="main"></div>
             </div>
             <!-- Button / New object -->
             <div class="fixed-action-btn" style="bottom: 25px;right:25px;">

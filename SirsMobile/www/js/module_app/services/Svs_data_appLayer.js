@@ -213,7 +213,7 @@ me.layersTreeIterator = function(sirsDef, leafCallBack, NodeCallBack){
 
 
         //init
-        me.testExistingHashMap();
+        //me.testExistingHashMap();
         //me.updateList();
         //me.updateHachMapclassIndex();
 

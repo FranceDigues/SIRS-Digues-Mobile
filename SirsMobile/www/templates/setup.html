@@ -7,11 +7,11 @@
                         <h2 class="sirs-card-title">Choix de la base de données</h2>
                         <p>Sélectionnez une base de données puis appuyez sur "connexion".</p>
                         <ul class="collection">
-                            <li class="collection-item avatar" ng-repeat="remote in c.remotes" ng-class="{selected: (c.selected === remote)}" on-tap="c.selected = remote">
-                                <i class="circle pink">{{remote.name[0].toUpperCase()}}</i>
-                                <span class="title">{{remote.name}}</span>
-                                <p>{{remote.url}}</p>
-                                <span class="secondary-content" ng-show="c.selected === remote"><i class="material-icons">check</i></span>
+                            <li class="collection-item avatar" ng-repeat="db in c.available" ng-class="{selected: (c.selected === db)}" on-tap="c.selected = db">
+                                <i class="circle pink">{{db.name[0].toUpperCase()}}</i>
+                                <span class="title">{{db.name}}</span>
+                                <p>{{db.url}}</p>
+                                <span class="secondary-content" ng-show="c.selected === db"><i class="material-icons">check</i></span>
                             </li>
                         </ul>
                     </div>
@@ -21,11 +21,11 @@
                             Ajouter<span class="hide-on-small-and-down"> une base</span>
                         </a>
                         <button type="button" class="btn-flat waves-effect waves-light"
-                                ng-class="{disabled: dbForm.$invalid}" ng-disabled="!c.selected" ng-click="c.remove()">
+                                ng-disabled="!c.selected" ng-click="c.remove()">
                             <i class="material-icons left">delete</i>Supprimer
                         </button>
                         <button type="button" class="btn pink waves-effect waves-light"
-                                ng-class="{disabled: dbForm.$invalid}" ng-disabled="!c.selected" ng-click="c.replicate()">
+                                ng-disabled="!c.selected" ng-click="c.replicate()">
                             <i class="material-icons left">check</i>Valider
                         </button>
                     </div>

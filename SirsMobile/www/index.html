@@ -10,11 +10,15 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link href="css/h-tree.css" rel="stylesheet">
+    <link href="css/card.css" rel="stylesheet">
     <link href="css/setup.css" rel="stylesheet">
     <link href="css/new_db.css" rel="stylesheet">
     <link href="css/replicate.css" rel="stylesheet">
     <link href="css/login.css" rel="stylesheet">
-    <link href="css/card.css" rel="stylesheet">
+    <link href="css/map.css" rel="stylesheet">
+    <link href="css/babord_menu.css" rel="stylesheet">
+    <link href="css/back_layer.css" rel="stylesheet">
+    <link href="css/add_back_layer.css" rel="stylesheet">
     <link href="css/ol.css" rel="stylesheet">
     <link rel="stylesheet" href="lib/materialize/dist/css/materialize.css" media="screen,projection">
     <link href="https://fonts.googleapis.com/icon?family=Material%20Icons" rel="stylesheet">
@@ -39,7 +43,7 @@
 
 
 
-    <script src="staticLib/ol_3.8.2/ol-debug.js"></script>
+    <script src="staticLib/ol_3.8.2/ol.min.js"></script>
 
     <!--gulp-inject task name : jslink-->
 
@@ -47,6 +51,7 @@
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/materialize/bin/materialize.js"></script>
     <script src="lib/ionic/js/ionic.bundle.min.js"></script>
+    <script src="staticLib/angular-ol.min.js"></script>
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
     <script src="lib/ionic-service-core/ionic-core.js"></script>
     <script src="lib/ionic-service-deploy/ionic-deploy.js"></script>
@@ -114,6 +119,7 @@
     <script src="js/module_app/controller/Ctrl_new_db.js"></script>
     <script src="js/module_app/controller/Ctrl_replicate.js"></script>
     <script src="js/module_app/controller/Ctrl_login.js"></script>
+    <script src="js/module_app/controller/Ctrl_add_back_layer.js"></script>
     <script src="js/module_app/controller/_Agregat.js"></script>
     <script src="js/module_app/directive/_Agregat.js"></script>
     <script src="js/module_app/directive/Dir_Materialize.js"></script>
@@ -121,6 +127,7 @@
     <script src="js/module_app/filter/customFilter.js"></script>
     <script src="js/module_app/services/Svs_context.js"></script>
     <script src="js/module_app/services/Svs_dao.js"></script>
+    <script src="js/module_app/services/Svs_map.js"></script>
     <script src="js/module_app/services/Svs_data_appLayer.js"></script>
     <script src="js/module_app/services/Svs_geolocation.js"></script>
     <script src="js/module_app/services/Svs_edition.js"></script>

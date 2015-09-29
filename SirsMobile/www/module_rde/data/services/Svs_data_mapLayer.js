@@ -73,14 +73,14 @@ angular.module('module_rde.data.services.maplayer', [])
     //methode de mise a jour de l'objet layers
     me.update = function () {
         $log.debug("update")
-        sPouch.confDb.get('layersList').then(function (doc) {
-            $log.debug(doc);
-
-            me.updateLayer( doc.layers);
-
-        }).catch(function (err) {
-            $log.debug(err);
-        });
+        //sPouch.confDb.get('layersList').then(function (doc) {
+        //    $log.debug(doc);
+        //
+        //    me.updateLayer( doc.layers);
+        //
+        //}).catch(function (err) {
+        //    $log.debug(err);
+        //});
     }
 
     //listen event from base layer def update

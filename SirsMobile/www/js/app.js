@@ -10,6 +10,7 @@ var app = angular.module('SirsMobile', [
     'ionic.service.deploy',
     'ngCordova',
     'ngRoute',
+    'ol',
     
     
 
@@ -43,7 +44,7 @@ var app = angular.module('SirsMobile', [
 
      ]);
 
-app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, PouchDocument) {
+app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
     //sMapLayer
     $ionicPlatform.ready(function () {
 
@@ -104,13 +105,17 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4, PouchDocu
     });
 })
 
-    .config(function ($routeProvider, $ionicConfigProvider, sStyleFactoryProvider) {
+    .config(function ($routeProvider, $ionicConfigProvider, olMapProvider, sStyleFactoryProvider) {
 
               //$ionicAccountProvider.identify({
               //      app_id: '1bb2cb28'
               //});
 
         $ionicConfigProvider.tabs.position('bottom'); // other values: top
+
+        olMapProvider.provideOptions('main', ['MapService', function(MapService) {
+            return MapService.buildConfig();
+        }]);
 
         $routeProvider
             .when('/setup', {

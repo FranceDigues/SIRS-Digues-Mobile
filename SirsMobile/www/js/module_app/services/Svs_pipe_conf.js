@@ -22,6 +22,6 @@ angular.module('module_app.data.services.conf', [])
 
 
         //init
-        me.getBabordMenu();
+        //me.getBabordMenu();
 
     })

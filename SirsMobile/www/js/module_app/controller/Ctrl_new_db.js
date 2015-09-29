@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.new_db', ['module_app.services.context'])
 
-    .controller('NewDatabaseController', function NewDatabaseController($location, DsService) {
+    .controller('NewDatabaseController', function NewDatabaseController($location, DatabaseService) {
 
         var self = this;
 
@@ -13,7 +13,7 @@ angular.module('module_app.controllers.new_db', ['module_app.services.context'])
         };
 
         self.add = function() {
-            DsService.addRemote(self.remote);
+            DatabaseService.add(self.db);
             $location.path('/setup');
         };
     });
