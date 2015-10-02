@@ -9,7 +9,9 @@ angular.module('module_app.controllers.new_db', ['module_app.services.context'])
             name: null,
             url: 'http://',
             username: null,
-            password: null
+            password: null,
+            replicated: false,
+            favorites: []
         };
 
         self.add = function() {

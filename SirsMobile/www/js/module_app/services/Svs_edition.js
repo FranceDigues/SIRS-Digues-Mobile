@@ -4,7 +4,7 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
 
         // TODO → should be configured
 
-        this.$get = function(sPouch, AuthService, PouchDocument) {
+        this.$get = function(sPouch, AuthService, LocalDocument) {
             return {
                 newObject: function(type) {
                     return {
@@ -15,11 +15,11 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
                 },
 
                 getClosableObjects: function() {
-                    return PouchDocument.query('objetsNonClos/byLogin', AuthService.getValue()._id);
+                    return LocalDocument.query('objetsNonClos/byLogin', AuthService.getValue()._id);
                 },
 
                 getClosedObjects: function() {
-                    return PouchDocument.query('objetsClos/byLogin', AuthService.getValue()._id);
+                    return LocalDocument.query('objetsClos/byLogin', AuthService.getValue()._id);
                 }
             };
         };

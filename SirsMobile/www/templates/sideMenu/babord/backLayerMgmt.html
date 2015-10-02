@@ -9,6 +9,8 @@
             <ion-item ng-repeat="layer in c.sLayer.list()" ng-click="c.useLayer(layer)">
                 <i class="material-icons" ng-if="layer === c.sLayer.getActive()">check</i>
                 <h2>{{layer.name}}</h2>
+
+                <!-- Swipe actions -->
                 <ion-option-button class="button button-assertive" ng-click="c.removeLayer(layer)" ion-stop-event>
                     <i class="material-icons">delete</i>
                 </ion-option-button>

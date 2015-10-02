@@ -1,0 +1,13 @@
+<div id="appLayerList" ng-controller="AppLayerListController as c">
+    <ion-header-bar align-title="center">
+        <button type="button" class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="c.backToList()"></button>
+        <h1 class="title">Couches disponibles</h1>
+    </ion-header-bar>
+
+    <ion-content class="has-header">
+        <ion-checkbox ng-checked="c.isActive(layer)" ng-click="c.toggleLayer(layer)" ng-repeat="layer in c.available">
+            {{layer.title}}
+            <div class="layer-categories">{{layer.categories.join(' / ') || 'Sans catégorie'}}</div>
+        </ion-checkbox>
+    </ion-content>
+</div>

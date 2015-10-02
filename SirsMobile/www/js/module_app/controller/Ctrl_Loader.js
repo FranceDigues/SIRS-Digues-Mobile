@@ -8,7 +8,7 @@
 /***************************************************************** --------- *****************************************************/
 
 angular.module('module_app.controllers.loader', [])
-    .controller('cLoader', function cLoader ($scope,$timeout, $log, $location, sPouch, sMapLayer, sProf, sContext, PouchDocument) {
+    .controller('cLoader', function cLoader ($scope,$timeout, $log, $location, sPouch, sMapLayer, sProf, sContext, LocalDocument) {
         var me = this;
 
         me.sContext =sContext;
@@ -23,7 +23,7 @@ angular.module('module_app.controllers.loader', [])
         $log.debug("loader");
 
 
-        PouchDocument.save({
+        LocalDocument.save({
             _id: '_design/objetsNonClos',
             views: {
                 byLogin: {
@@ -36,7 +36,7 @@ angular.module('module_app.controllers.loader', [])
             }
         });
 
-        PouchDocument.save({
+        LocalDocument.save({
             _id: '_design/objetsClos',
             views: {
                 byLogin: {

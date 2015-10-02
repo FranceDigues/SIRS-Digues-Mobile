@@ -1,131 +1,39 @@
-<div ng-controller="cAppLayerMgmt as c">
+<div id="appLayers" ng-controller="AppLayersController as c">
+    <ion-header-bar align-title="center">
+        <button type="button" class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="c.backToMenu()"></button>
+        <h1 class="title">Affichage</h1>
+    </ion-header-bar>
 
-    <header class="bar bar-header bar-stable">
-        <button class="col-25 button button-icon button-clear ion-arrow-left-a"
-                on-tap="c.sContext.backToBabordMenu()"></button>
-        <a class="btn-floating btn-large waves-effect waves-light pink" ng-class="c.search === true? 'yellow':'pink'"
-           style="left:50%;"><i
-                class="material-icons right" on-tap="c.toggleSearch()">{{(c.search === true? 'close':'add')}}</i></a>
-    </header>
+    <ion-content class="has-header has-fab-bottom">
+        <ion-list can-swipe="true">
+            <ion-item ng-repeat="layer in c.layers">
+                <div class="layer-color" ng-style="{'background-color': c.getLayerColor($index)}"></div>
+                <div class="layer-state">
+                    <i class="material-icons" ng-class="layer.position ? 'icon-layer-selected':'icon-layer-unselected'">call_merge</i>
+                    <i class="material-icons" ng-class="layer.visible ? 'icon-layer-selected' : 'icon-layer-unselected'">visibility</i>
+                    <i class="material-icons" ng-class="layer.editable ? 'icon-layer-selected' : 'icon-layer-unselected'">edit</i>
+                    <i class="icon ion-android-hand" ng-class="layer.selectable ? 'icon-layer-selected' : 'icon-layer-unselected'"></i>
+                </div>
+                <h2>{{layer.title}}</h2>
 
-    <ion-content class="has-header affichage-content" overflow-scroll="true" style="padding-top:15px;">
-
-        <!--searchview-->
-        <div ng-show="c.search">
-            <!--//Liste expensive layer-->
-            <!--//fixme calque sans theme?-->
-            <ion-list>
-                <ion-item ng-repeat="cat in c.sAppLayer.categories" class="waves-effect waves-teal"
-                          style="  display: block; width: 100%;"
-                          ng-click="c.justeOneOpen(cat)"
-                          ng-show="(c.sAppLayer.leaves|filter:{categorie:cat.title}:true|filter:{favori:false}).length>0">
-                    <p style="padding-bottom: 10px;">{{cat.title}} :</p>
-                    <ion-checkbox class="waves-effect waves-teal"
-                                  ng-repeat="layer in c.sAppLayer.leaves|filter:{categorie:cat.title}:true|filter:{favori:false}"
-                                  on-tap="layer.favori=true;"
-                                  ion-stop-event="click"
-                                  style="  display: block; width: 100%;"
-                                  ng-if="cat.visible">
-                        {{layer.title}}
-                    </ion-checkbox>
-                </ion-item>
-                <ion-item class="waves-effect waves-teal"
-                          style="  display: block; width: 100%;"
-                          ng-click="c.sansCat=!c.sansCat">
-                    <p style="padding-bottom: 10px;">SANS CATEGORIE</p>
-                    <ion-checkbox class="waves-effect waves-teal"
-                                  ng-repeat="layer in c.sAppLayer.leaves|filter:{categorie:'!!'}:true|filter:{favori:false}"
-                                  on-tap="layer.favori=true;"
-                                  ion-stop-event="click"
-                                  style="  display: block; width: 100%;"
-                                  ng-if="c.sansCat">
-                        {{layer.title}}
-                    </ion-checkbox>
-                </ion-item>
-            </ion-list>
-
-        </div>
-
-        <!--FILTRER-->
-        <ion-list
-                show-delete="c.shouldShowDelete"
-                show-reorder="c.shouldShowReorder"
-                can-swipe="c.listCanSwipe"
-                class="animate-if">
-
-            <ion-item class="affichage-list" ng-repeat="layer in c.sAppLayer.leaves|filter:{favori:true}">
-                <h2 class="layer-heading">
-                    <i class="layer-color" ng-style="{'background-color': c.getLayerColor(layer)}"></i>
-                    {{layer.title}}
-                </h2>
-
-                <table name="blackBox" class="tabStampContnair">
-                    <tr>
-                        <td class="tabStampLine"><i class="material-icons tiny-icon-affichage right"
-                                                    ng-class="layer.realPosition ? 'icon-layer-unselected':'icon-layer-selected'">call_merge</i>
-                        </td>
-                        <td class="tabStampLine"><i class="icon ion-eye tiny-icon-affichage right"
-                                                    ng-class="layer.visible ? 'icon-layer-selected':'icon-layer-unselected'"></i>
-                        </td>
-                        <td class="tabStampLine "><i class="icon ion-edit tiny-icon-affichage right"
-                                                     ng-class="layer.editable ? 'icon-layer-selected':'icon-layer-unselected'"></i>
-                        </td>
-                        <td class="tabStampLine"><i class="icon ion-android-hand tiny-icon-affichage right"
-                                                    ng-class="layer.selectable ? 'icon-layer-selected':'icon-layer-unselected'"></i>
-                        </td>
-                    </tr>
-                </table>
-
-                <!--sous boutton-->
-
-                <ion-option-button class="button-info"
-                                   on-tap="layer.realPosition=!layer.realPosition">
-                    <i class="material-icons right"
-                       ng-class="layer.realPosition ? 'icon-layer-unselected':'icon-layer-selected'">call_merge</i>
+                <!-- Swipe actions -->
+                <ion-option-button class="button" on-tap="layer.position = !layer.position">
+                    <i class="material-icons" ng-class="layer.position ? 'icon-layer-selected' : 'icon-layer-unselected'">call_merge</i>
                 </ion-option-button>
-                <ion-option-button class="button-info"
-                                   on-tap="layer.visible=!layer.visible; c.loadDataLayer(layer);">
-                    <!--bousolle like -->
-                    <i class="icon ion-eye right"
-                       ng-class="layer.visible ? 'icon-layer-selected':'icon-layer-unselected'"></i>
+                <ion-option-button class="button" on-tap="layer.visible = !layer.visible">
+                    <i class="material-icons" ng-class="layer.visible ? 'icon-layer-selected' : 'icon-layer-unselected'">visibility</i>
                 </ion-option-button>
-                <ion-option-button class="button-info"
-                                   on-tap="layer.editable=!layer.editable">
-                    <!--edit-->
-                    <i class="icon ion-edit right"
-                       ng-class="layer.editable ? 'icon-layer-selected':'icon-layer-unselected'"></i>
+                <ion-option-button class="button" on-tap="layer.editable = !layer.editable">
+                    <i class="material-icons" ng-class="layer.editable ? 'icon-layer-selected' : 'icon-layer-unselected'">edit</i>
                 </ion-option-button>
-                <ion-option-button class="button-info"
-                                   on-tap="layer.selectable=!layer.selectable">
-                    <!--select-->
-                    <i class="icon ion-android-hand right"
-                       ng-class="layer.selectable ? 'icon-layer-selected':'icon-layer-unselected'"></i>
+                <ion-option-button class="button" on-tap="layer.selectable = !layer.selectable">
+                    <i class="icon ion-android-hand" ng-class="layer.selectable ? 'icon-layer-selected' : 'icon-layer-unselected'"></i>
                 </ion-option-button>
-
-
-                <ion-delete-button class="ion-trash-b icon-delete-layer"
-                                   on-tap="layer.favori=false;layer.visible=false;">
-                </ion-delete-button>
-                <ion-reorder-button class="ion-navicon"
-                                    on-reorder="c.reorderItem(layer, $fromIndex, $toIndex)">
-                </ion-reorder-button>
-
             </ion-item>
         </ion-list>
     </ion-content>
 
-
-    <!--bar bar-footer-->
-    <ion-footer-bar class=" bar-positive cyan">
-        <div class="buttons">
-            <button class="button button-icon icon ion-trash-b"
-                    on-tap="c.shouldShowDelete = !c.shouldShowDelete; c.shouldShowReorder = false"></button>
-        </div>
-        <div class="buttons right" ng-if="c.noFilter" class="animate-if">
-            <button class="button" on-tap="c.shouldShowDelete = false; c.shouldShowReorder = !c.shouldShowReorder">
-                Reorder
-            </button>
-        </div>
-    </ion-footer-bar>
-
+    <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 200px;" on-tap="c.goToLayerList()">
+        <i class="large material-icons">list</i>
+    </button>
 </div>

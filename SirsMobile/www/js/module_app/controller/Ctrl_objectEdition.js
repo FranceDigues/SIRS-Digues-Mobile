@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.objectEdition', [])
 
-    .controller('ObjectEditionController', function ObjectEditionController($scope, $q, $location, $ionicLoading, $ionicScrollDelegate, $routeParams, GeolocationService, PouchDocument, ContextService, objectDoc) {
+    .controller('ObjectEditionController', function ObjectEditionController($scope, $q, $location, $ionicLoading, $ionicScrollDelegate, $routeParams, GeolocationService, LocalDocument, ContextService, objectDoc) {
 
         var self = this;
 
@@ -47,7 +47,7 @@ angular.module('module_app.controllers.objectEdition', [])
             }
 
             // Save document.
-            PouchDocument.save(self.objectDoc).then(function() {
+            LocalDocument.save(self.objectDoc).then(function() {
                 $location.path('/home');
             });
         };
@@ -60,7 +60,7 @@ angular.module('module_app.controllers.objectEdition', [])
         $scope.$on('$destroy', function() {
             // Remove the document if it's new and non saved.
             if (isNewObject && objectDoc._rev === initialRevision) {
-                PouchDocument.remove(objectDoc);
+                LocalDocument.remove(objectDoc);
             }
             // Restore the geolocation service state.
             if (!geolocWasEnabled) {

@@ -14,21 +14,24 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
                     url: 'http://5.196.17.92:5984/sirs_symadrem',
                     username: 'geouser',
                     password: 'geopw',
-                    replicated: false
+                    replicated: false,
+                    favorites: []
                 },
                 {
                     name: 'azerty',
                     url: 'http://localhost:5984/azerty',
                     username: 'username',
                     password: 'password',
-                    replicated: false
+                    replicated: false,
+                    favorites: []
                 },
                 {
                     name: 'qwerty',
                     url: 'http://localhost:5984/qwerty',
                     username: 'username',
                     password: 'password',
-                    replicated: false
+                    replicated: false,
+                    favorites: []
                 }
             ]
         },
@@ -73,6 +76,9 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
                 }
             ]
         },
+
+        // Application layers.
+        appLayers: [],
 
         // Others.
         version: 'v0.2.1 -u10'
@@ -149,7 +155,9 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
         self.setActive = function(name) {
             var oldValue = dbContext.active;
             dbContext.active = name;
-            $rootScope.$broadcast('databaseChanged', self.getActive(), oldValue);
+            if (oldValue !== name) {
+                $rootScope.$broadcast('databaseChanged', self.getActive(), oldValue);
+            }
         };
     })
 
@@ -202,7 +210,143 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
         };
     })
 
-    .service('AuthService', function AuthService($rootScope, $q, ContextService, PouchDocument, md5) {
+    .service('AppLayersService', function AppLayersService($rootScope, $q, LocalDocument, DatabaseService) {
+
+        var self = this;
+
+        var favorites = DatabaseService.getActive().favorites;
+
+        var cachedDescriptions = {
+            'core': {
+                layers: [
+                    {
+                        "title": "Tronçons",
+                        "fieldToFilterOn": "@class",
+                        "filterValue": "fr.sirs.core.model.TronconDigue"
+                    },
+                    {
+                        "title": "Bornes",
+                        "fieldToFilterOn": "@class",
+                        "filterValue": "fr.sirs.core.model.BorneDigue"
+                    },
+                    {
+                        "title": "Structures",
+                        "children": [
+                            {
+                                "title": "Sommet de risberme",
+                                "fieldToFilterOn": "@class",
+                                "filterValue": "fr.sirs.core.model.SommetRisberme"
+                            },
+                            {
+                                "title": "Crête",
+                                "fieldToFilterOn": "@class",
+                                "filterValue": "fr.sirs.core.model.Crete"
+                            },
+                            {
+                                "title": "Pied de digue",
+                                "fieldToFilterOn": "@class",
+                                "filterValue": "fr.sirs.core.model.PiedDigue"
+                            },
+                            {
+                                "title": "Talus de digue",
+                                "fieldToFilterOn": "@class",
+                                "filterValue": "fr.sirs.core.model.TalusDigue"
+                            },
+                            {
+                                "title": "Talus de risberme",
+                                "fieldToFilterOn": "@class",
+                                "filterValue": "fr.sirs.core.model.TalusRisberme"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "Francs-bords",
+                        "children": [
+                            {
+                                "title": "Largeur de franc bord",
+                                "fieldToFilterOn": "@class",
+                                "filterValue": "fr.sirs.core.model.LargeurFrancBord"
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+
+        function moduleDescriptions() {
+            var deferred = $q.defer();
+            if (!cachedDescriptions) {
+                LocalDocument.get('$sirs').then(
+                    function onSuccess(result) {
+                        cachedDescriptions = result.moduleDescriptions;
+                        deferred.resolve(cachedDescriptions);
+                    },
+                    function onError(error) {
+                        deferred.reject(error);
+                    });
+            } else {
+                deferred.resolve(cachedDescriptions);
+            }
+            return deferred.promise;
+        }
+
+        function extractLeaves(nodes, parent) {
+            var leaves = [];
+            angular.forEach(nodes, function(node) {
+                node.categories = angular.isObject(parent) ?
+                    parent.categories.concat(parent.title) : [];
+                if (angular.isArray(node.children)) {
+                    leaves = leaves.concat(extractLeaves(node.children, node));
+                } else {
+                    leaves.push(node);
+                }
+            });
+            return leaves;
+        }
+
+
+        self.getAvailable = function() {
+            var deferred = $q.defer();
+
+            moduleDescriptions().then(
+                function onSuccess(modules) {
+                    var leaves = [];
+                    angular.forEach(modules, function(module) {
+                        leaves = leaves.concat(extractLeaves(module.layers));
+                    });
+                    deferred.resolve(leaves);
+                },
+                function onError(error) {
+                    deferred.reject(error);
+                });
+
+            return deferred.promise;
+        };
+
+        self.getFavorites = function() {
+            return favorites;
+        };
+
+        self.addFavorite = function(layer) {
+            favorites.push(layer);
+            $rootScope.$broadcast('appLayerAdded', layer);
+        };
+
+        self.removeFavorite = function(layer) {
+            favorites.splice(favorites.map(function(item) {
+                return item.title;
+            }).indexOf(layer.title), 1);
+            $rootScope.$broadcast('appLayerRemoved', layer);
+        };
+
+
+        $rootScope.$on('databaseChanged', function() {
+            cachedDescriptions = null;
+        });
+    })
+
+    .service('AuthService', function AuthService($rootScope, $q, ContextService, LocalDocument, md5) {
 
         var self = this;
 
@@ -224,7 +368,7 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
             $rootScope.$broadcast('loginStart', login);
 
-            PouchDocument.queryOne('Utilisateur/byLogin', login).then(
+            LocalDocument.queryOne('Utilisateur/byLogin', login).then(
                 function onGetUserSuccess(doc) {
                     if (doc.password === md5.createHash(password).toUpperCase()) {
                         context.authUser = doc;
@@ -240,7 +384,7 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
                     $rootScope.$broadcast('loginError', login);
                 });
 
-            PouchDocument.query('Utilisateur/all').then(function(result) {
+            LocalDocument.query('Utilisateur/all').then(function(result) {
                 console.log(result);
             });
 
@@ -255,4 +399,9 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
             context.authUser = null;
             $rootScope.$broadcast('logoutSuccess');
         };
+
+
+        $rootScope.$on('databaseChanged', function() {
+            context.authUser = null;
+        });
     });

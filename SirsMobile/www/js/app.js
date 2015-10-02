@@ -163,12 +163,12 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
                 controller: 'ObjectEditionController as c',
                 reloadOnSearch : false,
                 resolve: {
-                    objectDoc: function($log, $route, PouchDocument, EditionService) {
+                    objectDoc: function($log, $route, LocalDocument, EditionService) {
                         var params = $route.current.params;
                         if (params.id && params.id !== '') {
-                            return PouchDocument.get(params.id);
+                            return LocalDocument.get(params.id);
                         } else {
-                            return PouchDocument.create(EditionService.newObject(params.type));
+                            return LocalDocument.create(EditionService.newObject(params.type));
                         }
                     }
                 }

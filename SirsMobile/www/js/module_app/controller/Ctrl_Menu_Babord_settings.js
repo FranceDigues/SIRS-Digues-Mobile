@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.menus.babord.settings', [])
 
-    .controller('SettingsController', function SettingsController(PouchDocument, ContextService) {
+    .controller('SettingsController', function SettingsController(LocalDocument, ContextService) {
 
         var self = this;
 

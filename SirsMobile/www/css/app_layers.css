@@ -1,0 +1,44 @@
+#appLayers > ion-header-bar {
+    background-color: #0097A7;
+}
+
+#appLayers > ion-header-bar > h1,
+#appLayers > ion-header-bar > button {
+    color: #FFFFFF;
+}
+
+#appLayers ion-list ion-item ion-option-button {
+    min-width: inherit;
+}
+
+#appLayers ion-list ion-item .item-content {
+    padding: 6px 50px 30px 16px;
+}
+
+#appLayers ion-list ion-item .item-content .layer-color {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 20px;
+}
+
+#appLayers ion-list ion-item .item-content .layer-state {
+    position: absolute;
+    bottom: 2px;
+    left: 16px;
+}
+
+#appLayers ion-list ion-item .item-content .layer-state > i {
+    display: inline-block;
+    font-size: 16px;
+    height: 20px;
+    width: 20px;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+#appLayers > .btn-floating {
+    z-index: 10;
+    position: absolute;
+}
