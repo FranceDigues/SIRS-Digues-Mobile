@@ -33,14 +33,18 @@
 
     <div class="fixed-button-bar text-center">
         <!-- FBB / Editable Layers -->
-        <button class="btn btn-large waves-effect waves-light" type="button"
-                ng-if="c.tab === 'layers'" ng-disabled="!c.selectedLayer">Tracer</button>
-        <button class="btn btn-large waves-effect waves-light" type="button"
-                ng-if="c.tab === 'layers'" ng-disabled="!c.selectedLayer" ng-click="c.newObject()">Commencer</button>
+        <div ng-if="c.tab === 'layers'">
+            <button class="btn btn-large waves-effect waves-light" type="button"
+                    ng-disabled="!c.selectedLayer">Tracer</button>
+            <button class="btn btn-large waves-effect waves-light" type="button"
+                    ng-disabled="!c.selectedLayer" ng-click="c.newObject()">Commencer</button>
+        </div>
         <!-- FBB / Editable Layers -->
-        <button class="btn btn-large waves-effect waves-light" type="button"
-                ng-if="c.tab === 'closable'" ng-disabled="!c.selectedClosable">Tracer</button>
-        <button class="btn btn-large waves-effect waves-light" type="button"
-                ng-if="c.tab === 'closable'" ng-disabled="!c.selectedClosable" ng-click="c.closeObject()">Fermer</button>
+        <div ng-if="c.tab === 'closable'">
+            <button class="btn btn-large waves-effect waves-light" type="button"
+                    ng-disabled="!c.selectedClosable">Tracer</button>
+            <button class="btn btn-large waves-effect waves-light" type="button"
+                    ng-disabled="!c.selectedClosable" ng-click="c.closeObject()">Fermer</button>
+        </div>
     </div>
 </div>

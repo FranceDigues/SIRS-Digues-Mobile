@@ -1,12 +1,12 @@
 angular.module('module_app.controllers.menus.tribord.objectManagement', [])
 
-    .controller('ObjectManagementController', function ObjectManagementController($filter, $location, $ionicScrollDelegate, LocalDocument, AuthService, GeolocationService, EditionService, sAppLayer) {
+    .controller('ObjectManagementController', function ObjectManagementController($filter, $location, $ionicScrollDelegate, LocalDocument, AuthService, GeolocationService, EditionService, AppLayersService) {
 
         var self = this;
 
         self.tab = 'layers';
 
-        self.allLayers = sAppLayer.leaves;
+        self.allLayers = AppLayersService.getFavorites();
 
         self.closable = [];
 

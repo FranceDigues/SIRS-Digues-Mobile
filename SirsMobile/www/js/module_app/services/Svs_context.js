@@ -216,62 +216,7 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
         var favorites = DatabaseService.getActive().favorites;
 
-        var cachedDescriptions = {
-            'core': {
-                layers: [
-                    {
-                        "title": "Tronçons",
-                        "fieldToFilterOn": "@class",
-                        "filterValue": "fr.sirs.core.model.TronconDigue"
-                    },
-                    {
-                        "title": "Bornes",
-                        "fieldToFilterOn": "@class",
-                        "filterValue": "fr.sirs.core.model.BorneDigue"
-                    },
-                    {
-                        "title": "Structures",
-                        "children": [
-                            {
-                                "title": "Sommet de risberme",
-                                "fieldToFilterOn": "@class",
-                                "filterValue": "fr.sirs.core.model.SommetRisberme"
-                            },
-                            {
-                                "title": "Crête",
-                                "fieldToFilterOn": "@class",
-                                "filterValue": "fr.sirs.core.model.Crete"
-                            },
-                            {
-                                "title": "Pied de digue",
-                                "fieldToFilterOn": "@class",
-                                "filterValue": "fr.sirs.core.model.PiedDigue"
-                            },
-                            {
-                                "title": "Talus de digue",
-                                "fieldToFilterOn": "@class",
-                                "filterValue": "fr.sirs.core.model.TalusDigue"
-                            },
-                            {
-                                "title": "Talus de risberme",
-                                "fieldToFilterOn": "@class",
-                                "filterValue": "fr.sirs.core.model.TalusRisberme"
-                            }
-                        ]
-                    },
-                    {
-                        "title": "Francs-bords",
-                        "children": [
-                            {
-                                "title": "Largeur de franc bord",
-                                "fieldToFilterOn": "@class",
-                                "filterValue": "fr.sirs.core.model.LargeurFrancBord"
-                            }
-                        ]
-                    }
-                ]
-            }
-        };
+        var cachedDescriptions = null;
 
 
         function moduleDescriptions() {
@@ -329,15 +274,19 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
         };
 
         self.addFavorite = function(layer) {
+            layer.editable = false;
+            layer.selectable = false;
+            layer.visible = false;
             favorites.push(layer);
             $rootScope.$broadcast('appLayerAdded', layer);
         };
 
         self.removeFavorite = function(layer) {
-            favorites.splice(favorites.map(function(item) {
+            var index = favorites.map(function(item) {
                 return item.title;
-            }).indexOf(layer.title), 1);
-            $rootScope.$broadcast('appLayerRemoved', layer);
+            }).indexOf(layer.title);
+            favorites.splice(index, 1);
+            $rootScope.$broadcast('appLayerRemoved', layer, index);
         };
 
 
