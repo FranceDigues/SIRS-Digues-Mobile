@@ -86,7 +86,7 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
 
         function thirdStep() {
             self.step = 3;
-            self.description = 'Indexation des documents...';
+            self.description = 'Construction des index...';
             self.percent = 0;
             self.completion = '0/' + indexedViews.length;
 

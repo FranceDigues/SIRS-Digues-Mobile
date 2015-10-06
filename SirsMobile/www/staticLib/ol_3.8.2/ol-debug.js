@@ -8381,7 +8381,7 @@ ol.DRAG_BOX_HYSTERESIS_PIXELS = 8;
 /**
  * @define {number} Hysteresis pixels.
  */
-ol.LONG_CLICK_HYSTERESIS_PIXELS = 20;
+ol.LONG_CLICK_HYSTERESIS_PIXELS = 24;
 
 
 /**

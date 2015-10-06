@@ -15,6 +15,8 @@ angular.module('module_app.services.map', ['module_app.services.context'])
 
         var self = this;
 
+        var lastSelection = [];
+
         var wktReader = new ol.format.WKT();
 
         var featureCache = $cacheFactory('featureCache');
@@ -23,10 +25,12 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             circleStyle: new ol.style.Style({
                 fill: new ol.style.Fill({ color: [255, 165, 0, 0.25] }),
                 stroke: new ol.style.Stroke({ color: [255, 165, 0, 1], width: 2 })
-            })
+            }),
+            layers: function isSelectable(olLayer) {
+                var model = olLayer.get('model');
+                return angular.isObject(model) && model.selectable === true;
+            }
         });
-
-        var lastSelection = [];
 
 
         self.buildConfig = function() {
@@ -116,13 +120,6 @@ angular.module('module_app.services.map', ['module_app.services.context'])
                         rev: row.value.rev,
                         title: row.value.libelle
                     });
-
-                    //var feature = wktReader.readFeature(row.value.geometry);
-                    //feature.getGeometry().transform('EPSG:2154', 'EPSG:3857');
-                    //feature.set('id', row.value.id);
-                    //feature.set('rev', row.value.rev);
-                    //feature.set('title', row.value.libelle);
-                    //features.push(feature);
                 }
             });
             return features;

@@ -7,10 +7,10 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
         // Database.
         database: {
-            active: 'test',
+            active: 'sirs_symadrem',
             list: [
                 {
-                    name: 'test',
+                    name: 'sirs_symadrem',
                     url: 'http://5.196.17.92:5984/sirs_symadrem',
                     username: 'geouser',
                     password: 'geopw',
@@ -18,18 +18,10 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
                     favorites: []
                 },
                 {
-                    name: 'azerty',
-                    url: 'http://localhost:5984/azerty',
-                    username: 'username',
-                    password: 'password',
-                    replicated: false,
-                    favorites: []
-                },
-                {
-                    name: 'qwerty',
-                    url: 'http://localhost:5984/qwerty',
-                    username: 'username',
-                    password: 'password',
+                    name: 'sirs_isere',
+                    url: 'http://5.196.17.92:5984/sirs_isere',
+                    username: 'geouser',
+                    password: 'geopw',
                     replicated: false,
                     favorites: []
                 }
@@ -38,12 +30,6 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
         // Authentication.
         authUser: null,
-
-        // Preferences.
-        settings: {
-            autoSync: true,
-            autoGeoloc: false
-        },
 
         // Background layer.
         backLayer: {
