@@ -9,7 +9,9 @@ angular.module('module_app.services.map', ['module_app.services.context'])
         return new ol.View(defaultView);
     })
 
-    .service('MapManager', function MapManager($rootScope, $q, $cacheFactory, olMap, BackLayerService, AppLayersService, LocalDocument, StyleFactory, currentView) {
+    .service('MapManager', function MapManager($rootScope, $q, $cacheFactory, $ionicSideMenuDelegate, olMap,
+                                               BackLayerService, AppLayersService, LocalDocument, StyleFactory,
+                                               sContext, currentView) {
 
         var self = this;
 
@@ -65,7 +67,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             if (layerModel.visible === true) {
                 setAppLayerFeatures(olLayer);
             } else {
-                olLayer.getSource().clear();
+                olLayer.getSource().getSource().clear();
             }
         };
 
@@ -110,8 +112,8 @@ angular.module('module_app.services.map', ['module_app.services.context'])
                     geometry.transform('EPSG:2154', 'EPSG:3857');
                     features.push({
                         geometry: geometry,
-                        docId: row.value.id,
-                        docRev: row.value.rev,
+                        id: row.value.id,
+                        rev: row.value.rev,
                         title: row.value.libelle
                     });
 
@@ -150,9 +152,9 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             promise.then(
                 function onSuccess(featureModels) {
                     olSource.addFeatures(featureModels.map(function(featureModel) {
-                        var olFeature = new ol.Feature(featureModel);
-                        olFeature.setStyle(StyleFactory(layerModel.color, featureModel.geometry.getType()));
-                        return olFeature;
+                        var feature = new ol.Feature(featureModel);
+                        feature.setStyle(StyleFactory(layerModel.color, featureModel.geometry.getType()));
+                        return feature;
                     }));
                 },
                 function onError(error) {
@@ -170,6 +172,16 @@ angular.module('module_app.services.map', ['module_app.services.context'])
                 feature.set('selected', true);
             });
             $rootScope.$broadcast('objectSelected', event.selected);
+
+            // TODO → move it and listen the above event
+            sContext.tribordView.active = 'desordreSlct';
+            if (lastSelection.length) {
+                sContext.selectedFeatures = event.selected;
+                !$ionicSideMenuDelegate.isOpenRight() && $ionicSideMenuDelegate.toggleRight();
+            } else {
+                sContext.selectedFeatures = [];
+                $ionicSideMenuDelegate.isOpenRight() && $ionicSideMenuDelegate.toggleRight();
+            }
         });
 
         $rootScope.$on('backLayerChanged', function(event, layerModel) {
@@ -228,7 +240,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             return function() {
                 var styles = [],
                     strokeColor = color,
-                    strokeWidth = 4;
+                    strokeWidth = 5;
                 if (this.get('selected') === true) {
                     styles.push(createLineStyle([255, 255, 255, 1], strokeWidth + 4));
                 }

@@ -1,43 +1,16 @@
 
 angular.module('module_app.controllers.menus.tribord.desordreDetail', [])
 
-    .controller('cDesordreDetail', function cDesordreDetail($log,$ionicScrollDelegate, $cordovaToast, sContext,sPouch) {
+    .controller('cDesordreDetail', function cDesordreDetail($ionicScrollDelegate, sContext, LocalDocument) {
 
         var self = this;
+
 
         self.activeTab = 'description';
 
         self.document = sContext.selectedDocument;
-        self.abstract={}
-        self.updateAbstract=function(){
-            self.abstract={}
 
-            pattern = /.*Id$/;
-
-            angular.forEach(   self.document, function(value, key) {
-                $log.debug(key)
-                if(pattern.test(key)){
-                    $log.debug(key)
-                         sPouch.localDb.get(value).then(function(doc){
-                            self.abstract[key.substr(0,key.length-2)]= doc.libelle;
-
-                                 $log.debug("self.abstract");
-                                 $log.debug(self.abstract);
-                        }).catch(function(err){
-                                 $log.error(err)
-                             }
-
-                    );
-
-                }
-            });
-
-
-        }
-
-        self.updateAbstract();
-
-
+        self.abstract = {};
 
         self.setActiveTab = function(name) {
             if (name !== self.activeTab) {
@@ -59,7 +32,13 @@ angular.module('module_app.controllers.menus.tribord.desordreDetail', [])
             sContext.tribordView.active = 'observationDetail';
         }
 
-        function onGetObservationError() {
-            $cordovaToast.showLongBottom('Une erreur s\'est produite.');
-        }
+        (function loadAbstracts() {
+            angular.forEach(self.document, function(value, key) {
+                if (/.*Id$/.test(key)) {
+                    LocalDocument.get(value).then(function(doc) {
+                        self.abstract[key.substr(0, key.length - 2)] = doc.libelle;
+                    });
+                }
+            });
+        })(); // run it
     });

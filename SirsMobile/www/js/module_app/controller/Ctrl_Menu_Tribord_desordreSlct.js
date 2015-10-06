@@ -1,14 +1,14 @@
 
 angular.module('module_app.controllers.menus.tribord.desordreSlct', [])
 
-    .controller('cDesordreSlct', function cDesordreSlct($cordovaToast, sContext, sPouch) {
+    .controller('cDesordreSlct', function cDesordreSlct($cordovaToast, sContext, LocalDocument) {
 
         var self = this;
 
         self.sContext = sContext;
 
         self.openDisorderDetails = function(feature) {
-            sPouch.localDb.get(feature.get('id')).then(onGetDocumentSuccess, onGetDocumentError);
+            LocalDocument.get(feature.get('id')).then(onGetDocumentSuccess, onGetDocumentError);
         };
 
 
