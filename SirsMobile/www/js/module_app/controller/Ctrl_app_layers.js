@@ -1,15 +1,18 @@
 angular.module('module_app.controllers.appLayers', ['module_app.services.context'])
 
-    .controller('AppLayersController', function AppLayersController($location, AppLayersService, sContext, sStyleFactory) {
+    .controller('AppLayersController', function AppLayersController($location, AppLayersService, MapManager, sContext, sStyleFactory) {
 
         var self = this;
 
 
         self.layers = AppLayersService.getFavorites();
 
-        self.getLayerColor = function(index) {
-            var rgba = sStyleFactory.getColorAtIndex(index);
-            return 'rgb(' + rgba[0] + ',' + rgba[1] + ',' + rgba[2] + ')';
+        self.layerColor = function(layer) {
+            return 'rgb(' + layer.color[0] + ',' + layer.color[1] + ',' + layer.color[2] + ')';
+        };
+
+        self.toggleVisibility = function(layer) {
+            MapManager.toggleAppLayer(layer);
         };
 
         self.backToMenu = function() {

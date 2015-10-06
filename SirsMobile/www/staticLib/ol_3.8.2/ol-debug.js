@@ -8381,7 +8381,7 @@ ol.DRAG_BOX_HYSTERESIS_PIXELS = 8;
 /**
  * @define {number} Hysteresis pixels.
  */
-ol.LONG_CLICK_HYSTERESIS_PIXELS = 15;
+ol.LONG_CLICK_HYSTERESIS_PIXELS = 20;
 
 
 /**
@@ -109532,6 +109532,8 @@ ol.interaction.LongClickSelect.prototype.forEachVectorSources_ = function (layer
       // Ensure that the layer has a vector source.
       if (source instanceof ol.source.Vector) {
         callback.call(this, source);
+      } else if (source instanceof ol.source.ImageVector) {
+        callback.call(this, source.getSource());
       }
     }
   }, this);

@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.menus.babord.backLayerMgmt', [])
 
-    .controller('BackLayerController', function BackLayerController($location, BackLayerService, MapService, sContext) {
+    .controller('BackLayerController', function BackLayerController($location, BackLayerService, sContext) {
 
         var self = this;
 
@@ -9,7 +9,7 @@ angular.module('module_app.controllers.menus.babord.backLayerMgmt', [])
 
 
         self.useLayer = function(layer) {
-            MapService.setBackLayer(layer);
+            BackLayerService.setActive(layer.name);
         };
 
         self.removeLayer = function(layer) {

@@ -15,11 +15,11 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
                 },
 
                 getClosableObjects: function() {
-                    return LocalDocument.query('objetsNonClos/byLogin', AuthService.getValue()._id);
+                    return LocalDocument.query('objetsNonClos/byLogin', { key: AuthService.getValue()._id });
                 },
 
                 getClosedObjects: function() {
-                    return LocalDocument.query('objetsClos/byLogin', AuthService.getValue()._id);
+                    return LocalDocument.query('objetsClos/byLogin', { key: AuthService.getValue()._id });
                 }
             };
         };

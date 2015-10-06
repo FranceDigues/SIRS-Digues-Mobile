@@ -7,7 +7,7 @@
     <ion-content class="has-header has-fab-bottom">
         <ion-list can-swipe="true">
             <ion-item ng-repeat="layer in c.layers">
-                <div class="layer-color" ng-style="{'background-color': c.getLayerColor($index)}"></div>
+                <div class="layer-color" ng-style="{'background-color': c.layerColor(layer)}"></div>
                 <div class="layer-state">
                     <i class="material-icons" ng-class="layer.position ? 'icon-layer-selected':'icon-layer-unselected'">call_merge</i>
                     <i class="material-icons" ng-class="layer.visible ? 'icon-layer-selected' : 'icon-layer-unselected'">visibility</i>
@@ -20,7 +20,7 @@
                 <ion-option-button class="button" on-tap="layer.position = !layer.position">
                     <i class="material-icons" ng-class="layer.position ? 'icon-layer-selected' : 'icon-layer-unselected'">call_merge</i>
                 </ion-option-button>
-                <ion-option-button class="button" on-tap="layer.visible = !layer.visible">
+                <ion-option-button class="button" on-tap="c.toggleVisibility(layer)">
                     <i class="material-icons" ng-class="layer.visible ? 'icon-layer-selected' : 'icon-layer-unselected'">visibility</i>
                 </ion-option-button>
                 <ion-option-button class="button" on-tap="layer.editable = !layer.editable">

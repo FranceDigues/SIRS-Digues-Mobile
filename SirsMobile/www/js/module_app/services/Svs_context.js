@@ -277,6 +277,12 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
             layer.editable = false;
             layer.selectable = false;
             layer.visible = false;
+            layer.color = [
+                Math.floor(Math.random() * 256),    // red
+                Math.floor(Math.random() * 256),    // green
+                Math.floor(Math.random() * 256),    // blue
+                1                                   // alpha
+            ];
             favorites.push(layer);
             $rootScope.$broadcast('appLayerAdded', layer);
         };
@@ -317,12 +323,12 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
             $rootScope.$broadcast('loginStart', login);
 
-            LocalDocument.queryOne('Utilisateur/byLogin', login).then(
-                function onGetUserSuccess(doc) {
-                    if (doc.password === md5.createHash(password).toUpperCase()) {
-                        context.authUser = doc;
-                        deferred.resolve(doc);
-                        $rootScope.$broadcast('loginSuccess', login, doc);
+            LocalDocument.queryOne('Utilisateur/byLogin', { key: login, include_docs: true }).then(
+                function onGetUserSuccess(result) {
+                    if (result.doc.password === md5.createHash(password).toUpperCase()) {
+                        context.authUser = result.doc;
+                        deferred.resolve(result.doc);
+                        $rootScope.$broadcast('loginSuccess', login, result.doc);
                     } else {
                         deferred.reject();
                         $rootScope.$broadcast('loginError', login);
@@ -332,10 +338,6 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
                     deferred.reject();
                     $rootScope.$broadcast('loginError', login);
                 });
-
-            LocalDocument.query('Utilisateur/all').then(function(result) {
-                console.log(result);
-            });
 
             return deferred.promise;
         };

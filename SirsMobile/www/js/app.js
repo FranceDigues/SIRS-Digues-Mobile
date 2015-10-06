@@ -113,8 +113,8 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
 
         $ionicConfigProvider.tabs.position('bottom'); // other values: top
 
-        olMapProvider.provideOptions('main', ['MapService', function(MapService) {
-            return MapService.buildConfig();
+        olMapProvider.provideOptions('main', ['MapManager', function(MapManager) {
+            return MapManager.buildConfig();
         }]);
 
         $routeProvider

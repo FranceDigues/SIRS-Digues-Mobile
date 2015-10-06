@@ -57,6 +57,7 @@ angular.module('module_app.services.dao', ['module_app.services.context'])
 
         var self = this;
 
+
         self.get = function(id) {
             var deferred = $q.defer();
 
@@ -71,13 +72,13 @@ angular.module('module_app.services.dao', ['module_app.services.context'])
             return deferred.promise;
         };
 
-        self.queryOne = function(fun, key) {
+        self.queryOne = function(fun, options) {
             var deferred = $q.defer();
 
-            PouchService.getLocalDB().query(fun, { key: key, include_docs: true })
+            PouchService.getLocalDB().query(fun, options)
                 .then(function(result) {
                     if (result.rows.length === 1) {
-                        deferred.resolve(result.rows[0].doc);
+                        deferred.resolve(result.rows[0]);
                     } else {
                         deferred.reject();
                     }
@@ -89,14 +90,12 @@ angular.module('module_app.services.dao', ['module_app.services.context'])
             return deferred.promise;
         };
 
-        self.query = function(fun, key) {
+        self.query = function(fun, options) {
             var deferred = $q.defer();
 
-            PouchService.getLocalDB().query(fun, { key: key, include_docs: true })
+            PouchService.getLocalDB().query(fun, options)
                 .then(function(result) {
-                    deferred.resolve(result.rows.map(function(row) {
-                        return row.doc;
-                    }));
+                    deferred.resolve(result.rows);
                 })
                 .catch(function(error) {
                     deferred.reject(error);

@@ -119,11 +119,13 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
         
         function thirdStepComplete() {
             DatabaseService.getActive().replicated = true;
-            if (AuthService.isNull()) {
-                $location.path('/login');
-            } else {
-                $location.path('/home');
-            }
+            $timeout(function() {
+                if (AuthService.isNull()) {
+                    $location.path('/login');
+                } else {
+                    $location.path('/home');
+                }
+            }, 1000);
         }
 
         function thirdStepError(error) {
