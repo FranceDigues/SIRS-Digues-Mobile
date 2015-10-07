@@ -109522,7 +109522,7 @@ ol.interaction.LongClickSelect.prototype.forEachVectorSources_ = function (layer
   layers.forEach(function (layer) {
     // This is a group of layers. Call this method recursively.
     if (layer instanceof ol.layer.Group) {
-      this.forEachVectorSources_(layer.getLayers());
+      this.forEachVectorSources_(layer.getLayers(), callback, layerFilter);
     }
 
     // This is a single layer. Check if this layer should be included.

@@ -1,30 +1,33 @@
 angular.module('module_app.services.map', ['module_app.services.context'])
 
-    .constant('defaultView', {
-        zoom: 8,
-        center: ol.proj.transform([3.5, 43.5], 'CRS:84', 'EPSG:3857')
-    })
-    
-    .factory('currentView', function(defaultView) {
-        return new ol.View(defaultView);
+    .factory('featureCache', function($cacheFactory) {
+        return $cacheFactory('featureCache');
     })
 
-    .service('MapManager', function MapManager($rootScope, $q, $cacheFactory, $ionicSideMenuDelegate, olMap,
-                                               BackLayerService, AppLayersService, LocalDocument, StyleFactory,
-                                               sContext, currentView) {
+    .service('MapManager', function MapManager($rootScope, $q, $ionicSideMenuDelegate, olMap, BackLayerService,
+                                               AppLayersService, LocalDocument, StyleFactory, sContext,
+                                               GeolocationService, featureCache) {
 
         var self = this;
 
+
+        // OpenLayers objects
+        // ----------
+
         var lastSelection = [];
 
-        var wktReader = new ol.format.WKT();
+        var currentView = new ol.View({
+            zoom: 8,
+            center: ol.proj.transform([3.5, 43.5], 'CRS:84', 'EPSG:3857')
+        });
 
-        var featureCache = $cacheFactory('featureCache');
+        var wktFormat = new ol.format.WKT();
+
+        var wgs84Sphere = new ol.Sphere(6378137);
 
         var selectInteraction = new ol.interaction.LongClickSelect({
             circleStyle: new ol.style.Style({
-                fill: new ol.style.Fill({ color: [255, 165, 0, 0.25] }),
-                stroke: new ol.style.Stroke({ color: [255, 165, 0, 1], width: 2 })
+                fill: new ol.style.Fill({ color: [255, 255, 255, 0.5] })
             }),
             layers: function isSelectable(olLayer) {
                 var model = olLayer.get('model');
@@ -32,24 +35,54 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             }
         });
 
+        var backLayer = new ol.layer.Tile({
+            name: 'Background',
+            source: createBackLayerSourceInstance(BackLayerService.getActive())
+        });
+
+        var appLayers = new ol.layer.Group({
+            name: 'Business',
+            layers: AppLayersService.getFavorites().map(createAppLayerInstance)
+        });
+
+        var geolocLayer = new ol.layer.Vector({
+            name: 'Geolocation',
+            visible: GeolocationService.isEnabled(),
+            source: new ol.source.Vector({ useSpatialIndex: false }),
+            style: function(feature) {
+                switch(feature.getGeometry().getType()) {
+                    case 'Polygon':
+                        return [
+                            new ol.style.Style({
+                                fill: new ol.style.Fill({ color: [255, 255, 255, 0.2] }),
+                                stroke: new ol.style.Stroke({ color: [0, 0, 255, 1], width: 1 })
+                            })
+                        ];
+                    case 'Point':
+                        return [
+                            new ol.style.Style({
+                                image: new ol.style.Icon({
+                                    anchor: [0.5, 1],
+                                    anchorXUnits: 'fraction',
+                                    anchorYUnits: 'fraction',
+                                    src: 'img/pin-icon.png'
+                                })
+                            })
+                        ];
+                    default:
+                        return [];
+                }
+            }
+        });
+
+
+        // Public methods
+        // ----------
 
         self.buildConfig = function() {
-            var olLayers = [];
-
-            // Background layer.
-            olLayers.push(createBackLayerInstance(BackLayerService.getActive()));
-
-            // Application layers.
-            angular.forEach(AppLayersService.getFavorites(), function(layerModel, index) {
-                olLayers.push(createAppLayerInstance(layerModel));
-                if (layerModel.visible === true) {
-                    setAppLayerFeatures(olLayers[index + 1]);
-                }
-            });
-
             return {
                 view: currentView,
-                layers: olLayers,
+                layers: [backLayer, appLayers, geolocLayer],
                 controls: [],
                 interactions: ol.interaction.defaults({
                     altShiftDragRotate: false,
@@ -58,6 +91,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             };
         };
 
+        // TODO → find a way to do this through event
         self.toggleAppLayer = function(layerModel) {
             var olLayer = getAppLayerInstance(layerModel);
 
@@ -76,89 +110,116 @@ angular.module('module_app.services.map', ['module_app.services.context'])
         };
 
 
-        function createBackLayerInstance(layerModel) {
-            var options = angular.copy(layerModel);
-            options.source = new ol.source[layerModel.source.type](layerModel.source);
-            return new ol.layer[layerModel.type](options);
+        // Private methods
+        // ----------
+
+        function createBackLayerSourceInstance(layerModel) {
+            return new ol.source[layerModel.source.type](layerModel.source);
         }
 
         function createAppLayerInstance(layerModel) {
             var olLayer = new ol.layer.Image({
                 name: layerModel.title,
                 visible: layerModel.visible,
+                model: layerModel,
                 source: new ol.source.ImageVector({
                     source: new ol.source.Vector({ useSpatialIndex: false })
                 })
             });
-            olLayer.set('model', layerModel);
+
+            if (layerModel.visible === true) {
+                setAppLayerFeatures(olLayer);
+            }
             return olLayer;
         }
 
-        function getAppLayerInstance(layerModel) {
-            var map = olMap.get('main');
-            if (map instanceof ol.Map) {
-                var layers = map.getLayers(),
-                    i = layers.getLength();
-                while (i--) {
-                    if (layers.item(i).get('model') === layerModel) {
-                        return layers.item(i);
-                    }
-                }
-            }
-            return null;
-        }
-
-        function createFeatureModels(rows) {
+        function createAppFeatureInstances(featureDocs) {
             var features = [];
-            angular.forEach(rows, function(row) {
-                if (angular.isString(row.value.geometry)) { // paranoiac check
-                    var geometry = wktReader.readGeometry(row.value.geometry);
-                    geometry.transform('EPSG:2154', 'EPSG:3857');
-                    features.push({
-                        geometry: geometry,
-                        id: row.value.id,
-                        rev: row.value.rev,
-                        title: row.value.libelle
-                    });
+            angular.forEach(featureDocs, function(featureDoc) {
+                if (angular.isString(featureDoc.value.geometry)) {
+                    var feature = wktFormat.readFeature(featureDoc.value.geometry);
+                    feature.getGeometry().transform('EPSG:2154', 'EPSG:3857');
+                    feature.set('id', featureDoc.value.id);
+                    feature.set('rev', featureDoc.value.rev);
+                    feature.set('title', featureDoc.value.libelle);
+                    features.push(feature);
                 }
             });
             return features;
+        }
+
+        function createGeolocFeatureInstances(location) {
+            var pos = [location.longitude, location.latitude];
+            return [
+                new ol.Feature({
+                    geometry: new ol.geom.Point(pos)
+                        .transform('EPSG:4326', 'EPSG:3857')
+                }),
+                new ol.Feature({
+                    geometry: ol.geom.Polygon.circular(wgs84Sphere, pos, location.accuracy, 200)
+                        .transform('EPSG:4326', 'EPSG:3857')
+                })
+            ];
+        }
+
+        function getAppLayerInstance(layerModel) {
+            var layers = appLayers.getLayers(),
+                i = layers.getLength();
+            while (i--) {
+                if (layers.item(i).get('model') === layerModel) {
+                    return layers.item(i);
+                }
+            }
+            return null;
         }
 
         function setAppLayerFeatures(olLayer) {
             var layerModel = olLayer.get('model'),
                 olSource = olLayer.getSource().getSource();
 
+            // Try to get the promise of a previous query.
             var promise = featureCache.get(layerModel.title);
             if (angular.isUndefined(promise)) {
+
+                // No promise found, create a deferred object.
                 var deferred = $q.defer();
+
+                // Try to get the layer features.
                 LocalDocument.query('Element/byClassAndLinear', {
                     startkey: [layerModel.filterValue],
                     endkey: [layerModel.filterValue, {}]
                 }).then(
                     function(results) {
-                        deferred.resolve(createFeatureModels(results));
+                        deferred.resolve(createAppFeatureInstances(results));
                     },
                     function(error) {
                         deferred.reject(error);
                     });
+
+                // Set and store the promise.
                 promise = deferred.promise;
                 featureCache.put(layerModel.title, promise);
             }
 
+            // Wait for promise resolution or rejection.
             promise.then(
-                function onSuccess(featureModels) {
-                    olSource.addFeatures(featureModels.map(function(featureModel) {
-                        var feature = new ol.Feature(featureModel);
-                        feature.setStyle(StyleFactory(layerModel.color, featureModel.geometry.getType()));
-                        return feature;
-                    }));
+                function onSuccess(features) {
+                    // Set feature styles.
+                    angular.forEach(features, function(feature) {
+                        feature.setStyle(StyleFactory(layerModel.color, feature.getGeometry().getType()));
+                    });
+
+                    // Draw features.
+                    olSource.addFeatures(features);
                 },
                 function onError(error) {
                     // TODO → handle error
                 });
         }
 
+
+        // Event listeners
+        // ----------
 
         selectInteraction.on('select', function(event) {
             angular.forEach(lastSelection, function(feature) {
@@ -182,24 +243,28 @@ angular.module('module_app.services.map', ['module_app.services.context'])
         });
 
         $rootScope.$on('backLayerChanged', function(event, layerModel) {
-            var map = olMap.get('main');
-            if (map instanceof ol.Map) {
-                map.getLayers().setAt(0, createBackLayerInstance(layerModel));
-            }
+            backLayer.setSource(createBackLayerSourceInstance(layerModel));
         });
 
         $rootScope.$on('appLayerAdded', function(event, layerModel) {
-            var map = olMap.get('main');
-            if (map instanceof ol.Map) {
-                map.getLayers().push(createAppLayerInstance(layerModel));
-            }
+            appLayers.getLayers().push(createAppLayerInstance(layerModel));
         });
 
         $rootScope.$on('appLayerRemoved', function(event, layerModel, index) {
-            var map = olMap.get('main');
-            if (map instanceof ol.Map) {
-                map.getLayers().removeAt(index + 1);
-            }
+            appLayers.getLayers().removeAt(index);
+        });
+
+        $rootScope.$on('geolocationReady', function() {
+            geolocLayer.setVisible(true);
+        });
+
+        $rootScope.$on('geolocationStopped', function() {
+            geolocLayer.setVisible(false);
+        });
+
+        $rootScope.$on('geolocationChanged', function(event, location) {
+            geolocLayer.getSource().clear();
+            geolocLayer.getSource().addFeatures(createGeolocFeatureInstances(location.coords));
         });
     })
 

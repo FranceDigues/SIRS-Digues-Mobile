@@ -1,12 +1,22 @@
 angular.module('module_app.controllers.menus.babord.menu', [])
 
-    .controller('cBabordMenu', function cBabordMenu($rootScope, $scope, $location, sContext, sConf) {
+    .controller('cBabordMenu', function cBabordMenu($rootScope, $scope, $location, sContext, sConf, ContextService, GeolocationService) {
 
         var self = this;
+
+        self.settings = ContextService.getValue().settings;
 
         self.sConf = sConf;
 
         self.sContext = sContext;
+
+        (self.updateGeolocation = function() {
+            if (self.settings.geolocation) {
+                GeolocationService.start();
+            } else {
+                GeolocationService.stop();
+            }
+        })();
 
         self.setView = function(menu) {
             switch (menu.target) {

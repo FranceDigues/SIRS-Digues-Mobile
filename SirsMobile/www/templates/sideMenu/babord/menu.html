@@ -8,7 +8,7 @@
             Couches métiers
         </ion-item>
         <ion-item on-tap="c.setView({target: 'babord', file: 'backLayerMgmt'})">
-            Fonds cartographiques
+            Fonds de carte
         </ion-item>
         <ion-item on-tap="c.setView({target: 'babord', file: 'newObjectSummary'})">
             Objets saisis
@@ -16,6 +16,12 @@
         <ion-item on-tap="c.setView({target: 'main', file: 'porteDocument'})">
             Porte documents
         </ion-item>
+        <ion-toggle ng-model="c.settings.geolocation" ng-change="c.updateGeolocation()" toggle-class="toggle-calm">
+            Localisation GPS
+        </ion-toggle>
+        <ion-toggle ng-model="foo" toggle-class="toggle-calm">
+            Mode édition
+        </ion-toggle>
         <ion-item on-tap="c.setView({target: 'babord', file: 'helpMe'})">
             Aide
         </ion-item>

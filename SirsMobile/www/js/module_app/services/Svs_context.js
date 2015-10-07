@@ -37,7 +37,6 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
             list: [
                 {
                     name: 'Bing Aerial',
-                    type: 'Tile',
                     source: {
                         type: 'BingMaps',
                         key: 'Aj6XtE1Q1rIvehmjn2Rh1LR2qvMGZ-8vPS9Hn3jCeUiToM77JFnf-kFRzyMELDol',
@@ -46,7 +45,6 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
                 },
                 {
                     name: 'OpenStreetMap',
-                    type: 'Tile',
                     source: {
                         type: 'OSM',
                         url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -54,7 +52,6 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
                 },
                 {
                     name: 'Landscape',
-                    type: 'Tile',
                     source: {
                         type: 'OSM',
                         url: 'http://{a-c}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'
@@ -66,7 +63,14 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
         // Application layers.
         appLayers: [],
 
+        // Settings.
+        settings: {
+            geolocation: true,
+            edition: false
+        },
+
         // Others.
+        lastLocation: null,
         version: 'v0.2.1 -u10'
     })
 

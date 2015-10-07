@@ -4,7 +4,7 @@ angular.module('module_app.services.geolocation', [])
 
         // TODO → should be configured
 
-        this.$get = function($rootScope, $log, $q, $timeout) {
+        this.$get = function($rootScope, $log, $q, $timeout, ContextService) {
 
             var STOPPED = -1,
                 STOPPING = 0,
@@ -13,16 +13,16 @@ angular.module('module_app.services.geolocation', [])
                 STARTING = 4,
                 STARTED = 5;
 
-            var status = -1,                    // the last service status
-                promise = undefined,            // the last command promise
-                lastLocation = undefined,    // the last known position
-                nextLocation = $q.defer();      // the next location deferred
+            var context = ContextService.getValue(),    // the application context
+                status = -1,                            // the last service status
+                promise = undefined,                    // the last command promise
+                nextLocation = $q.defer();              // the next location deferred
 
 
             function initCmd(callback) {
                 $log.debug('[GeolocationService] Connecting...');
                 geoloc.initLoc(angular.noop, []);
-                $timeout(callback, 2000); // TODO → find a way to handle setup success
+                $timeout(callback, 3000); // TODO → find a way to handle setup success
             }
 
             function startCmd(callback) {
@@ -49,7 +49,7 @@ angular.module('module_app.services.geolocation', [])
                     status = STARTED;
                     $log.debug('[GeolocationService] Started.');
                 }
-                lastLocation = result;
+                context.lastLocation = result;
                 nextLocation.resolve(result);
                 nextLocation = $q.defer();
                 $log.debug('[GeolocationService] Position changed.');
@@ -105,7 +105,7 @@ angular.module('module_app.services.geolocation', [])
                 },
 
                 getLastLocation: function() {
-                    return lastLocation;
+                    return context.lastLocation;
                 },
 
                 getLocationPromise: function() {
