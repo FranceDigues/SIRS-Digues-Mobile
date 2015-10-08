@@ -1,8 +1,10 @@
-<div ng-controller="cHelpMe as c">
-    <header class="bar bar-header bar-stable">
-        <button class="col-25 button button-icon button-clear ion-arrow-left-a" on-tap="c.sContext.backToBabordMenu()"></button>
-    </header>
+<div id="help" ng-controller="HelpController as c">
+    <ion-header-bar align-title="center">
+        <button type="button" class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="c.backToMenu()"></button>
+        <h1 class="title">Aides</h1>
+    </ion-header-bar>
+
     <ion-content class="has-header">
-    i'm cHelpMe
-        </ion-content>
+        <p>Work in progress</p>
+    </ion-content>
 </div>

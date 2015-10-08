@@ -1,0 +1,8 @@
+#help > ion-header-bar {
+    background-color: #0097A7;
+}
+
+#help > ion-header-bar > h1,
+#help > ion-header-bar > button {
+    color: #FFFFFF;
+}

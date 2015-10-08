@@ -26,7 +26,7 @@ angular.module('module_app.controllers',
 
         'module_app.controllers.menus.babord.appLayerMgmt',
         'module_app.controllers.menus.babord.settings',
-        'module_app.controllers.menus.babord.helpMe',
+        'module_app.controllers.menus.babord.help',
         'module_app.controllers.menus.babord.menu',
         'module_app.controllers.menus.babord.newObjectSummary',
         'module_app.controllers.menus.babord.porteDoc',
@@ -38,7 +38,7 @@ angular.module('module_app.controllers',
 
 
 
-        'module_app.controllers.menus.tribord.desordreDetail',
+        'module_app.controllers.menus.tribord.objectDetail',
         'module_app.controllers.menus.tribord.desordreMgmt',
         'module_app.controllers.menus.tribord.objectManagement',
         'module_app.controllers.menus.tribord.desordreSlct',

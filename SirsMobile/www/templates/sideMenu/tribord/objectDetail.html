@@ -1,0 +1,32 @@
+<div id="disorderDetails" ng-controller="ObjectDetailsController as c">
+    <ion-header-bar align-title="center">
+        <button class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="c.backToDisorderList()"></button>
+        <h1 class="title">Détail de l'objet</h1>
+    </ion-header-bar>
+
+    <div class="tabs-striped tabs-top" ng-if="c.getObjectType() === 'desordre'">
+        <div class="tabs tabs-sirs">
+            <!-- Tab / Description -->
+            <a class="tab-item" ng-class="{active: c.activeTab === 'description'}" on-tap="c.setActiveTab('description')">Description</a>
+            <!-- Tab / Observations -->
+            <a class="tab-item" ng-class="{active: c.activeTab === 'observations'}" on-tap="c.setActiveTab('observations')">Observations</a>
+        </div>
+    </div>
+
+    <ion-content class="has-header has-fab-bottom" delegate-handle="disorderScroll" ng-class="{'has-tabs-top': c.getObjectType() === 'desordre'}">
+        <!-- Content -->
+        <div ng-include="'templates/sideMenu/tribord/' + c.getObjectType() + 'Detail.html'"></div>
+    </ion-content>
+
+    <!-- FAB / Description -->
+    <div class="fixed-action-btn" style="bottom: 15px; right: 85px;" ng-if="c.activeTab === 'description'">
+        <a class="btn-floating btn-large waves-effect waves-light pink"><i class="large material-icons">delete</i></a>
+    </div>
+    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;" ng-if="c.activeTab === 'description'">
+        <a class="btn-floating btn-large waves-effect waves-light pink"><i class="large material-icons">edit</i></a>
+    </div>
+    <!-- FAB / Observations -->
+    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;" ng-if="c.activeTab === 'observations'">
+        <a class="btn-floating btn-large waves-effect waves-light pink"><i class="large material-icons">add</i></a>
+    </div>
+</div>

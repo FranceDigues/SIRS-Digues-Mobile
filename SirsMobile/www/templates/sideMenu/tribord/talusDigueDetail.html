@@ -1,82 +1,60 @@
-<div id="disorderDetails" ng-controller="cTalusDigueDetail as c">
-    <ion-header-bar align-title="center">
-        <button class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="c.backToDisorderList()"></button>
-        <h1 class="title">Détail de l'objet</h1>
-    </ion-header-bar>
-
-    <ion-content class="has-header has-tabs-top has-fab-bottom" delegate-handle="disorderScroll" ng-switch="c.activeTab">
-        <!-- Content / Description -->
-            <div class="sirs-panel">
-                <div class="sirs-field-inline">
-                    <span class="sirs-field-title">Numéro de désignation :</span>
-                    <span class="sirs-field-value" ng-bind="c.document.designation"></span>
-                </div>
-                <div class="sirs-field-inline">
-                    <span class="sirs-field-title">Géométrie :</span>
-                    <span class="sirs-field-value">Désordre Linéaire</span>
-                </div>
-                <div class="sirs-field-inline">
-                    <span class="sirs-field-title">Position GPS :</span>
-                    <span class="sirs-field-value">Précision 5m</span>
-                </div>
-            </div>
-            <div class="sirs-section">
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Matériau haut</span>
-                    <span class="sirs-field-value" ng-bind="c.abstract.materiauHaut"></span>
-                </div>
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Matériau bas</span>
-                    <span class="sirs-field-value" ng-bind="c.abstract.materiauBas"></span>
-                </div>
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Nature haut</span>
-                    <span class="sirs-field-value" ng-bind="c.abstract.natureHaut"></span>
-                </div>
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Nature bas</span>
-                    <span class="sirs-field-value" ng-bind="c.abstract.natureBas"></span>
-                </div>
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Epaisseur du sommet</span>
-                    <span class="sirs-field-value" ng-bind="c.document.epaisseurSommet"></span>
-                </div>
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Pente intérieure</span>
-                    <span class="sirs-field-value" ng-bind="c.document.penteInterieure"></span>
-                </div>
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Longueur rampant haut</span>
-                    <span class="sirs-field-value" ng-bind="c.document.longueurRampantHaut"></span>
-                </div>
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Longueur rampant bas</span>
-                    <span class="sirs-field-value" ng-bind="c.document.longueurRampantBas"></span>
-                </div>
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Longueur fonction</span>
-                    <span class="sirs-field-value" ng-bind="c.abstract.fonction"></span>
-                </div>
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Côté</span>
-                    <span class="sirs-field-value" ng-bind="c.abstract.cote"></span>
-                </div>
-                <div class="sirs-field">
-                    <span class="sirs-field-title">Description</span>
-                    <span class="sirs-field-value"ng-bind="c.document.commentaire"></span>
-                </div>
-            </div>
-    </ion-content>
-
-    <!-- FAB / Description -->
-    <div class="fixed-action-btn" style="bottom: 15px; right: 85px;" ng-if="c.activeTab === 'description'">
-        <a class="btn-floating btn-large waves-effect waves-light pink"><i class="large material-icons">delete</i></a>
+<div class="sirs-panel">
+    <div class="sirs-field-inline">
+        <span class="sirs-field-title">Numéro de désignation :</span>
+        <span class="sirs-field-value" ng-bind="c.document.designation"></span>
     </div>
-    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;" ng-if="c.activeTab === 'description'">
-        <a class="btn-floating btn-large waves-effect waves-light pink"><i class="large material-icons">edit</i></a>
+    <!--<div class="sirs-field-inline">-->
+        <!--<span class="sirs-field-title">Géométrie :</span>-->
+        <!--<span class="sirs-field-value">Désordre Linéaire</span>-->
+    <!--</div>-->
+    <!--<div class="sirs-field-inline">-->
+        <!--<span class="sirs-field-title">Position GPS :</span>-->
+        <!--<span class="sirs-field-value">Précision 5m</span>-->
+    <!--</div>-->
+</div>
+<div class="sirs-section">
+    <div class="sirs-field">
+        <span class="sirs-field-title">Matériau haut</span>
+        <span class="sirs-field-value" ng-bind="c.abstract.materiauHaut"></span>
     </div>
-    <!-- FAB / Observations -->
-    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;" ng-if="c.activeTab === 'observations'">
-        <a class="btn-floating btn-large waves-effect waves-light pink"><i class="large material-icons">add</i></a>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Matériau bas</span>
+        <span class="sirs-field-value" ng-bind="c.abstract.materiauBas"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Nature haut</span>
+        <span class="sirs-field-value" ng-bind="c.abstract.natureHaut"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Nature bas</span>
+        <span class="sirs-field-value" ng-bind="c.abstract.natureBas"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Epaisseur du sommet</span>
+        <span class="sirs-field-value" ng-bind="c.document.epaisseurSommet"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Pente intérieure</span>
+        <span class="sirs-field-value" ng-bind="c.document.penteInterieure"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Longueur rampant haut</span>
+        <span class="sirs-field-value" ng-bind="c.document.longueurRampantHaut"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Longueur rampant bas</span>
+        <span class="sirs-field-value" ng-bind="c.document.longueurRampantBas"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Longueur fonction</span>
+        <span class="sirs-field-value" ng-bind="c.abstract.fonction"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Côté</span>
+        <span class="sirs-field-value" ng-bind="c.abstract.cote"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Description</span>
+        <span class="sirs-field-value" ng-bind="c.document.commentaire"></span>
     </div>
 </div>

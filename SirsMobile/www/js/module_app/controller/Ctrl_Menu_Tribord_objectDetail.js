@@ -1,7 +1,7 @@
 
-angular.module('module_app.controllers.menus.tribord.desordreDetail', [])
+angular.module('module_app.controllers.menus.tribord.objectDetail', [])
 
-    .controller('cDesordreDetail', function cDesordreDetail($ionicScrollDelegate, sContext, LocalDocument) {
+    .controller('ObjectDetailsController', function cDesordreDetail($ionicScrollDelegate, sContext, LocalDocument) {
 
         var self = this;
 
@@ -17,6 +17,13 @@ angular.module('module_app.controllers.menus.tribord.desordreDetail', [])
                 self.activeTab = name;
                 $ionicScrollDelegate.$getByHandle('disorderScroll').scrollTop(false);
             }
+        };
+
+        self.getObjectType = function() {
+            var objectType = self.document['@class'].substring(
+                self.document['@class'].lastIndexOf('.') + 1);
+            objectType = objectType.charAt(0).toLowerCase() + objectType.slice(1);
+            return objectType;
         };
 
         self.backToDisorderList = function() {
