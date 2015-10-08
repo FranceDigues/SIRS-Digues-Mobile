@@ -4,6 +4,7 @@ angular.module('module_app.controllers.menus.tribord.objectManagement', [])
 
         var self = this;
 
+
         self.tab = 'layers';
 
         self.allLayers = AppLayersService.getFavorites();
@@ -38,7 +39,9 @@ angular.module('module_app.controllers.menus.tribord.objectManagement', [])
         };
 
 
-        EditionService.getClosableObjects().then(function(result) {
-            self.closable = result;
+        EditionService.getClosableObjects().then(function(results) {
+            self.closable = results.map(function(row) {
+                return row.doc;
+            });
         });
     });

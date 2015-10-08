@@ -3,7 +3,7 @@
  */
 angular.module('module_app.controllers.menus.hud', [])
 
-    .controller('cHud', function cHud ($scope, $location,  $log,sMapLayer, sContext,sPouch, $rootScope,$ionicSideMenuDelegate, $timeout) {
+    .controller('cHud', function cHud ($scope, $location,  $log,sMapLayer, sContext,sPouch, $rootScope,$ionicSideMenuDelegate, AuthService) {
 
         var me = this;
         me.swipeProxy= false;
@@ -12,11 +12,8 @@ angular.module('module_app.controllers.menus.hud', [])
 
 
         me.logout = function () {
-            $log.debug('logout')
-
-            //TODO clear context
-
-            $location.path('/sign-in');
+            AuthService.logout();
+            $location.path('/login');
         };
 
         me.swipeProxy= false;

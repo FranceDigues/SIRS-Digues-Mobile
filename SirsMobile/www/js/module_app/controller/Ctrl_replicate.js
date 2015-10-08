@@ -13,6 +13,21 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
             'Element/byClassAndLinear'
         ]; // TODO → make it configurable ?
 
+        var designDocs = [
+            {
+                _id: '_design/objetsNonClos',
+                views: {
+                    byLogin: {
+                        map: function(doc) {
+                            if (doc.author && doc.positionDebut && !doc.positionFin) {
+                                emit(doc.author, doc._id);
+                            }
+                        }.toString()
+                    }
+                }
+            }
+        ]; // TODO → make it configurable ?
+
 
         (function firstStep() {
             self.step = 1;
@@ -86,6 +101,51 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
 
         function thirdStep() {
             self.step = 3;
+            self.description = 'Préparation de l\'espace de travail...';
+            self.percent = 0;
+            self.completion = '0/' + designDocs.length;
+
+            var promise = $q.when(); // empty promise for chaining
+
+            angular.forEach(designDocs, function(designDoc, i) {
+                promise = promise.then(function() {
+                    var deferred = $q.defer();
+
+                    localDB.put(designDoc)
+                        .then(function() {
+                            deferred.notify(i + 1);
+                            deferred.resolve();
+                        }).catch(function(error) {
+                            deferred.notify(i + 1);
+                            deferred.reject(error);
+                        });
+
+                    return deferred.promise;
+                });
+            });
+
+            promise.then(thirdStepComplete, thirdStepError, thirdStepProgress);
+        }
+
+        function thirdStepProgress(proceedDocs) {
+            self.percent = (proceedDocs / designDocs.length) * 100;
+            self.completion = proceedDocs + '/' + designDocs.length;
+        }
+
+        function thirdStepComplete() {
+            // Wait 1000ms before launching the fourth step.
+            $timeout(fourthStep, 1000);
+        }
+
+        function thirdStepError(error) {
+            if (error.status === 409) {
+                thirdStepComplete(); // already done
+            }
+            // TODO → handle other errors
+        }
+
+        function fourthStep() {
+            self.step = 4;
             self.description = 'Construction des index...';
             self.percent = 0;
             self.completion = '0/' + indexedViews.length;
@@ -96,28 +156,28 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
                 promise = promise.then(function() {
                     var deferred = $q.defer();
 
-                    localDB.query(view, {
-                        limit: 0
-                    }).then(function() {
-                        deferred.notify(i + 1);
-                        deferred.resolve();
-                    }).catch(function(error) {
-                        deferred.reject(error);
-                    });
+                    localDB.query(view, { limit: 0 })
+                        .then(function() {
+                            deferred.notify(i + 1);
+                            deferred.resolve();
+                        }).catch(function(error) {
+                            deferred.notify(i + 1);
+                            deferred.reject(error);
+                        });
 
                     return deferred.promise;
                 });
             });
 
-            promise.then(thirdStepComplete, thirdStepError, thirdStepProgress);
+            promise.then(fourthStepComplete, fourthStepError, fourthStepProgress);
         }
 
-        function thirdStepProgress(proceedViews) {
+        function fourthStepProgress(proceedViews) {
             self.percent = (proceedViews / indexedViews.length) * 100;
             self.completion = proceedViews + '/' + indexedViews.length;
         }
         
-        function thirdStepComplete() {
+        function fourthStepComplete() {
             DatabaseService.getActive().replicated = true;
             $timeout(function() {
                 if (AuthService.isNull()) {
@@ -128,7 +188,7 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
             }, 1000);
         }
 
-        function thirdStepError(error) {
+        function fourthStepError(error) {
             // TODO → handle errors
         }
     });

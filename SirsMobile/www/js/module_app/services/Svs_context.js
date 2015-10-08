@@ -60,9 +60,6 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
             ]
         },
 
-        // Application layers.
-        appLayers: [],
-
         // Settings.
         settings: {
             geolocation: true,

@@ -137,10 +137,10 @@ angular.module('module_app.controllers.map', [])
             me.currentMap.addInteraction(selectInteraction);
         });
 
-        $scope.$on('$destroy', function() {
-            me.currentMap.removeInteraction(selectInteraction);
-            me.currentMap = null;
-        });
+        //$scope.$on('$destroy', function() {
+        //    me.currentMap.removeInteraction(selectInteraction);
+        //    me.currentMap = null;
+        //});
 
 
         $scope.$on("enableGeoLoc", function() {
