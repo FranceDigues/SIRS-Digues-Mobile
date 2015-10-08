@@ -8,13 +8,21 @@
             <p>Objet linéaire :</p>
             <div class="switch toggle-lineaire">
                 <label>
-                    <input type="checkbox">
+                    <input type="checkbox" ng-model="c.isLinear">
                     <span class="lever"></span>
                 </label>
             </div>
-            <p class="position-gps">Position GPS enregistrée : #posGPS</p>
-            <p class="qualite-signal">Qualité du signal lors de l'enregistrement : #qual</p>
-            <button class="btn btn-mettreajour waves-effect waves-light">Mettre à jour</button>
+            <p class="position-gps">
+                Position GPS enregistrée :
+                <span ng-show="c.geoloc">{{c.geoloc.longitude|number:2}}, {{c.geoloc.latitude|number:2}}</span>
+                <span ng-hide="c.geoloc">...</span>
+            </p>
+            <p class="qualite-signal">
+                Qualité du signal lors de l'enregistrement :
+                <span ng-show="c.geoloc">{{c.geoloc.accuracy|number:1}}m</span>
+                <span ng-hide="c.geoloc">...</span>
+            </p>
+            <button class="btn btn-mettreajour waves-effect waves-light" on-tap="c.updateLoc()">Mettre à jour</button>
         </div>
     </div>
     <div class="row">
@@ -62,5 +70,8 @@
             <label for="description">Description</label>
             <textarea id="description" class="materialize-textarea"></textarea>
         </div>
+    </div>
+    <div class="text-right">
+        <button class="btn waves-effect waves-light" on-tap="c.save()">Enregistrer</button>
     </div>
 </div>
