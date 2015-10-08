@@ -6,6 +6,6 @@ angular.module('module_app.controllers.menus.tribord.observationDetail', [])
         var self = this;
 
         self.backToDisorderDetails = function() {
-            sContext.tribordView.active = 'desordreDetail';
+            sContext.tribordView.active = 'objectDetail';
         };
     });

@@ -54,7 +54,16 @@ angular.module('module_app.controllers.objectEdition', [])
 
 
         // Force geolocation service activation and wait for first location.
-        waitForLocation(GeolocationService.start());
+        if (geolocWasEnabled) {
+            var lastLocation = GeolocationService.getLastLocation();
+            if (lastLocation) {
+                self.geoloc = lastLocation.coords;
+            } else {
+                waitForLocation(GeolocationService.getLocationPromise());
+            }
+        } else {
+            waitForLocation(GeolocationService.start());
+        }
 
         // Callback for page exit.
         $scope.$on('$destroy', function() {
