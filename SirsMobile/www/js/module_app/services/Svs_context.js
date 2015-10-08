@@ -330,12 +330,10 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
         };
 
         self.logout = function() {
-            if (angular.isObject(context.authUser)) {
-                return;
+            if (!self.isNull()) {
+                context.authUser = null;
+                $rootScope.$broadcast('logoutSuccess');
             }
-
-            context.authUser = null;
-            $rootScope.$broadcast('logoutSuccess');
         };
 
 

@@ -5,9 +5,9 @@ angular.module('module_app.controllers.login', ['module_app.services.context'])
         var self = this;
 
 
-        self.username = null;
+        self.username = 'admin';
 
-        self.password = null;
+        self.password = 'admin';
 
 
         self.login = function() {
