@@ -12,7 +12,8 @@ angular.module('module_app.controllers.appLayers', ['module_app.services.context
         };
 
         self.toggleVisibility = function(layer) {
-            MapManager.toggleAppLayer(layer);
+            layer.visible = !layer.visible;
+            MapManager.syncAppLayer(layer);
         };
 
         self.backToMenu = function() {

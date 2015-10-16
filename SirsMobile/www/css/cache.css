@@ -1,0 +1,97 @@
+
+/* Header */
+
+#cache > ion-header-bar {
+    background-color: #0098A6;
+}
+#cache > ion-header-bar > h1,
+#cache > ion-header-bar > .button.ion-arrow-left-a {
+    color: #FFFFFF;
+}
+
+/* General */
+
+#cache .row {
+    margin: 0;
+    padding: 0;
+}
+#cache .row,
+#cache .row > .col {
+    height: 100%;
+}
+
+/* Actions */
+
+#cache .cache-actions {
+    position: fixed;
+    bottom: 20px;
+    right: 10px;
+}
+#cache .cache-actions .btn-corner.active {
+    right: 20px;
+}
+#cache .cache-actions .btn-corner {
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-size: 30px;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+#cache .cache-actions .btn-corner > i {
+    color: #333333;
+}
+#cache .cache-actions .btn-corner.tl {
+    bottom: 205px;
+    background-image: url("../img/cache-topleft.png");
+}
+#cache .cache-actions .btn-corner.tr {
+    bottom: 140px;
+    background-image: url("../img/cache-topright.png");
+}
+#cache .cache-actions .btn-corner.bl {
+    bottom: 75px;
+    background-image: url("../img/cache-bottomleft.png");
+}
+#cache .cache-actions .btn-corner.br {
+    bottom: 10px;
+    background-image: url("../img/cache-bottomright.png");
+}
+
+/* Left */
+
+#cache .cache-left {
+    position: relative;
+    padding: 15px;
+    border-right: 1px solid #CCCCCC;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .25);
+}
+#cache .cache-left rzslider {
+    margin-top: 35px;
+    margin-bottom: 30px;
+}
+#cache .cache-left label {
+    font-size: 14px;
+}
+#cache .cache-left .btn-floating {
+    position: absolute;
+}
+
+/* Right */
+
+#cache .cache-right {
+    position: relative;
+    padding: 0;
+}
+#cache .cache-right ol-map {
+    display: block;
+    height: 100%;
+}
+#cache .cache-right img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 5%;
+}

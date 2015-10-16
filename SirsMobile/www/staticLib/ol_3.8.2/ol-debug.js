@@ -23727,6 +23727,7 @@ ol.TileRange.prototype.extend = function(tileRange) {
 
 /**
  * @return {number} Height.
+ * @api
  */
 ol.TileRange.prototype.getHeight = function() {
   return this.maxY - this.minY + 1;
@@ -23735,6 +23736,7 @@ ol.TileRange.prototype.getHeight = function() {
 
 /**
  * @return {ol.Size} Size.
+ * @api
  */
 ol.TileRange.prototype.getSize = function() {
   return [this.getWidth(), this.getHeight()];
@@ -23743,6 +23745,7 @@ ol.TileRange.prototype.getSize = function() {
 
 /**
  * @return {number} Width.
+ * @api
  */
 ol.TileRange.prototype.getWidth = function() {
   return this.maxX - this.minX + 1;
@@ -37556,6 +37559,7 @@ ol.tilegrid.TileGrid.prototype.getTileRangeExtent =
  * @param {number} resolution Resolution.
  * @param {ol.TileRange=} opt_tileRange Temporary tile range object.
  * @return {ol.TileRange} Tile range.
+ * @api
  */
 ol.tilegrid.TileGrid.prototype.getTileRangeForExtentAndResolution =
     function(extent, resolution, opt_tileRange) {
@@ -37576,6 +37580,7 @@ ol.tilegrid.TileGrid.prototype.getTileRangeForExtentAndResolution =
  * @param {number} z Z.
  * @param {ol.TileRange=} opt_tileRange Temporary tile range object.
  * @return {ol.TileRange} Tile range.
+ * @api
  */
 ol.tilegrid.TileGrid.prototype.getTileRangeForExtentAndZ =
     function(extent, z, opt_tileRange) {
@@ -118600,6 +118605,7 @@ goog.require('ol.SelectEvent');
 goog.require('ol.Size');
 goog.require('ol.Sphere');
 goog.require('ol.Tile');
+goog.require('ol.TileRange');
 goog.require('ol.TileState');
 goog.require('ol.View');
 goog.require('ol.ViewHint');
@@ -119639,6 +119645,21 @@ goog.exportProperty(
     'getTileCoord',
     ol.Tile.prototype.getTileCoord);
 
+goog.exportProperty(
+    ol.TileRange.prototype,
+    'getHeight',
+    ol.TileRange.prototype.getHeight);
+
+goog.exportProperty(
+    ol.TileRange.prototype,
+    'getSize',
+    ol.TileRange.prototype.getSize);
+
+goog.exportProperty(
+    ol.TileRange.prototype,
+    'getWidth',
+    ol.TileRange.prototype.getWidth);
+
 goog.exportSymbol(
     'ol.View',
     ol.View,
@@ -119783,6 +119804,16 @@ goog.exportProperty(
     ol.tilegrid.TileGrid.prototype,
     'getResolutions',
     ol.tilegrid.TileGrid.prototype.getResolutions);
+
+goog.exportProperty(
+    ol.tilegrid.TileGrid.prototype,
+    'getTileRangeForExtentAndResolution',
+    ol.tilegrid.TileGrid.prototype.getTileRangeForExtentAndResolution);
+
+goog.exportProperty(
+    ol.tilegrid.TileGrid.prototype,
+    'getTileRangeForExtentAndZ',
+    ol.tilegrid.TileGrid.prototype.getTileRangeForExtentAndZ);
 
 goog.exportProperty(
     ol.tilegrid.TileGrid.prototype,
@@ -123188,6 +123219,16 @@ goog.exportProperty(
     ol.tilegrid.WMTS.prototype,
     'getResolutions',
     ol.tilegrid.WMTS.prototype.getResolutions);
+
+goog.exportProperty(
+    ol.tilegrid.WMTS.prototype,
+    'getTileRangeForExtentAndResolution',
+    ol.tilegrid.WMTS.prototype.getTileRangeForExtentAndResolution);
+
+goog.exportProperty(
+    ol.tilegrid.WMTS.prototype,
+    'getTileRangeForExtentAndZ',
+    ol.tilegrid.WMTS.prototype.getTileRangeForExtentAndZ);
 
 goog.exportProperty(
     ol.tilegrid.WMTS.prototype,

@@ -33,16 +33,8 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
         // Background layer.
         backLayer: {
-            active: 'Bing Aerial',
+            active: 'OpenStreetMap',
             list: [
-                {
-                    name: 'Bing Aerial',
-                    source: {
-                        type: 'BingMaps',
-                        key: 'Aj6XtE1Q1rIvehmjn2Rh1LR2qvMGZ-8vPS9Hn3jCeUiToM77JFnf-kFRzyMELDol',
-                        imagerySet: 'Aerial'
-                    }
-                },
                 {
                     name: 'OpenStreetMap',
                     source: {
@@ -180,10 +172,14 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
         };
 
         self.getActive = function() {
+            return self.getByName(layerContext.active);
+        };
+
+        self.getByName = function(name) {
             var i = layerContext.list.length;
             while(i--) {
                 var layer = layerContext.list[i];
-                if (layer.name === layerContext.active) {
+                if (layer.name === name) {
                     return layer;
                 }
             }

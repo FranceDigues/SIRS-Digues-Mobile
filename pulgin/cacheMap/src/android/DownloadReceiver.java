@@ -39,7 +39,7 @@ public class DownloadReceiver extends BroadcastReceiver {
 //                    Log.d("PluginRDE_DLM", "DLM DL URI FILE : " + c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
                     String uri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                     //check if this is your download uri
-                    if (!uri.contains("files/Tile"))  return;
+                    if (!uri.contains("files/tiles"))  return;
 
                     //here you get file path so you can move
                     //it to other location if you want

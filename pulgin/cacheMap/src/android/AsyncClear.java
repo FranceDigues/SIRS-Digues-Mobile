@@ -87,12 +87,12 @@ public class AsyncClear extends AsyncTask {
 //        String s = myContext.getExternalFilesDirs(this.filePath);
 
 
-            File baseDir = myContext.getExternalFilesDir("/Tile");
+            File baseDir = myContext.getExternalFilesDir("/tiles");
         if(!this.clearAll){
-            baseDir = myContext.getExternalFilesDir("/Tile/"+this.caDe.getLayerSource()); //si not clear all on suprime uniquement le caDe
+            baseDir = myContext.getExternalFilesDir("/tiles/"+this.caDe.getName()); //si not clear all on suprime uniquement le caDe
 
 //            supression du descripteur de cache associer
-            File jsonCade = new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getLayerSource() +"_"+ this.caDe.getName()+".json");
+            File jsonCade = new File(myContext.getExternalFilesDir("tiles").getPath() + "/" + this.caDe.getName() + ".json");
             jsonCade.delete();
 
         }

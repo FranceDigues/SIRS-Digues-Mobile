@@ -56,7 +56,7 @@ public static void broadCastCacheList(Context c, Pyromaniac flamethrower){
 
     try {
 
-    File[] jsonList =c.getExternalFilesDir("Tile").listFiles(new FileFilter() {
+    File[] jsonList =c.getExternalFilesDir("tiles").listFiles(new FileFilter() {
         @Override
         public boolean accept(File pathname) {
             return pathname.getName().endsWith(".json");

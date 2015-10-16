@@ -1,46 +1,56 @@
-<ion-view class="cache-view">
-    <ion-content scroll="false">
+<ion-view id="cache">
+    <ion-header-bar>
+        <a href="#/home" class="col-10 button button-icon button-clear ion-arrow-left-a"></a>
+        <h1 class="title">Mise en cache</h1>
+    </ion-header-bar>
+
+    <ion-content class="has-header" scroll="false">
         <div class="row">
-            <div class="col col-25 cache-form">
-                <ion-list>
-                    <!--FIXME  validation de form-->
-                    <label class="item item-input">
-                        <span class="input-label">nom du Cache</span>
-                        <input type="text" ng-model="CacheName">
-                    </label>
-                    <ion-toggle ng-model="polyOrnotPoly">
-                        Selection Polygonale
-                    </ion-toggle>
-                    <ion-checkbox ng-repeat="layer in layers|filter:{isCache:false}" ng-model="isChecked"> Recup
-                        {{layer.name}} ?
-                    </ion-checkbox>
 
-                    <rzslider rz-slider-model="centreCarte.zoom" rz-slider-floor="0" rz-slider-ceil="18"></rzslider>
-                    <rzslider rz-slider-model="z.zMin" rz-slider-high="z.zMax" rz-slider-floor="0"
-                              rz-slider-ceil="18"></rzslider>
-                    {{nbTile}}
-                    {{nbTileDownloaded}}
-                    <progress max="{{nbTile}}" value="{{nbTileDownloaded}}"></progress>
+            <!-- Content / Left -->
+            <div class="cache-left col col-25">
+                <div class="sirs-field">
+                    <span class="sirs-field-title">Niveaux de zoom</span>
+                    <rzslider class="cacheSlider" rz-slider-model="c.minZoom" rz-slider-high="c.maxZoom" rz-slider-floor="0" rz-slider-ceil="18" rz-slider-on-change="c.updateTileCount()"></rzslider>
+                </div>
+                <div class="sirs-field">
+                    <span class="sirs-field-title">Niveau de zoom actuel</span>
+                    <p class="text-right">{{c.getCurrentZoom()}}</p>
+                </div>
+                <div class="sirs-field">
+                    <span class="sirs-field-title">Nombre de tuiles</span>
+                    <p class="text-right">{{c.tileCount|number}}</p>
+                </div>
+                <p ng-show="c.tileCount > 20000">
+                    <i class="icon ion-alert-circled"></i>&nbsp;Nombre de tuiles élevé. Afin de limiter l'espace disque occupé par la mise en cache, il est conseillé de réduire l'étendu géographique ou encore le niveau de zoom maximum.
+                </p>
 
-                    <button class="button button-block button-positive" href="#/" on-tap="cachMe()">Lancer la recherche
-                    </button>
-                </ion-list>
+                <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; right: 15px;" on-tap="c.validate()">
+                    <i class="large material-icons">check</i>
+                </button>
             </div>
-            <div class="col col-75">
-                <openlayers id="mapCache" ol-center="centreCarte" ol-controls="controls" ol-defaults="defaults"
-                            height="400px">
-                    <ol-layer ol-layer-properties="layer" ng-repeat="layer in layers|filter:{active:true}"></ol-layer>
-                </openlayers>
-                <ion-list>
-                    <!--on-tap="changeColorOfFeature()"-->
-                    <ion-item ng-repeat="item in  user.cache.layers">Source en Cache : {{item.origine}} , Nom Du Cache :
-                        {{item.nom}}
-                    </ion-item>
-                </ion-list>
 
+            <!-- Content / Right -->
+            <div class="cache-right col col-75">
+                <ol-map name="cache" onready="c.setDefaultArea(map)"></ol-map>
+                <img src="img/viseur.png" ng-show="c.selectedCorner"/>
+            </div>
 
+            <!-- Actions -->
+            <div class="cache-actions">
+                <button type="button" class="btn-floating btn waves-effect waves-light white btn-corner tl"
+                        on-tap="c.editCorner('tl')" ng-class="{active: c.selectedCorner === 'tl'}">
+                </button>
+                <button type="button" class="btn-floating btn waves-effect waves-light white btn-corner tr"
+                        on-tap="c.editCorner('tr')" ng-class="{active: c.selectedCorner === 'tr'}">
+                </button>
+                <button type="button" class="btn-floating btn waves-effect waves-light white btn-corner br"
+                        on-tap="c.editCorner('br')" ng-class="{active: c.selectedCorner === 'br'}">
+                </button>
+                <button type="button" class="btn-floating btn waves-effect waves-light white btn-corner bl"
+                        on-tap="c.editCorner('bl')" ng-class="{active: c.selectedCorner === 'bl'}">
+                </button>
             </div>
         </div>
-        <!--{{var.CoordList}}-->
     </ion-content>
 </ion-view>

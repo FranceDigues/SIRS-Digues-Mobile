@@ -11,16 +11,16 @@
                 <h2>{{layer.name}}</h2>
 
                 <!-- Swipe actions -->
-                <ion-option-button class="button button-assertive" ng-click="c.removeLayer(layer)" ion-stop-event>
+                <ion-option-button class="button" ng-click="c.goToCache(layer)" ion-stop-event>
+                    <i class="material-icons">storage</i>
+                </ion-option-button>
+                <ion-option-button class="button" ng-click="c.removeLayer(layer)" ion-stop-event>
                     <i class="material-icons">delete</i>
                 </ion-option-button>
             </ion-item>
         </ion-list>
     </ion-content>
 
-    <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 130px;" on-tap="c.goToCache()">
-        <i class="large material-icons">storage</i>
-    </button>
     <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 200px;" on-tap="c.goToAddLayer()">
         <i class="large material-icons">add</i>
     </button>

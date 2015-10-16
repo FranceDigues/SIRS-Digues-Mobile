@@ -100,7 +100,7 @@ public class AsyncCacheBuilder extends AsyncTask {
 
         try {
 //            InputStream instream = new FileInputStream(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getSource() +"_"+ this.caDe.getNom()+".json");
-            File f = new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getLayerSource() +"_"+ this.caDe.getName()+".json");
+            File f = new File(myContext.getExternalFilesDir("tiles").getPath() + "/" + this.caDe.getName() + "/de.json");
 
 
 // if file the available for reading
@@ -208,13 +208,12 @@ public class AsyncCacheBuilder extends AsyncTask {
 
             FileWriter file = null;
             try {
-                File fi = new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getLayerSource() +"_"+ this.caDe.getName()+".json");
+                File fi = new File(myContext.getExternalFilesDir("tiles").getPath() + "/" + this.caDe.getName() + ".json");
 
-                Log.d("PluginRDE_Json", myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getLayerSource() +"_"+ this.caDe.getName()+".json");
+                Log.d("PluginRDE_Json", fi.getPath());
 
-                file = new FileWriter(new File(myContext.getExternalFilesDir( "Tile").getPath()+"/"+this.caDe.getLayerSource() +"_"+ this.caDe.getName()+".json"));
+                file = new FileWriter(fi);
                 file.write(gson.toJson(this.caDe));
-//            file.flush();
                 file.close();
 
             } catch (IOException e) {

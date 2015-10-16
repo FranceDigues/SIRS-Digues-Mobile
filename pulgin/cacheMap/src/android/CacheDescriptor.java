@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 //TODO ! pHd, pBg == > MIN MAX
 public class CacheDescriptor {
 
-    private int idf;
     private String name;
     private String layerSource;
     private sourceType typeSource;
@@ -46,7 +45,6 @@ public class CacheDescriptor {
         this.layers = new ArrayList<String>();
 
         try {
-            this.setIdf(jsonCache.getInt("idf"));
             this.setName(jsonCache.getString("name"));
             this.setLayerSource(jsonCache.getString("layerSource"));
             this.setTypeSource(sourceType.valueOf(jsonCache.getString("typeSource")));
@@ -90,14 +88,6 @@ public class CacheDescriptor {
             e.printStackTrace();
         }
 
-    }
-
-    public int getIdf() {
-        return idf;
-    }
-
-    public void setIdf(int idf) {
-        this.idf = idf;
     }
 
     public String getName() {
@@ -270,7 +260,7 @@ public ArrayList<Tile> getaTileFromZoomLvl_TMS(int z) {
     public String getDirPath() {
 //        Log.d("PluginRDE_debug", this.path);
         if (this.path == "") {
-            this.path = "Tile/" + this.getLayerSource() + "/" + this.getName() + "/";
+            this.path = "tiles/" + this.getName() + "/";
         }
 //        Log.d("PluginRDE_debug", this.path);
         return this.path;
@@ -310,7 +300,6 @@ public ArrayList<Tile> getaTileFromZoomLvl_TMS(int z) {
 
         CacheDescriptor that = (CacheDescriptor) o;
 
-        if (idf != that.idf) return false;
         if (zMin != that.zMin) return false;
         if (zMax != that.zMax) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;

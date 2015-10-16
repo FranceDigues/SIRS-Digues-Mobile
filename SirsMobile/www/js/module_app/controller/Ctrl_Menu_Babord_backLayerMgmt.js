@@ -25,8 +25,8 @@ angular.module('module_app.controllers.menus.babord.backLayerMgmt', [])
             sContext.setBabordView({ target: 'babord', file: 'menu' });
         };
 
-        self.goToCache = function() {
-            $location.path('/geoCache');
+        self.goToCache = function(layer) {
+            $location.path('/cache/' + layer.name);
         };
 
         self.goToAddLayer = function() {

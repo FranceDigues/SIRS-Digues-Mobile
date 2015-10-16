@@ -1,12 +1,17 @@
 angular.module('module_app.services.map', ['module_app.services.context'])
 
+    .value('currentView', new ol.View({
+        zoom: 8,
+        center: ol.proj.transform([3.5, 43.5], 'EPSG:4326', 'EPSG:3857')
+    }))
+
     .factory('featureCache', function($cacheFactory) {
         return $cacheFactory('featureCache');
     })
 
-    .service('MapManager', function MapManager($rootScope, $q, $ionicSideMenuDelegate, olMap, BackLayerService,
-                                               AppLayersService, LocalDocument, StyleFactory, sContext,
-                                               GeolocationService, featureCache) {
+    .service('MapManager', function MapManager($rootScope, $q, $ionicPlatform, $ionicSideMenuDelegate, olMap,
+                                               BackLayerService, AppLayersService, LocalDocument, StyleFactory,
+                                               sContext, GeolocationService, featureCache, currentView) {
 
         var self = this;
 
@@ -15,11 +20,6 @@ angular.module('module_app.services.map', ['module_app.services.context'])
         // ----------
 
         var lastSelection = [];
-
-        var currentView = new ol.View({
-            zoom: 8,
-            center: ol.proj.transform([3.5, 43.5], 'CRS:84', 'EPSG:3857')
-        });
 
         var wktFormat = new ol.format.WKT();
 
@@ -35,9 +35,9 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             }
         });
 
-        var backLayer = new ol.layer.Tile({
+        var backLayers = new ol.layer.Group({
             name: 'Background',
-            source: createBackLayerSourceInstance(BackLayerService.getActive())
+            layers: [createBackLayerInstance(BackLayerService.getActive())]
         });
 
         var appLayers = new ol.layer.Group({
@@ -82,7 +82,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
         self.buildConfig = function() {
             return {
                 view: currentView,
-                layers: [backLayer, appLayers, geolocLayer],
+                layers: [backLayers, appLayers, geolocLayer],
                 controls: [],
                 interactions: ol.interaction.defaults({
                     altShiftDragRotate: false,
@@ -92,11 +92,8 @@ angular.module('module_app.services.map', ['module_app.services.context'])
         };
 
         // TODO → find a way to do this through event
-        self.toggleAppLayer = function(layerModel) {
+        self.syncAppLayer = function(layerModel) {
             var olLayer = getAppLayerInstance(layerModel);
-
-            // Update layer model.
-            layerModel.visible = !layerModel.visible;
 
             // Update OL layer.
             olLayer.setVisible(layerModel.visible);
@@ -109,12 +106,33 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             }
         };
 
+        // TODO → find a way to do this through event
+        self.syncBackLayer = function() {
+            var olLayer = createBackLayerInstance(BackLayerService.getActive());
+            backLayers.getLayers().setAt(0, olLayer);
+        };
+
 
         // Private methods
         // ----------
 
-        function createBackLayerSourceInstance(layerModel) {
-            return new ol.source[layerModel.source.type](layerModel.source);
+        function createBackLayerInstance(layerModel) {
+            var source = angular.copy(layerModel.source),
+                extent;
+
+            // Override the source if the layer is available from cache.
+            if (angular.isObject(layerModel.cache)) {
+                extent = layerModel.cache.extent;
+                source.type = 'XYZ';
+                source.url = layerModel.cache.url;
+            }
+
+            return new ol.layer.Tile({
+                name: layerModel.title,
+                extent: extent,
+                model: layerModel,
+                source: new ol.source[source.type](source)
+            });
         }
 
         function createAppLayerInstance(layerModel) {
@@ -243,7 +261,12 @@ angular.module('module_app.services.map', ['module_app.services.context'])
         });
 
         $rootScope.$on('backLayerChanged', function(event, layerModel) {
-            backLayer.setSource(createBackLayerSourceInstance(layerModel));
+            backLayers.getLayers().setAt(0, createBackLayerInstance(layerModel));
+
+            var map = olMap.get('main');
+            if (angular.isObject(layerModel.cache) && map) {
+                currentView.fit(layerModel.cache.extent, map.getSize());
+            }
         });
 
         $rootScope.$on('appLayerAdded', function(event, layerModel) {

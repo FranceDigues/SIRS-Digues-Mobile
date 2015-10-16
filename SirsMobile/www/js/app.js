@@ -113,9 +113,13 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
 
         $ionicConfigProvider.tabs.position('bottom'); // other values: top
 
-        olMapProvider.provideOptions('main', ['MapManager', function(MapManager) {
+        olMapProvider.provideOptions('main', function(MapManager) {
             return MapManager.buildConfig();
-        }]);
+        });
+
+        olMapProvider.provideOptions('cache', function(CacheMapManager) {
+            return CacheMapManager.buildConfig();
+        });
 
         $routeProvider
             .when('/setup', {
@@ -134,9 +138,9 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
                 templateUrl: 'templates/login.html',
                 controller: 'LoginController as c'
             })
-            .when('/geoCache', {
-                templateUrl: 'module_rde/geoCache/geoCache.html',
-                controller: 'cGeoCache as c'
+            .when('/cache/:layer', {
+                templateUrl: 'templates/cache.html',
+                controller: 'CacheController as c'
             })
             .when('/sign-in', {
                 templateUrl: 'templates/sign-in.html',
