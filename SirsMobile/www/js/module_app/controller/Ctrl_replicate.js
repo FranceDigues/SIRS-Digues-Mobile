@@ -20,7 +20,31 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
                     byLogin: {
                         map: function(doc) {
                             if (doc.author && doc.positionDebut && !doc.positionFin) {
-                                emit(doc.author, doc._id);
+                                emit(doc.author, {
+                                    _id: doc._id,
+                                    _rev: doc._rev,
+                                    libelle: doc.libelle,
+                                    positionDebut: doc.positionDebut,
+                                    positionFin: doc.positionFin
+                                });
+                            }
+                        }.toString()
+                    }
+                }
+            },
+            {
+                _id: '_design/objetsClos',
+                views: {
+                    byLogin: {
+                        map: function(doc) {
+                            if (doc.author && doc.positionDebut && doc.positionFin) {
+                                emit(doc.author, {
+                                    _id: doc._id,
+                                    _rev: doc._rev,
+                                    libelle: doc.libelle,
+                                    positionDebut: doc.positionDebut,
+                                    positionFin: doc.positionFin
+                                });
                             }
                         }.toString()
                     }

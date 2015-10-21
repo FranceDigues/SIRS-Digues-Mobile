@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.objectEdition', [])
 
-    .controller('ObjectEditionController', function ObjectEditionController($scope, $q, $location, $ionicLoading, $ionicScrollDelegate, $routeParams, GeolocationService, LocalDocument, ContextService, objectDoc) {
+    .controller('ObjectEditionController', function ObjectEditionController($scope, $q, $location, $ionicLoading, $ionicScrollDelegate, $routeParams, GeolocationService, LocalDocument, EditionService, ContextService, objectDoc) {
 
         var self = this;
 
@@ -40,14 +40,14 @@ angular.module('module_app.controllers.objectEdition', [])
 
             // Set position(s).
             if (isNewObject) {
-                self.objectDoc.positionDebut = 'POINT(' + coordinate[0] + ',' + coordinate[1] + ')';
+                self.objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
             }
             if (!self.isLinear || (!isNewObject && !isClosed)) {
-                self.objectDoc.positionFin = 'POINT(' + coordinate[0] + ',' + coordinate[1] + ')';
+                self.objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
             }
 
             // Save document.
-            LocalDocument.save(self.objectDoc).then(function() {
+            EditionService.saveObject(self.objectDoc).then(function() {
                 $location.path('/home');
             });
         };

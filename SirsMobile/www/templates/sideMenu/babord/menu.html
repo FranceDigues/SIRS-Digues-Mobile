@@ -19,9 +19,9 @@
         <ion-toggle ng-model="c.settings.geolocation" ng-change="c.updateGeolocation()" toggle-class="toggle-calm">
             Localisation GPS
         </ion-toggle>
-        <!--<ion-toggle ng-model="foo" toggle-class="toggle-calm">-->
-            <!--Mode édition-->
-        <!--</ion-toggle>-->
+        <ion-toggle ng-init="edition = c.sEdition.isEnabled()" ng-model="edition" ng-change="c.sEdition.toggle()" toggle-class="toggle-calm">
+            Mode édition
+        </ion-toggle>
         <!--<ion-item on-tap="c.setView({target: 'babord', file: 'helpMe'})">-->
             <!--Aide-->
         <!--</ion-item>-->

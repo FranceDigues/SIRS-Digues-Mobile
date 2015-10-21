@@ -2,7 +2,8 @@ angular.module('module_app.services.map', ['module_app.services.context'])
 
     .value('currentView', new ol.View({
         zoom: 8,
-        center: ol.proj.transform([3.5, 43.5], 'EPSG:4326', 'EPSG:3857')
+        center: ol.proj.transform([3.5, 43.5], 'EPSG:4326', 'EPSG:3857'),
+        enableRotation: false
     }))
 
     .factory('featureCache', function($cacheFactory) {
@@ -10,8 +11,8 @@ angular.module('module_app.services.map', ['module_app.services.context'])
     })
 
     .service('MapManager', function MapManager($rootScope, $q, $ionicPlatform, $ionicSideMenuDelegate, olMap,
-                                               BackLayerService, AppLayersService, LocalDocument, StyleFactory,
-                                               sContext, GeolocationService, featureCache, currentView) {
+                                               BackLayerService, AppLayersService, EditionService, LocalDocument,
+                                               StyleFactory, sContext, GeolocationService, featureCache, currentView) {
 
         var self = this;
 
@@ -31,7 +32,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             }),
             layers: function isSelectable(olLayer) {
                 var model = olLayer.get('model');
-                return angular.isObject(model) && model.selectable === true;
+                return (angular.isObject(model) && model.selectable === true) || olLayer.get('name') === 'Edition';
             }
         });
 
@@ -42,8 +43,11 @@ angular.module('module_app.services.map', ['module_app.services.context'])
 
         var appLayers = new ol.layer.Group({
             name: 'Business',
+            visible: !EditionService.isEnabled(),
             layers: AppLayersService.getFavorites().map(createAppLayerInstance)
         });
+
+        var editionLayer = createEditionLayerInstance();
 
         var geolocLayer = new ol.layer.Vector({
             name: 'Geolocation',
@@ -82,9 +86,10 @@ angular.module('module_app.services.map', ['module_app.services.context'])
         self.buildConfig = function() {
             return {
                 view: currentView,
-                layers: [backLayers, appLayers, geolocLayer],
+                layers: [backLayers, appLayers, editionLayer, geolocLayer],
                 controls: [],
                 interactions: ol.interaction.defaults({
+                    pinchRotate: false,
                     altShiftDragRotate: false,
                     shiftDragZoom: false
                 }).extend([selectInteraction])
@@ -166,6 +171,47 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             return features;
         }
 
+        function createEditionLayerInstance() {
+            var olLayer = new ol.layer.Image({
+                name: 'Edition',
+                visible: EditionService.isEnabled(),
+                source: new ol.source.ImageVector({
+                    source: new ol.source.Vector({ useSpatialIndex: false })
+                })
+            });
+
+            setEditionLayerFeatures(olLayer);
+            return olLayer;
+        }
+
+        function createEditionFeatureInstance(featureDoc) {
+            // Compute geometry.
+            var geometry = wktFormat.readGeometry(featureDoc.positionDebut);
+            if (featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut)) {
+                geometry = new ol.geom.LineString([
+                    geometry.getFirstCoordinate(),
+                    wktFormat.readGeometry(featureDoc.positionFin).getFirstCoordinate()
+                ]);
+            }
+            geometry.transform('EPSG:2154', 'EPSG:3857');
+
+            // Create feature.
+            var feature = new ol.Feature({ geometry: geometry });
+            feature.setStyle(StyleFactory([255, 0, 0, 1], geometry.getType()));
+            feature.set('id', featureDoc._id);
+            feature.set('rev', featureDoc._rev);
+            feature.set('title', featureDoc.libelle);
+            return feature;
+        }
+
+        function createEditionFeatureInstances(featureDocs) {
+            var features = [];
+            angular.forEach(featureDocs, function(featureDoc) {
+                features.push(createEditionFeatureInstance(featureDoc.value));
+            });
+            return features;
+        }
+
         function createGeolocFeatureInstances(location) {
             var pos = [location.longitude, location.latitude];
             return [
@@ -178,17 +224,6 @@ angular.module('module_app.services.map', ['module_app.services.context'])
                         .transform('EPSG:4326', 'EPSG:3857')
                 })
             ];
-        }
-
-        function getAppLayerInstance(layerModel) {
-            var layers = appLayers.getLayers(),
-                i = layers.getLength();
-            while (i--) {
-                if (layers.item(i).get('model') === layerModel) {
-                    return layers.item(i);
-                }
-            }
-            return null;
         }
 
         function setAppLayerFeatures(olLayer) {
@@ -233,6 +268,30 @@ angular.module('module_app.services.map', ['module_app.services.context'])
                 function onError(error) {
                     // TODO → handle error
                 });
+        }
+
+        function setEditionLayerFeatures(olLayer) {
+            var olSource = olLayer.getSource().getSource();
+
+            EditionService.getClosedObjects().then(
+                function onSuccess(results) {
+                    olSource.clear();
+                    olSource.addFeatures(createEditionFeatureInstances(results));
+                },
+                function onError(error) {
+                    // TODO → handle error
+                });
+        }
+
+        function getAppLayerInstance(layerModel) {
+            var layers = appLayers.getLayers(),
+                i = layers.getLength();
+            while (i--) {
+                if (layers.item(i).get('model') === layerModel) {
+                    return layers.item(i);
+                }
+            }
+            return null;
         }
 
 
@@ -289,6 +348,22 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             geolocLayer.getSource().clear();
             geolocLayer.getSource().addFeatures(createGeolocFeatureInstances(location.coords));
         });
+
+        $rootScope.$on('editionModeChanged', function(event, isEnabled) {
+            appLayers.setVisible(!isEnabled);
+            editionLayer.setVisible(isEnabled);
+        });
+
+        $rootScope.$on('editionObjectSaved', function(event, objectDoc) {
+            if (objectDoc.positionDebut && objectDoc.positionFin) {
+                var source = editionLayer.getSource().getSource(),
+                    features = source.getFeatures(), i = features.length;
+                while (i--) {
+                    if (features[i].get('id') === objectDoc._id) return;
+                }
+                source.addFeature(createEditionFeatureInstance(objectDoc));
+            }
+        });
     })
 
     .factory('StyleFactory', function() {
@@ -313,10 +388,10 @@ angular.module('module_app.services.map', ['module_app.services.context'])
 
         function createPointStyleFunc(color) {
             return function() {
-                var fillColor = this.get('selected') === true ? color : [255, 255, 255, 0.25],
+                var fillColor = this.get('selected') === true ? color : [255, 255, 255, 0.5],
                     strokeColor = this.get('selected') === true ? [255, 255, 255, 1] : color,
                     strokeWidth = 2,
-                    pointRadius = 5;
+                    pointRadius = 6;
                 return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius)];
             };
         }
