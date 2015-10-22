@@ -141,7 +141,11 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
                             deferred.resolve();
                         }).catch(function(error) {
                             deferred.notify(i + 1);
-                            deferred.reject(error);
+                            if (error.status === 409) {
+                                deferred.resolve(); // already done
+                            } else {
+                                deferred.reject(error);
+                            }
                         });
 
                     return deferred.promise;
@@ -162,9 +166,6 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
         }
 
         function thirdStepError(error) {
-            if (error.status === 409) {
-                thirdStepComplete(); // already done
-            }
             // TODO → handle other errors
         }
 

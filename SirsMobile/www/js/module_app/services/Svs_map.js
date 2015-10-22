@@ -32,7 +32,10 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             }),
             layers: function isSelectable(olLayer) {
                 var model = olLayer.get('model');
-                return (angular.isObject(model) && model.selectable === true) || olLayer.get('name') === 'Edition';
+                if (angular.isObject(model)) {
+                    return model.selectable === true && model.visible === true && appLayers.getVisible(); // app layer
+                }
+                return (olLayer.get('name') === 'Edition' && editionLayer.getVisible()); // edition layer
             }
         });
 
