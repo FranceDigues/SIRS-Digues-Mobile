@@ -6,6 +6,7 @@ ionic plugin rm cordova-plugin-console;
 ionic plugin rm cordova-plugin-crosswalk-webview;
 ionic plugin rm cordova-plugin-device;
 ionic plugin rm cordova-plugin-dialogs;
+ionic plugin rm cordova-plugin-fileopener;
 ionic plugin rm cordova-plugin-file-transfer;
 ionic plugin rm cordova-plugin-geolocation;
 ionic plugin rm cordova-plugin-media;

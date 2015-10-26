@@ -60,26 +60,28 @@
 }
 
 .h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column {
-    z-index: 3;
     position: absolute;
     top: 0;
     height: 100%;
     overflow: hidden;
-    background-color: white;
-    transition: left .2s ease, margin .2s ease;
+    transition: left .15s ease, opacity .1s ease, transform .1s ease;
+    border-left: 1px solid #dedede;
+    border-right: 1px solid #dedede;
+    opacity: 1;
 }
 .h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column.ng-enter {
-    z-index: 2;
-    margin-left: 33.3333333333333%;
+    transform: scale(.5);
+    opacity: 0;
 }
 .h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column.ng-enter-active {
-     margin-left: 0;
+
  }
 .h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column.ng-leave {
-    z-index: 1;
+
 }
 .h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column.ng-leave-active {
-    left: 0 !important;
+    transform: scale(.5);
+    opacity: 0;
 }
 
 .h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column > ion-scroll {
@@ -93,6 +95,10 @@
     list-style: none;
 }
 
+.h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column > ion-scroll div.empty {
+    padding: 10px;
+}
+
 .h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column > ion-scroll ul > li.h-tree-node {
     position: relative;
     cursor: pointer;
@@ -101,23 +107,13 @@
     white-space: nowrap;
     padding: 12px 50px 12px 10px;
 }
-.h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column > ion-scroll ul > li.h-tree-node:hover {
-    background-color: #f5f5f5;
-}
 .h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column > ion-scroll ul > li.h-tree-node.active {
     color: #ffffff;
     background-color: #666666;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
 }
 
-.h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column > ion-scroll ul > li.h-tree-node > .node-count {
-    position: absolute;
-    display: inline-block;
-    padding: 2px 10px;
-    top: 9px;
-    right: 12px;
-    background-color: #808080;
-    box-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
-    color: #ffffff;
+.h-tree > div.h-tree-content > div.h-tree-columns > div.h-tree-column > ion-scroll ul > li.h-tree-node > .icon {
+    margin-right: 6px;
+    font-size: 18px;
 }

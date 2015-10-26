@@ -7,7 +7,7 @@
     <ion-content class="has-header">
         <!-- Content / Description -->
         <div style="position:relative;">
-            <h-tree size="2" tops="c.tops" children="c.children()"></h-tree>
+            <h-tree size="3" tops="c.roots" children="c.children(node)" onselect="c.select(node)"></h-tree>
         </div>
     </ion-content>
 </ion-view>

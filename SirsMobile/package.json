@@ -40,7 +40,8 @@
     {
       "locator": "../../EXTERNAL_GIT_DEP/geolocation-cordova",
       "id": "com.geomatys.android.cordova.geo"
-    }
+    },
+    "cordova-plugin-fileopener"
   ],
   "cordovaPlatforms": [
     "android"

@@ -18,6 +18,7 @@ ionic plugin add cordova-plugin-console;
 ionic plugin add cordova-plugin-crosswalk-webview;
 ionic plugin add cordova-plugin-device;
 ionic plugin add cordova-plugin-dialogs;
+ionic plugin add cordova-plugin-fileopener;
 ionic plugin add cordova-plugin-file-transfer;
 ionic plugin add cordova-plugin-geolocation;
 ionic plugin add cordova-plugin-media;

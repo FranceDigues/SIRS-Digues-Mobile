@@ -81,7 +81,7 @@ angular.module('module_app.directives.horizontal_tree', [])
                     path.push(node);
 
                     // Acquire node children if needed.
-                    if (node.childCount) {
+                    if (node.isDirectory) {
                         $q.when(scope.children({ node: node })).then(addColumn);
                     }
                 };
@@ -102,12 +102,13 @@ angular.module('module_app.directives.horizontal_tree', [])
                         '<div class="h-tree-columns">' +
                             '<div class="h-tree-column" ng-repeat="column in columns" ng-style="style($index)">' +
                                 '<ion-scroll direction="y">' +
-                                    '<ul>' +
+                                    '<ul ng-if="column.length">' +
                                         '<li class="h-tree-node" ng-repeat="node in column" ng-class="{active:path[$parent.$index]==node}" on-tap="select($parent.$index,$index)">' +
+                                            '<span class="icon" ng-class="{\'ion-folder\':node.isDirectory,\'ion-document\':!node.isDirectory}"></span>' +
                                             '<span class="node-label">{{node.label}}</span>' +
-                                            '<span class="node-count" ng-show="node.childCount">{{node.childCount}}</span>' +
                                         '</li>' +
                                     '</ul>' +
+                                    '<div class="empty" ng-if="!column.length">Ce dossier est vide</div>' +
                                 '</ion-scroll>' +
                             '</div>' +
                         '</div>' +

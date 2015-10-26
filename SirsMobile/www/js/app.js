@@ -179,7 +179,7 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
             })
             .when('/documents', {
                 templateUrl: 'templates/documents.html',
-                controller: 'cPorteDocument as c'
+                controller: 'DocumentController as c'
             })
             .otherwise('/setup');
 
