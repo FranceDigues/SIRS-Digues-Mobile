@@ -138,6 +138,10 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
                 templateUrl: 'templates/login.html',
                 controller: 'LoginController as c'
             })
+            .when('/sync', {
+                templateUrl: 'templates/sync.html',
+                controller: 'SyncController as c'
+            })
             .when('/cache/:layer', {
                 templateUrl: 'templates/cache.html',
                 controller: 'CacheController as c'

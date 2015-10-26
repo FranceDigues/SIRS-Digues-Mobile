@@ -4,8 +4,6 @@ angular.module('module_app.controllers.documents', [])
 
         var self = this;
 
-        var empty = [];
-
         var directories = {};
 
 

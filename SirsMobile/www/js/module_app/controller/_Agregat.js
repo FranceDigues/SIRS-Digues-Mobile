@@ -6,6 +6,7 @@
 angular.module('module_app.controllers',
     [
         'module_app.controllers.documents',
+        'module_app.controllers.sync',
         'module_app.controllers.loader',
         'module_app.controllers.map',
         'module_app.controllers.menus.init',
