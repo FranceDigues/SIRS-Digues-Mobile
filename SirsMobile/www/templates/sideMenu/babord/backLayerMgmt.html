@@ -8,7 +8,7 @@
         <ion-list can-swipe="true">
             <ion-item ng-repeat="layer in c.sLayer.list()" ng-click="c.useLayer(layer)">
                 <i class="material-icons" ng-if="layer === c.sLayer.getActive()">check</i>
-                <h2>{{layer.name}}</h2>
+                <h2>{{layer.name}}<span ng-if="layer.cache"> (hors ligne)</span></h2>
 
                 <!-- Swipe actions -->
                 <ion-option-button class="button" ng-click="c.goToCache(layer)" ion-stop-event>
