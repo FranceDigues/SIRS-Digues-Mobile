@@ -13,7 +13,8 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
                     return {
                         '@class': 'fr.sirs.core.model.' + type,
                         'author': AuthService.getValue()._id,
-                        'valid': false
+                        'valid': false,
+                        'linearId': null
                     };
                 },
 

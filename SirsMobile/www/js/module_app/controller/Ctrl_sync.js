@@ -58,6 +58,7 @@ angular.module('module_app.controllers.sync', ['module_app.services.context'])
 
         function syncComplete() {
             $timeout(function() {
+                self.db.lastSync = new Date().getTime(); // store sync timestamp
                 self.status = 2;
             }, 1000);
         }
