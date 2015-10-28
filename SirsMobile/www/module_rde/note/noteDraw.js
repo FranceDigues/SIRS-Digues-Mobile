@@ -19,7 +19,7 @@ angular.module('module_rde.note', [])
 
         me.gotoHome=function(){
 
-            $location.path("/home");
+            $location.path("/main");
 
         }
 

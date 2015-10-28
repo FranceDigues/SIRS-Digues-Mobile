@@ -1,12 +1,10 @@
-angular.module('module_app.controllers.menus.babord.menu', [])
+angular.module('module_app.controllers.babord_menu', [])
 
-    .controller('cBabordMenu', function cBabordMenu($rootScope, $scope, $location, sContext, sConf, ContextService, GeolocationService, EditionService) {
+    .controller('BabordMenuController', function cBabordMenu($location, sContext, ContextService, GeolocationService, EditionService) {
 
         var self = this;
 
         self.settings = ContextService.getValue().settings;
-
-        self.sConf = sConf;
 
         self.sContext = sContext;
 

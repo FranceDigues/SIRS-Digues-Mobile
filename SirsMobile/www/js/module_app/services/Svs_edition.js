@@ -12,7 +12,7 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
                 newObject: function(type) {
                     return {
                         '@class': 'fr.sirs.core.model.' + type,
-                        'author': AuthService.getValue()._id,
+                        'auteur': AuthService.getValue()._id,
                         'valid': false,
                         'linearId': null
                     };
@@ -26,14 +26,14 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
                 },
 
                 getClosableObjects: function() {
-                    return LocalDocument.query('objetsNonClos/byLogin', {
+                    return LocalDocument.query('objetsNonClos/byAuteur', {
                         key: AuthService.getValue()._id,
                         include_docs: true
                     });
                 },
 
                 getClosedObjects: function() {
-                    return LocalDocument.query('objetsClos/byLogin', {
+                    return LocalDocument.query('objetsClos/byAuteur', {
                         key: AuthService.getValue()._id,
                         include_docs: false
                     });

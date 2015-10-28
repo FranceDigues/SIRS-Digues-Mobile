@@ -1,6 +1,6 @@
 <ion-view id="cache">
     <ion-header-bar>
-        <a href="#/home" class="col-10 button button-icon button-clear ion-arrow-left-a"></a>
+        <a href="#/main" class="col-10 button button-icon button-clear ion-arrow-left-a"></a>
         <h1 class="title">Mise en cache</h1>
     </ion-header-bar>
 
@@ -24,7 +24,6 @@
                 <p ng-show="c.tileCount > 20000">
                     <i class="icon ion-alert-circled"></i>&nbsp;Nombre de tuiles élevé. Afin de limiter l'espace disque occupé par la mise en cache, il est conseillé de réduire l'étendu géographique ou encore le niveau de zoom maximum.
                 </p>
-
                 <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; right: 15px;" on-tap="c.validate()">
                     <i class="large material-icons">check</i>
                 </button>

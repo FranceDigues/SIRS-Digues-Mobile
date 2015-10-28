@@ -13,7 +13,7 @@ angular.module('module_app.controllers.login', ['module_app.services.context'])
         self.login = function() {
             AuthService.login(self.username, self.password).then(
                 function() {
-                    $location.path('/home');
+                    $location.path('/main');
                 },
                 function() {
                     // TODO → handle errors

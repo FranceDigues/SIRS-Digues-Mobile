@@ -33,7 +33,7 @@ angular.module('module_app.controllers.setup', ['module_app.services.context'])
             } else if (AuthService.isNull()) {
                 $location.path('/login');
             } else {
-                $location.path('/home');
+                $location.path('/main');
             }
         };
     });

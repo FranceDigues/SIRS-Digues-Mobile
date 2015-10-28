@@ -17,10 +17,10 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
             {
                 _id: '_design/objetsNonClos',
                 views: {
-                    byLogin: {
+                    byAuteur: {
                         map: function(doc) {
-                            if (doc.author && doc.positionDebut && !doc.positionFin) {
-                                emit(doc.author, {
+                            if (doc.auteur && doc.positionDebut && !doc.positionFin) {
+                                emit(doc.auteur, {
                                     _id: doc._id,
                                     _rev: doc._rev,
                                     libelle: doc.libelle,
@@ -35,16 +35,28 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
             {
                 _id: '_design/objetsClos',
                 views: {
-                    byLogin: {
+                    byAuteur: {
                         map: function(doc) {
-                            if (doc.author && doc.positionDebut && doc.positionFin) {
-                                emit(doc.author, {
+                            if (doc.auteur && doc.positionDebut && doc.positionFin) {
+                                emit(doc.auteur, {
                                     _id: doc._id,
                                     _rev: doc._rev,
                                     libelle: doc.libelle,
                                     positionDebut: doc.positionDebut,
                                     positionFin: doc.positionFin
                                 });
+                            }
+                        }.toString()
+                    }
+                }
+            },
+            {
+                _id: '_design/documents',
+                views: {
+                    byChemin: {
+                        map: function(doc) {
+                            if (doc.chemin) {
+                                emit(doc._id);
                             }
                         }.toString()
                     }
@@ -208,7 +220,7 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
                 if (AuthService.isNull()) {
                     $location.path('/login');
                 } else {
-                    $location.path('/home');
+                    $location.path('/main');
                 }
             }, 1000);
         }

@@ -42,3 +42,18 @@
     z-index: 10;
     position: absolute;
 }
+
+
+#appLayerList > ion-header-bar {
+    background-color: #0097A7;
+}
+
+#appLayerList > ion-header-bar > h1,
+#appLayerList > ion-header-bar > button {
+    color: #FFFFFF;
+}
+
+#appLayerList ion-content .item-checkbox .layer-categories {
+    font-size: 14px;
+    color: #AAAAAA;
+}

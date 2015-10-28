@@ -11,38 +11,19 @@ var app = angular.module('SirsMobile', [
     'ngCordova',
     'ngRoute',
     'ol',
-    
-    
 
     'uuid4',
     'angular-md5',
     'rzModule',
     'pouchdb',
-    'openlayers-directive',
-
 
     'module_app.controllers',
     'module_app.services',
     'module_app.directives',
 
     'module_rde.data.services',
-    'module_rde.geoCache',
     'module_rde.note',
-
-
-    'module_rde.profiling',
-
-
-
-    'filter.custom'
-
-
-
-
-
-
-
-     ]);
+    'module_rde.profiling']);
 
 app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
     //sMapLayer
@@ -142,29 +123,21 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
                 templateUrl: 'templates/sync.html',
                 controller: 'SyncController as c'
             })
+            .when('/forgot_password', {
+                templateUrl: 'templates/forgot_password.html'
+            })
             .when('/cache/:layer', {
                 templateUrl: 'templates/cache.html',
                 controller: 'CacheController as c'
-            })
-            .when('/sign-in', {
-                templateUrl: 'templates/sign-in.html',
-                controller: 'cSignIn as c'
             })
             .when('/note', {
                 cache: false,
                 templateUrl: 'module_rde/note/note.html',
                 controller: 'cNote as c'
             })
-            .when('/home', {
-                templateUrl: 'templates/home.html',
-                controller: 'cHud as c'
-            })
-            .when('/loading', {
-                templateUrl: 'templates/loading.html',
-                controller: 'cLoader as c'
-            })
-            .when('/forgot-password', {
-                templateUrl: 'templates/forgot-password.html'
+            .when('/main', {
+                templateUrl: 'templates/main.html',
+                controller: 'MainController as c'
             })
             .when('/edition/:type/:id?', {
                 templateUrl: 'templates/objectEdition.html',

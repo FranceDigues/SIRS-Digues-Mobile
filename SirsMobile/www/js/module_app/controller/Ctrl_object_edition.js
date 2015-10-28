@@ -1,4 +1,4 @@
-angular.module('module_app.controllers.objectEdition', [])
+angular.module('module_app.controllers.object_edition', [])
 
     .controller('ObjectEditionController', function ObjectEditionController($scope, $q, $location, $ionicLoading, $ionicScrollDelegate, $routeParams, GeolocationService, LocalDocument, EditionService, ContextService, objectDoc) {
 
@@ -48,7 +48,7 @@ angular.module('module_app.controllers.objectEdition', [])
 
             // Save document.
             EditionService.saveObject(self.objectDoc).then(function() {
-                $location.path('/home');
+                $location.path('/main');
             });
         };
 

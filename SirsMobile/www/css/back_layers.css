@@ -30,3 +30,18 @@
     height: 100%;
     font-size: 24px;
 }
+
+
+#addBackLayer > ion-header-bar {
+    background-color: #0097A7;
+}
+
+#addBackLayer > ion-header-bar > h1,
+#addBackLayer > ion-header-bar > button {
+    color: #FFFFFF;
+}
+
+#addBackLayer > .btn-floating {
+    z-index: 10;
+    position: absolute;
+}

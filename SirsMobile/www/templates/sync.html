@@ -37,7 +37,7 @@
                     </div>
                     <div class="sirs-card-action" ng-if="c.status !== 1">
                         <div ng-if="c.status === 0">
-                            <a href="#/home" class="btn-flat waves-effect waves-teal">
+                            <a href="#/main" class="btn-flat waves-effect waves-teal">
                                 <i class="material-icons left">arrow_back</i>Retour
                             </a>
                             <button type="button" class="btn pink waves-effect waves-teal right" on-tap="c.launch()" >
@@ -45,12 +45,12 @@
                             </button>
                         </div>
                         <div ng-if="c.status === 2" class="text-right">
-                            <a href="#/home" class="btn pink waves-effect waves-teal">
+                            <a href="#/main" class="btn pink waves-effect waves-teal">
                                 <i class="material-icons left">check</i>Terminer
                             </a>
                         </div>
                         <div ng-if="c.status === 3" class="text-right">
-                            <a href="#/home" class="btn-flat waves-effect waves-teal">
+                            <a href="#/main" class="btn-flat waves-effect waves-teal">
                                 <i class="material-icons left">arrow_back</i>Abandonner
                             </a>
                             <button type="button" class="btn pink waves-effect waves-teal right" on-tap="c.launch()" >
