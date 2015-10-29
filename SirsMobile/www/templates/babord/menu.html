@@ -1,19 +1,19 @@
-<div id="babordMenu" ng-controller="BabordMenuController as c">
+<div id="menu" ng-controller="MenuController as c">
     <ion-header-bar align-title="center">
         <h1 class="title">Menu principal</h1>
     </ion-header-bar>
 
     <ion-content class="has-header" delegate-handle="editScroll" ng-switch="c.tab">
-        <ion-item on-tap="c.setView({target: 'babord', file: 'appLayerMgmt'})">
+        <ion-item on-tap="c.setBabordView('app_layers')">
             Couches métiers
         </ion-item>
-        <ion-item on-tap="c.setView({target: 'babord', file: 'backLayerMgmt'})">
+        <ion-item on-tap="c.setBabordView('back_layers')">
             Fonds de carte
         </ion-item>
-        <ion-item on-tap="c.setView({target: 'main', file: 'documents'})">
+        <ion-item href="#/documents">
             Porte documents
         </ion-item>
-        <ion-item on-tap="c.setView({target: 'main', file: 'sync'})">
+        <ion-item href="#/sync">
             Synchronisation
         </ion-item>
         <ion-toggle ng-model="c.settings.geolocation" ng-change="c.updateGeolocation()" toggle-class="toggle-calm">
@@ -22,11 +22,8 @@
         <ion-toggle ng-init="edition = c.sEdition.isEnabled()" ng-model="edition" ng-change="c.sEdition.toggle()" toggle-class="toggle-calm">
             Mode édition
         </ion-toggle>
-        <!--<ion-item on-tap="c.setView({target: 'babord', file: 'helpMe'})">-->
-            <!--Aide-->
-        <!--</ion-item>-->
-        <!--<ion-item on-tap="c.setView({target: 'babord', file: 'globalSettings'})">-->
-            <!--Parametres-->
-        <!--</ion-item>-->
+        <ion-item on-tap="c.setBabordView('help')">
+            Aide
+        </ion-item>
     </ion-content>
 </div>

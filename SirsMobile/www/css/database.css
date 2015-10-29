@@ -1,0 +1,20 @@
+#database {
+    background-color: #00bcd0;
+}
+
+#database .collection > .collection-item.avatar {
+    min-height: 62px;
+}
+
+#database .collection > .collection-item.avatar.selected {
+    background-color: #f5f5f5;
+}
+
+#database .collection > .collection-item.avatar > p {
+    color: #777777;
+}
+
+
+#databaseAdd {
+    background-color: #00bcd0;
+}

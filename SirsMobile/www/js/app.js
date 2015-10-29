@@ -103,13 +103,13 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
         });
 
         $routeProvider
-            .when('/setup', {
-                templateUrl: 'templates/setup.html',
-                controller: 'SetupController as c'
+            .when('/database', {
+                templateUrl: 'templates/database.html',
+                controller: 'DatabaseController as c'
             })
-            .when('/new_db', {
-                templateUrl: 'templates/new_db.html',
-                controller: 'NewDatabaseController as c'
+            .when('/database_add', {
+                templateUrl: 'templates/database_add.html',
+                controller: 'DatabaseAddController as c'
             })
             .when('/replicate', {
                 templateUrl: 'templates/replicate.html',
@@ -137,7 +137,7 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
             })
             .when('/main', {
                 templateUrl: 'templates/main.html',
-                controller: 'MainController as c'
+                controller: 'MainController as mc'
             })
             .when('/edition/:type/:id?', {
                 templateUrl: 'templates/objectEdition.html',
@@ -158,7 +158,7 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
                 templateUrl: 'templates/documents.html',
                 controller: 'DocumentController as c'
             })
-            .otherwise('/setup');
+            .otherwise('/database');
 
         // Setup layer colors.
         var colors = [];

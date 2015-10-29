@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.main', ['module_app.services.context'])
 
-    .controller('MainController', function MainController($location, $ionicSideMenuDelegate, AuthService, sContext) {
+    .controller('MainController', function MainController($location, $ionicSideMenuDelegate, AuthService, sContext, SidePanelService) {
 
         var self = this;
 
@@ -11,6 +11,10 @@ angular.module('module_app.controllers.main', ['module_app.services.context'])
         };
 
         self.sContext = sContext;
+
+        self.setBabordView = SidePanelService.setBabordView;
+
+        self.getBabordView = SidePanelService.getBabordView;
 
         self.menuDelegate = $ionicSideMenuDelegate;
 

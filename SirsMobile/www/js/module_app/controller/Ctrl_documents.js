@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.documents', [])
 
-    .controller('DocumentController', function($q, $scope, $ionicPlatform, $cordovaFile) {
+    .controller('DocumentController', function DocumentController($q, $scope, $ionicPlatform, $cordovaFile) {
 
         var self = this;
 

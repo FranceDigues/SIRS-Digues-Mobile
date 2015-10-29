@@ -60,7 +60,7 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
         // Others.
         lastLocation: null,
-        version: 'v0.2.1 -u10'
+        version: '0.7.0'
     })
 
     .service('ContextService', function ContextService($rootScope, $location, LocalStorageItem, defaultContext) {
@@ -336,4 +336,20 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
         $rootScope.$on('databaseChanged', function() {
             context.authUser = null;
         });
+    })
+
+    .service('SidePanelService', function SidePanelService() {
+
+        var self = this;
+
+        var babordView = 'menu';
+
+
+        self.getBabordView = function() {
+            return babordView;
+        };
+
+        self.setBabordView = function(view) {
+            babordView = view;
+        }
     });

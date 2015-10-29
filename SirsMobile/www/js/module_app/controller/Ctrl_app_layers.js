@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.app_layers', ['module_app.services.context'])
 
-    .controller('AppLayersController', function AppLayersController($location, AppLayersService, MapManager, sContext) {
+    .controller('AppLayersController', function AppLayersController($location, AppLayersService, SidePanelService, MapManager) {
 
         var self = this;
 
@@ -17,15 +17,15 @@ angular.module('module_app.controllers.app_layers', ['module_app.services.contex
         };
 
         self.backToMenu = function() {
-            sContext.setBabordView({ target: 'babord', file: 'menu' });
+            SidePanelService.setBabordView('menu');
         };
 
         self.goToLayerList = function() {
-            sContext.setBabordView({ target: 'babord', file: 'appLayerList' });
+            SidePanelService.setBabordView('app_layers_select');
         };
     })
 
-    .controller('AppLayerListController', function AppLayerListController(AppLayersService, sContext) {
+    .controller('AppLayersSelectController', function AppLayersSelectController(AppLayersService, SidePanelService) {
 
         var self = this;
 
@@ -47,7 +47,7 @@ angular.module('module_app.controllers.app_layers', ['module_app.services.contex
         };
 
         self.backToList = function() {
-            sContext.setBabordView({ target: 'babord', file: 'appLayerMgmt' });
+            SidePanelService.setBabordView('app_layers');
         };
 
 

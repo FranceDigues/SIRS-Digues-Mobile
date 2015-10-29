@@ -1,27 +1,27 @@
-#backLayer > ion-header-bar {
+#backLayers > ion-header-bar {
     background-color: #0097A7;
 }
 
-#backLayer > ion-header-bar > h1,
-#backLayer > ion-header-bar > button {
+#backLayers > ion-header-bar > h1,
+#backLayers > ion-header-bar > button {
     color: #FFFFFF;
 }
 
-#backLayer > .btn-floating {
+#backLayers > .btn-floating {
     z-index: 10;
     position: absolute;
 }
 
-#backLayer ion-list ion-item ion-option-button {
+#backLayers ion-list ion-item ion-option-button {
     min-width: inherit;
 }
 
-#backLayer ion-list ion-item.activated,
-#backLayer ion-list ion-item.activated .item-content {
+#backLayers ion-list ion-item.activated,
+#backLayers ion-list ion-item.activated .item-content {
     background-color: #FFFFFF;
 }
 
-#backLayer ion-list ion-item .item-content .material-icons {
+#backLayers ion-list ion-item .item-content .material-icons {
     position: absolute;
     top: 0;
     right: 0;
@@ -32,16 +32,16 @@
 }
 
 
-#addBackLayer > ion-header-bar {
+#backLayersAdd > ion-header-bar {
     background-color: #0097A7;
 }
 
-#addBackLayer > ion-header-bar > h1,
-#addBackLayer > ion-header-bar > button {
+#backLayersAdd > ion-header-bar > h1,
+#backLayersAdd > ion-header-bar > button {
     color: #FFFFFF;
 }
 
-#addBackLayer > .btn-floating {
+#backLayersAdd > .btn-floating {
     z-index: 10;
     position: absolute;
 }

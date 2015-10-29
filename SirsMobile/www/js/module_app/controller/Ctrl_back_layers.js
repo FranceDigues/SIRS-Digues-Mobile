@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.back_layers', ['module_app.services.context'])
 
-    .controller('BackLayerController', function BackLayerController($location, BackLayerService, sContext) {
+    .controller('BackLayersController', function BackLayersController($location, BackLayerService, SidePanelService) {
 
         var self = this;
 
@@ -22,7 +22,7 @@ angular.module('module_app.controllers.back_layers', ['module_app.services.conte
         };
 
         self.backToMenu = function() {
-            sContext.setBabordView({ target: 'babord', file: 'menu' });
+            SidePanelService.setBabordView('menu');
         };
 
         self.goToCache = function(layer) {
@@ -30,11 +30,11 @@ angular.module('module_app.controllers.back_layers', ['module_app.services.conte
         };
 
         self.goToAddLayer = function() {
-            sContext.setBabordView({ target: 'babord', file: 'addBackLayer' });
+            SidePanelService.setBabordView('back_layers_add');
         };
     })
 
-    .controller('AddBackLayerController', function AddBackLayerController(BackLayerService, sContext) {
+    .controller('BackLayersAddController', function BackLayersAddController(BackLayerService, SidePanelService) {
 
         var self = this;
 
@@ -64,6 +64,6 @@ angular.module('module_app.controllers.back_layers', ['module_app.services.conte
         };
 
         self.backToList = function() {
-            sContext.setBabordView({ target: 'babord', file: 'backLayerMgmt' });
+            SidePanelService.setBabordView('back_layers');
         };
     });

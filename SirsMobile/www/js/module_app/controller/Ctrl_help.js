@@ -1,12 +1,12 @@
-angular.module('module_app.controllers.menus.babord.help', [])
+angular.module('module_app.controllers.help', [])
 
-    .controller('HelpController', function BackLayerController(sContext) {
+    .controller('HelpController', function HelpController(SidePanelService) {
 
         var self = this;
 
 
         self.backToMenu = function() {
-            sContext.setBabordView({ target: 'babord', file: 'menu' });
+            SidePanelService.setBabordView('menu');
         };
     });
 

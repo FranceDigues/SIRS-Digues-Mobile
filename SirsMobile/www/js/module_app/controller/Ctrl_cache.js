@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.cache', [])
 
-    .service('CacheMapManager', function($routeParams, BackLayerService, currentView) {
+    .service('CacheMapManager', function CacheMapManager($routeParams, BackLayerService, currentView) {
 
         var self = this;
 
@@ -113,7 +113,7 @@ angular.module('module_app.controllers.cache', [])
         };
     })
 
-    .controller('CacheController', function($scope, $timeout, $routeParams, CacheMapManager, MapManager, BackLayerService, olMap, currentView) {
+    .controller('CacheController', function CacheController($scope, $timeout, $routeParams, CacheMapManager, MapManager, BackLayerService, olMap, currentView) {
 
         var self = this;
 

@@ -1,6 +1,6 @@
-angular.module('module_app.controllers.setup', ['module_app.services.context'])
+angular.module('module_app.controllers.database', ['module_app.services.context'])
 
-    .controller('SetupController', function SetupController($location, DatabaseService, AuthService) {
+    .controller('DatabaseController', function DatabaseController($location, DatabaseService, AuthService) {
 
         var self = this;
 
@@ -35,5 +35,25 @@ angular.module('module_app.controllers.setup', ['module_app.services.context'])
             } else {
                 $location.path('/main');
             }
+        };
+    })
+
+    .controller('DatabaseAddController', function DatabaseAddController($location, DatabaseService) {
+
+        var self = this;
+
+
+        self.db = {
+            name: null,
+            url: 'http://',
+            username: null,
+            password: null,
+            replicated: false,
+            favorites: []
+        };
+
+        self.add = function() {
+            DatabaseService.add(self.db);
+            $location.path('/setup');
         };
     });
