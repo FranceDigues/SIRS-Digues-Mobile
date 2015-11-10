@@ -5,9 +5,10 @@
 
 angular.module('module_rde.note', [])
 
-    .controller('cNote', function ($scope, $log, $ionicPlatform,$location,sContext,$timeout,$stateParams) {
+    .controller('cNote', function ($scope, $log, $ionicPlatform,$location,sContext,$timeout,uuid4) {
 
         var me = this;
+
         var canvas =  null;
 
         //recuperration de l'image d'arriere plans dans les paramettre.
@@ -26,6 +27,17 @@ angular.module('module_rde.note', [])
         me.currentText = "";
         me.tmpFileName=null;
 
+        me.objectId = null;
+
+        me.photos = null;
+
+
+        me.setup = function(objectId, photos) {
+
+            me.objectId = objectId;
+
+            me.photos = photos;
+        };
 
         $ionicPlatform.ready(function () {
 
@@ -59,16 +71,24 @@ angular.module('module_rde.note', [])
 
                 //write on good file
                 me._copyFile= function(fileEntry) {
-                   $log.debug("resolve good file.")
-                   $log.debug(  sContext.noteImg)
-                   $log.debug(  sContext.noteImg.substring(0,sContext.noteImg.length-3 )+"png")
 
-                    window.resolveLocalFileSystemURL(sContext.photoDir, function(fs2) {
+                    window.resolveLocalFileSystemURL(sContext.mediaDir, function(fs2) {
+                            var fileName = me.objectId + '_' + uuid4.generate() + '.png';
 
                             fileEntry.copyTo(
                                 fs2,
-                                sContext.noteImg.substring(0,sContext.noteImg.length-3 )+"png",
-                                me._onCopySuccess,
+                                fileName,
+                                function() {
+
+                                    // Force digest.
+                                    $timeout(function() {
+                                        // Store the photo in the object document.
+                                        me.photos.push({
+                                            '@class': 'fr.sirs.core.model.Photo',
+                                            'chemin': fileName
+                                        });
+                                    });
+                                },
                                 me._onCopyFail
                             );
                         },
@@ -89,20 +109,10 @@ angular.module('module_rde.note', [])
 
 
                 $timeout(function(){
-                    canvas.setHeight(window.innerHeight-(window.innerHeight/30));
-                    canvas.setWidth( window.innerWidth-(window.innerWidth*0.25));
+                    canvas.setHeight(window.innerHeight - 45);
+                    canvas.setWidth(window.innerWidth - (window.innerWidth * 0.25));
                     canvas.calcOffset();
                     canvas.renderAll();
-
-                    //affectation de l'image en arriere plans pour edition
-                    if (sContext.noteImg != null){
-
-                        $log.debug("noteImage")
-                        $log.debug(sContext.noteImg)
-
-                        canvas.setBackgroundImage(sContext.photoDir+sContext.noteImg, canvas.renderAll.bind(canvas));
-                    }
-
                 },300)
 
 

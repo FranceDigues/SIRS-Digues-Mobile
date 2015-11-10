@@ -4,13 +4,11 @@ angular.module('module_app.controllers.documents', [])
 
         var self = this;
 
-        var directories = {};
-
 
         self.roots = [];
 
         self.children = function(node) {
-            return analyseDirectory(node._entry);
+            return visitDirectory(node._entry);
         };
 
         self.select = function(node) {
@@ -20,16 +18,7 @@ angular.module('module_app.controllers.documents', [])
         };
 
 
-        $ionicPlatform.ready(function() {
-            $cordovaFile.checkDir(window.cordova.file.externalDataDirectory, 'documents').then(function(directory) {
-                analyseDirectory(directory).then(function(files) {
-                    self.roots = files;
-                });
-            });
-        });
-
-
-        function analyseDirectory(directory) {
+        function visitDirectory(directory) {
             var deferred = $q.defer();
 
             directory.createReader().readEntries(function(entries) {
@@ -49,29 +38,12 @@ angular.module('module_app.controllers.documents', [])
             return deferred.promise;
         }
 
-        function visitDocumentTree(directory, parentNode) {
-            directory.createReader().readEntries(function(entries) {
-                directories[directory.fullPath] = [];
 
-                if (angular.isObject(parentNode)) {
-                    parentNode.childCount = entries.length;
-                }
-
-                angular.forEach(entries, function(entry) {
-                    var node = {
-                        id: entry.fullPath,
-                        label: entry.name,
-                        childCount: 0,
-                        isDirectory: entry.isDirectory
-                    };
-                    directories[directory.fullPath].push(node);
-
-                    if (entry.isDirectory) {
-                        visitDocumentTree(entry, node);
-                    }
-
-                    $scope.$digest();
+        $ionicPlatform.ready(function() {
+            $cordovaFile.checkDir(window.cordova.file.externalDataDirectory, 'documents').then(function(directory) {
+                visitDirectory(directory).then(function(files) {
+                    self.roots = files;
                 });
             });
-        }
+        }); // fill root documents when the device is ready
     });

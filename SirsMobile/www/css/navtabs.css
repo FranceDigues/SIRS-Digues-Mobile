@@ -1,0 +1,18 @@
+.sirs-nav-tabs {
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0;
+}
+
+.sirs-nav-tabs > .sirs-tab {
+    display: inline-block;
+    padding: 14px 50px;
+    overflow: hidden;
+    color: #00bcd0;
+    font-size: 1rem;
+    box-shadow: inset 0 0 0 rgb(0, 188, 208);
+}
+
+.sirs-nav-tabs > .sirs-tab.active {
+    box-shadow: inset 0 -4px 0 rgb(0, 188, 208);
+}

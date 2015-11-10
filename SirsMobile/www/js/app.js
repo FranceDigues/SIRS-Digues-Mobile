@@ -25,7 +25,7 @@ var app = angular.module('SirsMobile', [
     'module_rde.note',
     'module_rde.profiling']);
 
-app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
+app.run(function ($ionicPlatform, $cordovaFile, $log, sContext) {
     //sMapLayer
     $ionicPlatform.ready(function () {
 
@@ -48,26 +48,15 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
         //todo add support for multi storage capabilities (sd/internal)
         $log.debug("CORDOVA FILE INIT")
         //repertoire des photo nouvellement aqcise et non encore syncronisé.
-        $cordovaFile.checkDir(cordova.file.externalDataDirectory , "nouvellesPhotos").then(function (success) {
+        $cordovaFile.checkDir(cordova.file.externalDataDirectory , "medias").then(function (success) {
             // success
         }, function (error) {
             // error
-            $cordovaFile.createDir(cordova.file.externalDataDirectory , "nouvellesPhotos");
-            $cordovaFile.createFile(  cordova.file.externalDataDirectory + "nouvellesPhotos/" ,"_keepMtpOpen");
+            $cordovaFile.createDir(cordova.file.externalDataDirectory , "medias");
+            $cordovaFile.createFile(  cordova.file.externalDataDirectory + "medias/" ,"_keepMtpOpen");
         });
 
-        sContext.photoDir = cordova.file.externalDataDirectory + "nouvellesPhotos/";
-
-//repertoire de notes
-        $cordovaFile.checkDir(cordova.file.externalDataDirectory , "notes").then(function (success) {
-            // success
-        }, function (error) {
-            // error
-            $cordovaFile.createDir(cordova.file.externalDataDirectory , "notes");
-            $cordovaFile.createFile(  cordova.file.externalDataDirectory + "notes/" ,"_keepMtpOpen");
-        });
-
-        sContext.notesDir = cordova.file.externalDataDirectory + "notes/";
+        sContext.mediaDir = cordova.file.externalDataDirectory + "medias/";
 
         //repertoire de notes
         $cordovaFile.checkDir(cordova.file.externalDataDirectory , "documents").then(function (success) {
@@ -79,10 +68,6 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
         });
 
         sContext.docDir = cordova.file.externalDataDirectory + "documents/";
-
-
-        //TODO à gerber :
-        window.uuid4 = uuid4;
     });
 })
 
@@ -139,12 +124,11 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext, uuid4) {
                 templateUrl: 'templates/main.html',
                 controller: 'MainController as mc'
             })
-            .when('/edition/:type/:id?', {
-                templateUrl: 'templates/objectEdition.html',
-                controller: 'ObjectEditionController as c',
-                reloadOnSearch : false,
+            .when('/object/:type/:id?', {
+                templateUrl: 'templates/object_edit.html',
+                controller: 'ObjectEditController as c',
                 resolve: {
-                    objectDoc: function($log, $route, LocalDocument, EditionService) {
+                    objectDoc: function($route, LocalDocument, EditionService) {
                         var params = $route.current.params;
                         if (params.id && params.id !== '') {
                             return LocalDocument.get(params.id);

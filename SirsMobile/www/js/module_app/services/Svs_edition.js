@@ -14,6 +14,7 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
                         '@class': 'fr.sirs.core.model.' + type,
                         'auteur': AuthService.getValue()._id,
                         'valid': false,
+                        'photos': [],
                         'linearId': null
                     };
                 },
