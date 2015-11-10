@@ -9,6 +9,42 @@ angular.module('module_app.controllers.object_edit', [])
         }
     })
 
+    .service('PositionMapManager', function CacheMapManager(BackLayerService, currentView) {
+
+        var self = this;
+
+
+        self.buildConfig = function() {
+            var layerModel = BackLayerService.getActive(),
+                source = angular.copy(layerModel.source),
+                extent;
+
+            // Override the source if the layer is available from cache.
+            if (angular.isObject(layerModel.cache)) {
+                extent = layerModel.cache.extent;
+                source.type = 'XYZ';
+                source.url = layerModel.cache.url;
+            }
+
+            var olLayer = new ol.layer.Tile({
+                name: layerModel.title,
+                extent: extent,
+                model: layerModel,
+                source: new ol.source[source.type](source)
+            });
+
+            return {
+                view: currentView,
+                layers: [olLayer],
+                controls: [],
+                interactions: ol.interaction.defaults({
+                    altShiftDragRotate: false,
+                    shiftDragZoom: false
+                })
+            };
+        };
+    })
+
     .controller('ObjectEditController', function ObjectEditController($scope, $location, $ionicScrollDelegate,
                                                                       $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                       $routeParams, GeolocationService, LocalDocument,
@@ -58,8 +94,12 @@ angular.module('module_app.controllers.object_edit', [])
             }
         };
 
-        self.recordAudio = function() {
+        self.selectPos = function() {
+            self.setView('map');
+        };
 
+        self.recordAudio = function() {
+            // TODO → to implement
         };
 
         self.takePhoto = function() {
@@ -138,5 +178,20 @@ angular.module('module_app.controllers.object_edit', [])
 
         function photoCaptureError() {
             // TODO → handle error
+        }
+    })
+
+    .controller('ObjectEditPosController', function(currentView) {
+
+        var self = this;
+
+
+        self.getPosition = function() {
+            var coordinate = ol.proj.transform(currentView.getCenter(), 'EPSG:3857', 'EPSG:4326');
+            return {
+                longitude: coordinate[0],
+                latitude: coordinate[1],
+                accuracy: -1
+            };
         }
     });

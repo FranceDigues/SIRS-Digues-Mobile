@@ -35,16 +35,12 @@
         <!-- FBB / Editable Layers -->
         <div ng-if="c.tab === 'layers'">
             <button class="btn btn-large waves-effect waves-light" type="button"
-                    ng-disabled="!c.selectedLayer">Tracer</button>
-            <button class="btn btn-large waves-effect waves-light" type="button"
-                    ng-disabled="!c.selectedLayer" ng-click="c.newObject()">Commencer</button>
+                    ng-disabled="!c.selectedLayer" ng-click="c.newObject()">Ajouter un objet</button>
         </div>
         <!-- FBB / Editable Layers -->
         <div ng-if="c.tab === 'closable'">
             <button class="btn btn-large waves-effect waves-light" type="button"
-                    ng-disabled="!c.selectedClosable">Tracer</button>
-            <button class="btn btn-large waves-effect waves-light" type="button"
-                    ng-disabled="!c.selectedClosable" ng-click="c.closeObject()">Fermer</button>
+                    ng-disabled="!c.selectedClosable" ng-click="c.closeObject()">Fermer l'objet</button>
         </div>
     </div>
 </div>

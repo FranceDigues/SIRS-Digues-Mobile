@@ -87,6 +87,10 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext) {
             return CacheMapManager.buildConfig();
         });
 
+        olMapProvider.provideOptions('position', function(PositionMapManager) {
+            return PositionMapManager.buildConfig();
+        });
+
         $routeProvider
             .when('/database', {
                 templateUrl: 'templates/database.html',

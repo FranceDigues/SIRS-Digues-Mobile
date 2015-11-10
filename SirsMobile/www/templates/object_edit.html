@@ -46,7 +46,7 @@
                                         <button class="btn waves-effect waves-light" on-tap="c.locateMe()">
                                             <i class="material-icons center">gps_fixed</i>
                                         </button>
-                                        <button class="btn waves-effect waves-light" on-tap="c.locateMe()">
+                                        <button class="btn waves-effect waves-light" on-tap="c.selectPos()">
                                             <i class="material-icons center">edit</i>
                                         </button>
                                     </div>
@@ -94,13 +94,28 @@
         </ion-content>
     </div>
 
+    <!-- Map -->
+    <div class="object-map" ng-if="c.view === 'map'" ng-controller="ObjectEditPosController as cp">
+        <ion-header-bar>
+            <header class="bar bar-header bar-stable noteHeader">
+                <button class="button button-icon button-clear ion-arrow-left-a" on-tap="c.setView('form')"></button>
+                <span>Définir une position</span>
+                <button class="button button-icon button-clear ion-done right" on-tap="c.geoloc = cp.getPosition(); c.setView('form')"> VALIDER </button>
+            </header>
+        </ion-header-bar>
+        <div class="map-container">
+            <ol-map name="position"></ol-map>
+            <img src="img/viseur.png"/>
+        </div>
+    </div>
+
     <!-- Note -->
     <div class="object-note" ng-if="c.view === 'note'" ng-controller="cNote as cn" ng-init="cn.setup(c.objectDoc._id, c.photos)">
         <ion-header-bar>
             <header class="bar bar-header bar-stable noteHeader">
-                <button class="button button-icon button-clear ion-arrow-left-a" ng-click="c.view = 'form'"></button>
+                <button class="button button-icon button-clear ion-arrow-left-a" on-tap="c.setView('form')"></button>
                 <span>Prise de note</span>
-                <button class="button button-icon button-clear ion-done right" ng-click="cn.save(); c.view = 'form'"> VALIDER </button>
+                <button class="button button-icon button-clear ion-done right" on-tap="cn.save(); c.setView('form')"> VALIDER </button>
             </header>
         </ion-header-bar>
         <div id="bd-wrapper">
