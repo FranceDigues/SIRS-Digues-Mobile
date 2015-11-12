@@ -4,7 +4,7 @@ angular.module('module_app.controllers.sync', ['module_app.services.context'])
 
         var self = this;
 
-        var localDB = PouchService.getOrCreateLocalDB();
+        var localDB = PouchService.getLocalDB();
 
         var remoteDB = PouchService.getRemoteDB();
 

@@ -40,9 +40,20 @@
     bottom: 20px;
 }
 
-
 #objectEdit .object-form .specific .sirs-field {
     margin-top: 15px;
+}
+
+#objectEdit .object-form .specific .row {
+    padding: 0;
+}
+
+#objectEdit .object-form .specific .row > .col-50:first-child {
+    padding-left: 0;
+}
+
+#objectEdit .object-form .specific .row > .col-50:last-child {
+    padding-right: 0;
 }
 
 #objectEdit .object-form .medias .pics > .pic > .pic-quicklook {

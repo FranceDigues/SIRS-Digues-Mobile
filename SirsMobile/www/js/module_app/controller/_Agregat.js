@@ -9,7 +9,6 @@ angular.module('module_app.controllers', [
     'module_app.controllers.main',
     'module_app.controllers.menu',
     'module_app.controllers.object_edit',
-    'module_app.controllers.from.photo',
     'module_app.controllers.replicate',
     'module_app.controllers.sync',
 
@@ -17,5 +16,4 @@ angular.module('module_app.controllers', [
     'module_app.controllers.menus.tribord.desordreMgmt',
     'module_app.controllers.menus.tribord.objectManagement',
     'module_app.controllers.menus.tribord.desordreSlct',
-    'module_app.controllers.menus.tribord.closableDesordre',
     'module_app.controllers.menus.tribord.observationDetail']);
