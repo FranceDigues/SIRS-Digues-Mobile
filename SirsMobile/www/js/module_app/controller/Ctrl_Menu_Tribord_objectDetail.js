@@ -1,7 +1,7 @@
 
 angular.module('module_app.controllers.menus.tribord.objectDetail', [])
 
-    .controller('ObjectDetailsController', function cDesordreDetail($ionicScrollDelegate, sContext, LocalDocument) {
+    .controller('ObjectDetailsController', function cDesordreDetail($ionicPopup, $ionicScrollDelegate, sContext, LocalDocument) {
 
         var self = this;
 
@@ -9,6 +9,9 @@ angular.module('module_app.controllers.menus.tribord.objectDetail', [])
         self.activeTab = 'description';
 
         self.document = sContext.selectedDocument;
+
+        self.objectType = self.document['@class'].substring(
+            self.document['@class'].lastIndexOf('.') + 1);
 
         self.abstract = {};
 
@@ -32,6 +35,29 @@ angular.module('module_app.controllers.menus.tribord.objectDetail', [])
 
         self.openObservationDetails = function() {
             onGetObservationSuccess(); // TODO -> load observation details
+        };
+
+        self.remove = function() {
+            return $ionicPopup.confirm({
+                title: 'Suppression d\'un objet',
+                template: 'Voulez vous vraiment supprimer cet objet ?'
+            }).then(function(confirmed) {
+                if (confirmed) {
+                    LocalDocument.remove(self.document).then(function() {
+                        // Remove the feature from the selection list.
+                        var i = sContext.selectedFeatures.length;
+                        while (i--) {
+                            if (sContext.selectedFeatures[i].get('id') === self.document._id) {
+                                sContext.selectedFeatures.splice(i, 1);
+                                break;
+                            }
+                        }
+                        // Return to the selection list view.
+                        self.backToDisorderList();
+                    });
+                }
+                return confirmed;
+            });
         };
 
 
