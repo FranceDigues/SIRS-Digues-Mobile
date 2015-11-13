@@ -1,20 +1,23 @@
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.materiauId = c.objectDoc.materiauId || c.refs.RefMateriau[0].id">
         <label for="material" class="active">Matériau</label>
-        <select id="material" class="browser-default"></select>
+        <select id="material" class="browser-default" ng-model="c.objectDoc.materiauId"
+                ng-options="r.id as r.libelle for r in c.refs.RefMateriau"></select>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.natureId = c.objectDoc.natureId || c.refs.RefNature[0].id">
         <label for="nature" class="active">Nature</label>
-        <select id="nature" class="browser-default"></select>
+        <select id="nature" class="browser-default" ng-model="c.objectDoc.natureId"
+                ng-options="r.id as r.libelle for r in c.refs.RefNature"></select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.fonctionId = c.objectDoc.fonctionId || c.refs.RefFonction[0].id">
         <label for="function" class="active">Fonction</label>
-        <select id="function" class="browser-default"></select>
+        <select id="function" class="browser-default" ng-model="c.objectDoc.fonctionId"
+                ng-options="r.id as r.libelle for r in c.refs.RefFonction"></select>
     </div>
     <div class="sirs-field col col-50">
         <label for="width" class="active">Epaisseur</label>
-        <input id="width" type="text"/>
+        <input id="width" type="number"/>
     </div>
 </div>

@@ -1,16 +1,25 @@
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.categorieDesordreId = c.objectDoc.categorieDesordreId || c.refs.RefCategorieDesordre[0].id">
+        <label for="categorie" class="active">Catégorie du désordre</label>
+        <select id="categorie" class="browser-default" ng-model="c.objectDoc.categorieDesordreId"
+                ng-options="r.id as r.libelle for r in c.refs.RefCategorieDesordre"
+                ng-change="c.objectDoc.typeDesordreId = (c.refs.RefTypeDesordre | filter:'categorieId':c.objectDoc.categorieDesordreId)[0]._id"></select>
+    </div>
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.typeDesordreId = c.objectDoc.typeDesordreId || (c.refs.RefTypeDesordre | filter:'categorieId':c.objectDoc.categorieDesordreId)[0]._id">
         <label for="type" class="active">Type du désordre</label>
-        <select id="type" class="browser-default"></select>
+        <select id="type" class="browser-default" ng-model="c.objectDoc.typeDesordreId"
+                ng-options="r._id as r.libelle for r in (c.refs.RefTypeDesordre | filter:'categorieId':c.objectDoc.categorieDesordreId)"></select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
-        <label for="damPosition" class="active">Position sur la digue</label>
-        <select id="damPosition" class="browser-default"></select>
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.positionId = c.objectDoc.positionId || c.refs.RefPosition[0].id">
+        <label for="damRefPosition" class="active">Position sur la digue</label>
+        <select id="damRefPosition" class="browser-default" ng-model="c.objectDoc.positionId"
+                ng-options="r.id as r.libelle for r in c.refs.RefPosition"></select>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.coteId = c.objectDoc.coteId || c.refs.RefCote[0].id">
         <label for="damSide" class="active">Côté de la digue</label>
-        <select id="damSide" class="browser-default"></select>
+        <select id="damSide" class="browser-default" ng-model="c.objectDoc.coteId"
+                ng-options="r.id as r.libelle for r in c.refs.RefCote"></select>
     </div>
 </div>

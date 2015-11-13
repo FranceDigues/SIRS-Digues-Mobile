@@ -48,7 +48,7 @@ angular.module('module_app.controllers.object_edit', [])
     .controller('ObjectEditController', function ObjectEditController($scope, $location, $ionicScrollDelegate,
                                                                       $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                       $routeParams, GeolocationService, LocalDocument,
-                                                                      EditionService, objectDoc, uuid4) {
+                                                                      EditionService, objectDoc, refTypes, uuid4) {
 
         var self = this;
 
@@ -72,6 +72,8 @@ angular.module('module_app.controllers.object_edit', [])
         self.photos = angular.copy(objectDoc.photos);
 
         self.isLinear = true;
+
+        self.refs = refTypes;
 
         self.setTab = function(name) {
             if (name !== self.tab) {

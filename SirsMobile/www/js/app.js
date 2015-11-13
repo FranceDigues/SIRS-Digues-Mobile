@@ -139,6 +139,9 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext) {
                         } else {
                             return LocalDocument.create(EditionService.newObject(params.type));
                         }
+                    },
+                    refTypes: function(EditionService) {
+                        return EditionService.getReferenceTypes();
                     }
                 }
             })
