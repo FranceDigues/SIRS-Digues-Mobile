@@ -801,56 +801,56 @@ ion-content.has-fbb-bottom > div.scroll {
     position: absolute;
     right: 20px;
 }
-#bd-wrapper{
+.bd-wrapper{
     padding-top:43px;
     min-width: 1500px;
 }
-#bd-wrapper .left-bloc{
+.bd-wrapper .left-bloc{
     position:absolute;
     left:0;
     width:25%;
     height:100%;
 }
-#bd-wrapper .right-bloc{
+.bd-wrapper .right-bloc{
     position:absolute;
     right:0;
     width:75%;
     height:100%;
 }
 /*.canvas-container*/
-#bd-wrapper {
+.bd-wrapper {
     width:100% !important;
     height: 100% !important;
 }
 /*#canvasFabric*/
 /*.canvas-container*/
-#bd-wrapper  {
+.bd-wrapper  {
     width:100% !important;
     height: 100% !important;
 }
 /*.canvas-container*/
-#bd-wrapper {
+.bd-wrapper {
     width:100% !important;
     height: 100% !important;
 }
-#bd-wrapper .right-bloc .list .item.item-input.signin-item textarea{
+.bd-wrapper .right-bloc .list .item.item-input.signin-item textarea{
     resize:none;
 }
-#bd-wrapper .bouton-cache.btn{
+.bd-wrapper .bouton-cache.btn{
     margin-left: 25px;
     margin-top: 10px;
     background-color: #00BCD4;
 }
-#bd-wrapper .left-bloc .header-bloc{
+.bd-wrapper .left-bloc .header-bloc{
     height: 44px;
     background-color: #00BCD4;
 }
-#bd-wrapper .left-bloc .header-bloc .img-action{
+.bd-wrapper .left-bloc .header-bloc .img-action{
     display: inline-block;
     height: 44px;
     width: 44px;
 }
-#bd-wrapper .left-bloc .header-bloc .img-action img{
+.bd-wrapper .left-bloc .header-bloc .img-action img{
     border: 0;
     width: 44px;
     height: 44px;

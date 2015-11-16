@@ -13,7 +13,6 @@ angular.module('module_app.controllers', [
     'module_app.controllers.sync',
 
     'module_app.controllers.menus.tribord.objectDetail',
-    'module_app.controllers.menus.tribord.desordreMgmt',
     'module_app.controllers.menus.tribord.objectManagement',
     'module_app.controllers.menus.tribord.desordreSlct',
     'module_app.controllers.menus.tribord.observationDetail']);

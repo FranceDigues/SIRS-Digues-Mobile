@@ -1,0 +1,8 @@
+<ion-view id="observationEdit">
+
+
+
+    <!-- Note -->
+    <div ng-include="'templates/note_edit.html'" ng-if="c.view === 'note'"
+         ng-init="save = c.saveNote; exit = c.backToForm"></div>
+</ion-view>

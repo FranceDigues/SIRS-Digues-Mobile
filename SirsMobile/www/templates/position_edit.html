@@ -1,0 +1,13 @@
+<div id="positionEdit" ng-controller="ObjectEditPosController as cp" ng-init="cp.setup(save, exit)">
+    <ion-header-bar>
+        <header class="bar bar-header bar-stable noteHeader">
+            <button class="button button-icon button-clear ion-arrow-left-a" on-tap="cp.exit()"></button>
+            <span>Définir une position</span>
+            <button class="button button-icon button-clear ion-done right" on-tap="cp.validate()"> VALIDER </button>
+        </header>
+    </ion-header-bar>
+    <div class="map-container">
+        <ol-map name="position"></ol-map>
+        <img src="img/viseur.png"/>
+    </div>
+</div>

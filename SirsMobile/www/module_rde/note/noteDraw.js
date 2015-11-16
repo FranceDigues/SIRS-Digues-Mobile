@@ -27,16 +27,17 @@ angular.module('module_rde.note', [])
         me.currentText = "";
         me.tmpFileName=null;
 
-        me.objectId = null;
 
-        me.photos = null;
+        me.success = angular.noop;
 
+        me.exit = angular.noop;
 
-        me.setup = function(objectId, photos) {
+        me.error = angular.noop;
 
-            me.objectId = objectId;
-
-            me.photos = photos;
+        me.setup = function(success, exit, error) {
+            me.success = success || me.success;
+            me.exit = exit || me.exit;
+            me.error = error || me.error;
         };
 
         $ionicPlatform.ready(function () {
@@ -53,13 +54,14 @@ angular.module('module_rde.note', [])
                 });
 
 
-                me.save=function(){
+                me.validate=function(){
 
                     window.canvas2ImagePlugin.saveImageDataToLibrary(
                         function(msg){
                             console.log(msg);
 
-                            window.resolveLocalFileSystemURL("file://"+msg, me._copyFile, me._onCopyFail);
+                            window.resolveLocalFileSystemURL("file://"+msg, me.success, me.error);
+                            me.exit();
                         },
                         function(err){
                             console.log(err);

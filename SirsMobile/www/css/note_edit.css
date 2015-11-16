@@ -1,0 +1,18 @@
+#noteEdit,
+#noteEdit .bd-wrapper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    min-width: 0;
+    padding-top: 0;
+}
+
+#noteEdit .bd-wrapper .left-bloc {
+    border-right: 1px solid #cccccc;
+}
+
+#noteEdit .bd-wrapper .left-bloc,
+#noteEdit .bd-wrapper .right-bloc {
+    top: 0;
+    padding-top: 44px;
+}

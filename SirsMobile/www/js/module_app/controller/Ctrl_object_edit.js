@@ -75,6 +75,7 @@ angular.module('module_app.controllers.object_edit', [])
 
         self.refs = refTypes;
 
+
         self.setTab = function(name) {
             if (name !== self.tab) {
                 self.tab = name;
@@ -88,6 +89,10 @@ angular.module('module_app.controllers.object_edit', [])
             }
         };
 
+        self.backToForm = function() {
+            self.setView('form');
+        };
+
         self.locateMe = function() {
             if (GeolocationService.isEnabled()) {
                 waitForLocation(GeolocationService.getLocationPromise());
@@ -98,6 +103,10 @@ angular.module('module_app.controllers.object_edit', [])
 
         self.selectPos = function() {
             self.setView('map');
+        };
+
+        self.setPos = function(pos) {
+            self.geoloc = pos;
         };
 
         self.recordAudio = function() {
@@ -115,6 +124,8 @@ angular.module('module_app.controllers.object_edit', [])
         self.drawNote = function() {
             self.setView('note');
         };
+
+        self.saveNote = savePicture;
 
         self.save = function() {
             var coordinate = ol.proj.transform([self.geoloc.longitude, self.geoloc.latitude], 'EPSG:4326', 'EPSG:2154');
@@ -158,28 +169,30 @@ angular.module('module_app.controllers.object_edit', [])
         }
 
         function photoCaptureSuccess(imageURI) {
-            window.resolveLocalFileSystemURL(imageURI, function(imageFile) {
-                window.resolveLocalFileSystemURL(mediaPath, function(targetDir) {
-                    var fileName = objectDoc._id + '_' + uuid4.generate() + '.png';
-
-                    // Copy image file in its final directory.
-                    imageFile.copyTo(targetDir, fileName, function() {
-
-                        // Store the photo in the object document.
-                        self.photos.push({
-                            '@class': 'fr.sirs.core.model.Photo',
-                            'chemin': fileName
-                        });
-
-                        // Force digest.
-                        $scope.$digest();
-                    });
-                });
-            });
+            window.resolveLocalFileSystemURL(imageURI, savePicture);
         }
 
         function photoCaptureError() {
             // TODO → handle error
+        }
+
+        function savePicture(imageFile) {
+            window.resolveLocalFileSystemURL(mediaPath, function(targetDir) {
+                var fileName = objectDoc._id + '_' + uuid4.generate() + '.png';
+
+                // Copy image file in its final directory.
+                imageFile.copyTo(targetDir, fileName, function() {
+
+                    // Store the photo in the object document.
+                    self.photos.push({
+                        '@class': 'fr.sirs.core.model.Photo',
+                        'chemin': fileName
+                    });
+
+                    // Force digest.
+                    $scope.$digest();
+                });
+            });
         }
     })
 
@@ -188,12 +201,23 @@ angular.module('module_app.controllers.object_edit', [])
         var self = this;
 
 
-        self.getPosition = function() {
+        self.success = angular.noop;
+
+        self.exit = angular.noop;
+
+
+        self.setup = function(success, exit) {
+            self.success = success;
+            self.exit = exit;
+        };
+
+        self.validate = function() {
             var coordinate = ol.proj.transform(currentView.getCenter(), 'EPSG:3857', 'EPSG:4326');
-            return {
+            self.success({
                 longitude: coordinate[0],
                 latitude: coordinate[1],
                 accuracy: -1
-            };
+            });
+            self.exit();
         }
     });

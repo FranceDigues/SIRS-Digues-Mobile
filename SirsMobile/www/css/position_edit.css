@@ -1,0 +1,20 @@
+#positionEdit,
+#positionEdit .map-container,
+#positionEdit .map-container ol-map {
+    display: block;
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+#positionEdit .map-container {
+    padding-top: 44px;
+}
+
+#positionEdit .map-container img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 5%;
+}

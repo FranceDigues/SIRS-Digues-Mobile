@@ -1,3 +1,9 @@
+#objectEdit > div {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
 #objectEdit .object-form > ion-content {
     background-color: #00bcd0;
 }
@@ -66,47 +72,5 @@
 #objectEdit .object-form .medias .pics > .pic > .pic-quicklook > img {
     max-width: 100%;
     max-height: 100%;
-}
-
-
-#objectEdit .object-map,
-#objectEdit .object-map .map-container,
-#objectEdit .object-map .map-container ol-map {
-    display: block;
-    position: relative;
-    height: 100%;
-    width: 100%;
-}
-
-#objectEdit .object-map .map-container {
-    padding-top: 44px;
-}
-
-#objectEdit .object-map .map-container img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 5%;
-}
-
-
-#objectEdit .object-note,
-#objectEdit .object-note #bd-wrapper {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    min-width: 0;
-    padding-top: 0;
-}
-
-#objectEdit .object-note #bd-wrapper .left-bloc {
-    border-right: 1px solid #cccccc;
-}
-
-#objectEdit .object-note #bd-wrapper .left-bloc,
-#objectEdit .object-note #bd-wrapper .right-bloc {
-    top: 0;
-    padding-top: 44px;
 }
 
