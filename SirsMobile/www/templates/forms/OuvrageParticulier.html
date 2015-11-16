@@ -3,10 +3,12 @@
         <label for="label" class="active">Libellé</label>
         <input id="label" type="text" ng-model="c.objectDoc.libelle"/>
     </div>
-    <div class="sirs-field col col-50" ng-init="c.setupField('typeOuvrageVoirieId', c.refs.RefOuvrageVoirie[0])">
+</div>
+<div class="row">
+    <div class="sirs-field col col-100" ng-init="c.setupField('typeOuvrageParticulierId', c.refs.RefOuvrageParticulier[0])">
         <label for="workType" class="active">Type d'ouvrage</label>
-        <select id="workType" class="browser-default" ng-model="c.objectDoc.typeOuvrageVoirieId"
-                ng-options="r.id as r.libelle for r in c.refs.RefOuvrageVoirie"></select>
+        <select id="workType" class="browser-default" ng-model="c.objectDoc.typeOuvrageParticulierId"
+                ng-options="r.id as r.libelle for r in c.refs.RefOuvrageParticulier"></select>
     </div>
 </div>
 <div class="row">

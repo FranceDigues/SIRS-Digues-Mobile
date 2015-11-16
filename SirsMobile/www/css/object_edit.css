@@ -54,10 +54,12 @@
     padding: 0;
 }
 
+#objectEdit .object-form .specific .row > .col-100,
 #objectEdit .object-form .specific .row > .col-50:first-child {
     padding-left: 0;
 }
 
+#objectEdit .object-form .specific .row > .col-100,
 #objectEdit .object-form .specific .row > .col-50:last-child {
     padding-right: 0;
 }

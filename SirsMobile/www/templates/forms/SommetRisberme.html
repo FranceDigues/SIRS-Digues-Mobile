@@ -1,26 +1,30 @@
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('materiauId', c.refs.RefMateriau[0])">
         <label for="material" class="active">Matériau</label>
-        <select id="material" class="browser-default"></select>
+        <select id="material" class="browser-default" ng-model="c.objectDoc.materiauId"
+                ng-options="r.id as r.libelle for r in c.refs.RefMateriau"></select>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('natureId', c.refs.RefNature[0])">
         <label for="nature" class="active">Nature</label>
-        <select id="nature" class="browser-default"></select>
+        <select id="nature" class="browser-default" ng-model="c.objectDoc.natureId"
+                ng-options="r.id as r.libelle for r in c.refs.RefNature"></select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('fonctionId', c.refs.RefFonction[0])">
         <label for="function" class="active">Fonction</label>
-        <select id="function" class="browser-default"></select>
+        <select id="function" class="browser-default" ng-model="c.objectDoc.fonctionId"
+                ng-options="r.id as r.libelle for r in c.refs.RefFonction"></select>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.epaisseur = 0.0">
         <label for="width" class="active">Epaisseur</label>
-        <input id="width" type="text"/>
+        <input id="width" type="number" ng-model="c.objectDoc.epaisseur"/>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('coteId', c.refs.RefCote[0])">
         <label for="damSide" class="active">Côté de la digue</label>
-        <select id="damSide" class="browser-default"></select>
+        <select id="damSide" class="browser-default" ng-model="c.objectDoc.coteId"
+                ng-options="r.id as r.libelle for r in c.refs.RefCote"></select>
     </div>
 </div>

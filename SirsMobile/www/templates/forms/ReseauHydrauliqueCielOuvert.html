@@ -1,13 +1,18 @@
+<div class="sirs-field">
+    <label for="label" class="active">Libellé</label>
+    <input id="label" type="text" ng-model="c.objectDoc.libelle"/>
+</div>
 <div class="row">
-    <div class="sirs-field col col-50">
-        <label for="label" class="active">Libellé</label>
-        <input id="label" type="text" ng-model="c.objectDoc.libelle"/>
+    <div class="sirs-field col col-50" ng-init="c.setupField('typeReseauHydroCielOuvertId', c.refs.RefReseauHydroCielOuvert[0])">
+        <label for="resType" class="active">Type de réseau</label>
+        <select id="resType" class="browser-default" ng-model="c.objectDoc.typeReseauHydroCielOuvertId"
+                ng-options="r.id as r.libelle for r in c.refs.RefReseauHydroCielOuvert"></select>
     </div>
 </div>
 <div class="row">
     <div class="sirs-field col col-100" ng-init="c.setupField('reseauHydrauliqueFermeIds', c.refs.ReseauHydrauliqueFerme[0], true)">
         <label for="related" class="active">Réseau hydraulique fermé associé</label>
-        <select id="related" class="browser-default"ng-model="c.objectDoc.reseauHydrauliqueFermeIds[$index]"
+        <select id="related" class="browser-default" ng-model="c.objectDoc.reseauHydrauliqueFermeIds[$index]"
                 ng-options="r.id as r.libelle for r in c.refs.ReseauHydrauliqueFerme"
                 ng-repeat="val in c.objectDoc.reseauHydrauliqueFermeIds track by $index"></select>
     </div>

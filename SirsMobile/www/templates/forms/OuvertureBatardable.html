@@ -1,0 +1,52 @@
+<div class="sirs-field">
+    <label for="label" class="active">Libellé</label>
+    <input id="label" type="text" ng-model="c.objectDoc.libelle"/>
+</div>
+<div class="row">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.largeur = 0.0">
+        <label for="width" class="active">Largeur</label>
+        <input id="width" type="text" ng-model="c.objectDoc.largeur"/>
+    </div>
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.hauteur = 0.0">
+        <label for="height" class="active">Hauteur</label>
+        <input id="height" type="text" ng-model="c.objectDoc.hauteur"/>
+    </div>
+</div>
+<div class="row">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.zSeuil = 0.0">
+        <label for="zThreshold" class="active">Z du seuil</label>
+        <input id="zThreshold" type="number" ng-model="c.objectDoc.zSeuil"/>
+    </div>
+    <div class="sirs-field col col-50" ng-init="c.setupField('typeSeuilId', c.refs.RefSeuil[0])">
+        <label for="thresholdType" class="active">Type de seuil</label>
+        <select id="thresholdType" class="browser-default" ng-model="c.objectDoc.typeSeuilId"
+                ng-options="r.id as r.libelle for r in c.refs.RefSeuil"></select>
+    </div>
+</div>
+<div class="row">
+    <div class="sirs-field col col-50" ng-init="c.setupField('typeGlissiereId', c.refs.RefTypeGlissiere[0])">
+        <label for="slideType" class="active">Type de glissière</label>
+        <select id="slideType" class="browser-default" ng-model="c.objectDoc.typeGlissiereId"
+                ng-options="r.id as r.libelle for r in c.refs.RefTypeGlissiere"></select>
+    </div>
+</div>
+<div class="row">
+    <div class="sirs-field col col-100" ng-init="c.setupField('ouvrageRevancheIds', c.refs.OuvrageRevanche[0], true)">
+        <label for="related" class="active">Ouvrage de revanche associé</label>
+        <select id="related" class="browser-default" ng-model="c.objectDoc.ouvrageRevancheIds[$index]"
+                ng-options="r.id as r.libelle for r in c.refs.OuvrageRevanche"
+                ng-repeat="val in c.objectDoc.ouvrageRevancheIds track by $index"></select>
+    </div>
+</div>
+<div class="row">
+    <div class="sirs-field col col-50" ng-init="c.setupField('positionId', c.refs.RefPosition[0])">
+        <label for="damPosition" class="active">Position sur la digue</label>
+        <select id="damPosition" class="browser-default" ng-model="c.objectDoc.positionId"
+                ng-options="r.id as r.libelle for r in c.refs.RefPosition"></select>
+    </div>
+    <div class="sirs-field col col-50" ng-init="c.setupField('coteId', c.refs.RefCote[0])">
+        <label for="damSide" class="active">Côté de la digue</label>
+        <select id="damSide" class="browser-default" ng-model="c.objectDoc.coteId"
+                ng-options="r.id as r.libelle for r in c.refs.RefCote"></select>
+    </div>
+</div>

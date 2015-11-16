@@ -1,50 +1,63 @@
 <div class="row">
-    <div class="sirs-field col col-50">
-        <label for="lowMaterial" class="active">Matériau haut</label>
-        <select id="lowMaterial" class="browser-default"></select>
-    </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('materiauHautId', c.refs.RefMateriau[0])">
         <label for="topMaterial" class="active">Matériau haut</label>
-        <select id="topMaterial" class="browser-default"></select>
+        <select id="topMaterial" class="browser-default" ng-model="c.objectDoc.materiauHautId"
+                ng-options="r.id as r.libelle for r in c.refs.RefMateriau"></select>
+    </div>
+    <div class="sirs-field col col-50" ng-init="c.setupField('materiauBasId', c.refs.RefMateriau[0])">
+        <label for="lowMaterial" class="active">Matériau bas</label>
+        <select id="lowMaterial" class="browser-default" ng-model="c.objectDoc.materiauBasId"
+                ng-options="r.id as r.libelle for r in c.refs.RefMateriau"></select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('natureHautId', c.refs.RefNature[0])">
         <label for="topNature" class="active">Nature haut</label>
-        <select id="topNature" class="browser-default"></select>
+        <select id="topNature" class="browser-default" ng-model="c.objectDoc.natureHautId"
+                ng-options="r.id as r.libelle for r in c.refs.RefNature"></select>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('natureBasId', c.refs.RefNature[0])">
         <label for="lowNature" class="active">Nature bas</label>
-        <select id="lowNature" class="browser-default"></select>
+        <select id="lowNature" class="browser-default" ng-model="c.objectDoc.natureBasId"
+                ng-options="r.id as r.libelle for r in c.refs.RefNature"></select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.epaisseurSommet = 0.0">
         <label for="topThickness" class="active">Epaisseur du sommet</label>
-        <input id="topThickness" type="text"/>
+        <input id="topThickness" type="text" ng-model="c.objectDoc.epaisseurSommet"/>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.penteInterieure = 0.0">
         <label for="innerSlope" class="active">Pente intérieure</label>
-        <input id="innerSlope" type="text"/>
+        <input id="innerSlope" type="text" ng-model="c.objectDoc.penteInterieure"/>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.longueurRampantHaut = 0.0">
         <label for="topLength" class="active">Longueur rampant haut</label>
-        <input id="topLength" type="text"/>
+        <input id="topLength" type="text" ng-model="c.objectDoc.longueurRampantHaut"/>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.longueurRampantBas = 0.0">
         <label for="lowLength" class="active">Longueur rampant bas</label>
-        <input id="lowLength" type="text"/>
+        <input id="lowLength" type="text" ng-model="c.objectDoc.longueurRampantBas"/>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
-        <label for="function" class="active">Fonction</label>
-        <select id="function" class="browser-default"></select>
+    <div class="sirs-field col col-50" ng-init="c.setupField('fonctionHautId', c.refs.RefFonction[0])">
+        <label for="topFunction" class="active">Fonction haut</label>
+        <select id="topFunction" class="browser-default" ng-model="c.objectDoc.fonctionHautId"
+                ng-options="r.id as r.libelle for r in c.refs.RefFonction"></select>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('fonctionBasId', c.refs.RefFonction[0])">
+        <label for="lowFunction" class="active">Fonction bas</label>
+        <select id="lowFunction" class="browser-default" ng-model="c.objectDoc.fonctionBasId"
+                ng-options="r.id as r.libelle for r in c.refs.RefFonction"></select>
+    </div>
+</div>
+<div class="row">
+    <div class="sirs-field col col-50" ng-init="c.setupField('coteId', c.refs.RefCote[0])">
         <label for="damSide" class="active">Côté de la digue</label>
-        <select id="damSide" class="browser-default"></select>
+        <select id="damSide" class="browser-default" ng-model="c.objectDoc.coteId"
+                ng-options="r.id as r.libelle for r in c.refs.RefCote"></select>
     </div>
 </div>

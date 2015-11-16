@@ -153,6 +153,24 @@ angular.module('module_app.controllers.object_edit', [])
             });
         };
 
+        self.setupField = function(field, defaultValue, isMultiple) {
+            if (angular.isDefined(self.objectDoc[field])) {
+                return;
+            }
+            if (angular.isDefined(defaultValue)) {
+                if (angular.isString(defaultValue.id)) {
+                    // Reference identifier expected.
+                    self.objectDoc[field] = isMultiple ? [defaultValue.id] : defaultValue.id;
+                } else {
+                    // Simple value expected.
+                    self.objectDoc[field] = isMultiple ? [defaultValue] : defaultValue;
+                }
+            } else {
+                // No default value available.
+                self.objectDoc[field] = isMultiple ? [] : undefined;
+            }
+        };
+
 
         // Acquire the medias storage path when the device is ready.
         $ionicPlatform.ready(function() {

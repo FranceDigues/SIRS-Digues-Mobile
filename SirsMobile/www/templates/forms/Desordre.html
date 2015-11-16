@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.objectDoc.categorieDesordreId = c.objectDoc.categorieDesordreId || c.refs.RefCategorieDesordre[0].id">
+    <div class="sirs-field col col-50" ng-init="c.setupField('categorieDesordreId', c.refs.RefCategorieDesordre[0])">
         <label for="categorie" class="active">Catégorie du désordre</label>
         <select id="categorie" class="browser-default" ng-model="c.objectDoc.categorieDesordreId"
                 ng-options="r.id as r.libelle for r in c.refs.RefCategorieDesordre"
@@ -12,12 +12,12 @@
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.objectDoc.positionId = c.objectDoc.positionId || c.refs.RefPosition[0].id">
-        <label for="damRefPosition" class="active">Position sur la digue</label>
-        <select id="damRefPosition" class="browser-default" ng-model="c.objectDoc.positionId"
+    <div class="sirs-field col col-50" ng-init="c.setupField('positionId', c.refs.RefPosition[0])">
+        <label for="damPosition" class="active">Position sur la digue</label>
+        <select id="damPosition" class="browser-default" ng-model="c.objectDoc.positionId"
                 ng-options="r.id as r.libelle for r in c.refs.RefPosition"></select>
     </div>
-    <div class="sirs-field col col-50" ng-init="c.objectDoc.coteId = c.objectDoc.coteId || c.refs.RefCote[0].id">
+    <div class="sirs-field col col-50" ng-init="c.setupField('coteId', c.refs.RefCote[0])">
         <label for="damSide" class="active">Côté de la digue</label>
         <select id="damSide" class="browser-default" ng-model="c.objectDoc.coteId"
                 ng-options="r.id as r.libelle for r in c.refs.RefCote"></select>

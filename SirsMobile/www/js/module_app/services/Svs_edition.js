@@ -9,16 +9,37 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
             var context = ContextService.getValue();
 
             var refTypes = [
-                { name: 'EchelleLimnimetrique', include_docs: false },
-                { name: 'RefCote',              include_docs: false },
-                { name: 'RefCategorieDesordre', include_docs: true  },
-                { name: 'RefFonction',          include_docs: false },
-                { name: 'RefLargeurFrancBord',  include_docs: false },
-                { name: 'RefMateriau',          include_docs: false },
-                { name: 'RefNature',            include_docs: false },
-                { name: 'RefPosition',          include_docs: false },
-                { name: 'RefReferenceHauteur',  include_docs: false },
-                { name: 'RefTypeDesordre',      include_docs: false }
+                { name: 'EchelleLimnimetrique',         include_docs: false },
+                { name: 'OuvrageRevanche',              include_docs: false },
+                { name: 'OuvrageTelecomEnergie',        include_docs: false },
+                { name: 'RefCote',                      include_docs: false },
+                { name: 'RefCategorieDesordre',         include_docs: true  },
+                { name: 'RefConduiteFermee',            include_docs: false },
+                { name: 'RefEcoulement',                include_docs: false },
+                { name: 'RefFonction',                  include_docs: false },
+                { name: 'RefImplantation',              include_docs: false },
+                { name: 'RefLargeurFrancBord',          include_docs: false },
+                { name: 'RefMateriau',                  include_docs: false },
+                { name: 'RefNature',                    include_docs: false },
+                { name: 'RefOuvrageFranchissement',     include_docs: false },
+                { name: 'RefOuvrageParticulier',        include_docs: false },
+                { name: 'RefOrientationOuvrage',        include_docs: false },
+                { name: 'RefOuvrageHydrauliqueAssocie', include_docs: false },
+                { name: 'RefOuvrageTelecomEnergie',     include_docs: false },
+                { name: 'RefOuvrageVoirie',             include_docs: false },
+                { name: 'RefPosition',                  include_docs: false },
+                { name: 'RefReferenceHauteur',          include_docs: false },
+                { name: 'RefRevetement',                include_docs: false },
+                { name: 'RefSeuil',                     include_docs: false },
+                { name: 'RefTypeDesordre',              include_docs: false },
+                { name: 'RefTypeGlissiere',             include_docs: false },
+                { name: 'RefReseauHydroCielOuvert',     include_docs: false },
+                { name: 'RefReseauTelecomEnergie',      include_docs: false },
+                { name: 'RefUsageVoie',                 include_docs: false },
+                { name: 'RefUtilisationConduite',       include_docs: false },
+                { name: 'RefVoieDigue',                 include_docs: false },
+                { name: 'ReseauHydrauliqueFerme',       include_docs: false },
+                { name: 'ReseauTelecomEnergie',         include_docs: false }
             ];  // TODO → make it configurable ?
 
             return {
@@ -75,7 +96,7 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
                                 deferred.reject(error);
                             });
 
-                        promises[refType] = deferred.promise;
+                        promises[refType.name] = deferred.promise;
                     });
 
                     return $q.all(promises);

@@ -1,46 +1,60 @@
 <div class="row">
     <div class="sirs-field col col-50">
         <label for="label" class="active">Libellé</label>
-        <input id="label" type="text"/>
+        <input id="label" type="text" ng-model="c.objectDoc.libelle"/>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.objectDoc.largeur = 0.0">
         <label for="width" class="active">Largeur</label>
-        <input id="width" type="text"/>
+        <input id="width" type="text" ng-model="c.objectDoc.largeur"/>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('orientationOuvrageId', c.refs.RefOrientationOuvrage[0])">
         <label for="orientation" class="active">Orientation de l'ouvrage</label>
-        <select id="orientation" class="browser-default"></select>
+        <select id="orientation" class="browser-default" ng-model="c.objectDoc.orientationOuvrageId"
+                ng-options="r.id as r.libelle for r in c.refs.RefOrientationOuvrage"></select>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('usageId', c.refs.RefUsageVoie[0])">
         <label for="use" class="active">Usage</label>
-        <select id="use" class="browser-default"></select>
+        <select id="use" class="browser-default" ng-model="c.objectDoc.usageId"
+                ng-options="r.id as r.libelle for r in c.refs.RefOrientationOuvrage"></select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
-        <label for="coating" class="active">Revêtement</label>
-        <select id="coating" class="browser-default"></select>
+    <div class="sirs-field col col-50" ng-init="c.setupField('revetementHautId', c.refs.RefRevetement[0])">
+        <label for="topCoating" class="active">Revêtement Haut</label>
+        <select id="topCoating" class="browser-default" ng-model="c.objectDoc.revetementHautId"
+                ng-options="r.id as r.libelle for r in c.refs.RefRevetement"></select>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('revetementBasId', c.refs.RefRevetement[0])">
+        <label for="lowCoating" class="active">Revêtement Bas</label>
+        <select id="lowCoating" class="browser-default" ng-model="c.objectDoc.revetementBasId"
+                ng-options="r.id as r.libelle for r in c.refs.RefRevetement"></select>
+    </div>
+</div>
+<div class="row">
+    <div class="sirs-field col col-50" ng-init="c.setupField('typeOuvrageFranchissementId', c.refs.RefOuvrageFranchissement[0])">
         <label for="workType" class="active">Type d'ouvrage</label>
-        <select id="workType" class="browser-default"></select>
+        <select id="workType" class="browser-default" ng-model="c.objectDoc.typeOuvrageFranchissementId"
+                ng-options="r.id as r.libelle for r in c.refs.RefOuvrageFranchissement"></select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('positionHautId', c.refs.RefPosition[0])">
         <label for="topPosition" class="active">Position haut</label>
-        <select id="topPosition" class="browser-default"></select>
+        <select id="topPosition" class="browser-default" ng-model="c.objectDoc.positionHautId"
+                ng-options="r.id as r.libelle for r in c.refs.RefPosition"></select>
     </div>
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('positionBasId', c.refs.RefPosition[0])">
         <label for="lowPosition" class="active">Position bas</label>
-        <select id="lowPosition" class="browser-default"></select>
+        <select id="lowPosition" class="browser-default" ng-model="c.objectDoc.positionBasId"
+                ng-options="r.id as r.libelle for r in c.refs.RefPosition"></select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50">
+    <div class="sirs-field col col-50" ng-init="c.setupField('coteId', c.refs.RefCote[0])">
         <label for="damSide" class="active">Côté de la digue</label>
-        <select id="damSide" class="browser-default"></select>
+        <select id="damSide" class="browser-default" ng-model="c.objectDoc.coteId"
+                ng-options="r.id as r.libelle for r in c.refs.RefCote"></select>
     </div>
 </div>
