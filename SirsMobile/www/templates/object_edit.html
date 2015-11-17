@@ -9,8 +9,8 @@
 
                         <!-- Content -->
                         <div class="sirs-card-content" ng-switch="c.tab">
-                            <h2 class="sirs-card-title" ng-show="c.isNewObject">Nouveau/nouvelle {{c.objectType}}</h2>
-                            <h2 class="sirs-card-title" ng-hide="c.isNewObject">Fermer un(e) {{c.objectType}}</h2>
+                            <h2 class="sirs-card-title" ng-show="c.isNewObject">Nouveau/nouvelle {{c.type}}</h2>
+                            <h2 class="sirs-card-title" ng-hide="c.isNewObject">Fermer un(e) {{c.type}}</h2>
 
                             <div class="sirs-nav-tabs">
                                 <!-- Tab / Fields -->
@@ -37,8 +37,8 @@
                                     </div>
                                     <div class="sirs-field-inline">
                                 <span class="sirs-field-title">Position
-                                    <span ng-if="c.isLinear && !c.objectDoc.positionDebut"> de début</span>
-                                    <span ng-if="c.objectDoc.positionDebut"> de fin</span> :
+                                    <span ng-if="c.isLinear && !c.doc.positionDebut"> de début</span>
+                                    <span ng-if="c.doc.positionDebut"> de fin</span> :
                                 </span>
                                         <span class="sirs-field-value">{{c.geoloc | lonlat:'à définir'}}</span>
                                     </div>
@@ -52,7 +52,7 @@
                                     </div>
                                 </div>
                                 <!-- Content / Fields / Specific -->
-                                <div class="specific" ng-include="'templates/forms/' +  c.objectType + '.html'"></div>
+                                <div class="specific" ng-include="'templates/forms/' +  c.type + '.html'"></div>
                                 <!-- Content / Fields / Description -->
                                 <div class="sirs-field">
                                     <label for="description" class="active">Description</label>

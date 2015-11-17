@@ -1,31 +1,44 @@
 <div class="sirs-field">
     <label for="label" class="active">Libellé</label>
-    <input id="label" type="text" ng-model="c.objectDoc.libelle"/>
+    <input id="label" type="text" ng-model="c.doc.libelle"/>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.setupField('typeReseauHydroCielOuvertId', c.refs.RefReseauHydroCielOuvert[0])">
+    <div class="sirs-field col col-50" ng-init="c.setupRef('typeReseauHydroCielOuvertId', c.refs.RefReseauHydroCielOuvert[0])">
         <label for="resType" class="active">Type de réseau</label>
-        <select id="resType" class="browser-default" ng-model="c.objectDoc.typeReseauHydroCielOuvertId"
+        <select id="resType" class="browser-default" ng-model="c.doc.typeReseauHydroCielOuvertId"
                 ng-options="r.id as r.libelle for r in c.refs.RefReseauHydroCielOuvert"></select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-100" ng-init="c.setupField('reseauHydrauliqueFermeIds', c.refs.ReseauHydrauliqueFerme[0], true)">
+    <div class="sirs-field col col-100" ng-init="c.setupRef('reseauHydrauliqueFermeIds', c.refs.ReseauHydrauliqueFerme[0], true)">
         <label for="related" class="active">Réseau hydraulique fermé associé</label>
-        <select id="related" class="browser-default" ng-model="c.objectDoc.reseauHydrauliqueFermeIds[$index]"
-                ng-options="r.id as r.libelle for r in c.refs.ReseauHydrauliqueFerme"
-                ng-repeat="val in c.objectDoc.reseauHydrauliqueFermeIds track by $index"></select>
+        <div class="row sirs-field-multi" ng-repeat="val in c.doc.reseauHydrauliqueFermeIds track by $index">
+            <div class="col col-75">
+                <select id="related" class="browser-default" ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                        ng-options="r.id as r.libelle for r in c.refs.ReseauHydrauliqueFerme"></select>
+            </div>
+            <div class="col col-25">
+                <button class="btn pink waves-effect waves-teal" ng-disabled="c.doc.reseauHydrauliqueFermeIds.length === 1"
+                        ng-click="c.doc.reseauHydrauliqueFermeIds.splice($index, 1)">
+                    <i class="material-icons center">remove</i>
+                </button>
+                <button class="btn pink waves-effect waves-teal"
+                        ng-click="c.doc.reseauHydrauliqueFermeIds.splice($index + 1, 0, c.refs.ReseauHydrauliqueFerme[0].id)">
+                    <i class="material-icons center">add</i>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.setupField('positionId', c.refs.RefPosition[0])">
+    <div class="sirs-field col col-50" ng-init="c.setupRef('positionId', c.refs.RefPosition[0])">
         <label for="damPosition" class="active">Position sur la digue</label>
-        <select id="damPosition" class="browser-default" ng-model="c.objectDoc.positionId"
+        <select id="damPosition" class="browser-default" ng-model="c.doc.positionId"
                 ng-options="r.id as r.libelle for r in c.refs.RefPosition"></select>
     </div>
-    <div class="sirs-field col col-50" ng-init="c.setupField('coteId', c.refs.RefCote[0])">
+    <div class="sirs-field col col-50" ng-init="c.setupRef('coteId', c.refs.RefCote[0])">
         <label for="damSide" class="active">Côté de la digue</label>
-        <select id="damSide" class="browser-default" ng-model="c.objectDoc.coteId"
+        <select id="damSide" class="browser-default" ng-model="c.doc.coteId"
                 ng-options="r.id as r.libelle for r in c.refs.RefCote"></select>
     </div>
 </div>

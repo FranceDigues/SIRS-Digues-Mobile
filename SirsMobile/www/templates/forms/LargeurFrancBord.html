@@ -1,7 +1,7 @@
 <div class="row">
-    <div class="sirs-field" ng-init="c.setupField('typeLargeurFrancBord', c.refs.RefLargeurFrancBord[0])">
+    <div class="sirs-field" ng-init="c.setupRef('typeLargeurFrancBord', c.refs.RefLargeurFrancBord[0])">
         <label for="width" class="active">Largeur</label>
-        <select id="width" class="browser-default" ng-model="c.objectDoc.typeLargeurFrancBord"
+        <select id="width" class="browser-default" ng-model="c.doc.typeLargeurFrancBord"
                 ng-options="r.id as r.libelle for r in c.refs.RefLargeurFrancBord"></select>
     </div>
 </div>

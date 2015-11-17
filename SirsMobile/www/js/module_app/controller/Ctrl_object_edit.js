@@ -26,6 +26,7 @@ angular.module('module_app.controllers.object_edit', [])
                 source.url = layerModel.cache.url;
             }
 
+            // Create layer instance.
             var olLayer = new ol.layer.Tile({
                 name: layerModel.title,
                 extent: extent,
@@ -52,29 +53,12 @@ angular.module('module_app.controllers.object_edit', [])
 
         var self = this;
 
-        var isClosed = self.isClosed = !!objectDoc.positionFin;
-
-        var isNewObject = self.isNewObject = !$routeParams.id;
-
-        var mediaPath = self.mediaPath = null;
-
+        // Navigation
+        // -----------
 
         self.view = 'form';
 
         self.tab = 'fields';
-
-        self.objectType = $routeParams.type;
-
-        self.objectDoc = objectDoc;
-
-        self.geoloc = undefined;
-
-        self.photos = angular.copy(objectDoc.photos);
-
-        self.isLinear = true;
-
-        self.refs = refTypes;
-
 
         self.setTab = function(name) {
             if (name !== self.tab) {
@@ -93,6 +77,63 @@ angular.module('module_app.controllers.object_edit', [])
             self.setView('form');
         };
 
+        // Form
+        // ----------
+
+        self.type = $routeParams.type;
+
+        self.doc = objectDoc;
+
+        self.isClosed = !!objectDoc.positionFin;
+
+        self.isNewObject = !$routeParams.id;
+
+        self.isLinear = true;
+
+        self.refs = refTypes;
+
+        self.setupRef = function(field, defaultRef, isMultiple) {
+            if (angular.isDefined(self.doc[field])) {
+                return;
+            }
+            if (angular.isObject(defaultRef)) {
+                self.doc[field] = isMultiple ? [defaultRef.id] : defaultRef.id;
+            } else {
+                self.doc[field] = isMultiple ? [] : undefined;
+            }
+        };
+
+        self.save = function() {
+            var coordinate = ol.proj.transform([self.geoloc.longitude, self.geoloc.latitude], 'EPSG:4326', 'EPSG:2154');
+
+            // Set position(s).
+            if (self.isNewObject) {
+                self.doc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+            }
+            if (!self.isLinear || (!self.isNewObject && !self.isClosed)) {
+                self.doc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+            }
+
+            // Set photo(s).
+            self.doc.photos = self.photos;
+
+            // Save document.
+            EditionService.saveObject(self.doc).then(function() {
+                $location.path('/main');
+            });
+        };
+
+        self.delete = function() {
+            LocalDocument.remove(self.doc).then(function() {
+                $location.path('/main');
+            });
+        };
+
+        // Geolocation
+        // ----------
+
+        self.geoloc = undefined;
+
         self.locateMe = function() {
             if (GeolocationService.isEnabled()) {
                 waitForLocation(GeolocationService.getLocationPromise());
@@ -108,6 +149,21 @@ angular.module('module_app.controllers.object_edit', [])
         self.setPos = function(pos) {
             self.geoloc = pos;
         };
+
+        function waitForLocation(locationPromise) {
+            $ionicLoading.show({ template: 'En attente de localisation...' });
+            return locationPromise.then(function handleLocation(location) {
+                self.geoloc = location.coords;
+                $ionicLoading.hide();
+            });
+        }
+
+        // Medias
+        // ----------
+
+        self.mediaPath = null;
+
+        self.photos = angular.copy(self.doc.photos);
 
         self.recordAudio = function() {
             // TODO → to implement
@@ -127,65 +183,6 @@ angular.module('module_app.controllers.object_edit', [])
 
         self.saveNote = savePicture;
 
-        self.save = function() {
-            var coordinate = ol.proj.transform([self.geoloc.longitude, self.geoloc.latitude], 'EPSG:4326', 'EPSG:2154');
-
-            // Set position(s).
-            if (isNewObject) {
-                objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-            }
-            if (!self.isLinear || (!isNewObject && !isClosed)) {
-                objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-            }
-
-            // Set photo(s).
-            objectDoc.photos = self.photos;
-
-            // Save document.
-            EditionService.saveObject(objectDoc).then(function() {
-                $location.path('/main');
-            });
-        };
-
-        self.delete = function() {
-            LocalDocument.remove(objectDoc).then(function() {
-                $location.path('/main');
-            });
-        };
-
-        self.setupField = function(field, defaultValue, isMultiple) {
-            if (angular.isDefined(self.objectDoc[field])) {
-                return;
-            }
-            if (angular.isDefined(defaultValue)) {
-                if (angular.isString(defaultValue.id)) {
-                    // Reference identifier expected.
-                    self.objectDoc[field] = isMultiple ? [defaultValue.id] : defaultValue.id;
-                } else {
-                    // Simple value expected.
-                    self.objectDoc[field] = isMultiple ? [defaultValue] : defaultValue;
-                }
-            } else {
-                // No default value available.
-                self.objectDoc[field] = isMultiple ? [] : undefined;
-            }
-        };
-
-
-        // Acquire the medias storage path when the device is ready.
-        $ionicPlatform.ready(function() {
-            mediaPath = self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
-        });
-
-
-        function waitForLocation(locationPromise) {
-            $ionicLoading.show({ template: 'En attente de localisation...' });
-            return locationPromise.then(function handleLocation(location) {
-                self.geoloc = location.coords;
-                $ionicLoading.hide();
-            });
-        }
-
         function photoCaptureSuccess(imageURI) {
             window.resolveLocalFileSystemURL(imageURI, savePicture);
         }
@@ -195,8 +192,11 @@ angular.module('module_app.controllers.object_edit', [])
         }
 
         function savePicture(imageFile) {
-            window.resolveLocalFileSystemURL(mediaPath, function(targetDir) {
-                var fileName = objectDoc._id + '_' + uuid4.generate() + '.png';
+            if (!self.mediaPath) {
+                return;
+            }
+            window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
+                var fileName = self.doc._id + '_' + uuid4.generate() + '.png';
 
                 // Copy image file in its final directory.
                 imageFile.copyTo(targetDir, fileName, function() {
@@ -212,6 +212,11 @@ angular.module('module_app.controllers.object_edit', [])
                 });
             });
         }
+
+        $ionicPlatform.ready(function() {
+            // Acquire the medias storage path when the device is ready.
+            self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
+        });
     })
 
     .controller('ObjectEditPosController', function(currentView) {

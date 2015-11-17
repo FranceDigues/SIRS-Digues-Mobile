@@ -1,46 +1,46 @@
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.setupField('materiauHautId', c.refs.RefMateriau[0])">
+    <div class="sirs-field col col-50" ng-init="c.setupRef('materiauHautId', c.refs.RefMateriau[0])">
         <label for="topMaterial" class="active">Matériau haut</label>
-        <select id="topMaterial" class="browser-default" ng-model="c.objectDoc.materiauHautId"
+        <select id="topMaterial" class="browser-default" ng-model="c.doc.materiauHautId"
                 ng-options="r.id as r.libelle for r in c.refs.RefMateriau"></select>
     </div>
-    <div class="sirs-field col col-50" ng-init="c.setupField('materiauBasId', c.refs.RefMateriau[0])">
+    <div class="sirs-field col col-50" ng-init="c.setupRef('materiauBasId', c.refs.RefMateriau[0])">
         <label for="lowMaterial" class="active">Matériau bas</label>
-        <select id="lowMaterial" class="browser-default" ng-model="c.objectDoc.materiauBasId"
+        <select id="lowMaterial" class="browser-default" ng-model="c.doc.materiauBasId"
                 ng-options="r.id as r.libelle for r in c.refs.RefMateriau"></select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.setupField('natureHautId', c.refs.RefNature[0])">
+    <div class="sirs-field col col-50" ng-init="c.setupRef('natureHautId', c.refs.RefNature[0])">
         <label for="topNature" class="active">Nature haut</label>
-        <select id="topNature" class="browser-default" ng-model="c.objectDoc.natureHautId"
+        <select id="topNature" class="browser-default" ng-model="c.doc.natureHautId"
                 ng-options="r.id as r.libelle for r in c.refs.RefNature"></select>
     </div>
-    <div class="sirs-field col col-50" ng-init="c.setupField('natureBasId', c.refs.RefNature[0])">
+    <div class="sirs-field col col-50" ng-init="c.setupRef('natureBasId', c.refs.RefNature[0])">
         <label for="lowNature" class="active">Nature bas</label>
-        <select id="lowNature" class="browser-default" ng-model="c.objectDoc.natureBasId"
+        <select id="lowNature" class="browser-default" ng-model="c.doc.natureBasId"
                 ng-options="r.id as r.libelle for r in c.refs.RefNature"></select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.objectDoc.hauteurMurette = 0.0">
+    <div class="sirs-field col col-50" ng-init="c.doc.hauteurMurette = 0.0">
         <label for="height" class="active">Hauteur de la murette</label>
-        <input id="height" type="text" ng-model="c.objectDoc.hauteurMurette"/>
+        <input id="height" type="text" ng-model="c.doc.hauteurMurette"/>
     </div>
-    <div class="sirs-field col col-50" ng-init="c.objectDoc.largeur = 0.0">
+    <div class="sirs-field col col-50" ng-init="c.doc.largeur = 0.0">
         <label for="width" class="active">Largeur</label>
-        <input id="width" type="text" ng-model="c.objectDoc.largeur"/>
+        <input id="width" type="text" ng-model="c.doc.largeur"/>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.setupField('positionId', c.refs.RefPosition[0])">
+    <div class="sirs-field col col-50" ng-init="c.setupRef('positionId', c.refs.RefPosition[0])">
         <label for="damPosition" class="active">Position sur la digue</label>
-        <select id="damPosition" class="browser-default" ng-model="c.objectDoc.positionId"
+        <select id="damPosition" class="browser-default" ng-model="c.doc.positionId"
                 ng-options="r.id as r.libelle for r in c.refs.RefPosition"></select>
     </div>
-    <div class="sirs-field col col-50" ng-init="c.setupField('coteId', c.refs.RefCote[0])">
+    <div class="sirs-field col col-50" ng-init="c.setupRef('coteId', c.refs.RefCote[0])">
         <label for="damSide" class="active">Côté de la digue</label>
-        <select id="damSide" class="browser-default" ng-model="c.objectDoc.coteId"
+        <select id="damSide" class="browser-default" ng-model="c.doc.coteId"
                 ng-options="r.id as r.libelle for r in c.refs.RefCote"></select>
     </div>
 </div>
