@@ -16,7 +16,7 @@
         <select id="function" class="browser-default" ng-model="c.doc.fonctionId"
                 ng-options="r.id as r.libelle for r in c.refs.RefFonction"></select>
     </div>
-    <div class="sirs-field col col-50" ng-init="c.doc.epaisseur = 0.0">
+    <div class="sirs-field col col-50" ng-init="c.doc.epaisseur = c.doc.epaisseur || 0">
         <label for="width" class="active">Epaisseur</label>
         <input id="width" type="number" ng-model="c.doc.epaisseur"/>
     </div>

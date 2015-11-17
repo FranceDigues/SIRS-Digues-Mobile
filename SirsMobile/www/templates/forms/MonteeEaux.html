@@ -1,11 +1,33 @@
-<div class="row">
-    <div class="sirs-field col col-50">
-        <label for="heightRef" class="active">Référence hauteur</label>
-        <select id="heightRef" class="browser-default"></select>
+<div class="mesures">
+    <div class="mesure-labels row" ng-init="c.doc.mesures = [c.createMeasure()]">
+        <div class="sirs-field col">
+            <label class="active">Référence hauteur</label>
+        </div>
+        <div class="sirs-field col">
+            <label class="active">Hauteur</label>
+        </div>
+        <div class="sirs-field col col-25">
+            <!-- Empty -->
+        </div>
     </div>
-    <div class="sirs-field col col-50">
-        <label for="height" class="active">Hauteur</label>
-        <input id="height" type="number"/>
+    <div class="mesure-values row" ng-repeat="m in c.doc.mesures">
+        <div class="sirs-field col">
+            <select class="browser-default" ng-model="m.referenceHauteurId"
+                    ng-options="r.id as r.libelle for r in c.refs.RefReferenceHauteur"></select>
+        </div>
+        <div class="sirs-field col">
+            <input type="number" ng-model="m.hauteur"/>
+        </div>
+        <div class="sirs-field col col-25">
+            <button class="btn pink waves-effect waves-teal" ng-disabled="c.doc.mesures.length === 1"
+                    ng-click="c.doc.mesures.splice($index, 1)">
+                <i class="material-icons center">remove</i>
+            </button>
+            <button class="btn pink waves-effect waves-teal"
+                    ng-click="c.doc.mesures.splice($index + 1, 0, c.createMeasure())">
+                <i class="material-icons center">add</i>
+            </button>
+        </div>
     </div>
 </div>
 <div class="row">

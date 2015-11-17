@@ -11,10 +11,10 @@
 </div>
 <div class="row">
     <div class="sirs-field col col-100" ng-init="c.setupRef('reseauTelecomEnergieIds', c.refs.ReseauTelecomEnergie[0], true)">
-        <label for="related" class="active">Réseau télécom. ou énergie associé</label>
-        <div class="row sirs-field-multi" ng-repeat="val in c.doc.reseauTelecomEnergieIds track by $index">
+        <label class="active">Réseau télécom. ou énergie associé</label>
+        <div class="row sirs-field-multi" ng-repeat="v in c.doc.reseauTelecomEnergieIds track by $index">
             <div class="col col-75">
-                <select id="related" class="browser-default" ng-model="c.doc.reseauTelecomEnergieIds[$index]"
+                <select class="browser-default" ng-model="c.doc.reseauTelecomEnergieIds[$index]"
                         ng-options="r.id as r.libelle for r in c.refs.ReseauTelecomEnergie"></select>
             </div>
             <div class="col col-25">

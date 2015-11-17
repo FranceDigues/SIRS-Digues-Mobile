@@ -15,17 +15,17 @@
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.doc.hauteur = 0.0">
+    <div class="sirs-field col col-50" ng-init="c.doc.hauteur = c.doc.hauteur || 0">
         <label for="height" class="active">Hauteur</label>
         <input id="height" type="text" ng-model="c.doc.hauteur"/>
     </div>
 </div>
 <div class="row">
     <div class="sirs-field col col-100" ng-init="c.setupRef('ouvrageTelecomEnergieIds', c.refs.OuvrageTelecomEnergie[0], true)">
-        <label for="related" class="active">Ouvrage télécom. ou énergie associé</label>
-        <div class="row sirs-field-multi" ng-repeat="val in c.doc.ouvrageTelecomEnergieIds track by $index">
+        <label class="active">Ouvrage télécom. ou énergie associé</label>
+        <div class="row sirs-field-multi" ng-repeat="v in c.doc.ouvrageTelecomEnergieIds track by $index">
             <div class="col col-75">
-                <select id="related" class="browser-default" ng-model="c.doc.ouvrageTelecomEnergieIds[$index]"
+                <select class="browser-default" ng-model="c.doc.ouvrageTelecomEnergieIds[$index]"
                         ng-options="r.id as r.libelle for r in c.refs.OuvrageTelecomEnergie"></select>
             </div>
             <div class="col col-25">

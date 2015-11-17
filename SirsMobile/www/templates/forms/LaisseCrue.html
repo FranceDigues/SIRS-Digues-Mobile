@@ -4,7 +4,7 @@
         <select id="heightRef" class="browser-default" ng-model="c.doc.referenceHauteurId"
                 ng-options="r.id as r.libelle for r in c.refs.RefReferenceHauteur"></select>
     </div>
-    <div class="sirs-field col col-50" ng-init="c.doc.hauteur = 0.0">
+    <div class="sirs-field col col-50" ng-init="c.doc.hauteur = c.doc.hauteur || 0">
         <label for="height" class="active">Hauteur</label>
         <input id="height" type="number" ng-model="c.doc.hauteur"/>
     </div>

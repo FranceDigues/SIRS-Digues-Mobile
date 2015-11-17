@@ -23,11 +23,11 @@
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.doc.hauteurMurette = 0.0">
+    <div class="sirs-field col col-50" ng-init="c.doc.hauteurMurette = c.doc.hauteurMurette || 0">
         <label for="height" class="active">Hauteur de la murette</label>
         <input id="height" type="text" ng-model="c.doc.hauteurMurette"/>
     </div>
-    <div class="sirs-field col col-50" ng-init="c.doc.largeur = 0.0">
+    <div class="sirs-field col col-50" ng-init="c.doc.largeur = c.doc.largeur || 0">
         <label for="width" class="active">Largeur</label>
         <input id="width" type="text" ng-model="c.doc.largeur"/>
     </div>

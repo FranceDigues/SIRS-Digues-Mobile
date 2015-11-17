@@ -9,10 +9,10 @@
                 ng-options="r.id as r.libelle for r in c.refs.RefOuvrageHydrauliqueAssocie"></select>
     </div>
     <div class="sirs-field col col-50" ng-init="c.setupRef('reseauHydrauliqueFermeIds', c.refs.ReseauHydrauliqueFerme[0], true)">
-        <label for="related" class="active">Réseau hydraulique associé</label>
-        <div class="row sirs-field-multi" ng-repeat="val in c.doc.reseauHydrauliqueFermeIds track by $index">
+        <label class="active">Réseau hydraulique associé</label>
+        <div class="row sirs-field-multi" ng-repeat="v in c.doc.reseauHydrauliqueFermeIds track by $index">
             <div class="col col-75">
-                <select id="related" class="browser-default" ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                <select class="browser-default" ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
                         ng-options="r.id as r.libelle for r in c.refs.ReseauHydrauliqueFerme"></select>
             </div>
             <div class="col col-25">

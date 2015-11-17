@@ -3,7 +3,7 @@
     <input id="label" type="text" ng-model="c.doc.libelle"/>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.doc.diametre = 0.0">
+    <div class="sirs-field col col-50" ng-init="c.doc.diametre = c.doc.diametre || 0">
         <label for="diameter" class="active">Diamètre</label>
         <input id="diameter" type="text" ng-model="c.doc.diametre"/>
     </div>

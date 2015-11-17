@@ -103,6 +103,15 @@ angular.module('module_app.controllers.object_edit', [])
             }
         };
 
+        self.createMeasure = function() {
+            var defaultRef = self.refs.RefReferenceHauteur[0];
+            return {
+                _id: uuid4.generate(),
+                referenceHauteurId: defaultRef ? defaultRef.id : undefined,
+                hauteur: 0
+            };
+        };
+
         self.save = function() {
             var coordinate = ol.proj.transform([self.geoloc.longitude, self.geoloc.latitude], 'EPSG:4326', 'EPSG:2154');
 

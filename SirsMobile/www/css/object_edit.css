@@ -71,6 +71,23 @@
     line-height: 42px;
 }
 
+#objectEdit .object-form .specific .mesures > .mesure-labels {
+    margin-bottom: 0;
+}
+
+#objectEdit .object-form .specific .mesures > .mesure-values {
+    margin-bottom: 0;
+}
+
+#objectEdit .object-form .specific .mesures > .mesure-values input {
+    margin-bottom: 0;
+}
+
+#objectEdit .object-form .specific .mesures > .mesure-values .btn {
+    height: 42px;
+    line-height: 42px;
+}
+
 #objectEdit .object-form .medias .pics > .pic > .pic-quicklook {
     position: relative;
     height: 110px;
