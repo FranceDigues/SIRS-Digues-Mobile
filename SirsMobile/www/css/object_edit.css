@@ -71,14 +71,8 @@
     line-height: 42px;
 }
 
-#objectEdit .object-form .specific .mesures > .mesure-labels {
-    margin-bottom: 0;
-}
-
-#objectEdit .object-form .specific .mesures > .mesure-values {
-    margin-bottom: 0;
-}
-
+#objectEdit .object-form .specific .mesures > .mesure-labels,
+#objectEdit .object-form .specific .mesures > .mesure-values,
 #objectEdit .object-form .specific .mesures > .mesure-values input {
     margin-bottom: 0;
 }

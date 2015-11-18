@@ -4,3 +4,27 @@
     width: 100%;
 }
 
+#observationEdit .observation-form > ion-content {
+    background-color: #00bcd0;
+}
+
+#observationEdit .observation-form .sirs-nav-tabs {
+    background-color: #f8f8f8;
+}
+
+#observationEdit .observation-form .input-field > label {
+    color: #444444;
+}
+
+#observationEdit .observation-form .medias .pics > .pic > .pic-quicklook {
+    position: relative;
+    height: 110px;
+    text-align: center;
+    background-color: #f5f5f5;
+}
+
+#observationEdit .observation-form .medias .pics > .pic > .pic-quicklook > img {
+    max-width: 100%;
+    max-height: 100%;
+}
+

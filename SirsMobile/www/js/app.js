@@ -126,7 +126,8 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext) {
             })
             .when('/main', {
                 templateUrl: 'templates/main.html',
-                controller: 'MainController as mc'
+                controller: 'MainController as mc',
+                reloadOnSearch: false
             })
             .when('/object/:type/:id?', {
                 templateUrl: 'templates/object_edit.html',
@@ -142,6 +143,16 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext) {
                     },
                     refTypes: function(EditionService) {
                         return EditionService.getReferenceTypes();
+                    }
+                }
+            })
+            .when('/observation/:objectId/:obsId?', {
+                templateUrl: 'templates/observation_edit.html',
+                controller: 'ObservationEditController as c',
+                resolve: {
+                    objectDoc: function($route, sContext /*, LocalDocument*/) {
+                        return sContext.selectedDocument;
+                        //return LocalDocument.get($route.current.params.objectId);
                     }
                 }
             })

@@ -106,9 +106,11 @@ angular.module('module_app.controllers.object_edit', [])
         self.createMeasure = function() {
             var defaultRef = self.refs.RefReferenceHauteur[0];
             return {
-                _id: uuid4.generate(),
-                referenceHauteurId: defaultRef ? defaultRef.id : undefined,
-                hauteur: 0
+                '_id': uuid4.generate(),
+                '@class': 'fr.sirs.core.model.MesureMonteeEaux',
+                'date': new Date().toISOString(),
+                'referenceHauteurId': defaultRef ? defaultRef.id : undefined,
+                'hauteur': 0
             };
         };
 

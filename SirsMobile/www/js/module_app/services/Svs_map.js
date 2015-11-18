@@ -166,6 +166,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
                     var feature = wktFormat.readFeature(featureDoc.value.geometry);
                     feature.getGeometry().transform('EPSG:2154', 'EPSG:3857');
                     feature.set('id', featureDoc.value.id);
+                    feature.set('designation', featureDoc.value.designation);
                     feature.set('rev', featureDoc.value.rev);
                     feature.set('title', featureDoc.value.libelle);
                     features.push(feature);

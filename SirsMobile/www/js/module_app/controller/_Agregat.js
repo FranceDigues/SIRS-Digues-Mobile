@@ -9,6 +9,7 @@ angular.module('module_app.controllers', [
     'module_app.controllers.main',
     'module_app.controllers.menu',
     'module_app.controllers.object_edit',
+    'module_app.controllers.observation_edit',
     'module_app.controllers.replicate',
     'module_app.controllers.sync',
 

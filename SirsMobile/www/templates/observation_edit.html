@@ -1,6 +1,67 @@
 <ion-view id="observationEdit">
 
+    <!-- Form -->
+    <div class="observation-form" ng-if="c.view === 'form'">
+        <ion-content delegate-handle="formScroll">
+            <div class="row responsive-md">
+                <div class="col col-80 col-offset-10">
+                    <div class="sirs-card" ng-form="observationForm">
 
+                        <!-- Content -->
+                        <div class="sirs-card-content" ng-switch="c.tab">
+                            <h2 class="sirs-card-title" ng-show="c.isNewObject">Nouvelle Observation</h2>
+                            <h2 class="sirs-card-title" ng-hide="c.isNewObject">Editer une Observation</h2>
+
+                            <div class="sirs-nav-tabs">
+                                <!-- Tab / Fields -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'medias'}" on-tap="c.setTab('medias')">Medias</span>
+                                <!-- Tab / Medias -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'evolution'}" on-tap="c.setTab('evolution')">Évolution</span>
+                            </div>
+
+                            <!-- Content / Medias -->
+                            <div class="medias" ng-switch-when="medias">
+                                <div class="pics row">
+                                    <div class="pic col col-25" ng-repeat="photo in c.photos track by $index">
+                                        <div class="pic-quicklook">
+                                            <img ng-src="{{c.mediaPath + '/' + photo.chemin}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <!--<button type="button" class="btn waves-effect waves-teal" on-tap="c.recordAudio()">-->
+                                    <!--<i class="material-icons center">mic</i>-->
+                                    <!--</button>-->
+                                    <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.takePhoto()">
+                                        <i class="material-icons left">camera_alt</i>Prendre une photo
+                                    </button>
+                                    <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.drawNote()">
+                                        <i class="material-icons left">border_color</i>Déssiner une note
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Content / Evolution -->
+                            <div class="evolution" ng-switch-when="evolution">
+
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="sirs-card-action">
+                            <a href="#/main" class="btn-flat waves-effect waves-teal">
+                                <i class="material-icons left">arrow_back</i>Annuler
+                            </a>
+                            <button type="button" class="btn pink waves-effect waves-teal right"
+                                    ng-class="{disabled: observationForm.$invalid}" ng-disabled="observationForm.$invalid" on-tap="c.save()">
+                                <i class="material-icons left">check</i>Terminer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ion-content>
+    </div>
 
     <!-- Note -->
     <div ng-include="'templates/note_edit.html'" ng-if="c.view === 'note'"
