@@ -13,7 +13,7 @@ angular.module('module_app.controllers.menus.tribord.desordreSlct', [])
 
 
         function onGetDocumentSuccess(doc) {
-            sContext.selectedDocument = doc;
+            sContext.selectedObject = doc;
             sContext.tribordView.active = 'objectDetail';
         }
 

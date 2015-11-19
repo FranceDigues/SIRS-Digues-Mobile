@@ -1,9 +1,9 @@
 angular.module('module_app.controllers.object_edit', [])
 
     .filter('lonlat', function($filter) {
-        return function(location, fallback) {
-            if (location) {
-                return $filter('number')(location.longitude, 2) + ', ' + $filter('number')(location.latitude, 2);
+        return function(coordinate, fallback) {
+            if (coordinate) {
+                return $filter('number')(coordinate[0], 2) + ', ' + $filter('number')(coordinate[1], 2);
             }
             return fallback;
         }
@@ -84,22 +84,22 @@ angular.module('module_app.controllers.object_edit', [])
 
         self.doc = objectDoc;
 
-        self.isClosed = !!objectDoc.positionFin;
+        self.isNew = !$routeParams.id;
 
-        self.isNewObject = !$routeParams.id;
+        self.isClosed = objectDoc.positionFin || objectDoc.geometry;
 
-        self.isLinear = true;
+        self.isLinear = self.isNew || !objectDoc.positionFin;
 
         self.refs = refTypes;
 
         self.setupRef = function(field, defaultRef, isMultiple) {
-            if (angular.isDefined(self.doc[field])) {
+            if (angular.isDefined(objectDoc[field])) {
                 return;
             }
             if (angular.isObject(defaultRef)) {
-                self.doc[field] = isMultiple ? [defaultRef.id] : defaultRef.id;
+                objectDoc[field] = isMultiple ? [defaultRef.id] : defaultRef.id;
             } else {
-                self.doc[field] = isMultiple ? [] : undefined;
+                objectDoc[field] = isMultiple ? [] : undefined;
             }
         };
 
@@ -115,30 +115,24 @@ angular.module('module_app.controllers.object_edit', [])
         };
 
         self.save = function() {
-            var coordinate = ol.proj.transform([self.geoloc.longitude, self.geoloc.latitude], 'EPSG:4326', 'EPSG:2154');
-
-            // Set position(s).
-            if (self.isNewObject) {
-                self.doc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-            }
-            if (!self.isLinear || (!self.isNewObject && !self.isClosed)) {
-                self.doc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-            }
-
-            // Set photo(s).
-            self.doc.photos = self.photos;
-
-            // Save document.
-            EditionService.saveObject(self.doc).then(function() {
+            EditionService.saveObject(objectDoc).then(function() {
                 $location.path('/main');
             });
         };
 
         self.delete = function() {
-            LocalDocument.remove(self.doc).then(function() {
+            LocalDocument.remove(objectDoc).then(function() {
                 $location.path('/main');
             });
         };
+
+        $scope.$watch(function() { return self.isClosed; }, function(newValue) {
+            if (newValue === false) {
+                delete objectDoc.positionFin;
+            } else if (newValue === true) {
+                objectDoc.positionFin = objectDoc.positionDebut;
+            }
+        });
 
         // Geolocation
         // ----------
@@ -157,14 +151,34 @@ angular.module('module_app.controllers.object_edit', [])
             self.setView('map');
         };
 
-        self.setPos = function(pos) {
-            self.geoloc = pos;
+        self.handlePos = function(pos) {
+            var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', 'EPSG:2154');
+            if (self.isNew) {
+                objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+            }
+            if ((self.isNew && !self.isLinear) || (!self.isNew && !self.isClosed)) {
+                objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+            }
         };
+
+        self.getStartPos = function() {
+            return objectDoc.positionDebut ? parsePos(objectDoc.positionDebut) : undefined;
+        };
+
+        self.getEndPos = function() {
+            return objectDoc.positionFin ? parsePos(objectDoc.positionFin) : undefined;
+        };
+
+        function parsePos(position) {
+            var strings = position.substring(7, position.length - 1).split(' '),
+                numbers = [parseFloat(strings[0]), parseFloat(strings[1])];
+            return ol.proj.transform(numbers, 'EPSG:2154', 'EPSG:4326');
+        }
 
         function waitForLocation(locationPromise) {
             $ionicLoading.show({ template: 'En attente de localisation...' });
             return locationPromise.then(function handleLocation(location) {
-                self.geoloc = location.coords;
+                self.handlePos(location.coords);
                 $ionicLoading.hide();
             });
         }
@@ -173,8 +187,6 @@ angular.module('module_app.controllers.object_edit', [])
         // ----------
 
         self.mediaPath = null;
-
-        self.photos = angular.copy(self.doc.photos);
 
         self.recordAudio = function() {
             // TODO → to implement
@@ -207,13 +219,13 @@ angular.module('module_app.controllers.object_edit', [])
                 return;
             }
             window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
-                var fileName = self.doc._id + '_' + uuid4.generate() + '.png';
+                var fileName = objectDoc._id + '_' + uuid4.generate() + '.png';
 
                 // Copy image file in its final directory.
                 imageFile.copyTo(targetDir, fileName, function() {
 
                     // Store the photo in the object document.
-                    self.photos.push({
+                    objectDoc.photos.push({
                         '@class': 'fr.sirs.core.model.Photo',
                         'chemin': fileName
                     });

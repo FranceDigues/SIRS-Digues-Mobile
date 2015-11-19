@@ -55,7 +55,7 @@ angular.module('module_app.controllers.observation_edit', [])
 
         function createNewObservation() {
             return {
-                '_id': uuid4.generate(),
+                'id': uuid4.generate(),
                 '@class': 'fr.sirs.core.model.Observation',
                 'date': new Date().toISOString(),
                 'photos': []
@@ -110,13 +110,15 @@ angular.module('module_app.controllers.observation_edit', [])
                 return;
             }
             window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
-                var fileName = self.doc._id + '_' + uuid4.generate() + '.png';
+                var photoId = uuid4.generate(),
+                    fileName = objectDoc._id + '_' + self.doc.id + '_' + photoId + '.png';
 
                 // Copy image file in its final directory.
                 imageFile.copyTo(targetDir, fileName, function() {
 
                     // Store the photo in the object document.
                     self.photos.push({
+                        'id': photoId,
                         '@class': 'fr.sirs.core.model.Photo',
                         'chemin': fileName
                     });

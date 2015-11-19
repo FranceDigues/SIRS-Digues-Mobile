@@ -151,7 +151,7 @@ app.run(function ($ionicPlatform, $cordovaFile, $log, sContext) {
                 controller: 'ObservationEditController as c',
                 resolve: {
                     objectDoc: function($route, sContext /*, LocalDocument*/) {
-                        return sContext.selectedDocument;
+                        return sContext.selectedObject;
                         //return LocalDocument.get($route.current.params.objectId);
                     }
                 }

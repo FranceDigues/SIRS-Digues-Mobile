@@ -9,10 +9,10 @@
 
                         <!-- Content -->
                         <div class="sirs-card-content" ng-switch="c.tab">
-                            <h2 class="sirs-card-title" ng-show="c.isNewObject">Nouveau/nouvelle {{c.type}}</h2>
-                            <h2 class="sirs-card-title" ng-hide="c.isNewObject">Fermer un(e) {{c.type}}</h2>
+                            <h2 class="sirs-card-title" ng-show="c.isNew">Nouveau/nouvelle {{c.type}}</h2>
+                            <h2 class="sirs-card-title" ng-hide="c.isNew">Fermer un(e) {{c.type}}</h2>
 
-                            <div class="sirs-nav-tabs">
+                            <div class="sirs-nav-tabs" ng-if="c.type !== 'Desordre'">
                                 <!-- Tab / Fields -->
                                 <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'fields'}" on-tap="c.setTab('fields')">Attributs</span>
                                 <!-- Tab / Medias -->
@@ -25,9 +25,9 @@
                                 <div class="common">
                                     <div class="sirs-field">
                                         <label for="designation" class="active">Désignation</label>
-                                        <input id="designation" type="text" class="validate" required/>
+                                        <input id="designation" type="text" class="validate" ng-model="c.doc.designation" required/>
                                     </div>
-                                    <div class="switch">
+                                    <div ng-if="c.isNew || !c.isClosed" class="switch">
                                         <label>
                                             Objet ponctuel
                                             <input type="checkbox" ng-model="c.isLinear"/>
@@ -36,13 +36,15 @@
                                         </label>
                                     </div>
                                     <div class="sirs-field-inline">
-                                        <span class="sirs-field-title">Position
-                                            <span ng-if="c.isLinear && !c.doc.positionDebut"> de début</span>
-                                            <span ng-if="c.doc.positionDebut"> de fin</span> :
-                                        </span>
-                                        <span class="sirs-field-value">{{c.geoloc | lonlat:'à définir'}}</span>
+                                        <span ng-show="!c.isLinear" class="sirs-field-title">Position : </span>
+                                        <span ng-show="c.isLinear" class="sirs-field-title">Position de début :</span>
+                                        <span class="sirs-field-value">{{c.getStartPos() | lonlat:'à définir'}}</span>
                                     </div>
-                                    <div class="position-action">
+                                    <div ng-hide="!c.isLinear || c.isNew" class="sirs-field-inline">
+                                        <span class="sirs-field-title">Position de fin :</span>
+                                        <span class="sirs-field-value">{{c.getEndPos() | lonlat:'à définir'}}</span>
+                                    </div>
+                                    <div ng-if="!c.isClosed" class="position-action">
                                         <button class="btn waves-effect waves-light" on-tap="c.locateMe()">
                                             <i class="material-icons center">gps_fixed</i>
                                         </button>
@@ -56,14 +58,14 @@
                                 <!-- Content / Fields / Description -->
                                 <div class="sirs-field">
                                     <label for="description" class="active">Description</label>
-                                    <textarea id="description" class="materialize-textarea"></textarea>
+                                    <textarea id="description" class="materialize-textarea" ng-model="c.doc.description"></textarea>
                                 </div>
                             </div>
 
                             <!-- Content / Medias -->
                             <div class="medias" ng-switch-when="medias">
                                 <div class="pics row">
-                                    <div class="pic col col-25" ng-repeat="photo in c.photos track by $index">
+                                    <div class="pic col col-25" ng-repeat="photo in c.doc.photos track by $index">
                                         <div class="pic-quicklook">
                                             <img ng-src="{{c.mediaPath + '/' + photo.chemin}}"/>
                                         </div>
@@ -101,7 +103,7 @@
 
     <!-- Position Map -->
     <div ng-include="'templates/position_edit.html'" ng-if="c.view === 'map'"
-         ng-init="save = c.setPos; exit = c.backToForm"></div>
+         ng-init="save = c.handlePos; exit = c.backToForm"></div>
 
     <!-- Note -->
     <div ng-include="'templates/note_edit.html'" ng-if="c.view === 'note'"

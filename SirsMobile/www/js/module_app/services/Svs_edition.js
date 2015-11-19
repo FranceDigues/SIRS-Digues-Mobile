@@ -44,13 +44,16 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
 
             return {
                 newObject: function(type) {
-                    return {
+                    var objectDoc = {
                         '@class': 'fr.sirs.core.model.' + type,
                         'auteur': AuthService.getValue()._id,
                         'valid': false,
-                        'photos': [],
                         'linearId': null
                     };
+                    if (type !== 'Desordre') {
+                        objectDoc.photos = [];
+                    }
+                    return objectDoc;
                 },
 
                 saveObject: function(objectDoc) {
@@ -109,7 +112,7 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
                 toggle: function() {
                     context.settings.edition = !context.settings.edition;
                     $rootScope.$broadcast('editionModeChanged', context.settings.edition);
-                },
+                }
             };
         };
     });

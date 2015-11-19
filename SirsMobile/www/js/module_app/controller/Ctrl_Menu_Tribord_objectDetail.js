@@ -8,7 +8,7 @@ angular.module('module_app.controllers.menus.tribord.objectDetail', [])
 
         self.activeTab = 'description';
 
-        self.document = sContext.selectedDocument;
+        self.document = sContext.selectedObject;
 
         self.objectType = self.document['@class'].substring(
             self.document['@class'].lastIndexOf('.') + 1);
@@ -33,8 +33,9 @@ angular.module('module_app.controllers.menus.tribord.objectDetail', [])
             sContext.tribordView.active = 'desordreSlct';
         };
 
-        self.openObservationDetails = function() {
-            onGetObservationSuccess(); // TODO -> load observation details
+        self.openObservationDetails = function(observation) {
+            sContext.selectedObservation = observation;
+            sContext.tribordView.active = 'observationDetail';
         };
 
         self.remove = function() {
@@ -60,10 +61,6 @@ angular.module('module_app.controllers.menus.tribord.objectDetail', [])
             });
         };
 
-
-        function onGetObservationSuccess() {
-            sContext.tribordView.active = 'observationDetail';
-        }
 
         (function loadAbstracts() {
             angular.forEach(self.document, function(value, key) {

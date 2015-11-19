@@ -1,7 +1,7 @@
 <div id="observationDetails" ng-controller="cObservationDetail as c">
     <ion-header-bar align-title="center">
         <button class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="c.backToDisorderDetails()"></button>
-        <h1 class="title">Date observation</h1>
+        <h1 class="title">Observation</h1>
     </ion-header-bar>
 
     <ion-content class="has-header has-fab-bottom" delegate-handle="observationScroll">
@@ -9,20 +9,22 @@
         <div class="sirs-section">
             <div class="sirs-field">
                 <span class="sirs-field-title">Urgence</span>
-                <span class="sirs-field-value">Niveau 1</span>
+                <span class="sirs-field-value" ng-bind="c.urgencyLabel || 'Non définie'"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Evolution</span>
-                <span class="sirs-field-value">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>
+                <span class="sirs-field-value" ng-bind="c.doc.evolution || 'Non définie'"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Suites à donner</span>
-                <span class="sirs-field-value">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</span>
+                <span class="sirs-field-value" ng-bind="c.doc.suite || 'Non définie'"></span>
             </div>
         </div>
     </ion-content>
 
     <div class="fixed-action-btn" style="bottom: 15px; right: 15px;">
-        <a class="btn-floating btn-large waves-effect waves-light red"><i class="large material-icons">edit</i></a>
+        <a ng-href="#/observation/{{c.objectId}}/{{c.doc.id}}" class="btn-floating btn-large waves-effect waves-light pink">
+            <i class="large material-icons">edit</i>
+        </a>
     </div>
 </div>
