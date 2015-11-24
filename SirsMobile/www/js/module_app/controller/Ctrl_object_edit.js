@@ -206,6 +206,14 @@ angular.module('module_app.controllers.object_edit', [])
 
         self.saveNote = savePicture;
 
+        self.getPhotoPath = function(photo) {
+            var path = photo.chemin.replace(/\\/g, '/');
+            if (path.charAt(0) !== '/') {
+                path = '/' + path;
+            }
+            return self.mediaPath + path;
+        };
+
         function photoCaptureSuccess(imageURI) {
             window.resolveLocalFileSystemURL(imageURI, savePicture);
         }
@@ -230,7 +238,7 @@ angular.module('module_app.controllers.object_edit', [])
                     objectDoc.photos.push({
                         'id': photoId,
                         '@class': 'fr.sirs.core.model.Photo',
-                        'chemin': fileName
+                        'chemin': '/' + fileName
                     });
 
                     // Force digest.

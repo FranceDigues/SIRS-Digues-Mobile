@@ -24,7 +24,7 @@
                                 <div class="pics row">
                                     <div class="pic col col-25" ng-repeat="photo in c.photos track by photo.id">
                                         <div class="pic-quicklook">
-                                            <img ng-src="{{c.mediaPath + '/' + photo.chemin}}"/>
+                                            <img alt="Photo non disponible sur le mobile" ng-src="{{c.getPhotoPath(photo)}}"/>
                                         </div>
                                     </div>
                                 </div>

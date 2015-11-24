@@ -5,7 +5,6 @@
     </ion-header-bar>
 
     <ion-content class="has-header has-fab-bottom" delegate-handle="observationScroll">
-        <img alt="Pas d'image" style="margin-bottom: 10px" src="./img/u60.png"/>
         <div class="sirs-section">
             <div class="sirs-field">
                 <span class="sirs-field-title">Urgence</span>
@@ -20,6 +19,8 @@
                 <span class="sirs-field-value" ng-bind="c.doc.suite || 'Non définie'"></span>
             </div>
         </div>
+
+        <img ng-if="c.mediaPath" ng-repeat="photo in c.doc.photos track by photo.id" alt="Photo non disponible sur le mobile" ng-src="{{c.getPhotoPath(photo)}}"/>
     </ion-content>
 
     <div class="fixed-action-btn" style="bottom: 15px; right: 15px;">

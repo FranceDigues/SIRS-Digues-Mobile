@@ -65,7 +65,7 @@ angular.module('module_app.controllers.observation_edit', [])
         function getTargetObservation() {
             var i = objectDoc.observations.length;
             while (i--) {
-                if (objectDoc.observations[i] === $routeParams.obsId) {
+                if (objectDoc.observations[i].id === $routeParams.obsId) {
                     return objectDoc.observations[i];
                 }
             }
@@ -97,6 +97,14 @@ angular.module('module_app.controllers.observation_edit', [])
 
         self.saveNote = savePicture;
 
+        self.getPhotoPath = function(photo) {
+            var path = photo.chemin.replace(/\\/g, '/');
+            if (path.charAt(0) !== '/') {
+                path = '/' + path;
+            }
+            return self.mediaPath + path;
+        };
+
         function photoCaptureSuccess(imageURI) {
             window.resolveLocalFileSystemURL(imageURI, savePicture);
         }
@@ -120,7 +128,7 @@ angular.module('module_app.controllers.observation_edit', [])
                     self.photos.push({
                         'id': photoId,
                         '@class': 'fr.sirs.core.model.Photo',
-                        'chemin': fileName
+                        'chemin': '/' + fileName
                     });
 
                     // Force digest.
