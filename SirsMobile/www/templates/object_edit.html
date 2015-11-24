@@ -65,7 +65,7 @@
                             <!-- Content / Medias -->
                             <div class="medias" ng-switch-when="medias">
                                 <div class="pics row">
-                                    <div class="pic col col-25" ng-repeat="photo in c.doc.photos track by $index">
+                                    <div class="pic col col-25" ng-repeat="photo in c.doc.photos track by photo.id">
                                         <div class="pic-quicklook">
                                             <img ng-src="{{c.mediaPath + '/' + photo.chemin}}"/>
                                         </div>

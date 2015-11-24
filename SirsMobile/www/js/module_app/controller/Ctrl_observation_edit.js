@@ -1,6 +1,6 @@
 angular.module('module_app.controllers.observation_edit', [])
 
-    .controller('ObservationEditController', function ObservationEditController($scope, $location, $ionicScrollDelegate,
+    .controller('ObservationEditController', function ObservationEditController($scope, $filter, $location, $ionicScrollDelegate,
                                                                                 $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                                 $routeParams, GeolocationService, LocalDocument,
                                                                                 EditionService, objectDoc, uuid4) {
@@ -48,7 +48,7 @@ angular.module('module_app.controllers.observation_edit', [])
             }
 
             // Save document.
-            EditionService.saveObject(self.doc).then(function() {
+            EditionService.saveObject(objectDoc).then(function() {
                 $location.path('/main');
             });
         };
@@ -57,7 +57,7 @@ angular.module('module_app.controllers.observation_edit', [])
             return {
                 'id': uuid4.generate(),
                 '@class': 'fr.sirs.core.model.Observation',
-                'date': new Date().toISOString(),
+                'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
                 'photos': []
             };
         }
@@ -111,7 +111,7 @@ angular.module('module_app.controllers.observation_edit', [])
             }
             window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
                 var photoId = uuid4.generate(),
-                    fileName = objectDoc._id + '_' + self.doc.id + '_' + photoId + '.png';
+                    fileName = photoId + '.png';
 
                 // Copy image file in its final directory.
                 imageFile.copyTo(targetDir, fileName, function() {

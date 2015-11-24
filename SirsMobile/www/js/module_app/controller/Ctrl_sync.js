@@ -9,6 +9,7 @@ angular.module('module_app.controllers.sync', ['module_app.services.context'])
         var remoteDB = PouchService.getRemoteDB();
 
         var syncViews = [
+            'Utilisateur/byLogin',
             'Element/byClassAndLinear'
         ]; // TODO → make it configurable ?
 

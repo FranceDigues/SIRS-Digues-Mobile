@@ -10,7 +10,7 @@
             <!-- Empty -->
         </div>
     </div>
-    <div class="mesure-values row" ng-repeat="m in c.doc.mesures">
+    <div class="mesure-values row" ng-repeat="m in c.doc.mesures track by $index">
         <div class="sirs-field col">
             <select class="browser-default" ng-model="m.referenceHauteurId"
                     ng-options="r.id as r.libelle for r in c.refs.RefReferenceHauteur"></select>

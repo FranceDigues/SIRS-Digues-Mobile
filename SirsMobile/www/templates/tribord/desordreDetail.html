@@ -37,7 +37,7 @@
     <!-- Content / Observations -->
     <div ng-switch-when="observations">
         <ion-list>
-            <ion-item on-tap="c.openObservationDetails(obs)" ng-repeat="obs in c.document.observations">
+            <ion-item on-tap="c.openObservationDetails(obs)" ng-repeat="obs in c.document.observations track by obs.id">
                 {{obs.date|date:'dd/MM/yyyy'}}
             </ion-item>
         </ion-list>

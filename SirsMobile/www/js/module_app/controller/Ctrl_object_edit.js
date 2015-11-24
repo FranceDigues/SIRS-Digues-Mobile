@@ -196,7 +196,7 @@ angular.module('module_app.controllers.object_edit', [])
             navigator.camera.getPicture(photoCaptureSuccess, photoCaptureError, {
                 quality: 50,
                 destinationType: navigator.camera.DestinationType.FILE_URI,
-                encodingType:navigator.camera.EncodingType.PNG
+                encodingType: navigator.camera.EncodingType.PNG
             });
         };
 
@@ -219,13 +219,16 @@ angular.module('module_app.controllers.object_edit', [])
                 return;
             }
             window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
-                var fileName = objectDoc._id + '_' + uuid4.generate() + '.png';
+                var photoId = uuid4.generate(),
+                    fileName = photoId + '.png';
 
                 // Copy image file in its final directory.
                 imageFile.copyTo(targetDir, fileName, function() {
+                    objectDoc.photos = objectDoc.photos || [];
 
                     // Store the photo in the object document.
                     objectDoc.photos.push({
+                        'id': photoId,
                         '@class': 'fr.sirs.core.model.Photo',
                         'chemin': fileName
                     });
