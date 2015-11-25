@@ -12,7 +12,8 @@ angular.module('module_app.services.map', ['module_app.services.context'])
 
     .service('MapManager', function MapManager($rootScope, $q, $ionicPlatform, $ionicSideMenuDelegate, olMap,
                                                BackLayerService, AppLayersService, EditionService, LocalDocument,
-                                               StyleFactory, sContext, GeolocationService, featureCache, currentView) {
+                                               DefaultStyle, RealPositionStyle, sContext, GeolocationService,
+                                               featureCache, currentView) {
 
         var self = this;
 
@@ -201,7 +202,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
 
             // Create feature.
             var feature = new ol.Feature({ geometry: geometry });
-            feature.setStyle(StyleFactory([255, 0, 0, 1], geometry.getType()));
+            feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
             feature.set('id', featureDoc._id);
             feature.set('rev', featureDoc._rev);
             feature.set('title', featureDoc.libelle);
@@ -263,7 +264,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
                 function onSuccess(features) {
                     // Set feature styles.
                     angular.forEach(features, function(feature) {
-                        feature.setStyle(StyleFactory(layerModel.color, feature.getGeometry().getType()));
+                        feature.setStyle(DefaultStyle(layerModel.color, feature.getGeometry().getType()));
                     });
 
                     // Draw features.
@@ -370,12 +371,13 @@ angular.module('module_app.services.map', ['module_app.services.context'])
         });
     })
 
-    .factory('StyleFactory', function() {
+    .factory('DefaultStyle', function() {
 
-        function createPolygonStyle(fillColor, strokeColor, strokeWidth) {
+        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius) {
             var fill = new ol.style.Fill({ color: fillColor });
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
-            return new ol.style.Style({ fill: fill, stroke: stroke });
+            var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
+            return new ol.style.Style({ image: circle });
         }
 
         function createLineStyle(strokeColor, strokeWidth) {
@@ -383,11 +385,10 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             return new ol.style.Style({ stroke: stroke });
         }
 
-        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius) {
+        function createPolygonStyle(fillColor, strokeColor, strokeWidth) {
             var fill = new ol.style.Fill({ color: fillColor });
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
-            var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
-            return new ol.style.Style({ image: circle });
+            return new ol.style.Style({ fill: fill, stroke: stroke });
         }
 
         function createPointStyleFunc(color) {
@@ -438,6 +439,69 @@ angular.module('module_app.services.map', ['module_app.services.context'])
                     return createLineStyleFunc(color);
                 case 'Point':
                 case 'MultiPoint':
+                    return createPointStyleFunc(color);
+            }
+            return null;
+        };
+    })
+
+    .factory('RealPositionStyle', function() {
+
+        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius) {
+            var fill = new ol.style.Fill({ color: fillColor });
+            var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
+            var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
+            return new ol.style.Style({ image: circle });
+        }
+
+        function createLineStyle(strokeColor, strokeWidth, lineDash) {
+            var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth, lineDash: lineDash });
+            return new ol.style.Style({ stroke: stroke });
+        }
+
+        function createPointStyleFunc(color) {
+            return function() {
+                var fillColor = this.get('selected') === true ? color : [255, 255, 255, 0.75],
+                    strokeColor = this.get('selected') === true ? [255, 255, 255, 1] : color,
+                    strokeWidth = 2,
+                    circleRadius = 6;
+                return [createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius)];
+            };
+        }
+
+        function createLineStyleFunc(color) {
+            return function() {
+                var styles = [],
+                    pointFillColor = this.get('selected') === true ? color : [255, 255, 255, 0.75],
+                    pointStrokeColor = this.get('selected') === true ? [255, 255, 255, 1] : color,
+                    pointStrokeWidth = 2,
+                    pointCircleRadius = 6,
+                    lineStrokeColor = color,
+                    lineStrokeWidth = 3;
+
+                // Line style(s).
+                if (this.get('selected') === true) {
+                    styles.push(createLineStyle([255, 255, 255, 1], lineStrokeWidth + 4, [20, 30]));
+                }
+                styles.push(createLineStyle(lineStrokeColor, lineStrokeWidth, [30, 20]));
+
+                // Point style.
+                var pointStyle = createPointStyle(pointFillColor, pointStrokeColor, pointStrokeWidth, pointCircleRadius);
+                pointStyle.setGeometry(function(feature) {
+                    return new ol.geom.MultiPoint(feature.getGeometry().getCoordinates());
+                });
+                styles.push(pointStyle);
+
+                return styles;
+            };
+        }
+
+
+        return function(color, type) {
+            switch (type) {
+                case 'LineString':
+                    return createLineStyleFunc(color);
+                case 'Point':
                     return createPointStyleFunc(color);
             }
             return null;

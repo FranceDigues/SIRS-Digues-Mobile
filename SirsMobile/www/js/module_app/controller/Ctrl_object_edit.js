@@ -3,7 +3,7 @@ angular.module('module_app.controllers.object_edit', [])
     .filter('lonlat', function($filter) {
         return function(coordinate, fallback) {
             if (coordinate) {
-                return $filter('number')(coordinate[0], 2) + ', ' + $filter('number')(coordinate[1], 2);
+                return $filter('number')(coordinate[0], 3) + ', ' + $filter('number')(coordinate[1], 3);
             }
             return fallback;
         }
@@ -86,9 +86,9 @@ angular.module('module_app.controllers.object_edit', [])
 
         self.isNew = !$routeParams.id;
 
-        self.isClosed = objectDoc.positionFin || objectDoc.geometry;
+        self.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry);
 
-        self.isLinear = self.isNew || !objectDoc.positionFin;
+        self.isLinear = (self.isNew || !self.isClosed || (objectDoc.positionDebut !== objectDoc.positionFin));
 
         self.refs = refTypes;
 

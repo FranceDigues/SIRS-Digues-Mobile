@@ -10,7 +10,8 @@
                         <!-- Content -->
                         <div class="sirs-card-content" ng-switch="c.tab">
                             <h2 class="sirs-card-title" ng-show="c.isNew">Nouveau/nouvelle {{c.type}}</h2>
-                            <h2 class="sirs-card-title" ng-hide="c.isNew">Fermer un(e) {{c.type}}</h2>
+                            <h2 class="sirs-card-title" ng-show="!c.isNew && !c.isClosed">Fermer un(e) {{c.type}}</h2>
+                            <h2 class="sirs-card-title" ng-show="!c.isNew && c.isClosed">Détail d'un(e) {{c.type}}</h2>
 
                             <div class="sirs-nav-tabs" ng-if="c.type !== 'Desordre'">
                                 <!-- Tab / Fields -->
