@@ -3,12 +3,12 @@
         <label for="categorie" class="active">Catégorie du désordre</label>
         <select id="categorie" class="browser-default" ng-model="c.doc.categorieDesordreId"
                 ng-options="r.id as r.libelle for r in c.refs.RefCategorieDesordre"
-                ng-change="c.doc.typeDesordreId = (c.refs.RefTypeDesordre | filter:'categorieId':c.doc.categorieDesordreId)[0]._id"></select>
+                ng-change="c.doc.typeDesordreId = (c.refs.RefTypeDesordre | filter:{ categorieId: c.doc.categorieDesordreId })[0]._id"></select>
     </div>
-    <div class="sirs-field col col-50" ng-init="c.doc.typeDesordreId = c.doc.typeDesordreId || (c.refs.RefTypeDesordre | filter:'categorieId':c.doc.categorieDesordreId)[0]._id">
+    <div class="sirs-field col col-50" ng-init="c.doc.typeDesordreId = c.doc.typeDesordreId || (c.refs.RefTypeDesordre | filter:{ categorieId: c.doc.categorieDesordreId })[0]._id">
         <label for="type" class="active">Type du désordre</label>
         <select id="type" class="browser-default" ng-model="c.doc.typeDesordreId"
-                ng-options="r._id as r.libelle for r in (c.refs.RefTypeDesordre | filter:'categorieId':c.doc.categorieDesordreId)"></select>
+                ng-options="r._id as r.libelle for r in (c.refs.RefTypeDesordre | filter:{ categorieId: c.doc.categorieDesordreId })"></select>
     </div>
 </div>
 <div class="row">
