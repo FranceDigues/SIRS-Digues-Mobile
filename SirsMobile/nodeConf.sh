@@ -24,7 +24,7 @@ bower install --allow-root
 # Remove Fabric.js gzipped file (causes conflict on build).
 rm ./www/lib/fabric/dist/fabric.min.js.gz
 
-# Prepare Ionic platform.
+# Configure Ionic platform.
 ionic platfrom add android
 ionic browser add crosswalk
 ionic add ionic-service-core

@@ -2,50 +2,42 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-
-        <!--FIXME do not leave the castle who protect the big diamond with the door open ...-->
-        <meta http-equiv="Content-Security-Policy" content="default-src *; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos; *; style-src  &apos;self&apos; &apos;unsafe-inline&apos; *">
-
         <title>SIRS Mobile</title>
-
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src &apos;self&apos; &apos;unsafe-inline&apos;; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos;">
+        
         <!-- Lib CSS -->
-        <link href="lib/ionic/css/ionic.css" rel="stylesheet"/>
-        <link href="lib/materialize/dist/css/materialize.css" rel="stylesheet"/>
-        <link href="lib/angularjs-slider/dist/rzslider.min.css" rel="stylesheet"/>
-        <link href="https://fonts.googleapis.com/icon?family=Material%20Icons" rel="stylesheet"/>
+        <link rel="stylesheet" href="lib/ionic/css/ionic.min.css">
+        <link rel="stylesheet" href="lib/materialize/dist/css/materialize.min.css">
+        <link rel="stylesheet" href="lib/angularjs-slider/dist/rzslider.min.css">
+        <link rel="stylesheet" href="lib/material-icons/material-icons.css">
 
         <!-- App CSS -->
-        <link href="css/style.css" rel="stylesheet"/>
-        <link href="css/app_layers.css" rel="stylesheet"/>
-        <link href="css/back_layers.css" rel="stylesheet"/>
-        <link href="css/cache.css" rel="stylesheet"/>
-        <link href="css/card.css" rel="stylesheet"/>
-        <link href="css/database.css" rel="stylesheet"/>
-        <link href="css/forgot_password.css" rel="stylesheet"/>
-        <link href="css/help.css" rel="stylesheet"/>
-        <link href="css/main.css" rel="stylesheet"/>
-        <link href="css/menu.css" rel="stylesheet"/>
-        <link href="css/navtabs.css" rel="stylesheet"/>
-        <link href="css/note_edit.css" rel="stylesheet"/>
-        <link href="css/object_edit.css" rel="stylesheet"/>
-        <link href="css/observation_details.css" rel="stylesheet"/>
-        <link href="css/observation_edit.css" rel="stylesheet"/>
-        <link href="css/position_edit.css" rel="stylesheet"/>
-        <link href="css/h-tree.css" rel="stylesheet"/>
-        <link href="css/login.css" rel="stylesheet"/>
-        <link href="css/new_database.css" rel="stylesheet"/>
-        <link href="css/ol.css" rel="stylesheet">
-        <link href="css/replicate.css" rel="stylesheet"/>
-        <link href="css/sync.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/app_layers.css">
+        <link rel="stylesheet" href="css/back_layers.css">
+        <link rel="stylesheet" href="css/cache.css">
+        <link rel="stylesheet" href="css/card.css">
+        <link rel="stylesheet" href="css/database.css">
+        <link rel="stylesheet" href="css/forgot_password.css">
+        <link rel="stylesheet" href="css/help.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/menu.css">
+        <link rel="stylesheet" href="css/navtabs.css">
+        <link rel="stylesheet" href="css/note_edit.css">
+        <link rel="stylesheet" href="css/object_edit.css">
+        <link rel="stylesheet" href="css/observation_details.css">
+        <link rel="stylesheet" href="css/observation_edit.css">
+        <link rel="stylesheet" href="css/position_edit.css">
+        <link rel="stylesheet" href="css/h-tree.css">
+        <link rel="stylesheet" href="css/login.css">
+        <link rel="stylesheet" href="css/new_database.css">
+        <link rel="stylesheet" href="css/ol.css">
+        <link rel="stylesheet" href="css/replicate.css">
+        <link rel="stylesheet" href="css/sync.css">
 
-
-
+        <!-- Lib JS -->
         <script src="staticLib/ol_3.8.2/ol.min.js"></script>
-
-        <!--gulp-inject task name : jslink-->
-
-        <!-- bower:js -->
         <script src="lib/jquery/dist/jquery.min.js"></script>
         <script src="lib/materialize/bin/materialize.js"></script>
         <script src="lib/ionic/js/ionic.bundle.min.js"></script>
@@ -62,9 +54,9 @@
         <script src="lib/lodash/lodash.min.js"></script>
         <script src="lib/fabric/dist/fabric.min.js"></script>
         <script src="lib/angular-uuid4/angular-uuid4.min.js"></script>
-        <!-- endinject -->
 
-        <!-- module_rde:js -->
+        <!-- App JS -->
+        <!-- TODO : remove unused files from 'module_rde/' -->
         <script src="module_rde/Class/oAppLayer.js"></script>
         <script src="module_rde/Class/oCacheDescriptor.js"></script>
         <script src="module_rde/Class/oLayer.js"></script>
@@ -81,9 +73,6 @@
         <script src="module_rde/data/services/Svs_data_mapLayer.js"></script>
         <script src="module_rde/data/services/Svs_pipe_locationManager.js"></script>
         <script src="module_rde/data/services/_Agregat.js"></script>
-        <!-- endinject -->
-
-        <!-- inject:js -->
         <script src="js/app.js"></script>
         <script src="js/module_app/controller/Ctrl_Menu_Tribord_objectDetail.js"></script>
         <script src="js/module_app/controller/Ctrl_Menu_Tribord_objectManagement.js"></script>

@@ -3,11 +3,11 @@
 # Update source of external plugins.
 pushd ../../EXTERNAL_GIT_DEP
     for i in ./* ; do
-      if [ -d "$i" ]; then
-      pushd $i
-        git pull
-       popd
-      fi
+        if [ -d "$i" ]; then
+            pushd $i
+                git pull
+            popd
+        fi
     done
 popd
 
