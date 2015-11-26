@@ -10,7 +10,7 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
             active: 'sirs_symadrem',
             list: [
                 {
-                    name: 'sirs_symadrem',
+                    name: 'ovh_db',
                     url: 'http://5.196.17.92:5984/sirs_symadrem',
                     username: 'geouser',
                     password: 'geopw',
@@ -18,8 +18,8 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
                     favorites: []
                 },
                 {
-                    name: 'sirs_isere',
-                    url: 'http://5.196.17.92:5984/sirs_isere',
+                    name: 'amanin_db',
+                    url: 'http://192.168.1.143:5984/symadrem',
                     username: 'geouser',
                     password: 'geopw',
                     replicated: false,
@@ -60,7 +60,7 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
         // Others.
         lastLocation: null,
-        version: '0.7.0'
+        version: '0.2.7'
     })
 
     .service('ContextService', function ContextService($rootScope, $location, LocalStorageItem, defaultContext) {
@@ -338,11 +338,13 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
         });
     })
 
-    .service('SidePanelService', function SidePanelService() {
+    .service('SidePanelService', function SidePanelService($ionicSideMenuDelegate) {
 
         var self = this;
 
         var babordView = 'menu';
+
+        var tribordView = 'objectManagement';
 
 
         self.getBabordView = function() {
@@ -351,5 +353,43 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
         self.setBabordView = function(view) {
             babordView = view;
-        }
+            if (!$ionicSideMenuDelegate.isOpenLeft()) {
+                $ionicSideMenuDelegate.toggleLeft();
+            }
+        };
+
+        self.getTribordView = function() {
+            return tribordView;
+        };
+
+        self.setTribordView = function(view) {
+            tribordView = view;
+            if (!$ionicSideMenuDelegate.isOpenRight()) {
+                $ionicSideMenuDelegate.toggleRight();
+            }
+        };
+    })
+
+    .service('sContext', function sContext() {
+
+        var self = this;
+
+
+        // Paths
+        // ----------
+
+        self.photoDir=null;
+
+        self.notesDir=null;
+
+        self.docDir=null;
+
+        // Selections
+        // ----------
+
+        self.selectedFeatures = [];
+
+        self.selectedObject = null;
+
+        self.selectedObservation = null;
     });

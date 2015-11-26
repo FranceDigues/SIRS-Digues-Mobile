@@ -13,7 +13,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
     .service('MapManager', function MapManager($rootScope, $q, $ionicPlatform, $ionicSideMenuDelegate, olMap,
                                                BackLayerService, AppLayersService, EditionService, LocalDocument,
                                                DefaultStyle, RealPositionStyle, sContext, GeolocationService,
-                                               featureCache, currentView) {
+                                               SidePanelService, featureCache, currentView) {
 
         var self = this;
 
@@ -314,7 +314,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             $rootScope.$broadcast('objectSelected', event.selected);
 
             // TODO → move it and listen the above event
-            sContext.tribordView.active = 'desordreSlct';
+            SidePanelService.setTribordView('desordreSlct');
             if (lastSelection.length) {
                 sContext.selectedFeatures = event.selected;
                 !$ionicSideMenuDelegate.isOpenRight() && $ionicSideMenuDelegate.toggleRight();

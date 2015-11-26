@@ -28,7 +28,7 @@
                                         <label for="designation" class="active">Désignation</label>
                                         <input id="designation" type="text" class="validate" ng-model="c.doc.designation" required/>
                                     </div>
-                                    <div ng-if="c.isNew || !c.isClosed" class="switch">
+                                    <div ng-if="c.isNew" class="switch">
                                         <label>
                                             Objet ponctuel
                                             <input type="checkbox" ng-model="c.isLinear"/>

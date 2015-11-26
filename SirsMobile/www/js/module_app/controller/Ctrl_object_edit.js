@@ -126,10 +126,10 @@ angular.module('module_app.controllers.object_edit', [])
             });
         };
 
-        $scope.$watch(function() { return self.isClosed; }, function(newValue) {
-            if (newValue === false) {
+        $scope.$watch(function() { return self.isLinear; }, function(newValue) {
+            if (newValue === true) {
                 delete objectDoc.positionFin;
-            } else if (newValue === true) {
+            } else if (newValue === false) {
                 objectDoc.positionFin = objectDoc.positionDebut;
             }
         });

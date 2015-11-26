@@ -1,11 +1,4 @@
 {
-  "name": "sirsMobile",
-  "app_id": "1bb2cb28",
-  "browsers": [
-    {
-      "platform": "android",
-      "browser": "crosswalk",
-      "version": "14.43.343.23"
-    }
-  ]
+  "name": "SIRS Mobile",
+  "app_id": ""
 }

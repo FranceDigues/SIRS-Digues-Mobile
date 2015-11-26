@@ -1,25 +1,19 @@
 angular.module('module_app.controllers.main', ['module_app.services.context'])
 
-    .controller('MainController', function MainController($location, $ionicSideMenuDelegate, AuthService, sContext, SidePanelService) {
+    .controller('MainController', function MainController($location, $ionicSideMenuDelegate, AuthService, SidePanelService) {
 
         var self = this;
 
 
-        self.logout = function() {
-            AuthService.logout();
-            $location.path('/login');
-        };
-
-        self.sContext = sContext;
+        self.logout = AuthService.logout;
 
         self.setBabordView = SidePanelService.setBabordView;
 
         self.getBabordView = SidePanelService.getBabordView;
 
-        self.menuDelegate = $ionicSideMenuDelegate;
+        self.setTribordView = SidePanelService.setTribordView;
 
-        self.createNewObject = function() {
-            $ionicSideMenuDelegate.toggleRight();
-            self.sContext.tribordView.active = "objectManagement";
-        };
+        self.getTribordView = SidePanelService.getTribordView;
+
+        self.menuDelegate = $ionicSideMenuDelegate;
     });
