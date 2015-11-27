@@ -1,7 +1,16 @@
+# File extentions
+*.apk
+*.iml
+*.keystore
+
+# Folders
 .idea/
 node_modules/
 platforms/
 plugins/
-www/lib/
-*.apk
-*.keystore
+www/lib/*
+
+# Exceptions
+!www/lib/angular-ol/
+!www/lib/material-icons/
+!www/lib/ol/

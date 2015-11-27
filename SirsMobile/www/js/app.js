@@ -11,8 +11,7 @@ angular.module('SirsMobile', [
     // App modules.
     'module_app.controllers',
     'module_app.services',
-    'module_app.directives',
-    'module_rde.note'])
+    'module_app.directives'])
 
     .config(function ($routeProvider, $ionicConfigProvider, olMapProvider, routeResolve) {
 

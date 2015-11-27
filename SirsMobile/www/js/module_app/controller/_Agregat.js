@@ -8,6 +8,7 @@ angular.module('module_app.controllers', [
     'module_app.controllers.login',
     'module_app.controllers.main',
     'module_app.controllers.menu',
+    'module_app.controllers.note_edit',
     'module_app.controllers.object_add',
     'module_app.controllers.object_details',
     'module_app.controllers.object_edit',

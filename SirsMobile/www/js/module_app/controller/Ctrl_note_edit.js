@@ -3,9 +3,9 @@
  */
 
 
-angular.module('module_rde.note', [])
+angular.module('module_app.controllers.note_edit', [])
 
-    .controller('cNote', function ($scope, $log, $ionicPlatform,$location,sContext,$timeout,uuid4) {
+    .controller('NoteEditController', function NoteEditController($scope, $log, $ionicPlatform,$location,sContext,$timeout,uuid4) {
 
         var me = this;
 
