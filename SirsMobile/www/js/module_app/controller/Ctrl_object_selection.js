@@ -1,7 +1,7 @@
 
-angular.module('module_app.controllers.menus.tribord.desordreSlct', [])
+angular.module('module_app.controllers.object_selection', [])
 
-    .controller('cDesordreSlct', function cDesordreSlct($cordovaToast, sContext, LocalDocument, SidePanelService) {
+    .controller('ObjectSelectionController', function ObjectSelectionController($cordovaToast, sContext, LocalDocument, SidePanelService) {
 
         var self = this;
 
@@ -14,7 +14,7 @@ angular.module('module_app.controllers.menus.tribord.desordreSlct', [])
 
         function onGetDocumentSuccess(doc) {
             sContext.selectedObject = doc;
-            SidePanelService.setTribordView('objectDetail');
+            SidePanelService.setTribordView('object_details');
         }
 
         function onGetDocumentError() {

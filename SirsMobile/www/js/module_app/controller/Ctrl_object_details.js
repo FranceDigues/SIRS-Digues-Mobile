@@ -1,7 +1,7 @@
 
-angular.module('module_app.controllers.menus.tribord.objectDetail', [])
+angular.module('module_app.controllers.object_details', [])
 
-    .controller('ObjectDetailsController', function cDesordreDetail($ionicPopup, $ionicScrollDelegate, sContext, SidePanelService, LocalDocument) {
+    .controller('ObjectDetailsController', function ObjectDetailsController($ionicPopup, $ionicScrollDelegate, sContext, SidePanelService, LocalDocument) {
 
         var self = this;
 
@@ -30,12 +30,12 @@ angular.module('module_app.controllers.menus.tribord.objectDetail', [])
         };
 
         self.backToDisorderList = function() {
-            SidePanelService.setTribordView('desordreSlct');
+            SidePanelService.setTribordView('object_selection');
         };
 
         self.openObservationDetails = function(observation) {
             sContext.selectedObservation = observation;
-            SidePanelService.setTribordView('observationDetail');
+            SidePanelService.setTribordView('observation_details');
         };
 
         self.remove = function() {

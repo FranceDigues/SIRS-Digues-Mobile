@@ -344,7 +344,7 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
         var babordView = 'menu';
 
-        var tribordView = 'objectManagement';
+        var tribordView = 'object_add';
 
 
         self.getBabordView = function() {

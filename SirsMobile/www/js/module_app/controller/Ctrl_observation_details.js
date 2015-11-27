@@ -1,7 +1,7 @@
 
-angular.module('module_app.controllers.menus.tribord.observationDetail', [])
+angular.module('module_app.controllers.observation_details', [])
 
-    .controller('cObservationDetail', function cObservationDetail($ionicPlatform, sContext, SidePanelService, LocalDocument) {
+    .controller('ObservationDetailsController', function ObservationDetailsController($ionicPlatform, sContext, SidePanelService, LocalDocument) {
 
         var self = this;
 
@@ -23,7 +23,7 @@ angular.module('module_app.controllers.menus.tribord.observationDetail', [])
         };
 
         self.backToDisorderDetails = function() {
-            SidePanelService.setTribordView('objectDetail');
+            SidePanelService.setTribordView('object_details');
         };
 
 

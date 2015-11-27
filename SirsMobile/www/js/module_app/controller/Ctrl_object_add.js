@@ -1,6 +1,6 @@
-angular.module('module_app.controllers.menus.tribord.objectManagement', [])
+angular.module('module_app.controllers.object_add', [])
 
-    .controller('ObjectManagementController', function ObjectManagementController($filter, $location, $ionicScrollDelegate, LocalDocument, AuthService, GeolocationService, EditionService, AppLayersService) {
+    .controller('ObjectAddController', function ObjectAddController($filter, $location, $ionicScrollDelegate, LocalDocument, AuthService, GeolocationService, EditionService, AppLayersService) {
 
         var self = this;
 

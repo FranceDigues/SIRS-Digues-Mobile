@@ -314,7 +314,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             $rootScope.$broadcast('objectSelected', event.selected);
 
             // TODO → move it and listen the above event
-            SidePanelService.setTribordView('desordreSlct');
+            SidePanelService.setTribordView('object_selection');
             if (lastSelection.length) {
                 sContext.selectedFeatures = event.selected;
                 !$ionicSideMenuDelegate.isOpenRight() && $ionicSideMenuDelegate.toggleRight();
