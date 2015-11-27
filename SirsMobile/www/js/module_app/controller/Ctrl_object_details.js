@@ -22,13 +22,6 @@ angular.module('module_app.controllers.object_details', [])
             }
         };
 
-        self.getObjectType = function() {
-            var objectType = self.document['@class'].substring(
-                self.document['@class'].lastIndexOf('.') + 1);
-            objectType = objectType.charAt(0).toLowerCase() + objectType.slice(1);
-            return objectType;
-        };
-
         self.backToDisorderList = function() {
             SidePanelService.setTribordView('object_selection');
         };

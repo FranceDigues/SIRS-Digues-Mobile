@@ -4,7 +4,7 @@
         <h1 class="title">Détail de l'objet</h1>
     </ion-header-bar>
 
-    <div class="tabs-striped tabs-top" ng-if="c.getObjectType() === 'desordre'">
+    <div class="tabs-striped tabs-top" ng-if="c.objectType === 'Desordre'">
         <div class="tabs tabs-sirs">
             <!-- Tab / Description -->
             <a class="tab-item" ng-class="{active: c.activeTab === 'description'}" on-tap="c.setActiveTab('description')">Description</a>
@@ -13,9 +13,9 @@
         </div>
     </div>
 
-    <ion-content class="has-header has-fab-bottom" delegate-handle="disorderScroll" ng-class="{'has-tabs-top': c.getObjectType() === 'desordre'}">
+    <ion-content class="has-header has-fab-bottom" delegate-handle="disorderScroll" ng-class="{'has-tabs-top': c.objectType === 'Desordre'}">
         <!-- Content -->
-        <div ng-include="'templates/tribord/' + c.getObjectType() + 'Detail.html'"></div>
+        <div ng-include="'templates/details/' + c.objectType + '.html'"></div>
     </ion-content>
 
     <!-- FAB / Description -->
