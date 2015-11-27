@@ -24,7 +24,7 @@
 #backLayers ion-list ion-item .item-content .material-icons {
     position: absolute;
     top: 0;
-    right: 0;
+    right: 20px;
     z-index: 3;
     padding: 14px;
     height: 100%;

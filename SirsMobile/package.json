@@ -1,5 +1,5 @@
 {
-  "name": "SIRS Mobile",
+  "name": "SIRS-Mobile",
   "version": "0.2.7",
   "description": "SIRS Mobile Application",
   "devDependencies": {
@@ -12,10 +12,8 @@
     "cordova-plugin-console@1.0.2",
     "cordova-plugin-crosswalk-webview@1.4.0",
     "cordova-plugin-device@1.1.0",
-    "cordova-plugin-dialogs@1.2.0",
     "cordova-plugin-file@3.0.0",
     "cordova-plugin-fileopener@1.0.3",
-    "cordova-plugin-file-transfer@1.4.0",
     "cordova-plugin-media@1.0.1",
     "cordova-plugin-media-capture@1.1.0",
     "cordova-plugin-network-information@1.1.0",

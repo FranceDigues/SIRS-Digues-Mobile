@@ -56,4 +56,7 @@
 #appLayersSelect ion-content .item-checkbox .layer-categories {
     font-size: 14px;
     color: #AAAAAA;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
