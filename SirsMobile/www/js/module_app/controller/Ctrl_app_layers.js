@@ -16,6 +16,11 @@ angular.module('module_app.controllers.app_layers', ['module_app.services.contex
             MapManager.syncAppLayer(layer);
         };
 
+        self.togglePosition = function(layer) {
+            layer.realPosition = !layer.realPosition;
+            MapManager.syncAppLayer(layer);
+        };
+
         self.backToMenu = function() {
             SidePanelService.setBabordView('menu');
         };
@@ -34,8 +39,8 @@ angular.module('module_app.controllers.app_layers', ['module_app.services.contex
 
         self.isActive = function(layer) {
             return AppLayersService.getFavorites().map(function(item) {
-                    return item.title;
-                }).indexOf(layer.title) !== -1;
+                return item.title;
+            }).indexOf(layer.title) !== -1;
         };
 
         self.toggleLayer = function(layer) {

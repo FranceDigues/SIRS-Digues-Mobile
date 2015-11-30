@@ -66,7 +66,7 @@ angular.module('module_app.services.edition', ['module_app.services.context'])
                 getClosableObjects: function() {
                     return LocalDocument.query('objetsNonClos/byAuteur', {
                         key: AuthService.getValue()._id,
-                        include_docs: true
+                        include_docs: false
                     });
                 },
 

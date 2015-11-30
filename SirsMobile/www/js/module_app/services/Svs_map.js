@@ -46,7 +46,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
         });
 
         var appLayers = new ol.layer.Group({
-            name: 'Business',
+            name: 'Objects',
             visible: !EditionService.isEnabled(),
             layers: AppLayersService.getFavorites().map(createAppLayerInstance)
         });
@@ -108,10 +108,9 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             olLayer.setVisible(layerModel.visible);
 
             // Load data if necessary.
+            olLayer.getSource().getSource().clear();
             if (layerModel.visible === true) {
                 setAppLayerFeatures(olLayer);
-            } else {
-                olLayer.getSource().getSource().clear();
             }
         };
 
@@ -160,20 +159,86 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             return olLayer;
         }
 
-        function createAppFeatureInstances(featureDocs) {
+        function createAppFeatureModel(featureDoc) {
+            featureDoc = featureDoc.value || featureDoc; // depending on "include_docs" option when querying docs
+
+            var projGeometry = featureDoc.geometry ?
+                wktFormat.readGeometry(featureDoc.geometry).transform('EPSG:2154', 'EPSG:3857') : undefined;
+
+            var realGeometry = featureDoc.positionDebut ?
+                wktFormat.readGeometry(featureDoc.positionDebut).transform('EPSG:2154', 'EPSG:3857') : undefined;
+
+            if (realGeometry && featureDoc.positionFin && featureDoc.positionFin !== featureDoc.positionDebut) {
+                realGeometry = new ol.geom.LineString([
+                    realGeometry.getFirstCoordinate(),
+                    wktFormat.readGeometry(featureDoc.positionFin).transform('EPSG:2154', 'EPSG:3857').getFirstCoordinate()
+                ]);
+            }
+
+            return {
+                id: featureDoc.id || featureDoc._id,
+                rev: featureDoc.rev || featureDoc._rev,
+                designation: featureDoc.designation,
+                title: featureDoc.libelle,
+                projGeometry: projGeometry,
+                realGeometry: realGeometry
+            };
+        }
+
+        function createAppFeatureInstances(featureModels, layerModel) {
             var features = [];
-            angular.forEach(featureDocs, function(featureDoc) {
-                if (angular.isString(featureDoc.value.geometry)) {
-                    var feature = wktFormat.readFeature(featureDoc.value.geometry);
-                    feature.getGeometry().transform('EPSG:2154', 'EPSG:3857');
-                    feature.set('id', featureDoc.value.id);
-                    feature.set('designation', featureDoc.value.designation);
-                    feature.set('rev', featureDoc.value.rev);
-                    feature.set('title', featureDoc.value.libelle);
+            angular.forEach(featureModels, function(featureModel) {
+                if ((layerModel.realPosition && featureModel.realGeometry) || (!layerModel.realPosition && featureModel.projGeometry)) {
+                    var feature = new ol.Feature();
+                    if (layerModel.realPosition) {
+                        feature.setGeometry(featureModel.realGeometry);
+                        feature.setStyle(RealPositionStyle(layerModel.color, featureModel.realGeometry.getType()));
+                    } else {
+                        feature.setGeometry(featureModel.projGeometry);
+                        feature.setStyle(DefaultStyle(layerModel.color, featureModel.projGeometry.getType()));
+                    }
+                    feature.set('id', featureModel.id);
+                    feature.set('rev', featureModel.rev);
+                    feature.set('designation', featureModel.designation);
+                    feature.set('title', featureModel.libelle);
                     features.push(feature);
                 }
             });
             return features;
+        }
+
+        function setAppLayerFeatures(olLayer) {
+            var layerModel = olLayer.get('model'),
+                olSource = olLayer.getSource().getSource();
+
+            // Try to get the promise of a previous query.
+            var promise = featureCache.get(layerModel.title);
+            if (angular.isUndefined(promise)) {
+
+                // Try to get the layer features.
+                promise = LocalDocument.query('Element/byClassAndLinear', {
+                    startkey: [layerModel.filterValue],
+                    endkey: [layerModel.filterValue, {}]
+                }).then(
+                    function(results) {
+                        return results.map(createAppFeatureModel);
+                    },
+                    function(error) {
+                        // TODO → handle error
+                    });
+
+                // Set and store the promise.
+                featureCache.put(layerModel.title, promise);
+            }
+
+            // Wait for promise resolution or rejection.
+            promise.then(
+                function onSuccess(featureModels) {
+                    olSource.addFeatures(createAppFeatureInstances(featureModels, layerModel));
+                },
+                function onError(error) {
+                    // TODO → handle error
+                });
         }
 
         function createEditionLayerInstance() {
@@ -192,7 +257,7 @@ angular.module('module_app.services.map', ['module_app.services.context'])
         function createEditionFeatureInstance(featureDoc) {
             // Compute geometry.
             var geometry = wktFormat.readGeometry(featureDoc.positionDebut);
-            if (featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut)) {
+            if (geometry && featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut)) {
                 geometry = new ol.geom.LineString([
                     geometry.getFirstCoordinate(),
                     wktFormat.readGeometry(featureDoc.positionFin).getFirstCoordinate()
@@ -217,6 +282,19 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             return features;
         }
 
+        function setEditionLayerFeatures(olLayer) {
+            var olSource = olLayer.getSource().getSource();
+
+            EditionService.getClosedObjects().then(
+                function onSuccess(results) {
+                    olSource.clear();
+                    olSource.addFeatures(createEditionFeatureInstances(results));
+                },
+                function onError(error) {
+                    // TODO → handle error
+                });
+        }
+
         function createGeolocFeatureInstances(location) {
             var pos = [location.longitude, location.latitude];
             return [
@@ -229,63 +307,6 @@ angular.module('module_app.services.map', ['module_app.services.context'])
                         .transform('EPSG:4326', 'EPSG:3857')
                 })
             ];
-        }
-
-        function setAppLayerFeatures(olLayer) {
-            var layerModel = olLayer.get('model'),
-                olSource = olLayer.getSource().getSource();
-
-            // Try to get the promise of a previous query.
-            var promise = featureCache.get(layerModel.title);
-            if (angular.isUndefined(promise)) {
-
-                // No promise found, create a deferred object.
-                var deferred = $q.defer();
-
-                // Try to get the layer features.
-                LocalDocument.query('Element/byClassAndLinear', {
-                    startkey: [layerModel.filterValue],
-                    endkey: [layerModel.filterValue, {}]
-                }).then(
-                    function(results) {
-                        deferred.resolve(createAppFeatureInstances(results));
-                    },
-                    function(error) {
-                        deferred.reject(error);
-                    });
-
-                // Set and store the promise.
-                promise = deferred.promise;
-                featureCache.put(layerModel.title, promise);
-            }
-
-            // Wait for promise resolution or rejection.
-            promise.then(
-                function onSuccess(features) {
-                    // Set feature styles.
-                    angular.forEach(features, function(feature) {
-                        feature.setStyle(DefaultStyle(layerModel.color, feature.getGeometry().getType()));
-                    });
-
-                    // Draw features.
-                    olSource.addFeatures(features);
-                },
-                function onError(error) {
-                    // TODO → handle error
-                });
-        }
-
-        function setEditionLayerFeatures(olLayer) {
-            var olSource = olLayer.getSource().getSource();
-
-            EditionService.getClosedObjects().then(
-                function onSuccess(results) {
-                    olSource.clear();
-                    olSource.addFeatures(createEditionFeatureInstances(results));
-                },
-                function onError(error) {
-                    // TODO → handle error
-                });
         }
 
         function getAppLayerInstance(layerModel) {
@@ -307,21 +328,20 @@ angular.module('module_app.services.map', ['module_app.services.context'])
             angular.forEach(lastSelection, function(feature) {
                 feature.set('selected', false);
             });
-            lastSelection = event.selected;
             angular.forEach(event.selected, function(feature) {
                 feature.set('selected', true);
             });
             $rootScope.$broadcast('objectSelected', event.selected);
 
             // TODO → move it and listen the above event
-            SidePanelService.setTribordView('object_selection');
-            if (lastSelection.length) {
+            if (event.selected.length) {
                 sContext.selectedFeatures = event.selected;
-                !$ionicSideMenuDelegate.isOpenRight() && $ionicSideMenuDelegate.toggleRight();
+                SidePanelService.setTribordView('object_selection');
             } else {
                 sContext.selectedFeatures = [];
                 $ionicSideMenuDelegate.isOpenRight() && $ionicSideMenuDelegate.toggleRight();
             }
+            lastSelection = event.selected;
         });
 
         $rootScope.$on('backLayerChanged', function(event, layerModel) {
@@ -364,7 +384,10 @@ angular.module('module_app.services.map', ['module_app.services.context'])
                 var source = editionLayer.getSource().getSource(),
                     features = source.getFeatures(), i = features.length;
                 while (i--) {
-                    if (features[i].get('id') === objectDoc._id) return;
+                    if (features[i].get('id') === objectDoc._id) {
+                        features.removeAt(i);
+                        break;
+                    }
                 }
                 source.addFeature(createEditionFeatureInstance(objectDoc));
             }

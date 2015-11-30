@@ -258,6 +258,7 @@ angular.module('module_app.services.context', ['module_app.services.utils', 'mod
 
         self.addFavorite = function(layer) {
             layer.editable = false;
+            layer.realPosition = false;
             layer.selectable = false;
             layer.visible = false;
             layer.color = [

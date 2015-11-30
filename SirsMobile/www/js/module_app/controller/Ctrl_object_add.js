@@ -15,6 +15,7 @@ angular.module('module_app.controllers.object_add', [])
 
         self.selectedClosable = undefined;
 
+
         self.setTab = function(name) {
             if (name !== self.tab) {
                 self.tab = name;
@@ -34,7 +35,7 @@ angular.module('module_app.controllers.object_add', [])
             if (angular.isDefined(self.selectedClosable)) {
                 var type = self.selectedClosable['@class'].substring(
                     self.selectedClosable['@class'].lastIndexOf('.') + 1); // TODO → improve type detection
-                $location.path('/object/' + encodeURIComponent(type) + '/' + self.selectedClosable._id);
+                $location.path('/object/' + encodeURIComponent(type) + '/' + self.selectedClosable.id);
             }
         };
 

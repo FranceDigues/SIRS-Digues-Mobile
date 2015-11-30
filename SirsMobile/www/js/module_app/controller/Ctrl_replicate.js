@@ -19,13 +19,15 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
                 views: {
                     byAuteur: {
                         map: function(doc) {
-                            if (doc.auteur && doc.positionDebut && !doc.positionFin) {
+                            if (doc.auteur && !doc.valid && doc.positionDebut && !doc.positionFin) {
                                 emit(doc.auteur, {
-                                    _id: doc._id,
-                                    _rev: doc._rev,
-                                    libelle: doc.libelle,
-                                    positionDebut: doc.positionDebut,
-                                    positionFin: doc.positionFin
+                                    '@class': doc['@class'],
+                                    'id': doc._id,
+                                    'rev': doc._rev,
+                                    'designation': doc.designation,
+                                    'libelle': doc.libelle,
+                                    'positionDebut': doc.positionDebut,
+                                    'positionFin': undefined
                                 });
                             }
                         }.toString()
@@ -37,26 +39,16 @@ angular.module('module_app.controllers.replicate', ['module_app.services.context
                 views: {
                     byAuteur: {
                         map: function(doc) {
-                            if (doc.auteur && doc.positionDebut && doc.positionFin) {
+                            if (doc.auteur && !doc.valid && doc.positionDebut && doc.positionFin) {
                                 emit(doc.auteur, {
-                                    _id: doc._id,
-                                    _rev: doc._rev,
-                                    libelle: doc.libelle,
-                                    positionDebut: doc.positionDebut,
-                                    positionFin: doc.positionFin
+                                    '@class': doc['@class'],
+                                    'id': doc._id,
+                                    'rev': doc._rev,
+                                    'designation': doc.designation,
+                                    'libelle': doc.libelle,
+                                    'positionDebut': doc.positionDebut,
+                                    'positionFin': doc.positionFin
                                 });
-                            }
-                        }.toString()
-                    }
-                }
-            },
-            {
-                _id: '_design/documents',
-                views: {
-                    byChemin: {
-                        map: function(doc) {
-                            if (doc.chemin) {
-                                emit(doc._id);
                             }
                         }.toString()
                     }
