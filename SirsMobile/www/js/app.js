@@ -9,9 +9,9 @@ angular.module('SirsMobile', [
     'rzModule',
     'pouchdb',
     // App modules.
-    'module_app.controllers',
-    'module_app.services',
-    'module_app.directives'])
+    'app.controllers',
+    'app.services',
+    'app.directives'])
 
     .config(function ($routeProvider, $ionicConfigProvider, olMapProvider, routeResolve) {
 
