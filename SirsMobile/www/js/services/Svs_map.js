@@ -198,6 +198,7 @@ angular.module('app.services.map', ['app.services.context'])
                         feature.setStyle(DefaultStyle(layerModel.color, featureModel.projGeometry.getType()));
                     }
                     feature.set('id', featureModel.id);
+                    feature.set('categories', layerModel.categories);
                     feature.set('rev', featureModel.rev);
                     feature.set('designation', featureModel.designation);
                     feature.set('title', featureModel.libelle);

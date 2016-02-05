@@ -1,3 +1,15 @@
 #objectSelection ion-content ion-list ion-item.visited {
     background-color: #f5f5f5;
 }
+
+#objectSelection ion-content ion-list ion-item {
+    padding: 10px 16px;
+}
+
+#objectSelection ion-content ion-list ion-item .layer-categories {
+    font-size: 12px;
+    color: #AAAAAA;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
