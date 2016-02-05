@@ -1,13 +1,15 @@
 
 angular.module('app.controllers.object_selection', [])
 
-    .controller('ObjectSelectionController', function ObjectSelectionController($cordovaToast, sContext, LocalDocument, SidePanelService) {
+    .controller('ObjectSelectionController', function ObjectSelectionController($cordovaToast, sContext, LocalDocument, SidePanelService, selection) {
 
         var self = this;
 
-        self.sContext = sContext;
+        self.selection = selection;
 
         self.openDisorderDetails = function(feature) {
+            feature.set('visited', true);
+            selection.active = feature;
             LocalDocument.get(feature.get('id')).then(onGetDocumentSuccess, onGetDocumentError);
         };
 

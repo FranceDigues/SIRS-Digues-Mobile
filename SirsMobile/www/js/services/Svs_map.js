@@ -6,6 +6,8 @@ angular.module('app.services.map', ['app.services.context'])
         enableRotation: false
     }))
 
+    .value('selection', { list: [], active: null })
+
     .factory('featureCache', function($cacheFactory) {
         return $cacheFactory('featureCache');
     })
@@ -13,15 +15,13 @@ angular.module('app.services.map', ['app.services.context'])
     .service('MapManager', function MapManager($rootScope, $q, $ionicPlatform, $ionicSideMenuDelegate, olMap,
                                                BackLayerService, AppLayersService, EditionService, LocalDocument,
                                                DefaultStyle, RealPositionStyle, sContext, GeolocationService,
-                                               SidePanelService, featureCache, currentView) {
+                                               SidePanelService, featureCache, currentView, selection) {
 
         var self = this;
 
 
         // OpenLayers objects
         // ----------
-
-        var lastSelection = [];
 
         var wktFormat = new ol.format.WKT();
 
@@ -325,23 +325,25 @@ angular.module('app.services.map', ['app.services.context'])
         // ----------
 
         selectInteraction.on('select', function(event) {
-            angular.forEach(lastSelection, function(feature) {
+            angular.forEach(selection.list, function(feature) {
                 feature.set('selected', false);
+                feature.set('visited', false);
             });
             angular.forEach(event.selected, function(feature) {
                 feature.set('selected', true);
+                feature.set('visited', false);
             });
             $rootScope.$broadcast('objectSelected', event.selected);
 
             // TODO → move it and listen the above event
             if (event.selected.length) {
-                sContext.selectedFeatures = event.selected;
+                selection.list = event.selected;
                 SidePanelService.setTribordView('object_selection');
             } else {
-                sContext.selectedFeatures = [];
+                selection.list = [];
                 $ionicSideMenuDelegate.isOpenRight() && $ionicSideMenuDelegate.toggleRight();
             }
-            lastSelection = event.selected;
+            $rootScope.$digest();
         });
 
         $rootScope.$on('backLayerChanged', function(event, layerModel) {
@@ -394,69 +396,77 @@ angular.module('app.services.map', ['app.services.context'])
         });
     })
 
-    .factory('DefaultStyle', function() {
+    .factory('DefaultStyle', function(selection) {
 
-        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius) {
+        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex) {
             var fill = new ol.style.Fill({ color: fillColor });
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
             var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
-            return new ol.style.Style({ image: circle });
+            return new ol.style.Style({ image: circle, zIndex: zIndex });
         }
 
-        function createLineStyle(strokeColor, strokeWidth) {
+        function createLineStyle(strokeColor, strokeWidth, zIndex) {
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
-            return new ol.style.Style({ stroke: stroke });
-        }
-
-        function createPolygonStyle(fillColor, strokeColor, strokeWidth) {
-            var fill = new ol.style.Fill({ color: fillColor });
-            var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
-            return new ol.style.Style({ fill: fill, stroke: stroke });
+            return new ol.style.Style({ stroke: stroke, zIndex: zIndex });
         }
 
         function createPointStyleFunc(color) {
             return function() {
-                var fillColor = this.get('selected') === true ? color : [255, 255, 255, 0.5],
-                    strokeColor = this.get('selected') === true ? [255, 255, 255, 1] : color,
+                color[3] = computeOpacity(this);
+
+                var highlight = shouldHighlight(this),
+                    fillColor = highlight ? color : [255, 255, 255, color[3]],
+                    strokeColor = highlight ? [255, 255, 255, color[3]] : color,
                     strokeWidth = 2,
                     pointRadius = 6;
-                return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius)];
+                return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius, computeZIndex(this))];
             };
         }
 
         function createLineStyleFunc(color) {
             return function() {
+                color[3] = computeOpacity(this);
+
                 var styles = [],
+                    highlight = shouldHighlight(this),
+                    zIndex = computeZIndex(this),
                     strokeColor = color,
                     strokeWidth = 5;
-                if (this.get('selected') === true) {
-                    styles.push(createLineStyle([255, 255, 255, 1], strokeWidth + 4));
+                if (highlight) {
+                    styles.push(createLineStyle([255, 255, 255, color[3]], strokeWidth + 4, zIndex));
                 }
-                styles.push(createLineStyle(strokeColor, strokeWidth));
+                styles.push(createLineStyle(strokeColor, strokeWidth, zIndex));
                 return styles;
             };
         }
 
-        function createPolygonStyleFunc(color) {
-            return function() {
-                var styles = [],
-                    fillColor = [255, 255, 255, 0.25],
-                    strokeColor = color,
-                    strokeWidth = 4;
-                if (this.get('selected') === true) {
-                    styles.push(createLineStyle([255, 255, 255, 1], strokeWidth + 4));
-                }
-                styles.push(createPolygonStyle(fillColor, strokeColor, strokeWidth));
-                return styles;
-            };
+        function shouldHighlight(feature) {
+            return selection.list.length && ((!selection.active && feature.get('selected')) || (selection.active && selection.active === feature));
+        }
+
+        function computeOpacity(feature) {
+            if (selection.active && feature !== selection.active) {
+                return 0.5;
+            } else if (selection.list.length && !feature.get('selected')) {
+                return 0.5;
+            } else {
+                return 1;
+            }
+        }
+
+        function computeZIndex(feature) {
+            if (feature === selection.active) {
+                return 3;
+            } else if (feature.get('selected')) {
+                return 2;
+            } else {
+                return 1;
+            }
         }
 
 
         return function(color, type) {
             switch (type) {
-                case 'Polygon':
-                case 'MultiPolygon':
-                    return createPolygonStyleFunc(color);
                 case 'LineString':
                 case 'MultiLineString':
                     return createLineStyleFunc(color);
@@ -468,48 +478,55 @@ angular.module('app.services.map', ['app.services.context'])
         };
     })
 
-    .factory('RealPositionStyle', function() {
+    .factory('RealPositionStyle', function(selection) {
 
-        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius) {
+        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex) {
             var fill = new ol.style.Fill({ color: fillColor });
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
             var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
-            return new ol.style.Style({ image: circle });
+            return new ol.style.Style({ image: circle, zIndex: zIndex });
         }
 
-        function createLineStyle(strokeColor, strokeWidth, lineDash) {
+        function createLineStyle(strokeColor, strokeWidth, lineDash, zIndex) {
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth, lineDash: lineDash });
-            return new ol.style.Style({ stroke: stroke });
+            return new ol.style.Style({ stroke: stroke, zIndex: zIndex });
         }
 
         function createPointStyleFunc(color) {
             return function() {
-                var fillColor = this.get('selected') === true ? color : [255, 255, 255, 0.75],
-                    strokeColor = this.get('selected') === true ? [255, 255, 255, 1] : color,
+                color[3] = computeOpacity(this);
+
+                var highlight = shouldHighlight(this),
+                    fillColor = highlight ? color : [255, 255, 255, color[3]],
+                    strokeColor = highlight ? [255, 255, 255, color[3]] : color,
                     strokeWidth = 2,
                     circleRadius = 6;
-                return [createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius)];
+                return [createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, computeZIndex(this))];
             };
         }
 
         function createLineStyleFunc(color) {
             return function() {
+                color[3] = computeOpacity(this);
+
                 var styles = [],
-                    pointFillColor = this.get('selected') === true ? color : [255, 255, 255, 0.75],
-                    pointStrokeColor = this.get('selected') === true ? [255, 255, 255, 1] : color,
+                    highlight = shouldHighlight(this),
+                    zIndex = computeZIndex(this),
+                    pointFillColor = highlight ? color : [255, 255, 255, color[3]],
+                    pointStrokeColor = highlight ? [255, 255, 255, color[3]] : color,
                     pointStrokeWidth = 2,
                     pointCircleRadius = 6,
                     lineStrokeColor = color,
                     lineStrokeWidth = 3;
 
                 // Line style(s).
-                if (this.get('selected') === true) {
-                    styles.push(createLineStyle([255, 255, 255, 1], lineStrokeWidth + 4, [20, 30]));
+                if (highlight) {
+                    styles.push(createLineStyle([255, 255, 255, color[3]], lineStrokeWidth + 4, [20, 30], zIndex));
                 }
-                styles.push(createLineStyle(lineStrokeColor, lineStrokeWidth, [30, 20]));
+                styles.push(createLineStyle(lineStrokeColor, lineStrokeWidth, [30, 20], zIndex));
 
                 // Point style.
-                var pointStyle = createPointStyle(pointFillColor, pointStrokeColor, pointStrokeWidth, pointCircleRadius);
+                var pointStyle = createPointStyle(pointFillColor, pointStrokeColor, pointStrokeWidth, pointCircleRadius, zIndex);
                 pointStyle.setGeometry(function(feature) {
                     return new ol.geom.MultiPoint(feature.getGeometry().getCoordinates());
                 });
@@ -517,6 +534,30 @@ angular.module('app.services.map', ['app.services.context'])
 
                 return styles;
             };
+        }
+
+        function shouldHighlight(feature) {
+            return selection.list.length && ((!selection.active && feature.get('selected')) || (selection.active && selection.active === feature));
+        }
+
+        function computeOpacity(feature) {
+            if (selection.active && feature !== selection.active) {
+                return 0.5;
+            } else if (selection.list.length && !feature.get('selected')) {
+                return 0.5;
+            } else {
+                return 1;
+            }
+        }
+
+        function computeZIndex(feature) {
+            if (feature === selection.active) {
+                return 3;
+            } else if (feature.get('selected')) {
+                return 2;
+            } else {
+                return 1;
+            }
         }
 
 

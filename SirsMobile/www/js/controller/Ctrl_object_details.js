@@ -1,7 +1,7 @@
 
 angular.module('app.controllers.object_details', [])
 
-    .controller('ObjectDetailsController', function ObjectDetailsController($ionicPopup, $ionicScrollDelegate, sContext, SidePanelService, LocalDocument) {
+    .controller('ObjectDetailsController', function ObjectDetailsController($ionicPopup, $ionicScrollDelegate, sContext, SidePanelService, LocalDocument, selection) {
 
         var self = this;
 
@@ -23,6 +23,8 @@ angular.module('app.controllers.object_details', [])
         };
 
         self.backToDisorderList = function() {
+            selection.active.changed();
+            selection.active = undefined;
             SidePanelService.setTribordView('object_selection');
         };
 
