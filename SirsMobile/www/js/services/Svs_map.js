@@ -165,6 +165,12 @@ angular.module('app.services.map', ['app.services.context'])
             var projGeometry = featureDoc.geometry ?
                 wktFormat.readGeometry(featureDoc.geometry).transform('EPSG:2154', 'EPSG:3857') : undefined;
 
+            if (projGeometry instanceof ol.geom.LineString &&
+                projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
+                projGeometry.getCoordinates()[0][1] === projGeometry.getCoordinates()[1][1]) {
+                projGeometry = new ol.geom.Point(projGeometry.getCoordinates()[0]);
+            }
+
             var realGeometry = featureDoc.positionDebut ?
                 wktFormat.readGeometry(featureDoc.positionDebut).transform('EPSG:2154', 'EPSG:3857') : undefined;
 
