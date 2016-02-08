@@ -10,5 +10,6 @@ angular.module('app.services',
         'app.services.map',
         'app.services.edition',
         'app.services.geolocation',
+        'app.services.tracker',
         'app.services.utils'
     ]);

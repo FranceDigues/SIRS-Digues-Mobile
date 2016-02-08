@@ -16,7 +16,7 @@ angular.module('app.services.geolocation', [])
             var context = ContextService.getValue(),    // the application context
                 status = -1,                            // the last service status
                 promise = undefined,                    // the last command promise
-                nextLocation = $q.defer();              // the next location deferred
+                trackDeferred = $q.defer();             // the track location deferred
 
 
             function initCmd(callback) {
@@ -50,8 +50,7 @@ angular.module('app.services.geolocation', [])
                     $log.debug('[GeolocationService] Started.');
                 }
                 context.lastLocation = result;
-                nextLocation.resolve(result);
-                nextLocation = $q.defer();
+                trackDeferred.notify(result);
                 $log.debug('[GeolocationService] Position changed.');
                 $rootScope.$broadcast('geolocationChanged', result);
             }
@@ -109,7 +108,13 @@ angular.module('app.services.geolocation', [])
                 },
 
                 getLocationPromise: function() {
-                    return nextLocation.promise;
+                    var deferred = $q.defer();
+                    trackDeferred.then(undefined, deferred.reject(deferred), deferred.resolve(deferred));
+                    return deferred.promise;
+                },
+
+                trackLocation: function(callback) {
+                    return trackDeferred.promise.then(undefined, undefined, callback);
                 },
 
                 isEnabled: function() {
