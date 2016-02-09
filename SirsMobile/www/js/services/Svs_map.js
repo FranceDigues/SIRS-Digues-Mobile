@@ -1,8 +1,8 @@
 angular.module('app.services.map', ['app.services.context'])
 
     .value('currentView', new ol.View({
-        zoom: 8,
-        center: ol.proj.transform([3.5, 43.5], 'EPSG:4326', 'EPSG:3857'),
+        zoom: 6,
+        center: ol.proj.transform([2.7246, 47.0874], 'EPSG:4326', 'EPSG:3857'),
         enableRotation: false
     }))
 
@@ -87,7 +87,19 @@ angular.module('app.services.map', ['app.services.context'])
         // Public methods
         // ----------
 
-        self.buildConfig = function() {
+        self.buildConfig = function(element) {
+            if (!currentView.get('touched')) {
+                // Center on module extent.
+                LocalDocument.get('$sirs').then(function(result) {
+                    var geometry = new ol.format.WKT().readGeometry(result.envelope, {
+                        dataProjection: 'EPSG:2154',
+                        featureProjection: 'EPSG:3857'
+                    });
+                    currentView.fit(geometry, [element.width(), element.height()]);
+                    currentView.set('touched', true);
+                });
+            }
+
             return {
                 view: currentView,
                 layers: [backLayers, appLayers, editionLayer, geolocLayer],

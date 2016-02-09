@@ -19,8 +19,8 @@ angular.module('SirsMobile', [
         $ionicConfigProvider.tabs.position('bottom'); // other values: top
 
         // Configure OpenLayers maps.
-        olMapProvider.provideOptions('main', function(MapManager) {
-            return MapManager.buildConfig();
+        olMapProvider.provideOptions('main', function(element, MapManager) {
+            return MapManager.buildConfig(element);
         });
         olMapProvider.provideOptions('cache', function(CacheMapManager) {
             return CacheMapManager.buildConfig();
