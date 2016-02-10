@@ -1,6 +1,7 @@
 angular.module('app.controllers.replicate', ['app.services.context'])
 
-    .controller('ReplicateController', function ReplicateController($q, $timeout, $location, AuthService, DatabaseService, PouchService) {
+    .controller('ReplicateController', function ReplicateController($q, $log, $timeout, $location, $ionicPopup,
+                                                                    AuthService, DatabaseService, PouchService) {
 
         var self = this;
 
@@ -85,7 +86,12 @@ angular.module('app.controllers.replicate', ['app.services.context'])
         }
 
         function firstStepError(error) {
-            // TODO → handle errors
+            $log.debug(error);
+
+            $ionicPopup.alert({
+                title: 'Erreur',
+                template: 'Une erreur s\'est produite lors de la connexion à la base de données.'
+            }).then(backToDatabase);
         }
 
         function secondStep(docCount) {
@@ -124,7 +130,12 @@ angular.module('app.controllers.replicate', ['app.services.context'])
         }
 
         function secondStepError(error) {
-            // TODO → handle errors
+            $log.debug(error);
+
+            $ionicPopup.alert({
+                title: 'Erreur',
+                template: 'Une erreur s\'est produite lors du téléchargement des documents.'
+            }).then(backToDatabase);
         }
 
         function thirdStep() {
@@ -169,8 +180,11 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             $timeout(fourthStep, 1000);
         }
 
-        function thirdStepError(error) {
-            // TODO → handle other errors
+        function thirdStepError() {
+            $ionicPopup.alert({
+                title: 'Erreur',
+                template: 'Une erreur s\'est produite lors de la préparation de l\'espace de travail.'
+            }).then(backToDatabase);
         }
 
         function fourthStep() {
@@ -218,6 +232,15 @@ angular.module('app.controllers.replicate', ['app.services.context'])
         }
 
         function fourthStepError(error) {
-            // TODO → handle errors
+            $log.debug(error);
+
+            $ionicPopup.alert({
+                title: 'Erreur',
+                template: 'Une erreur s\'est produite lors de la construction des index.'
+            }).then(backToDatabase);
+        }
+
+        function backToDatabase() {
+            $location.path('/database');
         }
     });
