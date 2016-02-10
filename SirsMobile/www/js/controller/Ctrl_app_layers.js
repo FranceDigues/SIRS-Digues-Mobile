@@ -11,6 +11,13 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
             return 'rgb(' + layer.color[0] + ',' + layer.color[1] + ',' + layer.color[2] + ')';
         };
 
+        self.move = function(from, to) {
+            if (from !== to) {
+                self.layers.splice(to, 0, self.layers.splice(from, 1)[0]);
+                MapManager.moveAppLayer(from, to);
+            }
+        };
+
         self.toggleVisibility = function(layer) {
             layer.visible = !layer.visible;
             MapManager.syncAppLayer(layer);

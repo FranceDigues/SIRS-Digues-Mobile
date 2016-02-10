@@ -127,6 +127,12 @@ angular.module('app.services.map', ['app.services.context'])
         };
 
         // TODO → find a way to do this through event
+        self.moveAppLayer = function(from, to) {
+            var collection = appLayers.getLayers();
+            collection.insertAt(to - 1, collection.removeAt(from));
+        };
+
+        // TODO → find a way to do this through event
         self.syncBackLayer = function() {
             var olLayer = createBackLayerInstance(BackLayerService.getActive());
             backLayers.getLayers().setAt(0, olLayer);
@@ -339,22 +345,31 @@ angular.module('app.services.map', ['app.services.context'])
             return null;
         }
 
+        function redrawAppLayers() {
+            appLayers.getLayers().forEach(function(layer) {
+                layer.getSource().changed();
+            });
+        }
+
 
         // Event listeners
         // ----------
 
+        $rootScope.$watch(function() { return selection.active; }, redrawAppLayers);
+
         selectInteraction.on('select', function(event) {
+            // Update feature properties.
             angular.forEach(selection.list, function(feature) {
-                feature.set('selected', false);
-                feature.set('visited', false);
+                feature.set('selected', false, true);
+                feature.set('visited', false, true);
             });
             angular.forEach(event.selected, function(feature) {
-                feature.set('selected', true);
-                feature.set('visited', false);
+                feature.set('selected', true, true);
+                feature.set('visited', false, true);
             });
-            $rootScope.$broadcast('objectSelected', event.selected);
 
-            // TODO → move it and listen the above event
+            // Update selection.
+            selection.active = undefined;
             if (event.selected.length) {
                 selection.list = event.selected;
                 SidePanelService.setTribordView('object_selection');
@@ -362,6 +377,14 @@ angular.module('app.services.map', ['app.services.context'])
                 selection.list = [];
                 $ionicSideMenuDelegate.isOpenRight() && $ionicSideMenuDelegate.toggleRight();
             }
+
+            // Redraw layers.
+            redrawAppLayers();
+
+            // Trigger event.
+            $rootScope.$broadcast('objectSelected', event.selected);
+
+            // Force digest.
             $rootScope.$digest();
         });
 

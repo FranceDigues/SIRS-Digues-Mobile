@@ -1,11 +1,11 @@
-<div id="appLayers" ng-controller="AppLayersController as c">
+<div id="appLayers" ng-controller="AppLayersController as c" ng-init="c.reorder = false">
     <ion-header-bar align-title="center">
         <button type="button" class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="c.backToMenu()"></button>
         <h1 class="title">Couches métiers</h1>
     </ion-header-bar>
 
     <ion-content class="has-header has-fab-bottom">
-        <ion-list can-swipe="true">
+        <ion-list can-swipe="!c.reorder" show-reorder="c.reorder">
             <ion-item ng-repeat="layer in c.layers">
                 <div class="layer-color" ng-style="{'background-color': c.layerColor(layer)}"></div>
                 <div class="layer-state">
@@ -29,11 +29,15 @@
                 <ion-option-button class="button" on-tap="layer.selectable = !layer.selectable">
                     <i class="icon ion-android-hand" ng-class="layer.selectable ? 'icon-layer-selected' : 'icon-layer-unselected'"></i>
                 </ion-option-button>
+                <ion-reorder-button class="ion-navicon" on-reorder="c.move($fromIndex, $toIndex)"></ion-reorder-button>
             </ion-item>
         </ion-list>
     </ion-content>
 
-    <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 200px;" on-tap="c.goToLayerList()">
+    <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 135px;" on-tap="c.reorder = !c.reorder">
         <i class="large material-icons">list</i>
+    </button>
+    <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 200px;" on-tap="c.goToLayerList()">
+        <i class="large material-icons">add</i>
     </button>
 </div>
