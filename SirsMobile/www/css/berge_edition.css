@@ -1,0 +1,8 @@
+#bergeEdition ion-content > .scroll {
+    padding-top: 10px;
+}
+
+#bergeEdition ion-content .tracking-text {
+    text-align: center;
+    margin: 20px 0;
+}

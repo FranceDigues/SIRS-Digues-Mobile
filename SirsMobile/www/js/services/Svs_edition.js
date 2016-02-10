@@ -9,6 +9,7 @@ angular.module('app.services.edition', ['app.services.context'])
             var context = ContextService.getValue();
 
             var refTypes = [
+                { name: 'Berge',                        include_docs: false },
                 { name: 'EchelleLimnimetrique',         include_docs: false },
                 { name: 'OuvrageRevanche',              include_docs: false },
                 { name: 'OuvrageTelecomEnergie',        include_docs: false },

@@ -1,6 +1,7 @@
 angular.module('app.controllers', [
     'app.controllers.app_layers',
     'app.controllers.back_layers',
+    'app.controllers.berges',
     'app.controllers.cache',
     'app.controllers.database',
     'app.controllers.documents',

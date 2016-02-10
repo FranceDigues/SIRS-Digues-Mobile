@@ -1,0 +1,48 @@
+<div id="bergeEdition" ng-controller="BergeController as berge">
+    <ion-header-bar align-title="center">
+        <h1 class="title">Trait de berge</h1>
+    </ion-header-bar>
+
+    <ion-content class="has-header" ng-class="{'has-fbb-bottom': !berge.tracking && berge.document}">
+        <!-- Tracking actions -->
+        <div class="text-center" ng-hide="berge.tracking">
+            <button type="button" class="btn btn-large waves-effect waves-light" ng-click="berge.startTracking()">Commencer</button>
+        </div>
+        <div class="text-center" ng-show="berge.tracking">
+            <button type="button" class="btn btn-large waves-effect waves-light" ng-click="berge.abortTracking()">Annuler</button>
+            <button type="button" class="btn btn-large waves-effect waves-light" ng-click="berge.stopTracking()">Terminer</button>
+        </div>
+
+        <!-- Tracking message -->
+        <p class="tracking-text" ng-show="berge.tracking">Acquisition du tracé GPS...</p>
+
+        <!-- Document form -->
+        <div ng-form="bergeForm" ng-if="!berge.tracking && berge.document">
+            <div class="row">
+                <div class="input-field col s12">
+                    <label for="designation">Désignation</label>
+                    <input id="designation" type="text" class="validate" required ng-model="berge.document.designation"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12" ng-init="berge.document.bergeId = berge.document.bergeId || berge.refs.Berge[0].id">
+                    <label for="berge" class="active">Berge</label>
+                    <select id="berge" name="type" class="browser-default" required ng-model="berge.document.bergeId"
+                            ng-options="r.id as r.libelle for r in berge.refs.Berge"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <label for="commentaire">Commentaire</label>
+                    <textarea id="commentaire" type="text" class="validate" ng-model="berge.document.commentaire"></textarea>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+
+
+    <div class="fixed-button-bar text-center" ng-show="!berge.tracking && berge.document">
+        <!-- Document actions -->
+        <button type="button" class="btn btn-large waves-effect waves-light" ng-disabled="bergeForm.$invalid" ng-click="berge.saveDocument()">Enregister</button>
+    </div>
+</div>
