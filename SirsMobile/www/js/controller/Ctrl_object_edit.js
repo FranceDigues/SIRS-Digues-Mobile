@@ -49,9 +49,11 @@ angular.module('app.controllers.object_edit', [])
     .controller('ObjectEditController', function ObjectEditController($scope, $location, $ionicScrollDelegate,
                                                                       $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                       $routeParams, GeolocationService, LocalDocument,
-                                                                      EditionService, objectDoc, refTypes, uuid4) {
+                                                                      EditionService, objectDoc, refTypes, uuid4, SirsDoc) {
 
         var self = this;
+
+        var dataProjection = SirsDoc.get().epsgCode;
 
         // Navigation
         // -----------
@@ -152,7 +154,7 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.handlePos = function(pos) {
-            var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', 'EPSG:2154');
+            var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
             if (self.isNew) {
                 objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
             }
@@ -172,7 +174,7 @@ angular.module('app.controllers.object_edit', [])
         function parsePos(position) {
             var strings = position.substring(7, position.length - 1).split(' '),
                 numbers = [parseFloat(strings[0]), parseFloat(strings[1])];
-            return ol.proj.transform(numbers, 'EPSG:2154', 'EPSG:4326');
+            return ol.proj.transform(numbers, dataProjection, 'EPSG:4326');
         }
 
         function waitForLocation(locationPromise) {

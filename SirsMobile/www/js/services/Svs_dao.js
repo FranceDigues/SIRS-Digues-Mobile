@@ -148,4 +148,25 @@ angular.module('app.services.dao', ['app.services.context'])
 
             return deferred.promise;
         };
+    })
+
+    .service('SirsDoc', function SirsDoc($q, LocalDocument) {
+
+        var self = this;
+
+        var doc = undefined;
+
+
+        self.get = function() {
+            return doc;
+        };
+
+        self.getOrLoad = function() {
+            if (doc) {
+                return $q.when(doc);
+            }
+            return LocalDocument.get('$sirs').then(function(result) {
+                return (doc = result);
+            });
+        };
     });

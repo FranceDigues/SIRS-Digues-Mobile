@@ -15,9 +15,11 @@ angular.module('app.services.map', ['app.services.context'])
     .service('MapManager', function MapManager($rootScope, $q, $ionicPlatform, $ionicSideMenuDelegate, olMap,
                                                BackLayerService, AppLayersService, EditionService, LocalDocument,
                                                DefaultStyle, RealPositionStyle, sContext, GeolocationService,
-                                               SidePanelService, featureCache, currentView, selection) {
+                                               SidePanelService, featureCache, currentView, selection, SirsDoc) {
 
         var self = this;
+
+        var dataProjection = SirsDoc.get().epsgCode;
 
 
         // OpenLayers objects
@@ -91,12 +93,14 @@ angular.module('app.services.map', ['app.services.context'])
             if (!currentView.get('touched')) {
                 // Center on module extent.
                 LocalDocument.get('$sirs').then(function(result) {
-                    var geometry = new ol.format.WKT().readGeometry(result.envelope, {
-                        dataProjection: 'EPSG:2154',
-                        featureProjection: 'EPSG:3857'
-                    });
-                    currentView.fit(geometry, [element.width(), element.height()]);
-                    currentView.set('touched', true);
+                    if (result.envelope) {
+                        var geometry = new ol.format.WKT().readGeometry(result.envelope, {
+                            dataProjection: dataProjection,
+                            featureProjection: 'EPSG:3857'
+                        });
+                        currentView.fit(geometry, [element.width(), element.height()]);
+                        currentView.set('touched', true);
+                    }
                 });
             }
 
@@ -181,7 +185,7 @@ angular.module('app.services.map', ['app.services.context'])
             featureDoc = featureDoc.value || featureDoc; // depending on "include_docs" option when querying docs
 
             var projGeometry = featureDoc.geometry ?
-                wktFormat.readGeometry(featureDoc.geometry).transform('EPSG:2154', 'EPSG:3857') : undefined;
+                wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
 
             if (projGeometry instanceof ol.geom.LineString &&
                 projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
@@ -190,12 +194,12 @@ angular.module('app.services.map', ['app.services.context'])
             }
 
             var realGeometry = featureDoc.positionDebut ?
-                wktFormat.readGeometry(featureDoc.positionDebut).transform('EPSG:2154', 'EPSG:3857') : undefined;
+                wktFormat.readGeometry(featureDoc.positionDebut).transform(dataProjection, 'EPSG:3857') : undefined;
 
             if (realGeometry && featureDoc.positionFin && featureDoc.positionFin !== featureDoc.positionDebut) {
                 realGeometry = new ol.geom.LineString([
                     realGeometry.getFirstCoordinate(),
-                    wktFormat.readGeometry(featureDoc.positionFin).transform('EPSG:2154', 'EPSG:3857').getFirstCoordinate()
+                    wktFormat.readGeometry(featureDoc.positionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
                 ]);
             }
 
@@ -288,7 +292,7 @@ angular.module('app.services.map', ['app.services.context'])
                     wktFormat.readGeometry(featureDoc.positionFin).getFirstCoordinate()
                 ]);
             }
-            geometry.transform('EPSG:2154', 'EPSG:3857');
+            geometry.transform(dataProjection, 'EPSG:3857');
 
             // Create feature.
             var feature = new ol.Feature({ geometry: geometry });

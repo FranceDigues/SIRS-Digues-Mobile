@@ -6,11 +6,14 @@
  * @param {Object} AuthService
  * @param {Object} LocalDocument
  * @param {Object} EditionService
+ * @param {Object} SirsDoc
  * @this BergeController
  */
-function BergeController(tracker, AuthService, LocalDocument, EditionService) {
+function BergeController(tracker, AuthService, LocalDocument, EditionService, SirsDoc) {
 
     var self = this;
+
+    var dataProjection = SirsDoc.get().epsgCode;
 
 
     EditionService.getReferenceTypes().then(function(refs) {
@@ -62,7 +65,7 @@ function BergeController(tracker, AuthService, LocalDocument, EditionService) {
     }
 
     function serializeCoordinates(coordinates) {
-        var geometry = (new ol.geom.LineString(coordinates)).transform('EPSG:2154', 'EPSG:3857');
+        var geometry = (new ol.geom.LineString(coordinates)).transform(dataProjection, 'EPSG:3857');
         return (new ol.format.WKT()).writeGeometry(geometry);
     }
 }
