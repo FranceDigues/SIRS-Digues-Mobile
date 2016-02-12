@@ -150,7 +150,7 @@ angular.module('app.services.dao', ['app.services.context'])
         };
     })
 
-    .service('SirsDoc', function SirsDoc($q, LocalDocument) {
+    .service('SirsDoc', function SirsDoc($rootScope, $q, LocalDocument) {
 
         var self = this;
 
@@ -169,4 +169,9 @@ angular.module('app.services.dao', ['app.services.context'])
                 return (doc = result);
             });
         };
+
+
+        $rootScope.$on('databaseChanged', function() {
+            doc = undefined;
+        });
     });

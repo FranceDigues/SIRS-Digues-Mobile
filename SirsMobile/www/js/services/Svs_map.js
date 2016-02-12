@@ -83,7 +83,6 @@ angular.module('app.services.map', ['app.services.context'])
             }
         });
 
-
         // Public methods
         // ----------
 
@@ -358,6 +357,13 @@ angular.module('app.services.map', ['app.services.context'])
         // ----------
 
         $rootScope.$watch(function() { return selection.active; }, redrawAppLayers);
+
+        $rootScope.$on('databaseChanged', function() {
+            backLayers.getLayers().clear();
+            backLayers.getLayers().push(createBackLayerInstance(BackLayerService.getActive()));
+            appLayers.getLayers().clear();
+            appLayers.getLayers().extend(AppLayersService.getFavorites().map(createAppLayerInstance));
+        });
 
         selectInteraction.on('select', function(event) {
             // Update feature properties.
