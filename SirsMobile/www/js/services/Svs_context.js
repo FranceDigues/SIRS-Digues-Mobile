@@ -10,16 +10,8 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             active: 'amanin_db',
             list: [
                 {
-                    name: 'ovh_db',
-                    url: 'http://5.196.17.92:5984/sirs_symadrem',
-                    username: 'geouser',
-                    password: 'geopw',
-                    replicated: false,
-                    favorites: []
-                },
-                {
-                    name: 'amanin_db',
-                    url: 'http://192.168.1.143:5984/kevkev',
+                    name: 'test_ovh',
+                    url: 'http://51.255.38.183:5984/adidr',
                     username: 'geouser',
                     password: 'geopw',
                     replicated: false,

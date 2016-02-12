@@ -7,7 +7,17 @@
     <ion-content class="has-header">
         <!-- Content / Description -->
         <div style="position:relative;">
-            <h-tree size="3" tops="c.roots" children="c.children(node)" onselect="c.select(node)"></h-tree>
+            <h-tree ng-hide="c.fileDoc" size="3" tops="c.roots" children="c.children(node)" onselect="c.select(node)"></h-tree>
+            <div ng-show="c.fileDoc" class="description">
+                <h3 ng-bind="c.fileDoc.name"></h3>
+                <p ng-bind="c.fileDoc.description"></p>
+                <button type="button" class="btn waves-effect waves-light" ng-click="c.fileDoc = undefined">
+                    <i class="material-icons">keyboard_arrow_left</i>&nbsp;Retour
+                </button>
+                <button type="button" class="btn waves-effect waves-light" ng-click="c.open()">
+                    <i class="material-icons">folder_open</i>&nbsp;Ouvrir
+                </button>
+            </div>
         </div>
     </ion-content>
 </ion-view>

@@ -4,17 +4,27 @@ angular.module('app.controllers.documents', [])
 
         var self = this;
 
+        var selected = undefined;
+
 
         self.roots = [];
+
+        self.fileDoc = undefined;
 
         self.children = function(node) {
             return visitDirectory(node._entry);
         };
 
         self.select = function(node) {
+            selected = node;
+
             if (!node.isDirectory) {
-                window.cordova.plugins.FileOpener.openFile(node._entry.nativeURL);
+                // TODO Load document document...
             }
+        };
+
+        self.open = function() {
+            window.cordova.plugins.FileOpener.openFile(node._entry.nativeURL);
         };
 
 
