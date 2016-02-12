@@ -6,7 +6,7 @@ angular.module('app.controllers.main', ['app.services.context'])
 
         var plugins = Object.keys(sirsDoc.moduleDescriptions);
 
-        proj4.defs(sirsDoc.espgCode, sirsDoc.espgWKT);
+        proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
 
         //proj4.defs('CRS:84', 'GEOGCS["WGS 84", DATUM["World Geodetic System 1984", SPHEROID["WGS 84", 6378137.0, 298.257223563]], PRIMEM["Greenwich", 0.0], UNIT["degree", 0.017453292519943295], AXIS["Longitude", EAST], AXIS["Latitude", NORTH], AUTHORITY["CRS", "84"]]');
         //proj4.defs('EPSG:3395', 'PROJCS["WGS 84 / World Mercator", GEOGCS["WGS 84", DATUM["World Geodetic System 1984", SPHEROID["WGS 84", 6378137.0, 298.257223563]], PRIMEM["Greenwich", 0.0], UNIT["degree", 0.017453292519943295], AXIS["Latitude", NORTH], AXIS["Longitude", EAST]], PROJECTION["Mercator_1SP", AUTHORITY["EPSG", "9804"]], PARAMETER["latitude_of_origin", 0.0], PARAMETER["central_meridian", 0.0], PARAMETER["scale_factor", 1.0], PARAMETER["false_easting", 0.0], PARAMETER["false_northing", 0.0], UNIT["meter", 1], AXIS["Easting", EAST], AXIS["Northing", NORTH], AUTHORITY["EPSG", "3395"]]');
