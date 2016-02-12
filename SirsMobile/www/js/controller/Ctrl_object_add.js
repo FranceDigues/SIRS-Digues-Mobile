@@ -35,7 +35,7 @@ angular.module('app.controllers.object_add', [])
             if (angular.isDefined(self.selectedClosable)) {
                 var type = self.selectedClosable['@class'].substring(
                     self.selectedClosable['@class'].lastIndexOf('.') + 1); // TODO → improve type detection
-                $location.path('/object/' + encodeURIComponent(type) + '/' + self.selectedClosable.id);
+                $location.path('/object/' + encodeURIComponent(type) + '/' + self.selectedClosable._id);
             }
         };
 

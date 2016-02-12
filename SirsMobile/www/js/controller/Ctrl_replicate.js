@@ -11,7 +11,8 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
         var indexedViews = [
             'Utilisateur/byLogin',
-            'Element/byClassAndLinear'
+            'Element/byClassAndLinear',
+            'Document/byPath'
         ]; // TODO → make it configurable ?
 
         var designDocs = [
@@ -21,15 +22,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                     byAuteur: {
                         map: function(doc) {
                             if (doc.auteur && !doc.valid && doc.positionDebut && !doc.positionFin) {
-                                emit(doc.auteur, {
-                                    '@class': doc['@class'],
-                                    'id': doc._id,
-                                    'rev': doc._rev,
-                                    'designation': doc.designation,
-                                    'libelle': doc.libelle,
-                                    'positionDebut': doc.positionDebut,
-                                    'positionFin': undefined
-                                });
+                                emit(doc.auteur);
                             }
                         }.toString()
                     }
@@ -49,6 +42,28 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                                     'libelle': doc.libelle,
                                     'positionDebut': doc.positionDebut,
                                     'positionFin': doc.positionFin
+                                });
+                            }
+                        }.toString()
+                    }
+                }
+            },
+            {
+                _id: '_design/Document',
+                views: {
+                    byPath: {
+                        map: function(doc) {
+                            if (doc.chemin) {
+                                var path = doc.chemin.replace(/\\/g, '/');
+                                if (path.indexOf('/')) {
+                                    path = path.substring(1);
+                                }
+                                emit(path, {
+                                    '@class': doc['@class'],
+                                    'id': doc._id,
+                                    'rev': doc._rev,
+                                    'libelle': doc.libelle,
+                                    'commentaire': doc.commentaire
                                 });
                             }
                         }.toString()

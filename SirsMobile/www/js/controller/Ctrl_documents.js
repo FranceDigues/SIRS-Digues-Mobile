@@ -1,6 +1,6 @@
 angular.module('app.controllers.documents', [])
 
-    .controller('DocumentController', function DocumentController($q, $scope, $ionicPlatform, $cordovaFile) {
+    .controller('DocumentController', function DocumentController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocument) {
 
         var self = this;
 
@@ -18,13 +18,22 @@ angular.module('app.controllers.documents', [])
         self.select = function(node) {
             selected = node;
 
+            self.fileDoc = undefined;
             if (!node.isDirectory) {
-                // TODO Load document document...
+                var prefix = window.cordova.file.externalDataDirectory + 'documents/',
+                    shortPath = node._entry.fullPath.substring(prefix.length);
+
+                return LocalDocument.queryOne('Document/byPath', { key: shortPath, include_docs: false }).then(function(doc) {
+                    self.fileDoc = angular.extend({
+                        libelle: node._entry.name,
+                        description: 'Pas de description.'
+                    }, doc);
+                });
             }
         };
 
         self.open = function() {
-            window.cordova.plugins.FileOpener.openFile(node._entry.nativeURL);
+            window.cordova.plugins.FileOpener.openFile(selected._entry.nativeURL);
         };
 
 

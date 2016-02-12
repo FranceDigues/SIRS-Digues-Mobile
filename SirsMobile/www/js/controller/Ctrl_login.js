@@ -1,6 +1,6 @@
 angular.module('app.controllers.login', ['app.services.context'])
 
-    .controller('LoginController', function LoginController($location, AuthService) {
+    .controller('LoginController', function LoginController($location, $ionicPopup, AuthService) {
 
         var self = this;
 
@@ -16,7 +16,10 @@ angular.module('app.controllers.login', ['app.services.context'])
                     $location.path('/main');
                 },
                 function() {
-                    // TODO → handle errors
+                    $ionicPopup.alert({
+                        title: 'Erreur',
+                        template: 'Impossible de s\'authentifier. Veuillez vérifier vos informations de connexion.'
+                    });
                 });
         };
     });
