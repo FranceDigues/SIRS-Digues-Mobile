@@ -15,4 +15,18 @@ angular.module('app.directives.materialize', [])
             replace: true,
             template: '<select ng-transclude></select>'
         }
+    })
+
+    .directive('mtPickadate', function mtSelectDirective() {
+        return {
+            restrict: 'AE',
+            link: function(scope, $element) {
+                $element.pickadate(angular.extend({
+                    // Default options here.
+                }, scope.$eval('mtPickadate')));
+            },
+            transclude: true,
+            replace: true,
+            template: '<select ng-transclude></select>'
+        }
     });

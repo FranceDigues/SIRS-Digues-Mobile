@@ -66,7 +66,9 @@ function BergeController(tracker, AuthService, LocalDocument, EditionService, Si
             '@class': 'fr.sirs.core.model.TraitBerge',
             'auteur': AuthService.getValue()._id,
             'valid': false,
-            'geometry': serializeCoordinates()
+            'geometry': serializeCoordinates(),
+            'date_debut': undefined,
+            'date_fin': undefined
         };
         tracker.stop();
     }

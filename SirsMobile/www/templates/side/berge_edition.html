@@ -21,29 +21,40 @@
             <div class="row">
                 <div class="input-field col s12">
                     <label for="designation">Désignation</label>
-                    <input id="designation" type="text" class="validate" required ng-model="berge.document.designation"/>
+                    <input id="designation" name="designation" type="text" class="validate" required ng-model="berge.document.designation"/>
                 </div>
             </div>
             <div class="row">
                 <div class="col s12" ng-init="berge.document.bergeId = berge.document.bergeId || berge.refs.Berge[0].id">
                     <label for="berge" class="active">Berge</label>
-                    <select id="berge" name="type" class="browser-default" required ng-model="berge.document.bergeId"
+                    <select id="berge" name="berge" class="browser-default" required ng-model="berge.document.bergeId"
                             ng-options="r.id as r.libelle for r in berge.refs.Berge"></select>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <label for="commentaire">Commentaire</label>
-                    <textarea id="commentaire" type="text" class="validate" ng-model="berge.document.commentaire"></textarea>
+                    <label for="comment">Commentaire</label>
+                    <textarea id="comment" name="comment" type="text" class="validate" ng-model="berge.document.commentaire"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <label for="dateBegin" class="active">Date début</label>
+                    <input id="dateBegin" name="dateBegin" type="date" class="datepicker validate" ng-model="berge.document.date_debut"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <label for="dateEnd" class="active">Date fin</label>
+                    <input id="dateEnd" name="dateEnd" type="date" class="datepicker validate" ng-model="berge.document.date_fin"/>
                 </div>
             </div>
         </div>
     </ion-content>
 
-
     <div class="fixed-button-bar text-center" ng-show="!berge.tracking && berge.document">
         <!-- Document actions -->
-        <button type="button" class="btn btn-large waves-effect waves-light" ng-disabled="bergeForm.$invalid" on-tap="berge.cancelDocument()">Annuler</button>
-        <button type="button" class="btn btn-large waves-effect waves-light" ng-disabled="bergeForm.$invalid" on-tap="berge.saveDocument()">Valider</button>
+        <button type="button" class="btn btn-large waves-effect waves-light" on-tap="berge.cancelDocument()">Annuler</button>
+        <button type="button" class="btn btn-large waves-effect waves-light" ng-disabled="bergeForm.$invalid" on-tap="bergeForm.$valid && berge.saveDocument()">Valider</button>
     </div>
 </div>
