@@ -23,6 +23,12 @@
                     <i class="large material-icons">add</i>
                 </a>
             </div>
+            <!-- Button / New berge -->
+            <div class="fixed-action-btn" style="bottom: 25px;right:95px;" ng-if="mc.hasBergePlugin()">
+                <a on-tap="mc.setTribordView('berge_edition')" class="btn-floating btn-large waves-effect waves-light pink">
+                    <i class="large material-icons">timeline</i>
+                </a>
+            </div>
         </div>
     </ion-side-menu-content>
 

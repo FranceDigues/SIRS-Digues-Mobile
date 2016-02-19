@@ -184,7 +184,7 @@ angular.module('app.services.map', ['app.services.context'])
             var dataProjection = SirsDoc.get().epsgCode,
                 projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
 
-            if (projGeometry instanceof ol.geom.LineString &&
+            if (projGeometry instanceof ol.geom.LineString && projGeometry.getCoordinates().length === 2 &&
                 projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
                 projGeometry.getCoordinates()[0][1] === projGeometry.getCoordinates()[1][1]) {
                 projGeometry = new ol.geom.Point(projGeometry.getCoordinates()[0]);

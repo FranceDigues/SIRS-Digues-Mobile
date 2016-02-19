@@ -28,6 +28,10 @@ function TrackerService($q, GeolocationService) {
 
     self.getStatus = getStatus;
 
+    self.getCoordinates = getCoordinates;
+
+    self.getPromise = getPromise;
+
 
     function start() {
 
@@ -62,6 +66,14 @@ function TrackerService($q, GeolocationService) {
 
     function getStatus() {
         return status;
+    }
+
+    function getCoordinates() {
+        return coordinates;
+    }
+
+    function getPromise() {
+        return deferred.promise;
     }
 
     function handleLocation(location) {

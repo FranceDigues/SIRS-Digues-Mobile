@@ -5,16 +5,16 @@
 
     <ion-content class="has-header" ng-class="{'has-fbb-bottom': !berge.tracking && berge.document}">
         <!-- Tracking actions -->
-        <div class="text-center" ng-hide="berge.tracking">
-            <button type="button" class="btn btn-large waves-effect waves-light" ng-click="berge.startTracking()">Commencer</button>
+        <div class="text-center" ng-hide="berge.tracking || berge.document">
+            <button type="button" class="btn btn-large waves-effect waves-light" on-tap="berge.startTracking()">Commencer</button>
         </div>
         <div class="text-center" ng-show="berge.tracking">
-            <button type="button" class="btn btn-large waves-effect waves-light" ng-click="berge.abortTracking()">Annuler</button>
-            <button type="button" class="btn btn-large waves-effect waves-light" ng-click="berge.stopTracking()">Terminer</button>
+            <button type="button" class="btn btn-large waves-effect waves-light" on-tap="berge.abortTracking()">Annuler</button>
+            <button type="button" class="btn btn-large waves-effect waves-light" ng-disabled="berge.coordinates.length < 2" on-tap="(berge.coordinates.length > 2) && berge.stopTracking()">Terminer</button>
         </div>
 
         <!-- Tracking message -->
-        <p class="tracking-text" ng-show="berge.tracking">Acquisition du tracé GPS...</p>
+        <p class="tracking-text" ng-show="berge.tracking">Acquisition du tracé GPS... {{berge.coordinates.length}} point(s)</p>
 
         <!-- Document form -->
         <div ng-form="bergeForm" ng-if="!berge.tracking && berge.document">
@@ -43,6 +43,7 @@
 
     <div class="fixed-button-bar text-center" ng-show="!berge.tracking && berge.document">
         <!-- Document actions -->
-        <button type="button" class="btn btn-large waves-effect waves-light" ng-disabled="bergeForm.$invalid" ng-click="berge.saveDocument()">Enregister</button>
+        <button type="button" class="btn btn-large waves-effect waves-light" ng-disabled="bergeForm.$invalid" on-tap="berge.cancelDocument()">Annuler</button>
+        <button type="button" class="btn btn-large waves-effect waves-light" ng-disabled="bergeForm.$invalid" on-tap="berge.saveDocument()">Valider</button>
     </div>
 </div>

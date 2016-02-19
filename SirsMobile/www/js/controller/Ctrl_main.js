@@ -41,8 +41,6 @@ angular.module('app.controllers.main', ['app.services.context'])
 
         self.hasBergePlugin = hasPlugin.bind(self, 'plugin-berge');
 
-        self.hasVegetationPlugin = hasPlugin.bind(self, 'plugin-vegetation');
-
 
         function hasPlugin(plugin) {
             return plugins.indexOf(plugin) !== -1;
