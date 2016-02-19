@@ -10,7 +10,7 @@
         </div>
         <div class="text-center" ng-show="berge.tracking">
             <button type="button" class="btn btn-large waves-effect waves-light" on-tap="berge.abortTracking()">Annuler</button>
-            <button type="button" class="btn btn-large waves-effect waves-light" ng-disabled="berge.coordinates.length < 2" on-tap="(berge.coordinates.length > 2) && berge.stopTracking()">Terminer</button>
+            <button type="button" class="btn btn-large waves-effect waves-light" ng-disabled="berge.coordinates.length < 2" on-tap="(berge.coordinates.length > 1) && berge.stopTracking()">Terminer</button>
         </div>
 
         <!-- Tracking message -->

@@ -16,14 +16,6 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
                     password: 'geopw',
                     replicated: false,
                     favorites: []
-                },
-                {
-                    name: 'kevkev_a_paris',
-                    url: 'http://192.168.1.143:5984/kevkev_a_paris',
-                    username: 'geouser',
-                    password: 'geopw',
-                    replicated: false,
-                    favorites: []
                 }
             ]
         },

@@ -29,7 +29,7 @@ Ajouter l'option **-l** pour activer le livereload.
 
 ## Serveur de test
 
-http://geouser:geopw@5.196.17.92:5984/
+http://geouser:geopw@51.255.38.183:5984/
 
 ## Réinstallation
 
