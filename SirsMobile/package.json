@@ -5,7 +5,7 @@
   "devDependencies": {
     "cordova": "5.4.0",
     "bower": "1.6.6",
-    "ionic": "1.7.10"
+    "ionic": "1.7.16"
   },
   "cordovaPlugins": [
     "com.ionic.keyboard@1.0.4",
@@ -27,7 +27,11 @@
     {
       "locator": "../../EXTERNAL_GIT_DEP/geolocation-cordova",
       "id": "com.geomatys.android.cordova.geo"
-    }
+    },
+    "ionic-plugin-keyboard@1.0.4",
+    "cordova-plugin-camera@0.3.6",
+    "cordova-plugin-googleplayservices",
+    "cordova-android-support-v4"
   ],
   "cordovaPlatforms": [
     "android"
