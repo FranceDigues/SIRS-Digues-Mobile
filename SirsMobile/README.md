@@ -8,6 +8,8 @@ Définir la variable d'environnement **ANDROID_HOME**.
 
 Installer **NodeJS**.
 
+Installer **Bower**.
+
 ## Première installation
 
 Executer les 2 commandes suivantes :

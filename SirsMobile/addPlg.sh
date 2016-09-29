@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# @hb Modification
 # Install plugins from repository.
 #ionic plugin add com.ionic.keyboard@1.0.4; // Deprecated
 #ionic plugin add org.apache.cordova.camera@0.3.6;// Deprecated
@@ -22,7 +23,7 @@ ionic plugin add cordova-plugin-camera@0.3.6;
 ionic plugin add ../pulgin/cacheMap/;
 ionic plugin add ../../EXTERNAL_GIT_DEP/Canvas2ImagePlugin;
 
-# @hb Modification
+
 ionic plugin add cordova-plugin-googleplayservices;
 ionic plugin add cordova-android-support-v4;
 ionic plugin add ../../EXTERNAL_GIT_DEP/geolocation-cordova;
