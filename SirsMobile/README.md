@@ -31,6 +31,10 @@ Ajouter l'option **-l** pour activer le livereload.
 
 ## Serveur de test
 
+Pour tester avec une base de données couchDB il faut écrire l'url vers la base de données en suivie se pattern :
+
+http://geouser:geopw@IP_Machine:5984/data_base_name
+
 http://geouser:geopw@51.255.38.183:5984/
 
 ## Réinstallation
