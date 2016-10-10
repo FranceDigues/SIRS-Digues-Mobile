@@ -342,15 +342,14 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
 
         // @hb
         var changeColor = function(colArr){
-            self.selectedLayer.color[1] = colArr[0];
+            self.selectedLayer.color[0] = colArr[0];
             self.selectedLayer.color[1] = colArr[1];
             self.selectedLayer.color[2] = colArr[2];
-
         };
 
         //@hb
         self.chooseColor = function (){
-            console.log(self.selectedColor);
+
             if(self.selectedColor){
                 // Change the color of the selected layer
                 changeColor(self.selectedColor);
@@ -358,8 +357,8 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
                     MapManager.reloadLayer(self.selectedLayer);
                 //Close the Modal after the change
                 self.colorModal.hide();
+                self.selectedColor = undefined;
             }
-
 
         };
 
