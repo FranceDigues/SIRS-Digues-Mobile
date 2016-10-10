@@ -127,6 +127,28 @@ angular.module('app.services.map', ['app.services.context'])
             }
         };
 
+        // @hb Add label to the layer features
+        self.addLabelFeatureLayer = function(layerModel) {
+            var olLayer = getAppLayerInstance(layerModel);
+            // Update OL layer.
+            olLayer.get('model').featLabels = !olLayer.get('model').featLabels ;
+
+            // Load data if necessary.
+            olLayer.getSource().getSource().clear();
+            setAppLayerFeatures(olLayer);
+
+        };
+
+
+        // @hb relod the ol map after make same change
+        self.reloadLayer = function(layerModel) {
+            var olLayer = getAppLayerInstance(layerModel);
+            // Load data if necessary.
+            olLayer.getSource().getSource().clear();
+            setAppLayerFeatures(olLayer);
+        };
+
+
         // TODO → find a way to do this through event
         self.moveAppLayer = function(from, to) {
             var collection = appLayers.getLayers();
@@ -162,6 +184,7 @@ angular.module('app.services.map', ['app.services.context'])
             });
         }
 
+        //@hb create the layer of "couches métiers"
         function createAppLayerInstance(layerModel) {
             var olLayer = new ol.layer.Image({
                 name: layerModel.title,
@@ -175,7 +198,9 @@ angular.module('app.services.map', ['app.services.context'])
             if (layerModel.visible === true) {
                 setAppLayerFeatures(olLayer);
             }
+
             return olLayer;
+
         }
 
         function createAppFeatureModel(featureDoc) {
@@ -210,17 +235,25 @@ angular.module('app.services.map', ['app.services.context'])
             };
         }
 
+        // @hb the method to create the features of the layer
         function createAppFeatureInstances(featureModels, layerModel) {
+            console.log(featureModels);
+
             var features = [];
+            // get each feature from the featureModel
             angular.forEach(featureModels, function(featureModel) {
+
                 if ((layerModel.realPosition && featureModel.realGeometry) || (!layerModel.realPosition && featureModel.projGeometry)) {
+                    // Create the feature object
                     var feature = new ol.Feature();
                     if (layerModel.realPosition) {
                         feature.setGeometry(featureModel.realGeometry);
-                        feature.setStyle(RealPositionStyle(layerModel.color, featureModel.realGeometry.getType()));
+                        feature.setStyle(RealPositionStyle(layerModel.color, featureModel.realGeometry.getType(),featureModel,layerModel.featLabels));
+
                     } else {
                         feature.setGeometry(featureModel.projGeometry);
-                        feature.setStyle(DefaultStyle(layerModel.color, featureModel.projGeometry.getType()));
+                        feature.setStyle(DefaultStyle(layerModel.color, featureModel.projGeometry.getType(),featureModel,layerModel.featLabels));
+
                     }
                     feature.set('id', featureModel.id);
                     feature.set('categories', layerModel.categories);
@@ -229,6 +262,7 @@ angular.module('app.services.map', ['app.services.context'])
                     feature.set('title', featureModel.libelle);
                     features.push(feature);
                 }
+
             });
             return features;
         }
@@ -260,6 +294,7 @@ angular.module('app.services.map', ['app.services.context'])
             // Wait for promise resolution or rejection.
             promise.then(
                 function onSuccess(featureModels) {
+                    // @hb get the featureModels from the promise
                     olSource.addFeatures(createAppFeatureInstances(featureModels, layerModel));
                 },
                 function onError(error) {
@@ -448,19 +483,41 @@ angular.module('app.services.map', ['app.services.context'])
 
     .factory('DefaultStyle', function(selection) {
 
-        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex) {
+        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex,featureModel,featLabels) {
             var fill = new ol.style.Fill({ color: fillColor });
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
             var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
-            return new ol.style.Style({ image: circle, zIndex: zIndex });
+            if(featLabels){
+                //@hb
+                var text = new ol.style.Text({
+                    font: '12px Verdana',
+                    text: featureModel.title,
+                    fill: new ol.style.Fill({color: 'black'}),
+                    stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+                });
+                return new ol.style.Style({ image: circle, zIndex: zIndex,text: text });
+            }
+
+            return new ol.style.Style({ image: circle, zIndex: zIndex});
         }
 
-        function createLineStyle(strokeColor, strokeWidth, zIndex) {
+        function createLineStyle(strokeColor, strokeWidth, zIndex, featureModel, featLabels) {
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
+            if(featLabels){
+                //@hb
+                var text = new ol.style.Text({
+                    font: '12px Verdana',
+                    text: featureModel.title,
+                    fill: new ol.style.Fill({color: 'black'}),
+                    stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+                });
+                return new ol.style.Style({ stroke: stroke, zIndex: zIndex, text: text });
+            }
+
             return new ol.style.Style({ stroke: stroke, zIndex: zIndex });
         }
 
-        function createPointStyleFunc(color) {
+        function createPointStyleFunc(color,featureModel,featLabels) {
             return function() {
                 color[3] = computeOpacity(this);
 
@@ -469,11 +526,11 @@ angular.module('app.services.map', ['app.services.context'])
                     strokeColor = highlight ? [255, 255, 255, color[3]] : color,
                     strokeWidth = 2,
                     pointRadius = 6;
-                return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius, computeZIndex(this))];
+                return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius, computeZIndex(this),featureModel,featLabels)];
             };
         }
 
-        function createLineStyleFunc(color) {
+        function createLineStyleFunc(color,featureModel,featLabels) {
             return function() {
                 color[3] = computeOpacity(this);
 
@@ -483,9 +540,9 @@ angular.module('app.services.map', ['app.services.context'])
                     strokeColor = color,
                     strokeWidth = 5;
                 if (highlight) {
-                    styles.push(createLineStyle([255, 255, 255, color[3]], strokeWidth + 4, zIndex));
+                    styles.push(createLineStyle([255, 255, 255, color[3]], strokeWidth + 4, zIndex,featureModel,featLabels));
                 }
-                styles.push(createLineStyle(strokeColor, strokeWidth, zIndex));
+                styles.push(createLineStyle(strokeColor, strokeWidth, zIndex,featureModel,featLabels));
                 return styles;
             };
         }
@@ -515,14 +572,14 @@ angular.module('app.services.map', ['app.services.context'])
         }
 
 
-        return function(color, type) {
+        return function(color, type,featureModel,featLabels) {
             switch (type) {
                 case 'LineString':
                 case 'MultiLineString':
-                    return createLineStyleFunc(color);
+                    return createLineStyleFunc(color,featureModel,featLabels);
                 case 'Point':
                 case 'MultiPoint':
-                    return createPointStyleFunc(color);
+                    return createPointStyleFunc(color,featureModel,featLabels);
             }
             return null;
         };
@@ -530,11 +587,18 @@ angular.module('app.services.map', ['app.services.context'])
 
     .factory('RealPositionStyle', function(selection) {
 
-        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex) {
+        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex,featureModel) {
             var fill = new ol.style.Fill({ color: fillColor });
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
+            //@hb
+            var text = new ol.style.Text({
+                font: '12px Verdana',
+                text: featureModel.title,
+                fill: new ol.style.Fill({color: 'black'}),
+                stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+            });
             var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
-            return new ol.style.Style({ image: circle, zIndex: zIndex });
+            return new ol.style.Style({ image: circle, zIndex: zIndex,text: text });
         }
 
         function createLineStyle(strokeColor, strokeWidth, lineDash, zIndex) {
@@ -542,7 +606,7 @@ angular.module('app.services.map', ['app.services.context'])
             return new ol.style.Style({ stroke: stroke, zIndex: zIndex });
         }
 
-        function createPointStyleFunc(color) {
+        function createPointStyleFunc(color,featureModel) {
             return function() {
                 color[3] = computeOpacity(this);
 
@@ -551,7 +615,7 @@ angular.module('app.services.map', ['app.services.context'])
                     strokeColor = highlight ? [255, 255, 255, color[3]] : color,
                     strokeWidth = 2,
                     circleRadius = 6;
-                return [createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, computeZIndex(this))];
+                return [createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, computeZIndex(this),featureModel)];
             };
         }
 
@@ -611,12 +675,12 @@ angular.module('app.services.map', ['app.services.context'])
         }
 
 
-        return function(color, type) {
+        return function(color, type,featureModel,featLabels) {
             switch (type) {
                 case 'LineString':
                     return createLineStyleFunc(color);
                 case 'Point':
-                    return createPointStyleFunc(color);
+                    return createPointStyleFunc(color,featureModel,featLabels);
             }
             return null;
         };

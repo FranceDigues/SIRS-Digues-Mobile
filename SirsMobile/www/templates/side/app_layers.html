@@ -5,14 +5,19 @@
     </ion-header-bar>
 
     <ion-content class="has-header has-fab-bottom">
+
         <ion-list can-swipe="!c.reorder" show-reorder="c.reorder">
+
             <ion-item ng-repeat="layer in c.layers">
                 <div class="layer-color" ng-style="{'background-color': c.layerColor(layer)}"></div>
+
                 <div class="layer-state">
                     <i class="material-icons" ng-class="layer.realPosition ? 'icon-layer-selected':'icon-layer-unselected'">call_merge</i>
                     <i class="material-icons" ng-class="layer.visible ? 'icon-layer-selected' : 'icon-layer-unselected'">visibility</i>
                     <i class="material-icons" ng-class="layer.editable ? 'icon-layer-selected' : 'icon-layer-unselected'">edit</i>
                     <i class="icon ion-android-hand" ng-class="layer.selectable ? 'icon-layer-selected' : 'icon-layer-unselected'"></i>
+                    <i class="icon ion-android-textsms" ng-class="layer.featLabels ? 'icon-layer-selected' : 'icon-layer-unselected'"></i>
+                    <i class="icon ion-paintbrush"></i>
                 </div>
                 <h2>{{layer.title}}</h2>
 
@@ -29,8 +34,19 @@
                 <ion-option-button class="button" on-tap="layer.selectable = !layer.selectable">
                     <i class="icon ion-android-hand" ng-class="layer.selectable ? 'icon-layer-selected' : 'icon-layer-unselected'"></i>
                 </ion-option-button>
+                    <!--@hb add the button of setting the Borne Identifier-->
+                <ion-option-button class="button" on-tap="c.featureLabels(layer)">
+                    <i class="icon ion-android-textsms" ng-class="layer.featLabels ? 'icon-layer-selected' : 'icon-layer-unselected'"></i>
+                </ion-option-button>
+                <!--@hb add the button of setting the Borne Identifier-->
+                <ion-option-button class="button" on-tap="c.openColorModal(layer)">
+                    <i class="icon ion-paintbrush"></i>
+                </ion-option-button>
+
                 <ion-reorder-button class="ion-navicon" on-reorder="c.move($fromIndex, $toIndex)"></ion-reorder-button>
+
             </ion-item>
+
         </ion-list>
     </ion-content>
 
@@ -40,4 +56,38 @@
     <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 200px;" on-tap="c.goToLayerList()">
         <i class="large material-icons">add</i>
     </button>
+
+    <!--@hb a modal for choose the color of the layer-->
+    <script id="color-modal.html" type="text/ng-template">
+        <ion-modal-view style="display: block;">
+            <!-- Modal header bar-->
+            <ion-header-bar class="bar-secondary">
+                <h1 class="title">Choisir la couleur de la couche</h1>
+                <button class="button button-clear button-positive" ng-click="c.closeColorModal()">Fermer</button>
+            </ion-header-bar>
+
+            <!-- Modal content area -->
+            <ion-content>
+
+                        <div class="col" ng-repeat ="color in c.colors"
+                            ng-style="{'background-color': c.calculateBackGroundColor(color)}">
+                            <ion-radio ng-model="c.selectedColor"
+                                       ng-value="color.rgb">
+                                <div ng-style="{'background-color': c.calculateBackGroundColor(color)}">
+                                    {{color.name}}
+                                </div>
+                            </ion-radio>
+                        </div>
+            </ion-content>
+            <ion-footer-bar class="bar-light">
+                <div class="col text-right">
+                        <button class="button button-stable"
+                                ng-click="c.chooseColor()">Valider le choix</button>
+                    </div>
+            </ion-footer-bar>
+        </ion-modal-view>
+    </script>
+
+
+
 </div>

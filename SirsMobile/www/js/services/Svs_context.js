@@ -250,6 +250,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
 
         self.addFavorite = function(layer) {
             layer.editable = false;
+            layer.featLabels = false;
             layer.realPosition = false;
             layer.selectable = false;
             layer.visible = false;
