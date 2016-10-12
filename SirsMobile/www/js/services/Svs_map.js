@@ -1,4 +1,4 @@
-angular.module('app.services.map', ['app.services.context'])
+angular.module('app.services.map', ['app.services.context','app.services.loading'])
 
     .value('currentView', new ol.View({
         zoom: 6,
@@ -15,7 +15,8 @@ angular.module('app.services.map', ['app.services.context'])
     .service('MapManager', function MapManager($rootScope, $q, $ionicPlatform, $ionicSideMenuDelegate, olMap,
                                                BackLayerService, AppLayersService, EditionService, LocalDocument,
                                                DefaultStyle, RealPositionStyle, sContext, GeolocationService,
-                                               SidePanelService, featureCache, currentView, selection, SirsDoc,currentView) {
+                                               SidePanelService, featureCache, currentView, selection, SirsDoc,
+                                                load) {
 
         var self = this;
 
@@ -145,6 +146,7 @@ angular.module('app.services.map', ['app.services.context'])
 
         // @hb relod the ol map after make same change
         self.reloadLayer = function(layerModel) {
+
             var olLayer = getAppLayerInstance(layerModel);
             // Load data if necessary.
             olLayer.getSource().getSource().clear();
@@ -189,6 +191,7 @@ angular.module('app.services.map', ['app.services.context'])
 
         //@hb create the layer of "couches métiers"
         function createAppLayerInstance(layerModel) {
+            //@hb Change the layer Source to Cluster source
             var olLayer = new ol.layer.Image({
                 name: layerModel.title,
                 visible: layerModel.visible,
@@ -247,9 +250,7 @@ angular.module('app.services.map', ['app.services.context'])
             if (layerModel.visible === true) {
                 setAppLayerFeatures(olLayer);
             }
-
             return olLayer;
-
         }
 
         function createAppFeatureModel(featureDoc) {
@@ -286,26 +287,19 @@ angular.module('app.services.map', ['app.services.context'])
 
         // @hb the method to create the features of the layer
         function createAppFeatureInstances(featureModels, layerModel) {
-
-            console.log(currentView.getZoom());
-
             var features = [];
-            var index = 0;
             // get each feature from the featureModel
             angular.forEach(featureModels, function(featureModel) {
 
                 if ((layerModel.realPosition && featureModel.realGeometry) || (!layerModel.realPosition && featureModel.projGeometry)) {
                     // Create the feature object
                     var feature = new ol.Feature();
-
                     if (layerModel.realPosition) {
                         feature.setGeometry(featureModel.realGeometry);
-                        feature.setStyle(RealPositionStyle(layerModel.color, featureModel.realGeometry.getType(),featureModel,layerModel,currentView,index));
-
+                        feature.setStyle(RealPositionStyle(layerModel.color, featureModel.realGeometry.getType(),featureModel,layerModel));
                     } else {
                         feature.setGeometry(featureModel.projGeometry);
-                        feature.setStyle(DefaultStyle(layerModel.color, featureModel.projGeometry.getType(),featureModel,layerModel,currentView,index));
-
+                        feature.setStyle(DefaultStyle(layerModel.color, featureModel.projGeometry.getType(),featureModel,layerModel));
                     }
                     feature.set('id', featureModel.id);
                     feature.set('categories', layerModel.categories);
@@ -313,12 +307,7 @@ angular.module('app.services.map', ['app.services.context'])
                     feature.set('designation', featureModel.designation);
                     feature.set('title', featureModel.libelle);
                     features.push(feature);
-
-                    index++;
                 }
-
-
-
             });
             return features;
         }
@@ -326,50 +315,6 @@ angular.module('app.services.map', ['app.services.context'])
         function setAppLayerFeatures(olLayer) {
             var layerModel = olLayer.get('model'),
                 olSource = olLayer.getSource().getSource().getSource();
-
-            //@ hb
-            var clusterSource = new ol.source.Cluster({
-                distance: 40,
-                source: olSource
-            });
-
-            var clusters = new ol.layer.Vector({
-                source: clusterSource,
-                style: function(feature, resolution) {
-                    var size = feature.get('features').length;
-                    var style = styleCache[size];
-                    if (!style) {
-                        style = [new ol.style.Style({
-                            image: new ol.style.Circle({
-                                radius: 10,
-                                stroke: new ol.style.Stroke({
-                                    color: '#fff'
-                                }),
-                                fill: new ol.style.Fill({
-                                    color: '#3399CC'
-                                })
-                            }),
-                            text: new ol.style.Text({
-                                text: size.toString(),
-                                fill: new ol.style.Fill({
-                                    color: '#fff'
-                                })
-                            })
-                        })];
-                        styleCache[size] = style;
-                    }
-                    return style;
-                }
-            });
-
-
-
-
-
-
-
-
-
 
             // Try to get the promise of a previous query.
             var promise = featureCache.get(layerModel.title);
@@ -396,9 +341,7 @@ angular.module('app.services.map', ['app.services.context'])
                 function onSuccess(featureModels) {
                     // @hb get the featureModels from the promise
                     olSource.addFeatures(createAppFeatureInstances(featureModels, layerModel));
-                    // clusterSource.getSource().addFeatures(createAppFeatureInstances(featureModels, layerModel));
-                    // console.log(olLayer.getSource());
-                    // olLayer.getSource().set('source',clusterSource);
+                    $rootScope.flag = false;
                 },
                 function onError(error) {
                     // TODO → handle error
@@ -586,7 +529,7 @@ angular.module('app.services.map', ['app.services.context'])
 
     .factory('DefaultStyle', function(selection) {
 
-        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex,featureModel,layerModel,currentView,index) {
+        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex,featureModel,layerModel) {
 
             var fill = new ol.style.Fill({ color: fillColor });
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
@@ -607,7 +550,7 @@ angular.module('app.services.map', ['app.services.context'])
             return new ol.style.Style({ image: circle, zIndex: zIndex});
         }
 
-        function createLineStyle(strokeColor, strokeWidth, zIndex, featureModel, layerModel, currentView,index) {
+        function createLineStyle(strokeColor, strokeWidth, zIndex, featureModel, layerModel) {
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
             if(layerModel.featLabels){
                 //@hb
@@ -623,7 +566,7 @@ angular.module('app.services.map', ['app.services.context'])
             return new ol.style.Style({ stroke: stroke, zIndex: zIndex });
         }
 
-        function createPointStyleFunc(color,featureModel,layerModel,currentView,index) {
+        function createPointStyleFunc(color,featureModel,layerModel) {
             return function() {
                 color[3] = computeOpacity(this);
 
@@ -632,11 +575,11 @@ angular.module('app.services.map', ['app.services.context'])
                     strokeColor = highlight ? [255, 255, 255, color[3]] : color,
                     strokeWidth = 2,
                     pointRadius = 6;
-                return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius, computeZIndex(this),featureModel,layerModel,currentView,index)];
+                return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius, computeZIndex(this),featureModel,layerModel)];
             };
         }
 
-        function createLineStyleFunc(color,featureModel,layerModel,currentView,index) {
+        function createLineStyleFunc(color,featureModel,layerModel) {
             return function() {
                 color[3] = computeOpacity(this);
 
@@ -677,32 +620,14 @@ angular.module('app.services.map', ['app.services.context'])
             }
         }
 
-        //@hb return the text of the label depend of the resolution
-        function getText(text,resolution,index) {
-
-
-            if (resolution <= 9 && index !==0 && index % 15 !== 0) {
-                return '';
-            }
-            else if (resolution <= 10 && index !==0 && index % 10 !== 0) {
-                return '';
-            } else if (resolution <= 13 && index % 5 !== 0){
-                return '';
-            }
-            else {
-                return text;
-            }
-
-        }
-
-        return function(color, type,featureModel,layerModel, currentView,index) {
+        return function(color, type,featureModel,layerModel) {
             switch (type) {
                 case 'LineString':
                 case 'MultiLineString':
-                    return createLineStyleFunc(color,featureModel,layerModel,currentView,index);
+                    return createLineStyleFunc(color,featureModel,layerModel);
                 case 'Point':
                 case 'MultiPoint':
-                    return createPointStyleFunc(color,featureModel,layerModel, currentView,index);
+                    return createPointStyleFunc(color,featureModel,layerModel);
             }
             return null;
         };
@@ -798,7 +723,7 @@ angular.module('app.services.map', ['app.services.context'])
         }
 
 
-        return function(color, type,featureModel,layerModel,currentView) {
+        return function(color, type,featureModel,layerModel) {
             switch (type) {
                 case 'LineString':
                     return createLineStyleFunc(color,featureModel,layerModel);

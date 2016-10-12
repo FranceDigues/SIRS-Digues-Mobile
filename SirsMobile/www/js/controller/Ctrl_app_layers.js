@@ -1,9 +1,9 @@
-angular.module('app.controllers.app_layers', ['app.services.context'])
+angular.module('app.controllers.app_layers', ['app.services.context','app.services.loading'])
 
     .controller('AppLayersController', function AppLayersController($scope,
                                                                     $location, AppLayersService,
                                                                     SidePanelService, MapManager,
-                                                                    $ionicModal, $ionicSideMenuDelegate,olMap) {
+                                                                    $ionicModal, $ionicSideMenuDelegate,load, $rootScope) {
 
         var self = this;
 
@@ -41,10 +41,6 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
         // @hb
         self.featureLabels = function(layer){
             MapManager.addLabelFeatureLayer(layer);
-
-            console.log(olMap);
-            console.log(olMap.get('main'));
-
         };
 
         // @hb
@@ -333,6 +329,7 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
 
         // @hb
         self.openColorModal = function(layer) {
+            $rootScope.flag= true;
             // $ionicSideMenuDelegate.toggleLeft();
             self.selectedLayer = layer;
             self.colorModal.show();
@@ -364,7 +361,6 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
 
         //@hb
         self.chooseColor = function (){
-
             if(self.selectedColor){
                 // Change the color of the selected layer
                 changeColor(self.selectedColor);
@@ -373,6 +369,8 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
                 //Close the Modal after the change
                 self.colorModal.hide();
                 clearColorChoose();
+                $rootScope.flag= false;
+
             }
 
         };

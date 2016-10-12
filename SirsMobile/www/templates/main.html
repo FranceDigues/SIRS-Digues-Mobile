@@ -17,6 +17,14 @@
             </div>
             <!-- Content / Map -->
             <ol-map name="main"></ol-map>
+
+            <!--The loading -->
+            <div ng-if="mc.loadingstate" >
+                <div class="progress" style="z-index: 9999; bottom: -6px; position: fixed;">
+                    <div class="indeterminate"></div>
+                </div>
+            </div>
+
             <!-- Button / New object -->
             <div class="fixed-action-btn" style="bottom: 25px;right:25px;">
                 <a on-tap="mc.setTribordView('object_add')" class="btn-floating btn-large waves-effect waves-light pink">
