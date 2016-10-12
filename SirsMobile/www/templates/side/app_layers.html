@@ -69,56 +69,43 @@
             <!-- Modal content area -->
             <ion-content>
 
-                        <!--<div class="col" ng-repeat ="color in c.colors"-->
-                            <!--ng-style="{'background-color': c.calculateBackGroundColor(color)}">-->
-                            <!--<ion-radio ng-model="c.selectedColor"-->
-                                       <!--ng-value="color.rgb">-->
-                                <!--<div ng-style="{'background-color': c.calculateBackGroundColor(color)}">-->
-                                    <!--{{color.name}}-->
-                                <!--</div>-->
-                            <!--</ion-radio>-->
-                        <!--</div>-->
-
                 <div class="row" ng-repeat="color in c.colors" ng-if="$index % 4 === 0">
+
                     <div class="col col-25" ng-if="$index < c.colors.length"
                          ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index])}">
 
-                        <ion-radio ng-model="c.selectedColor"
-                        ng-value="c.colors[$index].rgb">
-                        <div ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index])}">
-                        {{c.colors[$index].name}}
-                        </div>
-                        </ion-radio>
+                        <button class="button button-block"
+                                ng-click="c.selectColor(c.colors[$index].rgb,$event)"
+                                ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index])}">
+                            {{c.colors[$index].name}}
+                        </button>
+
                     </div>
                     <div class="col col-25" ng-if="$index + 1 < c.colors.length"
                          ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index+1])}">
-                        <ion-radio ng-model="c.selectedColor"
-                                   ng-value="c.colors[$index+1].rgb">
-                            <div ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index+1])}">
-                                {{c.colors[$index+1].name}}
-                            </div>
-                        </ion-radio>
+                        <button class="button button-block"
+                                ng-click="c.selectColor(c.colors[$index+1].rgb,$event)"
+                                ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index+1])}">
+                            {{c.colors[$index+1].name}}
+                        </button>
                     </div>
                     <div class="col col-25" ng-if="$index + 2 < c.colors.length"
                         ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index+2])}">
-                        <ion-radio ng-model="c.selectedColor"
-                                   ng-value="c.colors[$index+2].rgb">
-                            <div ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index+2])}">
-                                {{c.colors[$index+2].name}}
-                            </div>
-                        </ion-radio>
+                        <button class="button button-block"
+                                ng-click="c.selectColor(c.colors[$index+2].rgb,$event)"
+                                ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index+2])}">
+                            {{c.colors[$index+2].name}}
+                        </button>
                     </div>
                     <div class="col col-25" ng-if="$index + 3 < c.colors.length"
                         ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index+3])}">
-                        <ion-radio ng-model="c.selectedColor"
-                                   ng-value="c.colors[$index+3].rgb">
-                            <div ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index+3])}">
-                                {{c.colors[$index+3].name}}
-                            </div>
-                        </ion-radio>
+                        <button class="button button-block"
+                                ng-click="c.selectColor(c.colors[$index+3].rgb,$event)"
+                                ng-style="{'background-color': c.calculateBackGroundColor(c.colors[$index+3])}">
+                            {{c.colors[$index+3].name}}
+                        </button>
                     </div>
                 </div>
-
 
 
 

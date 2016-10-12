@@ -3,7 +3,7 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
     .controller('AppLayersController', function AppLayersController($scope,
                                                                     $location, AppLayersService,
                                                                     SidePanelService, MapManager,
-                                                                    $ionicModal, $ionicSideMenuDelegate) {
+                                                                    $ionicModal, $ionicSideMenuDelegate,olMap) {
 
         var self = this;
 
@@ -41,6 +41,10 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
         // @hb
         self.featureLabels = function(layer){
             MapManager.addLabelFeatureLayer(layer);
+
+            console.log(olMap);
+
+
         };
 
         // @hb
@@ -80,7 +84,7 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
             },
             {
                 "hex": "#FFA474",
-                "name": "Atomic Tangerine",
+                "name": "Atomic",
                 "rgb": [255, 164, 116]
             },
             {
@@ -265,7 +269,7 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
             },
             {
                 "hex": "#A8E4A0",
-                "name": "Granny Smith Apple",
+                "name": "Granny Apple",
                 "rgb": [168, 228, 160]
             },
             {
@@ -324,6 +328,8 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
 
         self.selectedColor;
 
+        self.selectedElement;
+
 
         // @hb
         self.openColorModal = function(layer) {
@@ -333,6 +339,7 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
         };
         // @hb
         self.closeColorModal = function() {
+            clearColorChoose();
             self.colorModal.hide();
         };
         // @hb
@@ -347,6 +354,14 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
             self.selectedLayer.color[2] = colArr[2];
         };
 
+        var clearColorChoose = function() {
+            self.selectedColor = undefined;
+            if(self.selectedElement) {
+                self.selectedElement.removeClass('active');
+            }
+            self.selectedElement = undefined;
+        };
+
         //@hb
         self.chooseColor = function (){
 
@@ -357,10 +372,18 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
                     MapManager.reloadLayer(self.selectedLayer);
                 //Close the Modal after the change
                 self.colorModal.hide();
-                self.selectedColor = undefined;
+                clearColorChoose();
             }
 
         };
+
+        self.selectColor = function (color,e) {
+            clearColorChoose();
+            self.selectedColor = color;
+            self.selectedElement = angular.element(e.target);
+            self.selectedElement.addClass('active');
+        };
+
 
 
 

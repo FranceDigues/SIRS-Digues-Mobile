@@ -281,6 +281,50 @@ angular.module('app.services.map', ['app.services.context'])
             var layerModel = olLayer.get('model'),
                 olSource = olLayer.getSource().getSource();
 
+            //@ hb
+            var clusterSource = new ol.source.Cluster({
+                distance: 40,
+                source: olSource
+            });
+
+            var clusters = new ol.layer.Vector({
+                source: clusterSource,
+                style: function(feature, resolution) {
+                    var size = feature.get('features').length;
+                    var style = styleCache[size];
+                    if (!style) {
+                        style = [new ol.style.Style({
+                            image: new ol.style.Circle({
+                                radius: 10,
+                                stroke: new ol.style.Stroke({
+                                    color: '#fff'
+                                }),
+                                fill: new ol.style.Fill({
+                                    color: '#3399CC'
+                                })
+                            }),
+                            text: new ol.style.Text({
+                                text: size.toString(),
+                                fill: new ol.style.Fill({
+                                    color: '#fff'
+                                })
+                            })
+                        })];
+                        styleCache[size] = style;
+                    }
+                    return style;
+                }
+            });
+
+
+
+
+
+
+
+
+
+
             // Try to get the promise of a previous query.
             var promise = featureCache.get(layerModel.title);
             if (angular.isUndefined(promise)) {
@@ -306,6 +350,9 @@ angular.module('app.services.map', ['app.services.context'])
                 function onSuccess(featureModels) {
                     // @hb get the featureModels from the promise
                     olSource.addFeatures(createAppFeatureInstances(featureModels, layerModel));
+                    // clusterSource.getSource().addFeatures(createAppFeatureInstances(featureModels, layerModel));
+                    // console.log(olLayer.getSource());
+                    // olLayer.getSource().set('source',clusterSource);
                 },
                 function onError(error) {
                     // TODO → handle error
