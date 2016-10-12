@@ -43,7 +43,7 @@ angular.module('app.controllers.app_layers', ['app.services.context'])
             MapManager.addLabelFeatureLayer(layer);
 
             console.log(olMap);
-
+            console.log(olMap.get('main'));
 
         };
 

@@ -194,7 +194,53 @@ angular.module('app.services.map', ['app.services.context'])
                 visible: layerModel.visible,
                 model: layerModel,
                 source: new ol.source.ImageVector({
-                    source: new ol.source.Vector({ useSpatialIndex: false })
+                    style: function(feature, resolution) {
+                        var features = feature.get("features");
+                        var styles = [];
+
+                        if (angular.isArray(features) && features.length > 0) {
+                            angular.forEach(features, function (_feature) {
+                                var style = _feature.getStyle();
+                                if (typeof style === "function") {
+                                    style = style.call(_feature, _feature, resolution);
+                                } else if (style instanceof ol.style.Style) {
+                                    style = [].concat(style);
+                                }
+
+                                if (angular.isArray(style)) {
+                                    angular.forEach(style, function (_style) {
+                                        _style.setGeometry(_feature.getGeometry());
+                                        if (_style.getText() !== undefined && _style.getText() !== null) {
+                                            _style.getText().setText(undefined);
+                                        }
+                                        styles.push(_style);
+                                    });
+                                }
+                            });
+
+                            var style = features[0].getStyle();
+                            if (typeof style === "function") {
+                                style = style.call(feature, feature, resolution);
+                            } else if (style instanceof ol.style.Style) {
+                                style = [].concat(style);
+                            }
+
+
+                            if (angular.isArray(style)) {
+                                angular.forEach(style, function (_style) {
+                                    styles.push(new ol.style.Style({
+                                        zIndex: _style.getZIndex(),
+                                        text: _style.getText()
+                                    }));
+                                });
+                            }
+                        }
+                        return styles;
+                    },
+                    source: new ol.source.Cluster({
+                        distance: 24,
+                        source: new ol.source.Vector({useSpatialIndex: true})
+                    })
                 })
             });
 
@@ -279,7 +325,7 @@ angular.module('app.services.map', ['app.services.context'])
 
         function setAppLayerFeatures(olLayer) {
             var layerModel = olLayer.get('model'),
-                olSource = olLayer.getSource().getSource();
+                olSource = olLayer.getSource().getSource().getSource();
 
             //@ hb
             var clusterSource = new ol.source.Cluster({
@@ -548,8 +594,9 @@ angular.module('app.services.map', ['app.services.context'])
             if(layerModel.featLabels){
                 //@hb
                 var text = new ol.style.Text({
-                    font: '12px Bold',
-                    text: getText(featureModel.title,currentView.getZoom(),index),
+                    font: 'bold 12px sans-serif',
+                    text: featureModel.title,
+                    offsetY: -12,
                     fill: new ol.style.Fill({color: 'black'}),
                     stroke: new ol.style.Stroke({color: 'white', width: 0.5})
                 });
