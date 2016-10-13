@@ -1,6 +1,8 @@
 angular.module('app.controllers.menu', [])
 
-    .controller('MenuController', function BabordMenuController(ContextService, GeolocationService, EditionService, SidePanelService, currentView) {
+    .controller('MenuController', function BabordMenuController(ContextService, GeolocationService,
+                                                                EditionService, SidePanelService,
+                                                                currentView, $rootScope) {
 
         var self = this;
 
@@ -18,6 +20,8 @@ angular.module('app.controllers.menu', [])
         })(false);
 
         self.sEdition = EditionService;
+
+        $rootScope.editionModeFlag = self.sEdition.isEnabled();
 
         self.setBabordView = SidePanelService.setBabordView;
 

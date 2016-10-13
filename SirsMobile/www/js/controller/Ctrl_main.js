@@ -1,8 +1,8 @@
-angular.module('app.controllers.main', ['app.services.context','app.services.loading'])
+angular.module('app.controllers.main', ['app.services.context'])
 
     .controller('MainController', function MainController($location, $ionicSideMenuDelegate,
                                                           sirsDoc, AuthService, SidePanelService,
-                                                          $scope, load,$rootScope) {
+                                                          $scope,$rootScope) {
 
         var self = this;
 
@@ -47,13 +47,20 @@ angular.module('app.controllers.main', ['app.services.context','app.services.loa
 
         $rootScope.flag = true;
 
+        self.editionModeFlag = $rootScope.editionModeFlag;
+
         self.loadingstate= $rootScope.flag;
 
         $rootScope.$watch(function(){
             return $rootScope.flag;
         }, function(){
                 self.loadingstate = $rootScope.flag;
-                console.log($rootScope.flag);
+            });
+
+            $rootScope.$watch(function(){
+            return $rootScope.editionModeFlag;
+        }, function(){
+                self.editionModeFlag = $rootScope.editionModeFlag;
             });
 
 

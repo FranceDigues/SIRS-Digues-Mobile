@@ -5,7 +5,7 @@
 
 angular.module('app.services',
     [
-        'app.services.loading',
+        'app.services.colors',
         'app.services.context',
         'app.services.dao',
         'app.services.map',

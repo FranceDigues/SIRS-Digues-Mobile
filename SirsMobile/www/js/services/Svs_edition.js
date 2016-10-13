@@ -112,6 +112,7 @@ angular.module('app.services.edition', ['app.services.context'])
 
                 toggle: function() {
                     context.settings.edition = !context.settings.edition;
+                    $rootScope.editionModeFlag = !$rootScope.editionModeFlag;
                     $rootScope.$broadcast('editionModeChanged', context.settings.edition);
                 }
             };

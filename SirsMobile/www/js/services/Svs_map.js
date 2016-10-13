@@ -1,4 +1,4 @@
-angular.module('app.services.map', ['app.services.context','app.services.loading'])
+angular.module('app.services.map', ['app.services.context'])
 
     .value('currentView', new ol.View({
         zoom: 6,
@@ -13,10 +13,12 @@ angular.module('app.services.map', ['app.services.context','app.services.loading
     })
 
     .service('MapManager', function MapManager($rootScope, $q, $ionicPlatform, $ionicSideMenuDelegate, olMap,
-                                               BackLayerService, AppLayersService, EditionService, LocalDocument,
-                                               DefaultStyle, RealPositionStyle, sContext, GeolocationService,
-                                               SidePanelService, featureCache, currentView, selection, SirsDoc,
-                                                load) {
+                                               BackLayerService, AppLayersService,
+                                               EditionService, LocalDocument,
+                                               DefaultStyle, RealPositionStyle,
+                                               sContext, GeolocationService,
+                                               SidePanelService, featureCache,
+                                               currentView, selection, SirsDoc) {
 
         var self = this;
 
@@ -130,7 +132,6 @@ angular.module('app.services.map', ['app.services.context','app.services.loading
 
         // @hb Add label to the layer features
         self.addLabelFeatureLayer = function(layerModel) {
-
             var olLayer = getAppLayerInstance(layerModel);
             // Update OL layer.
             olLayer.get('model').featLabels = !olLayer.get('model').featLabels ;
@@ -138,9 +139,6 @@ angular.module('app.services.map', ['app.services.context','app.services.loading
             // Load data if necessary.
             olLayer.getSource().getSource().clear();
             setAppLayerFeatures(olLayer);
-
-
-
         };
 
 
