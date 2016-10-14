@@ -17,6 +17,7 @@ ionic plugin add cordova-plugin-network-information@1.1.0;
 ionic plugin add cordova-plugin-splashscreen@3.0.0;
 ionic plugin add cordova-plugin-whitelist@1.2.0;
 ionic plugin add cordova-plugin-camera@0.3.6;
+cordova plugin add https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git;
 
 
 # Install plugins from their sources.

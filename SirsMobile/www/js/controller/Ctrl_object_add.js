@@ -53,6 +53,7 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
         };
         // The methode for delete the object created
         self.deleteObject = function(){
+            // console.log(self.selectedClosable);
             if (angular.isDefined(self.selectedClosable)) {
                 LocalDocument.remove(self.selectedClosable);
                 getClosable();
