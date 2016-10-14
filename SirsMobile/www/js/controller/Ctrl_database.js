@@ -1,6 +1,10 @@
 angular.module('app.controllers.database', ['app.services.context'])
-
-    .controller('DatabaseController', function DatabaseController($location, DatabaseService, AuthService) {
+    .factory('dataBaseEditionFactory',function dataBaseEditionFactory() {
+      return {
+          oldDb: {}
+      }
+    })
+    .controller('DatabaseController', function DatabaseController($location, DatabaseService, AuthService,dataBaseEditionFactory) {
 
         var self = this;
 
@@ -36,6 +40,14 @@ angular.module('app.controllers.database', ['app.services.context'])
                 $location.path('/main');
             }
         };
+
+        //@hb
+        self.edition = function(){
+            if (self.selected) {
+                dataBaseEditionFactory.oldDb = self.selected;
+                $location.path('/database_edition');
+            }
+        };
     })
 
     .controller('DatabaseAddController', function DatabaseAddController($location, DatabaseService) {
@@ -53,6 +65,20 @@ angular.module('app.controllers.database', ['app.services.context'])
         };
 
         self.add = function() {
+            DatabaseService.add(self.db);
+            $location.path('/setup');
+        };
+    })
+    .controller('DatabaseEditionController', function DatabaseAddController($location, DatabaseService, dataBaseEditionFactory) {
+
+        var self = this;
+
+
+        self.db = dataBaseEditionFactory.oldDb;
+
+        self.update = function() {
+
+            DatabaseService.oldEditionRemove(dataBaseEditionFactory.oldDb);
             DatabaseService.add(self.db);
             $location.path('/setup');
         };

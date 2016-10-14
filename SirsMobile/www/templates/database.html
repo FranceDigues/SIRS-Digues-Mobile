@@ -20,6 +20,12 @@
                             <i class="material-icons left">playlist_add</i>
                             Ajouter<span class="hide-on-small-and-down"> une base</span>
                         </a>
+
+                        <button type="button" class="btn-flat waves-effect waves-light"
+                                ng-disabled="!c.selected" ng-click="c.edition()">
+                            <i class="material-icons left">mode_edit</i>Edition
+                        </button>
+
                         <button type="button" class="btn-flat waves-effect waves-light"
                                 ng-disabled="!c.selected" ng-click="c.remove()">
                             <i class="material-icons left">delete</i>Supprimer

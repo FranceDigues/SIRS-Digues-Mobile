@@ -41,6 +41,11 @@ angular.module('SirsMobile', [
                 controller: 'DatabaseAddController as c',
                 resolve: routeResolve['databaseAdd']
             })
+            .when('/database_edition', {
+                templateUrl: 'templates/database_edition.html',
+                controller: 'DatabaseEditionController as c',
+                resolve: routeResolve['databaseEdition']
+            })
             .when('/replicate', {
                 templateUrl: 'templates/replicate.html',
                 controller: 'ReplicateController as c',

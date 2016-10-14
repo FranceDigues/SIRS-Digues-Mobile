@@ -1,0 +1,47 @@
+<ion-view id="databaseAdd">
+    <ion-content>
+        <div class="row responsive-md">
+            <div class="col col-80 col-offset-10">
+                <div class="sirs-card">
+                    <div class="sirs-card-content">
+                        <h2 class="sirs-card-title">Edition base de données</h2>
+                        <p>Veuillez saisir les paramètres de connexions à la base de données.</p>
+                        <ng-form name="dbForm">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="name" type="text" class="validate" required ng-model="c.db.name">
+                                    <label for="name" class="active">Titre</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="url" type="url" class="validate" required ng-model="c.db.url">
+                                    <label for="url" class="active">URL</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input id="username" type="text" class="validate" required ng-model="c.db.username">
+                                    <label for="username" class="active">Identifiant utilisateur</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input id="password" type="password" class="validate" required ng-model="c.db.password">
+                                    <label for="password" class="active">Mot de passe</label>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                    <div class="sirs-card-action">
+                        <a href="#/database" class="btn-flat waves-effect waves-teal">
+                            <i class="material-icons left">arrow_back</i>Retour
+                        </a>
+                        <button type="button" class="btn pink waves-effect waves-teal right"
+                                ng-class="{disabled: dbForm.$invalid}" ng-disabled="dbForm.$invalid" ng-click="c.update()">
+                            <i class="material-icons left">done</i>Modifier les informations de la base
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

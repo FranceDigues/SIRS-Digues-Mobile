@@ -112,6 +112,15 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             });
         };
 
+        self.oldEditionRemove = function(db) {
+                    // Destroy the local database (if exists).
+                    new PouchDB(db.name).destroy();
+                    // Unregister the remove database.
+                    dbContext.list.splice(dbContext.list.indexOf(db), 1);
+                    // Broadcast application event.
+                    $rootScope.$broadcast('databaseRemoved', db);
+        };
+
         self.getActive = function() {
             var i = dbContext.list.length;
             while(i--) {
