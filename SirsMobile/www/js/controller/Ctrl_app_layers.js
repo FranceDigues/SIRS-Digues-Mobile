@@ -4,11 +4,11 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
                                                                     $location, AppLayersService,
                                                                     SidePanelService, MapManager,
                                                                     $ionicModal, $ionicSideMenuDelegate,
-                                                                    $rootScope, $timeout,colorsFactory) {
+                                                                    $rootScope, $timeout,colorsFactory,$filter) {
 
         var self = this;
 
-        self.layers = AppLayersService.getFavorites();
+        self.layers = $filter('orderBy')(AppLayersService.getFavorites(),'title');
 
         self.layerColor = function(layer) {
             return 'rgb(' + layer.color[0] + ',' + layer.color[1] + ',' + layer.color[2] + ')';
