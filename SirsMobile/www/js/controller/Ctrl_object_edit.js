@@ -117,6 +117,13 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.save = function() {
+            //@hb Add the source of the Desordre
+            if(objectDoc['@class'] === "fr.sirs.core.model.Desordre"){
+                objectDoc["sourceId"] = "RefSource:4";
+            }
+
+            console.log(objectDoc);
+
             EditionService.saveObject(objectDoc).then(function() {
                 $location.path('/main');
             });
