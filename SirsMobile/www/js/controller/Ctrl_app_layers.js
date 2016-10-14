@@ -127,7 +127,7 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
 
     })
 
-    .controller('AppLayersSelectController', function AppLayersSelectController(AppLayersService, SidePanelService) {
+    .controller('AppLayersSelectController', function AppLayersSelectController(AppLayersService, SidePanelService, $filter) {
 
         var self = this;
 
@@ -154,6 +154,6 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
 
 
         AppLayersService.getAvailable().then(function(layers) {
-            self.available = layers;
+            self.available = $filter('orderBy')(layers,'title');
         });
     });
