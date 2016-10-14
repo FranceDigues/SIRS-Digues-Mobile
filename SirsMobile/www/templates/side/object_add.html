@@ -31,16 +31,23 @@
         </div>
     </ion-content>
 
-    <div class="fixed-button-bar text-center">
+    <div class="fixed-button-bar text-center" ng-if="c.tab === 'layers'">
         <!-- FBB / Editable Layers -->
         <div ng-if="c.tab === 'layers'">
             <button class="btn btn-large waves-effect waves-light" type="button"
                     ng-disabled="!c.selectedLayer" ng-click="c.newObject()">Ajouter un objet</button>
         </div>
+    </div>
+    <div class="fixed-button-bar text-center" ng-if="c.tab === 'closable'" style="height: 124px;">
         <!-- FBB / Editable Layers -->
         <div ng-if="c.tab === 'closable'">
-            <button class="btn btn-large waves-effect waves-light" type="button"
+            <button class="btn btn-large waves-effect waves-light" type="button" style="margin-bottom: 10px;"
                     ng-disabled="!c.selectedClosable" ng-click="c.closeObject()">Fermer l'objet</button>
+        </div>
+        <!-- FBB / Delete the object -->
+        <div ng-if="c.tab === 'closable'">
+            <button class="btn btn-large waves-effect waves-light" type="button"
+                    ng-disabled="!c.selectedClosable" ng-click="c.deleteObject()">Supprimer l'objet</button>
         </div>
     </div>
 </div>

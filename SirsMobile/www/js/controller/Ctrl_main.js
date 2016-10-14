@@ -55,6 +55,7 @@ angular.module('app.controllers.main', ['app.services.context'])
             return $rootScope.flag;
         }, function(){
                 self.loadingstate = $rootScope.flag;
+            console.log($rootScope.flag);
             });
 
             $rootScope.$watch(function(){

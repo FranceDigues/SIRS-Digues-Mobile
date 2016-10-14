@@ -1,6 +1,8 @@
-angular.module('app.controllers.object_add', [])
+angular.module('app.controllers.object_add', ['app.services.dao'])
 
-    .controller('ObjectAddController', function ObjectAddController($filter, $location, $ionicScrollDelegate, LocalDocument, AuthService, GeolocationService, EditionService, AppLayersService) {
+    .controller('ObjectAddController', function ObjectAddController($filter, $location, $ionicScrollDelegate,
+                                                                    LocalDocument, AuthService, GeolocationService,
+                                                                    EditionService, AppLayersService,$scope) {
 
         var self = this;
 
@@ -15,6 +17,16 @@ angular.module('app.controllers.object_add', [])
 
         self.selectedClosable = undefined;
 
+        // Get the closable objects
+        var getClosable = function() {
+            return EditionService.getClosableObjects().then(function(results) {
+                self.closable = results.map(function(row) {
+                    return row.doc;
+                });
+            });
+
+        };
+
 
         self.setTab = function(name) {
             if (name !== self.tab) {
@@ -23,6 +35,7 @@ angular.module('app.controllers.object_add', [])
             }
         };
 
+        // Add the new object
         self.newObject = function() {
             if (angular.isDefined(self.selectedLayer)) {
                 var type = self.selectedLayer.filterValue.substring(
@@ -38,11 +51,13 @@ angular.module('app.controllers.object_add', [])
                 $location.path('/object/' + encodeURIComponent(type) + '/' + self.selectedClosable._id);
             }
         };
-
-
-        EditionService.getClosableObjects().then(function(results) {
-            self.closable = results.map(function(row) {
-                return row.doc;
-            });
-        });
+        // The methode for delete the object created
+        self.deleteObject = function(){
+            if (angular.isDefined(self.selectedClosable)) {
+                LocalDocument.remove(self.selectedClosable);
+                getClosable();
+            }
+        };
+        // Get the closable object for the first time
+        getClosable();
     });
