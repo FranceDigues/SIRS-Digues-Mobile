@@ -83,3 +83,4 @@ angular.module('app.controllers.database', ['app.services.context'])
             $location.path('/setup');
         };
     });
+

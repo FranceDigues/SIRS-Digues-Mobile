@@ -93,7 +93,7 @@ angular.module('SirsMobile', [
             .otherwise('/database');
     })
 
-    .run(function ($rootScope, $location, $ionicPlatform, $cordovaFile, sContext,$window) {
+    .run(function ($rootScope, $location, $ionicPlatform, $cordovaFile, sContext,$window, $cordovaToast) {
 
         // Wait for "deviceready" event.
         $ionicPlatform.ready(function () {
@@ -127,12 +127,16 @@ angular.module('SirsMobile', [
         $window.addEventListener("offline", function() {
             $rootScope.$apply(function() {
                 $rootScope.online = false;
+                $cordovaToast
+                    .showLongTop('La connexion est échoué');
             });
         }, false);
 
         $window.addEventListener("online", function() {
             $rootScope.$apply(function() {
                 $rootScope.online = true;
+                $cordovaToast
+                    .showLongTop('La connexion avec succés ');
             });
         }, false);
 

@@ -1,0 +1,12 @@
+<ion-list>
+    <ion-item ng-if="c.document.date_debut">
+        <span><b>La date de début: </b></span>{{c.document.date_debut | date: 'dd/MM/yyyy'}}</ion-item>
+    <ion-item ng-if="c.document.designation">
+        <span><b>La désignation: </b></span>{{c.document.designation}}</ion-item>
+    <ion-item ng-if="c.document.fictive !== undefined">
+        <span><b>Fictive: </b></span>{{c.document.fictive}}</ion-item>
+    <ion-item ng-if="c.document.libelle">
+        <span><b>Libelle: </b></span>{{c.document.libelle}}</ion-item>
+    <ion-item ng-if="c.document.commentaire">
+        <span><b>Commentaire: </b></span>{{c.document.commentaire}}</ion-item>
+</ion-list>

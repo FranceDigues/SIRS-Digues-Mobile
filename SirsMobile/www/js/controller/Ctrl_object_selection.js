@@ -10,9 +10,15 @@ angular.module('app.controllers.object_selection', [])
         self.openDisorderDetails = function(feature) {
             feature.set('visited', true);
             selection.active = feature;
-            LocalDocument.get(feature.get('id')).then(onGetDocumentSuccess, onGetDocumentError);
-        };
 
+            //@hb
+            if(!feature.getId()){
+                LocalDocument.get(feature.get('features')[0].get('id')).then(onGetDocumentSuccess, onGetDocumentError);
+            }
+            else {
+                LocalDocument.get(feature.get('id')).then(onGetDocumentSuccess, onGetDocumentError);
+            }
+        };
 
         function onGetDocumentSuccess(doc) {
             sContext.selectedObject = doc;

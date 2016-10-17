@@ -2,7 +2,7 @@ angular.module('app.controllers.main', ['app.services.context'])
 
     .controller('MainController', function MainController($location, $ionicSideMenuDelegate,
                                                           sirsDoc, AuthService, SidePanelService,
-                                                          $scope,$rootScope,$cordovaToast) {
+                                                          $scope,$rootScope) {
 
         var self = this;
 
@@ -64,33 +64,6 @@ angular.module('app.controllers.main', ['app.services.context'])
         }, function(){
                 self.editionModeFlag = $rootScope.editionModeFlag;
             });
-
-        // @hb
-        $rootScope.$watch(function() {
-            return $rootScope.online;
-        },function () {
-           if($rootScope.online){
-               $cordovaToast
-                   .showLongTop('La connexion avec succés ')
-                   .then(function(success) {
-                       // success
-                   }, function (error) {
-                       // error
-                   });
-           }
-           else {
-               $cordovaToast
-                   .showLongTop('La connexion est échoué')
-                   .then(function(success) {
-                       // success
-                   }, function (error) {
-                       // error
-                   });
-           }
-
-        });
-
-
 
 
         function hasPlugin(plugin) {
