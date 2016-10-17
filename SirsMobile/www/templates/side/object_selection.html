@@ -5,9 +5,9 @@
 
     <ion-content class="has-header" delegate-handle="selectionScroll">
         <ion-list>
-            <ion-item ng-repeat="ft in c.selection.list track by $index" on-tap="c.openDisorderDetails(ft)" ng-class="{visited: ft.get('visited')}">
-                {{ft.get('features')[0].get('title') || ft.get('features')[0].get('designation') || ft.get('features')[0].get('id')}}
-                <div class="layer-categories">{{ft.get('features')[0].get('categories').join(' / ') || 'Sans catégorie'}}</div>
+            <ion-item ng-repeat="ft in c.hbfeaturesCollection track by $index" on-tap="c.openDisorderDetails(ft)" ng-class="{visited: ft.get('visited')}">
+                {{ft.get('title') || ft.get('designation') || ft.get('id')}}
+                <div class="layer-categories">{{ft.get('categories').join(' / ') || 'Sans catégorie'}}</div>
             </ion-item>
         </ion-list>
     </ion-content>

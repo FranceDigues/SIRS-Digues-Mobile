@@ -7,17 +7,23 @@ angular.module('app.controllers.object_selection', [])
 
         self.selection = selection;
 
+        //@hb the collection of the features of the cluster
+        self.hbfeaturesCollection = [];
+        //@hb get all the selected features from the the Cluster
+        angular.forEach(self.selection.list,function(feat){
+            angular.forEach(feat.get('features'),function(f){
+                self.hbfeaturesCollection.push(f);
+            });
+        });
+
+        console.log(self.hbfeaturesCollection);
+
         self.openDisorderDetails = function(feature) {
+
             feature.set('visited', true);
             selection.active = feature;
 
-            //@hb
-            if(!feature.getId()){
-                LocalDocument.get(feature.get('features')[0].get('id')).then(onGetDocumentSuccess, onGetDocumentError);
-            }
-            else {
-                LocalDocument.get(feature.get('id')).then(onGetDocumentSuccess, onGetDocumentError);
-            }
+            LocalDocument.get(feature.get('id')).then(onGetDocumentSuccess, onGetDocumentError);
         };
 
         function onGetDocumentSuccess(doc) {
