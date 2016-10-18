@@ -5,6 +5,9 @@ angular.module('app.controllers.object_details', [])
 
         var self = this;
 
+        //@hb
+        console.log(selection);
+
 
         self.activeTab = 'description';
 

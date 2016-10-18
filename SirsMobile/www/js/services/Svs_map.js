@@ -566,14 +566,29 @@ angular.module('app.services.map', ['app.services.context'])
 
         function createPointStyleFunc(color,featureModel,layerModel) {
             return function() {
-                color[3] = computeOpacity(this);
+                var f = this;
+                var selectedIds = getAllSelectedFeaturesIds(selection.list);
+                color[3] = computeOpacity(f);
 
-                var highlight = shouldHighlight(this),
-                    fillColor = highlight ? color : [255, 255, 255, color[3]],
-                    strokeColor = highlight ? [255, 255, 255, color[3]] : color,
-                    strokeWidth = 2,
-                    pointRadius = 6;
-                return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius, computeZIndex(this),featureModel,layerModel)];
+
+                //@hb change the color of the selected feature
+                if(selection.active){
+                    var highlight = shouldHighlight(f),
+                        fillColor = highlight ? [255,0,0,1] : [255, 255, 255, color[3]],
+                        strokeColor = highlight ? [0, 0, 255, 1] : color,
+                        strokeWidth = 2,
+                        pointRadius = 6;
+                    return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius, computeZIndex(f),featureModel,layerModel)];
+                }
+                else {
+                    var highlightAll = shouldHighlightAll(f,selectedIds),
+                        fillColor = highlightAll ? [255,0,0,1] : [255, 255, 255, color[3]],
+                        strokeColor = highlightAll ? [0, 0, 255, 1] : color,
+                        strokeWidth = 2,
+                        pointRadius = 6;
+                    return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius, computeZIndex(f),featureModel,layerModel)];
+                }
+
             };
         }
 
@@ -595,14 +610,46 @@ angular.module('app.services.map', ['app.services.context'])
         }
 
         function shouldHighlight(feature) {
-            return selection.list.length && ((!selection.active && feature.get('selected')) || (selection.active && selection.active === feature));
+            return selection.list.length && (selection.active && selection.active === feature);
         }
+        //@hb the function for know all the selected features
+        function shouldHighlightAll(feature,selectedIds) {
+
+            if(feature.get('features')===undefined){
+                if(selectedIds.indexOf(feature.get('id')) !== -1){
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
+        }
+
+        function getAllFeaturesIds(arrs){
+            var ids=[];
+            angular.forEach(arrs,function (arr) {
+                ids.push(arr.get('id'));
+            });
+            return ids;
+
+        }
+        function getAllSelectedFeaturesIds(arrs){
+            var ids=[];
+            angular.forEach(arrs,function (arr) {
+                angular.forEach(arr.get('features'),function (f) {
+                    ids.push(f.get('id'));
+                });
+            });
+            return ids;
+        };
+
 
         function computeOpacity(feature) {
             if (selection.active && feature !== selection.active) {
-                return 0.5;
+                return 1;
             } else if (selection.list.length && !feature.get('selected')) {
-                return 0.5;
+                return 1;
             } else {
                 return 1;
             }
