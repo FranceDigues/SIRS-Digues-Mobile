@@ -4,11 +4,23 @@
     </ion-header-bar>
 
     <ion-content class="has-header" delegate-handle="selectionScroll">
-        <ion-list>
+        <!--List for only the Border layer -->
+        <ion-list ng-if="c.hbfeaturesCollection !== []">
             <ion-item ng-repeat="ft in c.hbfeaturesCollection track by $index" on-tap="c.openDisorderDetails(ft)" ng-class="{visited: ft.get('visited')}">
                 {{ft.get('title') || ft.get('designation') || ft.get('id')}}
                 <div class="layer-categories">{{ft.get('categories').join(' / ') || 'Sans catégorie'}}</div>
             </ion-item>
         </ion-list>
+
+        <!-- List for the other layers types-->
+        <ion-list>
+            <ion-item ng-repeat="ft in c.selection.list track by $index" on-tap="c.openDisorderDetails(ft)" ng-class="{visited: ft.get('visited')}">
+                {{ft.get('title') || ft.get('designation') || ft.get('id')}}
+                <div class="layer-categories">{{ft.get('categories').join(' / ') || 'Sans catégorie'}}</div>
+            </ion-item>
+        </ion-list>
+
+
+
     </ion-content>
 </div>

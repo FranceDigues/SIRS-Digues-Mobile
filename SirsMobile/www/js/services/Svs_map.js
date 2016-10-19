@@ -189,61 +189,75 @@ angular.module('app.services.map', ['app.services.context'])
 
         //@hb create the layer of "couches métiers"
         function createAppLayerInstance(layerModel) {
-            //@hb Change the layer Source to Cluster source
-            var olLayer = new ol.layer.Image({
-                name: layerModel.title,
-                visible: layerModel.visible,
-                model: layerModel,
-                source: new ol.source.ImageVector({
-                    style: function(feature, resolution) {
-                        var features = feature.get("features");
-                        var styles = [];
 
-                        if (angular.isArray(features) && features.length > 0) {
-                            angular.forEach(features, function (_feature) {
-                                var style = _feature.getStyle();
+            if(layerModel.filterValue === "fr.sirs.core.model.BorneDigue"){
+                //@hb Change the layer Source to Cluster source
+                var olLayer = new ol.layer.Image({
+                    name: layerModel.title,
+                    visible: layerModel.visible,
+                    model: layerModel,
+                    source: new ol.source.ImageVector({
+                        style: function(feature, resolution) {
+                            var features = feature.get("features");
+                            var styles = [];
+
+                            if (angular.isArray(features) && features.length > 0) {
+                                angular.forEach(features, function (_feature) {
+                                    var style = _feature.getStyle();
+                                    if (typeof style === "function") {
+                                        style = style.call(_feature, _feature, resolution);
+                                    } else if (style instanceof ol.style.Style) {
+                                        style = [].concat(style);
+                                    }
+
+                                    if (angular.isArray(style)) {
+                                        angular.forEach(style, function (_style) {
+                                            _style.setGeometry(_feature.getGeometry());
+                                            if (_style.getText() !== undefined && _style.getText() !== null) {
+                                                _style.getText().setText(undefined);
+                                            }
+                                            styles.push(_style);
+                                        });
+                                    }
+                                });
+
+                                var style = features[0].getStyle();
                                 if (typeof style === "function") {
-                                    style = style.call(_feature, _feature, resolution);
+                                    style = style.call(feature, feature, resolution);
                                 } else if (style instanceof ol.style.Style) {
                                     style = [].concat(style);
                                 }
 
+
                                 if (angular.isArray(style)) {
                                     angular.forEach(style, function (_style) {
-                                        _style.setGeometry(_feature.getGeometry());
-                                        if (_style.getText() !== undefined && _style.getText() !== null) {
-                                            _style.getText().setText(undefined);
-                                        }
-                                        styles.push(_style);
+                                        styles.push(new ol.style.Style({
+                                            zIndex: _style.getZIndex(),
+                                            text: _style.getText()
+                                        }));
                                     });
                                 }
-                            });
-
-                            var style = features[0].getStyle();
-                            if (typeof style === "function") {
-                                style = style.call(feature, feature, resolution);
-                            } else if (style instanceof ol.style.Style) {
-                                style = [].concat(style);
                             }
-
-
-                            if (angular.isArray(style)) {
-                                angular.forEach(style, function (_style) {
-                                    styles.push(new ol.style.Style({
-                                        zIndex: _style.getZIndex(),
-                                        text: _style.getText()
-                                    }));
-                                });
-                            }
-                        }
-                        return styles;
-                    },
-                    source: new ol.source.Cluster({
-                        distance: 24,
-                        source: new ol.source.Vector({useSpatialIndex: true})
+                            return styles;
+                        },
+                        source: new ol.source.Cluster({
+                            distance: 24,
+                            source: new ol.source.Vector({useSpatialIndex: true})
+                        })
                     })
-                })
-            });
+                });
+
+            }
+            else {
+                var olLayer = new ol.layer.Image({
+                    name: layerModel.title,
+                    visible: layerModel.visible,
+                    model: layerModel,
+                    source: new ol.source.ImageVector({
+                        source: new ol.source.Vector({ useSpatialIndex: false })
+                    })
+                });
+            }
 
             if (layerModel.visible === true) {
                 setAppLayerFeatures(olLayer);
@@ -311,8 +325,14 @@ angular.module('app.services.map', ['app.services.context'])
         }
 
         function setAppLayerFeatures(olLayer) {
-            var layerModel = olLayer.get('model'),
-                olSource = olLayer.getSource().getSource().getSource();
+            var layerModel = olLayer.get('model');
+
+                if(layerModel.filterValue === "fr.sirs.core.model.BorneDigue"){
+                    var olSource = olLayer.getSource().getSource().getSource();
+                }
+                else {
+                    var olSource = olLayer.getSource().getSource();
+                }
 
             // Try to get the promise of a previous query.
             var promise = featureCache.get(layerModel.title);
@@ -527,48 +547,12 @@ angular.module('app.services.map', ['app.services.context'])
 
     .factory('DefaultStyle', function(selection) {
 
-        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex,featureModel,layerModel) {
-
-            var fill = new ol.style.Fill({ color: fillColor });
-            var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
-            var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
-            if(layerModel.featLabels){
-                //@hb
-                var text = new ol.style.Text({
-                    font: 'bold 12px sans-serif',
-                    text: featureModel.title,
-                    offsetY: -12,
-                    fill: new ol.style.Fill({color: 'black'}),
-                    stroke: new ol.style.Stroke({color: 'white', width: 0.5})
-                });
-
-                return new ol.style.Style({ image: circle, zIndex: zIndex,text: text });
-            }
-
-            return new ol.style.Style({ image: circle, zIndex: zIndex});
-        }
-
-        function createLineStyle(strokeColor, strokeWidth, zIndex, featureModel, layerModel) {
-            var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
-            if(layerModel.featLabels){
-                //@hb
-                var text = new ol.style.Text({
-                    font: '12px Verdana',
-                    text: featureModel.title,
-                    fill: new ol.style.Fill({color: 'black'}),
-                    stroke: new ol.style.Stroke({color: 'white', width: 0.5})
-                });
-                return new ol.style.Style({ stroke: stroke, zIndex: zIndex, text: text });
-            }
-
-            return new ol.style.Style({ stroke: stroke, zIndex: zIndex });
-        }
 
         function createPointStyleFunc(color,featureModel,layerModel) {
             return function() {
                 var f = this;
                 var selectedIds = getAllSelectedFeaturesIds(selection.list);
-                color[3] = computeOpacity(f);
+                color[3] = 1;
 
 
                 //@hb change the color of the selected feature
@@ -592,12 +576,33 @@ angular.module('app.services.map', ['app.services.context'])
             };
         }
 
+        function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex,featureModel,layerModel) {
+
+            var fill = new ol.style.Fill({ color: fillColor });
+            var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
+            var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
+            if(layerModel.featLabels){
+                //@hb
+                var text = new ol.style.Text({
+                    font: 'bold 12px sans-serif',
+                    text: featureModel.title,
+                    offsetY: -12,
+                    fill: new ol.style.Fill({color: 'black'}),
+                    stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+                });
+
+                return new ol.style.Style({ image: circle, zIndex: zIndex,text: text });
+            }
+
+            return new ol.style.Style({ image: circle, zIndex: zIndex});
+        }
+
         function createLineStyleFunc(color,featureModel,layerModel) {
             return function() {
                 color[3] = computeOpacity(this);
 
                 var styles = [],
-                    highlight = shouldHighlight(this),
+                    highlight = shouldHighlight2(this),
                     zIndex = computeZIndex(this),
                     strokeColor = color,
                     strokeWidth = 5;
@@ -609,8 +614,28 @@ angular.module('app.services.map', ['app.services.context'])
             };
         }
 
+        function createLineStyle(strokeColor, strokeWidth, zIndex, featureModel, layerModel) {
+            var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
+            if(layerModel.featLabels){
+                //@hb
+                var text = new ol.style.Text({
+                    font: '12px Verdana',
+                    text: featureModel.title,
+                    fill: new ol.style.Fill({color: 'black'}),
+                    stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+                });
+                return new ol.style.Style({ stroke: stroke, zIndex: zIndex, text: text });
+            }
+
+            return new ol.style.Style({ stroke: stroke, zIndex: zIndex });
+        }
+
         function shouldHighlight(feature) {
             return selection.list.length && (selection.active && selection.active === feature);
+        }
+
+        function shouldHighlight2(feature) {
+            return selection.list.length && ((!selection.active && feature.get('selected')) || (selection.active && selection.active === feature));
         }
         //@hb the function for know all the selected features
         function shouldHighlightAll(feature,selectedIds) {
@@ -634,6 +659,7 @@ angular.module('app.services.map', ['app.services.context'])
             return ids;
 
         }
+
         function getAllSelectedFeaturesIds(arrs){
             var ids=[];
             angular.forEach(arrs,function (arr) {
@@ -647,9 +673,9 @@ angular.module('app.services.map', ['app.services.context'])
 
         function computeOpacity(feature) {
             if (selection.active && feature !== selection.active) {
-                return 1;
+                return 0.5;
             } else if (selection.list.length && !feature.get('selected')) {
-                return 1;
+                return 0.5;
             } else {
                 return 1;
             }
