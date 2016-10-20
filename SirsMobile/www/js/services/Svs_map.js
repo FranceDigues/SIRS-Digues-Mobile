@@ -266,7 +266,8 @@ angular.module('app.services.map', ['app.services.context'])
         }
 
         function createAppFeatureModel(featureDoc) {
-            featureDoc = featureDoc.value || featureDoc; // depending on "include_docs" option when querying docs
+            // featureDoc = featureDoc.value || featureDoc;
+            featureDoc = featureDoc.doc || featureDoc.value; // depending on "include_docs" option when querying docs
 
             var dataProjection = SirsDoc.get().epsgCode,
                 projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
@@ -299,6 +300,7 @@ angular.module('app.services.map', ['app.services.context'])
 
         // @hb the method to create the features of the layer
         function createAppFeatureInstances(featureModels, layerModel) {
+
             var features = [];
             // get each feature from the featureModel
             angular.forEach(featureModels, function(featureModel) {
@@ -332,6 +334,7 @@ angular.module('app.services.map', ['app.services.context'])
                 }
                 else {
                     var olSource = olLayer.getSource().getSource();
+                    console.log(olSource);
                 }
 
             // Try to get the promise of a previous query.
@@ -341,7 +344,8 @@ angular.module('app.services.map', ['app.services.context'])
                 // Try to get the layer features.
                 promise = LocalDocument.query('Element/byClassAndLinear', {
                     startkey: [layerModel.filterValue],
-                    endkey: [layerModel.filterValue, {}]
+                    endkey: [layerModel.filterValue, {}],
+                    include_docs: true
                 }).then(
                     function(results) {
                         return results.map(createAppFeatureModel);
@@ -581,17 +585,21 @@ angular.module('app.services.map', ['app.services.context'])
             var fill = new ol.style.Fill({ color: fillColor });
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
             var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
-            if(layerModel.featLabels){
-                //@hb
-                var text = new ol.style.Text({
-                    font: 'bold 12px sans-serif',
-                    text: featureModel.title,
-                    offsetY: -12,
-                    fill: new ol.style.Fill({color: 'black'}),
-                    stroke: new ol.style.Stroke({color: 'white', width: 0.5})
-                });
 
-                return new ol.style.Style({ image: circle, zIndex: zIndex,text: text });
+            // console.log(featureModel);
+            if(layerModel){
+                if(layerModel.featLabels){
+                    //@hb
+                    var text = new ol.style.Text({
+                        font: 'bold 12px sans-serif',
+                        text: featureModel.title ? featureModel.title : featureModel.designation ,
+                        offsetY: -12,
+                        fill: new ol.style.Fill({color: 'black'}),
+                        stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+                    });
+
+                    return new ol.style.Style({ image: circle, zIndex: zIndex,text: text });
+                }
             }
 
             return new ol.style.Style({ image: circle, zIndex: zIndex});
@@ -616,15 +624,17 @@ angular.module('app.services.map', ['app.services.context'])
 
         function createLineStyle(strokeColor, strokeWidth, zIndex, featureModel, layerModel) {
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
-            if(layerModel.featLabels){
-                //@hb
-                var text = new ol.style.Text({
-                    font: '12px Verdana',
-                    text: featureModel.title,
-                    fill: new ol.style.Fill({color: 'black'}),
-                    stroke: new ol.style.Stroke({color: 'white', width: 0.5})
-                });
-                return new ol.style.Style({ stroke: stroke, zIndex: zIndex, text: text });
+            if(layerModel){
+                if(layerModel.featLabels){
+                    //@hb
+                    var text = new ol.style.Text({
+                        font: '12px Verdana',
+                        text: featureModel.title ? featureModel.title : featureModel.designation,
+                        fill: new ol.style.Fill({color: 'black'}),
+                        stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+                    });
+                    return new ol.style.Style({ stroke: stroke, zIndex: zIndex, text: text });
+                }
             }
 
             return new ol.style.Style({ stroke: stroke, zIndex: zIndex });
@@ -709,19 +719,45 @@ angular.module('app.services.map', ['app.services.context'])
         function createPointStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex,featureModel,layerModel) {
             var fill = new ol.style.Fill({ color: fillColor });
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
-            //@hb
-            var text = new ol.style.Text({
-                font: '12px Verdana',
-                text: featureModel.title,
-                fill: new ol.style.Fill({color: 'black'}),
-                stroke: new ol.style.Stroke({color: 'white', width: 0.5})
-            });
             var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
-            return new ol.style.Style({ image: circle, zIndex: zIndex,text: text });
+
+            if(layerModel){
+                if(layerModel.featLabels){
+                    //@hb
+                    var text = new ol.style.Text({
+                        font: 'bold 12px sans-serif',
+                        text: featureModel.title ? featureModel.title : featureModel.designation,
+                        offsetY: -12,
+                        fill: new ol.style.Fill({color: 'black'}),
+                        stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+                    });
+
+                    return new ol.style.Style({ image: circle, zIndex: zIndex,text: text });
+                }
+            }
+
+
+            return new ol.style.Style({ image: circle, zIndex: zIndex});
         }
 
         function createLineStyle(strokeColor, strokeWidth, lineDash, zIndex,featureModel,layerModel) {
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth, lineDash: lineDash });
+
+            if(layerModel){
+                if(layerModel.featLabels){
+                    //@hb
+                    var text = new ol.style.Text({
+                        font: 'bold 12px sans-serif',
+                        text: featureModel.title ? featureModel.title : featureModel.designation,
+                        offsetY: -12,
+                        fill: new ol.style.Fill({color: 'black'}),
+                        stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+                    });
+
+                    return new ol.style.Style({ stroke: stroke, zIndex: zIndex,text: text });
+                }
+            }
+
             return new ol.style.Style({ stroke: stroke, zIndex: zIndex });
         }
 

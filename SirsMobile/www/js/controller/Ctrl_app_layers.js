@@ -42,7 +42,6 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
         // @hb
         self.colors = colorsFactory.colors;
 
-
         self.selectedLayer;
 
         self.selectedColor;
@@ -120,10 +119,6 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
             colorsFactory.selectedElement = angular.element(e.target);
             colorsFactory.selectedElement.addClass('active');
         };
-
-
-
-
 
     })
 
