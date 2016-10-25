@@ -90,6 +90,11 @@ angular.module('SirsMobile', [
                 controller: 'DocumentController as c',
                 resolve: routeResolve['documents']
             })
+            .when('/media', {
+                templateUrl: 'templates/media.html',
+                controller: 'MediaController as mdc',
+                resolve: routeResolve['media']
+            })
             .otherwise('/database');
     })
 
@@ -101,6 +106,7 @@ angular.module('SirsMobile', [
             // Hide the accessory bar above the keyboard for inputs.
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+
             }
 
             // Medias directory.
@@ -145,6 +151,8 @@ angular.module('SirsMobile', [
         $rootScope.$on('logoutSuccess', function() {
             $location.path('/login');
         });
+
+
     })
 
     .constant('routeResolve', {
@@ -170,6 +178,23 @@ angular.module('SirsMobile', [
             objectDoc: function($route, sContext /*, LocalDocument*/) {
                 return sContext.selectedObject;
                 //return LocalDocument.get($route.current.params.objectId);
+            }
+        },
+        media:{
+            orientationsList : function (LocalDocument) {
+                //@hb
+                return LocalDocument.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
+                    endkey: ['fr.sirs.core.model.RefOrientationPhoto',{}]
+                });
+
+            },
+            cotesList: function (LocalDocument) {
+                //@hb
+                return LocalDocument.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.RefCote'],
+                    endkey: ['fr.sirs.core.model.RefCote',{}]
+                });
             }
         }
     });

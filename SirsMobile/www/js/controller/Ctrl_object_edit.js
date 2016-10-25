@@ -49,7 +49,8 @@ angular.module('app.controllers.object_edit', [])
     .controller('ObjectEditController', function ObjectEditController($scope, $location, $ionicScrollDelegate,
                                                                       $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                       $routeParams, GeolocationService, LocalDocument,
-                                                                      EditionService, objectDoc, refTypes, uuid4, SirsDoc) {
+                                                                      EditionService, objectDoc, refTypes,
+                                                                      uuid4, SirsDoc,$ionicModal) {
 
         var self = this;
 
@@ -197,6 +198,28 @@ angular.module('app.controllers.object_edit', [])
 
         self.mediaPath = null;
 
+
+
+
+
+
+
+
+
+        //@hb get the value of Orientation & Côté from the Data Base
+        self.goToMedia = function () {
+            $location.path("/media");
+        };
+
+
+
+
+
+
+
+
+
+
         self.recordAudio = function() {
             // TODO → to implement
         };
@@ -286,4 +309,44 @@ angular.module('app.controllers.object_edit', [])
             });
             self.exit();
         }
+    })
+    .controller('MediaController', function (orientationsList, cotesList, $window) {
+        var self = this;
+        //@hb Media Modal options
+        self.tabOptions = {
+            tab:"photo",
+            setTab: function(tabName){
+                self.tabOptions.tab = tabName;
+            }
+        };
+
+        self.orientations = orientationsList;
+
+        self.cotes = cotesList;
+
+        self.back = function(){
+            $window.history.back();
+        };
+
+        self.save = function(){
+
+        };
+
+        //@hb
+        self.mediaOptions = {
+            photo: "",
+            extNumPhoto:"",
+            position:"",
+            orientation:"",
+            cote:"",
+            commentaire: ""
+        };
+
+
+
+
+
+
+
+
     });

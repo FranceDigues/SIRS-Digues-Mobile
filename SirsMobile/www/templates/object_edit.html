@@ -65,6 +65,7 @@
 
                             <!-- Content / Medias -->
                             <div class="medias" ng-switch-when="medias">
+                                <ion-scroll direction="x">
                                 <div class="pics row">
                                     <div class="pic col col-25" ng-repeat="photo in c.doc.photos track by photo.id">
                                         <div class="pic-quicklook">
@@ -72,16 +73,54 @@
                                         </div>
                                     </div>
                                 </div>
+                                </ion-scroll>
                                 <div class="text-center">
                                     <!--<button type="button" class="btn waves-effect waves-teal" on-tap="c.recordAudio()">-->
                                     <!--<i class="material-icons center">mic</i>-->
                                     <!--</button>-->
-                                    <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.takePhoto()">
-                                        <i class="material-icons left">camera_alt</i>Prendre une photo
+
+                                    <!--@hb Ajouter une medias-->
+                                    <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.goToMedia()">
+                                        <i class="material-icons left">perm_media</i>Ajouter une media
                                     </button>
-                                    <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.drawNote()">
-                                        <i class="material-icons left">border_color</i>Déssiner une note
-                                    </button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 </div>
                             </div>
                         </div>
@@ -92,7 +131,8 @@
                                 <i class="material-icons left">arrow_back</i>Annuler
                             </a>
                             <button type="button" class="btn pink waves-effect waves-teal right"
-                                    ng-class="{disabled: objectForm.$invalid}" ng-disabled="objectForm.$invalid" on-tap="c.save()">
+                                    ng-class="{disabled: objectForm.$invalid}" ng-disabled="objectForm.$invalid"
+                                    on-tap="c.save()">
                                 <i class="material-icons left">check</i>Terminer
                             </button>
                         </div>
@@ -101,6 +141,66 @@
             </div>
         </ion-content>
     </div>
+
+    <!--@hb a modal for add new Media-->
+    <!--<script id="media-modal.html" type="text/ng-template">-->
+        <!--<ion-modal-view style="display: block;">-->
+             <!--&lt;!&ndash;Modal content area&ndash;&gt;-->
+            <!--<ion-content>-->
+
+                <!--&lt;!&ndash;Tab for the Addphoto or draw note&ndash;&gt;-->
+                <!--<div class="sirs-nav-tabs">-->
+                    <!--&lt;!&ndash; Tab / Prendre une photo &ndash;&gt;-->
+                    <!--<span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.modalOptions.tab === 'photo'}"-->
+                          <!--on-tap="c.modalOptions.setTab('photo')">Prendre une photo</span>-->
+                    <!--&lt;!&ndash; Tab / Prendre une note &ndash;&gt;-->
+                    <!--<span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.modalOptions.tab === 'note'}"-->
+                          <!--on-tap="c.modalOptions.setTab('note')">Prendre une note</span>-->
+                <!--</div>-->
+                <!--<div class="sirs-card-content" ng-switch="c.modalOptions.tab">-->
+                    <!--&lt;!&ndash; The case of photo &ndash;&gt;-->
+                    <!--<div ng-switch-when="photo">-->
+                        <!--<span>Prendre une photo</span>-->
+                        <!--&lt;!&ndash;Les buttons de medias&ndash;&gt;-->
+                        <!--<button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.takePhoto()">-->
+                            <!--<i class="material-icons left">camera_alt</i>Prendre une photo-->
+                        <!--</button>-->
+
+                        <!--<span>Depuis un appareil externe</span>-->
+                        <!--<input type="text" placeholder="Numéro de photo">-->
+                        <!--<div class="spacer"></div>-->
+                        <!--<span>Position</span>-->
+                        <!--<button type="button" class="btn btn-large waves-effect waves-teal" on-tap="">-->
+                            <!--Enregistrer une position GPS-->
+                        <!--</button>-->
+
+
+
+                    <!--</div>-->
+
+                    <!--&lt;!&ndash; The case of note &ndash;&gt;-->
+                    <!--<div ng-switch-when="note">-->
+                        <!--<button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.drawNote()">-->
+                            <!--<i class="material-icons left">border_color</i>Déssiner une note-->
+                        <!--</button>-->
+                    <!--</div>-->
+
+                <!--</div>-->
+
+
+
+            <!--</ion-content>-->
+
+            <!--<ion-footer-bar class="bar-light">-->
+                <!--<div class="col col-33 col-offset-66" style="padding: 0px;">-->
+                    <!--<button class="button button-light" on-tap="c.modalOptions.mediaModal.hide()">ANNULER</button>-->
+                    <!--<button class="button button-light">VALIDER</button>-->
+                <!--</div>-->
+            <!--</ion-footer-bar>-->
+
+        <!--</ion-modal-view>-->
+
+    <!--</script>-->
 
     <!-- Position Map -->
     <div ng-include="'templates/position_edit.html'" ng-if="c.view === 'map'"
