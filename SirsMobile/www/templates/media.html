@@ -1,32 +1,35 @@
-<div  ng-if="mdc.view === 'form'">
+<ion-view>
+    <div class="object-form" ng-if="mdc.view === 'form'">
+        <ion-content delegate-handle="formScroll">
+            <div class="row responsive-md">
+                    <div class="col col-80 col-offset-10">
+                        <div class="sirs-card">
 
-<div class="sirs-card">
+                <div class="sirs-card-content">
 
-    <div class="sirs-card-content" ng-switch="mdc.tabOptions.tab">
-
-            <span class="blue-text text-darken-2 ">Prendre une photo</span><br>
-            <div class="spacer"></div>
-            <!--Les buttons de medias-->
-            <button type="button" class="left btn btn-large waves-effect waves-teal"
+                    <span class="blue-text text-darken-2 ">Prendre une photo ou une note</span><br>
+                    <!--<div class="spacer"></div>-->
+                    <!--Les buttons de medias-->
+                    <div class="text-center">
+                <button type="button" class=" btn btn-large waves-effect waves-teal"
                     on-tap="mdc.takePhoto()">
-                <i class="material-icons left">camera_alt</i>Prendre une photo
-            </button>
+                    <i class="material-icons left">camera_alt</i>Prendre une photo
+                </button>
 
-            <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="mdc.drawNote()">
-                <i class="material-icons left">border_color</i>Déssiner une note
-            </button>
+                <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="mdc.drawNote()">
+                    <i class="material-icons left">border_color</i>Déssiner une note
+                </button>
+                 </div>
 
-            <div class="pics row" ng-if="mdc.mediaOptions.id !=='' ">
-                <div class="pic col col-25">
-                    <div class="pic-quicklook">
-                        <img alt="Photo non disponible sur le mobile"
-                             style="height: 50px;"
-                             ng-src="{{mdc.getPhotoPath(mdc.mediaOptions)}}"/>
+                <div class="pics row" ng-if="mdc.mediaOptions.id !=='' ">
+                    <div class="pic col col-25">
+                        <div class="pic-quicklook">
+                            <img alt="Photo non disponible sur le mobile"
+                                style="height: 50px;"
+                                 ng-src="{{mdc.getPhotoPath(mdc.mediaOptions)}}"/>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="spacer"></div>
             <div class="row">
                 <span class="left blue-text text-darken-2">Depuis un appareil externe</span>
             </div>
@@ -42,9 +45,9 @@
                 Enregistrer une position GPS
             </button>
 
-            <div ng-if="mdc.mediaOptions.position !== ''" class="sirs-field-inline">
-                <span class="sirs-field-title">Position : </span>
-                <span class="sirs-field-value">{{mdc.mediaOptions.position}}</span>
+            <div ng-if="mdc.mediaOptions.positionDebut !== ''" class="sirs-field-inline">
+                <span class="sirs-field-title">&nbsp;&nbsp;Position&nbsp; : &nbsp;</span>
+                <span class="sirs-field-value">{{mdc.mediaOptions.positionDebut}}</span>
             </div>
 
             <br>
@@ -87,7 +90,10 @@
     </div>
 
 </div>
-</div>
+                    </div>
+                </div>
+        </ion-content>
+    </div> <!--End of the media Form -->
 
     <!-- Position Map -->
     <div ng-include="'templates/position_edit.html'"
@@ -97,4 +103,7 @@
 
     <!-- Note -->
     <div ng-include="'templates/note_edit.html'" ng-if="mdc.view === 'note'"
-     ng-init="save = mdc.saveNote; exit = mdc.backToForm"></div>
+     ng-init="save = mdc.saveNote; exit = mdc.backToForm">
+    </div>
+
+</ion-view>

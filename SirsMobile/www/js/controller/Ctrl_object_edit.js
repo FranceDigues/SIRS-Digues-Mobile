@@ -89,6 +89,7 @@ angular.module('app.controllers.object_edit', [])
         // ----------
 
         self.type = $routeParams.type;
+        console.log(self.type);
 
         self.doc = objectDoc;
 
@@ -304,14 +305,6 @@ angular.module('app.controllers.object_edit', [])
 
         var dataProjection = SirsDoc.get().epsgCode;
 
-        //@hb Media Modal options
-        self.tabOptions = {
-            tab:"photo",
-            setTab: function(tabName){
-                self.tabOptions.tab = tabName;
-            }
-        };
-
         self.orientations = $scope.c.orientations;
 
         self.cotes = $scope.c.cotes;
@@ -349,6 +342,7 @@ angular.module('app.controllers.object_edit', [])
         self.view = 'form';
 
         self.handlePos = function(pos) {
+
             var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
             self.mediaOptions.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
 
