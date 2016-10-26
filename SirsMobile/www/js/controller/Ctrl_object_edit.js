@@ -50,7 +50,7 @@ angular.module('app.controllers.object_edit', [])
                                                                       $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                       $routeParams, GeolocationService, LocalDocument,
                                                                       EditionService, objectDoc, refTypes,
-                                                                      uuid4, SirsDoc,$ionicModal) {
+                                                                      uuid4, SirsDoc,$ionicModal, orientationsList, cotesList) {
 
         var self = this;
 
@@ -79,6 +79,11 @@ angular.module('app.controllers.object_edit', [])
         self.backToForm = function() {
             self.setView('form');
         };
+
+        //@hb
+        self.orientations = orientationsList;
+        //@hb
+        self.cotes = cotesList;
 
         // Form
         // ----------
@@ -198,27 +203,10 @@ angular.module('app.controllers.object_edit', [])
 
         self.mediaPath = null;
 
-
-
-
-
-
-
-
-
         //@hb get the value of Orientation & Côté from the Data Base
         self.goToMedia = function () {
-            $location.path("/media");
+            self.setView('media');
         };
-
-
-
-
-
-
-
-
-
 
         self.recordAudio = function() {
             // TODO → to implement
@@ -310,8 +298,12 @@ angular.module('app.controllers.object_edit', [])
             self.exit();
         }
     })
-    .controller('MediaController', function (orientationsList, cotesList, $window) {
+    .controller('MediaController', function ($window, SirsDoc,
+                                             uuid4, $ionicPlatform, $scope) {
         var self = this;
+
+        var dataProjection = SirsDoc.get().epsgCode;
+
         //@hb Media Modal options
         self.tabOptions = {
             tab:"photo",
@@ -320,27 +312,112 @@ angular.module('app.controllers.object_edit', [])
             }
         };
 
-        self.orientations = orientationsList;
+        self.orientations = $scope.c.orientations;
 
-        self.cotes = cotesList;
+        self.cotes = $scope.c.cotes;
 
         self.back = function(){
-            $window.history.back();
+            $scope.c.setView('form');
         };
 
         self.save = function(){
+            $scope.c.doc.photos.push(self.mediaOptions);
+            $scope.c.setView('form');
+        };
 
+        self.selectPos = function() {
+            self.setView('map');
         };
 
         //@hb
         self.mediaOptions = {
-            photo: "",
-            extNumPhoto:"",
-            position:"",
-            orientation:"",
-            cote:"",
+            id: '',
+            chemin:'',
+            designation:"",
+            positionDebut:"",
+            orientationPhoto:"",
+            coteId:"",
             commentaire: ""
         };
+
+        self.setView = function(name) {
+            if (name !== self.view) {
+                self.view = name;
+            }
+        };
+
+        self.view = 'form';
+
+        self.handlePos = function(pos) {
+            var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
+            self.mediaOptions.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+
+        };
+
+        self.backToForm = function() {
+            self.setView('form');
+        };
+
+        self.takePhoto = function() {
+
+            self.mediaOptions['id'] = '';
+            self.mediaOptions['chemin'] = '';
+
+            navigator.camera.getPicture(photoCaptureSuccess, photoCaptureError, {
+                quality: 50,
+                destinationType: navigator.camera.DestinationType.FILE_URI,
+                encodingType: navigator.camera.EncodingType.PNG
+            });
+        };
+
+        self.drawNote = function() {
+            self.setView('note');
+        };
+
+        self.saveNote = savePicture;
+
+        function photoCaptureSuccess(imageURI) {
+            window.resolveLocalFileSystemURL(imageURI, savePicture);
+        }
+
+        self.getPhotoPath = function(photo) {
+            var path = photo.chemin.replace(/\\/g, '/');
+            if (path.charAt(0) !== '/') {
+                path = '/' + path;
+            }
+            return self.mediaPath + path;
+        };
+
+        function photoCaptureError() {
+            // TODO → handle error
+        }
+
+        function savePicture(imageFile) {
+            if (!self.mediaPath) {
+                return;
+            }
+            window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
+                var photoId = uuid4.generate(),
+                    fileName = photoId + '.png';
+
+                // Copy image file in its final directory.
+                imageFile.copyTo(targetDir, fileName, function() {
+                    // Store the photo in the object document.
+
+                    self.mediaOptions['id'] = photoId;
+                    self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
+                    self.mediaOptions['chemin'] = '/' + fileName;
+
+                    // Force digest.
+                    $scope.$digest();
+                });
+            });
+        }
+
+        $ionicPlatform.ready(function() {
+            // Acquire the medias storage path when the device is ready.
+            self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
+        });
 
 
 

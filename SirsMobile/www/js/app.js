@@ -90,11 +90,6 @@ angular.module('SirsMobile', [
                 controller: 'DocumentController as c',
                 resolve: routeResolve['documents']
             })
-            .when('/media', {
-                templateUrl: 'templates/media.html',
-                controller: 'MediaController as mdc',
-                resolve: routeResolve['media']
-            })
             .otherwise('/database');
     })
 
@@ -172,15 +167,7 @@ angular.module('SirsMobile', [
             },
             refTypes: function(EditionService) {
                 return EditionService.getReferenceTypes();
-            }
-        },
-        observationEdit: {
-            objectDoc: function($route, sContext /*, LocalDocument*/) {
-                return sContext.selectedObject;
-                //return LocalDocument.get($route.current.params.objectId);
-            }
-        },
-        media:{
+            },
             orientationsList : function (LocalDocument) {
                 //@hb
                 return LocalDocument.query('Element/byClassAndLinear', {
@@ -195,6 +182,12 @@ angular.module('SirsMobile', [
                     startkey: ['fr.sirs.core.model.RefCote'],
                     endkey: ['fr.sirs.core.model.RefCote',{}]
                 });
+            }
+        },
+        observationEdit: {
+            objectDoc: function($route, sContext /*, LocalDocument*/) {
+                return sContext.selectedObject;
+                //return LocalDocument.get($route.current.params.objectId);
             }
         }
     });

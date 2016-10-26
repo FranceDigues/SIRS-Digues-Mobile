@@ -1,54 +1,67 @@
-
-    <!--Tab for the Addphoto or draw note-->
-    <div class="sirs-nav-tabs">
-        <!-- Tab / Prendre une photo -->
-        <span class="sirs-tab waves-effect waves-teal" ng-class="{active: mdc.tabOptions.tab === 'photo'}"
-              on-tap="mdc.tabOptions.setTab('photo')">Prendre une photo</span>
-        <!-- Tab / Prendre une note -->
-        <span class="sirs-tab waves-effect waves-teal" ng-class="{active: mdc.tabOptions.tab === 'note'}"
-              on-tap="mdc.tabOptions.setTab('note')">Prendre une note</span>
-    </div>
+<div  ng-if="mdc.view === 'form'">
 
 <div class="sirs-card">
 
     <div class="sirs-card-content" ng-switch="mdc.tabOptions.tab">
-        <!-- The case of photo -->
-        <div ng-switch-when="photo">
+
             <span class="blue-text text-darken-2 ">Prendre une photo</span><br>
             <div class="spacer"></div>
             <!--Les buttons de medias-->
-            <button type="button" class="left btn btn-large waves-effect waves-teal" on-tap="mdc.takePhoto()">
+            <button type="button" class="left btn btn-large waves-effect waves-teal"
+                    on-tap="mdc.takePhoto()">
                 <i class="material-icons left">camera_alt</i>Prendre une photo
-            </button><br>
+            </button>
+
+            <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="mdc.drawNote()">
+                <i class="material-icons left">border_color</i>Déssiner une note
+            </button>
+
+            <div class="pics row" ng-if="mdc.mediaOptions.id !=='' ">
+                <div class="pic col col-25">
+                    <div class="pic-quicklook">
+                        <img alt="Photo non disponible sur le mobile"
+                             style="height: 50px;"
+                             ng-src="{{mdc.getPhotoPath(mdc.mediaOptions)}}"/>
+                    </div>
+                </div>
+            </div>
+
             <div class="spacer"></div>
             <div class="row">
                 <span class="left blue-text text-darken-2">Depuis un appareil externe</span>
             </div>
             <div class="spacer"></div>
             <div class="row">
-                <input type="text" ng-model="mdc.mediaOptions.extNumPhoto" placeholder="Numéro de photo">
+                <input type="text" ng-model="mdc.mediaOptions.designation" placeholder="Numéro de photo">
             </div>
             <div class="spacer"></div>
             <span class="left blue-text text-darken-2">Position</span><br>
             <div class="spacer"></div>
             <button type="button" class="left btn btn-large waves-effect waves-teal"
-                on-tap="mdc.goToPhoto()">
+                on-tap="mdc.selectPos()">
                 Enregistrer une position GPS
-            </button><br>
+            </button>
+
+            <div ng-if="mdc.mediaOptions.position !== ''" class="sirs-field-inline">
+                <span class="sirs-field-title">Position : </span>
+                <span class="sirs-field-value">{{mdc.mediaOptions.position}}</span>
+            </div>
+
+            <br>
             <div class="spacer"></div>
             <div class="row">
-                <select ng-model="mdc.mediaOptions.orientation"
+                <select ng-model="mdc.mediaOptions.orientationPhoto"
                     class="browser-default">
                     <option value="" disabled selected>Orientation</option>
                     <option ng-repeat="v in mdc.orientations"
-                        value="v.id">{{v.value.libelle}}</option>
+                        value="{{v.id}}">{{v.value.libelle}}</option>
                 </select><br>
 
-                <select ng-model="mdc.mediaOptions.cote"
+                <select ng-model="mdc.mediaOptions.coteId"
                     class="browser-default">
                     <option value="" disabled selected>Côté</option>
                     <option ng-repeat="vv in mdc.cotes"
-                        value="vv.id">{{vv.value.libelle}}</option>
+                        value="{{vv.id}}">{{vv.value.libelle}}</option>
                 </select><br>
             </div>
 
@@ -56,14 +69,8 @@
                 <input type="text" ng-model="mdc.mediaOptions.commentaire" placeholder="Commentaire">
             </div>
 
-        </div>
 
-        <!-- The case of note -->
-        <div ng-switch-when="note">
-            <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.drawNote()">
-                <i class="material-icons left">border_color</i>Déssiner une note
-            </button>
-        </div>
+
 
     </div>
 
@@ -80,3 +87,14 @@
     </div>
 
 </div>
+</div>
+
+    <!-- Position Map -->
+    <div ng-include="'templates/position_edit.html'"
+         ng-if="mdc.view === 'map'"
+         ng-init="save = mdc.handlePos; exit = mdc.backToForm">
+    </div>
+
+    <!-- Note -->
+    <div ng-include="'templates/note_edit.html'" ng-if="mdc.view === 'note'"
+     ng-init="save = mdc.saveNote; exit = mdc.backToForm"></div>
