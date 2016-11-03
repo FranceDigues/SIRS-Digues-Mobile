@@ -5,7 +5,6 @@ angular.module('app.controllers', [
     'app.controllers.cache',
     'app.controllers.database',
     'app.controllers.documents',
-    'app.controllers.help',
     'app.controllers.login',
     'app.controllers.main',
     'app.controllers.menu',
