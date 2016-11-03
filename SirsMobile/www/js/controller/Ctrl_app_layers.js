@@ -50,8 +50,7 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
 
         // @hb
         self.featureLabels = function(layer){
-            $rootScope.flag = true;
-
+            $rootScope.loadingflag = true;
             $timeout(function(){
                 MapManager.addLabelFeatureLayer(layer);
             },1000);
@@ -68,8 +67,6 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
 
         // @hb
         self.openColorModal = function(layer) {
-            $rootScope.flag= true;
-            // $ionicSideMenuDelegate.toggleLeft();
             colorsFactory.selectedLayer = layer;
             self.colorModal.show();
         };
@@ -77,7 +74,6 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
         self.closeColorModal = function() {
             clearColorChoose();
             self.colorModal.hide();
-            $rootScope.flag = false;
         };
         // @hb
         self.calculateBackGroundColor = function (color) {
@@ -105,7 +101,10 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
                 // Change the color of the selected layer
                 changeColor(colorsFactory.selectedColor);
                 // Update the change to the view
+                $rootScope.loadingflag= true;
+                $timeout(function () {
                     MapManager.reloadLayer(colorsFactory.selectedLayer);
+                },1000);
                 //Close the Modal after the change
                 self.colorModal.hide();
                 clearColorChoose();

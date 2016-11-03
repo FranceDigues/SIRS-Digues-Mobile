@@ -18,15 +18,13 @@
             <!-- Content / Map -->
             <ol-map name="main"></ol-map>
 
-            <!--The loading Flag -->
-            <div ng-if="mc.loadingstate" >
-                <div class="progress" style="z-index: 9999; bottom: -6px; position: fixed;">
-                    <div class="indeterminate"></div>
-                </div>
-            </div>
             <!--Edition Mode Title-->
             <div  ng-if="mc.editionModeFlag" style="z-index: 9999; top: 4px; position: fixed;">
                 <i class="material-icons">mode_edit</i><span>Mode Edition</span>
+            </div>
+
+            <div style="z-index: 9999; right: 60px; top: 5px; position: fixed;">
+                <span>Précision du signal GPS :  {{mc.gpsAccuracy}} m </span>
             </div>
 
             <!-- Button / New object -->

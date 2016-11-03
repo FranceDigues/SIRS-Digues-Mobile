@@ -50,11 +50,22 @@ angular.module('app.controllers.object_edit', [])
                                                                       $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                       $routeParams, GeolocationService, LocalDocument,
                                                                       EditionService, objectDoc, refTypes,
-                                                                      uuid4, SirsDoc,$ionicModal, orientationsList, cotesList) {
+                                                                      uuid4, SirsDoc,$ionicModal, orientationsList,
+                                                                      cotesList, $rootScope, $cordovaGeolocation) {
 
         var self = this;
 
+        $rootScope.loadingflag = false;
+
         var dataProjection = SirsDoc.get().epsgCode;
+
+
+        self.gpsAccuracy=0;
+        //@hb
+        $cordovaGeolocation.getCurrentPosition({}).then(function (position) {
+            self.gpsAccuracy = Math.round(position.coords.accuracy);
+        });
+
 
         // Navigation
         // -----------
@@ -89,7 +100,6 @@ angular.module('app.controllers.object_edit', [])
         // ----------
 
         self.type = $routeParams.type;
-        console.log(self.type);
 
         self.doc = objectDoc;
 
@@ -156,11 +166,11 @@ angular.module('app.controllers.object_edit', [])
         self.geoloc = undefined;
 
         self.locateMe = function() {
-            if (GeolocationService.isEnabled()) {
-                waitForLocation(GeolocationService.getLocationPromise());
-            } else {
+            // if (GeolocationService.isEnabled()) {
+            //     waitForLocation(GeolocationService.getLocationPromise());
+            // } else {
                 waitForLocation(GeolocationService.start()).then(GeolocationService.stop);
-            }
+            // }
         };
 
         self.selectPos = function() {
@@ -195,6 +205,7 @@ angular.module('app.controllers.object_edit', [])
             $ionicLoading.show({ template: 'En attente de localisation...' });
             return locationPromise.then(function handleLocation(location) {
                 self.handlePos(location.coords);
+                console.log(location);
                 $ionicLoading.hide();
             });
         }

@@ -2,7 +2,7 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
 
     .controller('ObjectAddController', function ObjectAddController($filter, $location, $ionicScrollDelegate,
                                                                     LocalDocument, AuthService, GeolocationService,
-                                                                    EditionService, AppLayersService,$scope) {
+                                                                    EditionService, AppLayersService,$scope, $rootScope) {
 
         var self = this;
 
@@ -38,6 +38,7 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
         // Add the new object
         self.newObject = function() {
             if (angular.isDefined(self.selectedLayer)) {
+                $rootScope.loadingflag = true;
                 var type = self.selectedLayer.filterValue.substring(
                     self.selectedLayer.filterValue.lastIndexOf('.') + 1); // TODO → improve type detection
                 $location.path('/object/' + encodeURIComponent(type));

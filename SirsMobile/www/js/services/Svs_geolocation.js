@@ -108,8 +108,9 @@ angular.module('app.services.geolocation', [])
                 },
 
                 getLocationPromise: function() {
+
                     var deferred = $q.defer();
-                    trackDeferred.then(undefined, deferred.reject(deferred), deferred.resolve(deferred));
+                    trackDeferred.promise.then(undefined, deferred.reject(deferred), deferred.resolve(deferred));
                     return deferred.promise;
                 },
 

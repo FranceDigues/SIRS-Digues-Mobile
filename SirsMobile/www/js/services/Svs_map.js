@@ -18,7 +18,7 @@ angular.module('app.services.map', ['app.services.context'])
                                                DefaultStyle, RealPositionStyle,
                                                sContext, GeolocationService,
                                                SidePanelService, featureCache,
-                                               currentView, selection, SirsDoc) {
+                                               currentView, selection, SirsDoc, $window) {
 
         var self = this;
 
@@ -126,8 +126,12 @@ angular.module('app.services.map', ['app.services.context'])
             // Load data if necessary.
             olLayer.getSource().getSource().clear();
             if (layerModel.visible === true) {
-                setAppLayerFeatures(olLayer);
+                    $rootScope.loadingflag = true;
+                $window.setTimeout(function(){
+                    setAppLayerFeatures(olLayer);
+                },1000);
             }
+
         };
 
         // @hb Add label to the layer features
@@ -363,8 +367,8 @@ angular.module('app.services.map', ['app.services.context'])
                 function onSuccess(featureModels) {
                     // @hb get the featureModels from the promise
                     olSource.addFeatures(createAppFeatureInstances(featureModels, layerModel));
-                    $rootScope.flag = false;
-                },
+                    $rootScope.loadingflag = false;
+                                    },
                 function onError(error) {
                     // TODO → handle error
                 });

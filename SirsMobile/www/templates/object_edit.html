@@ -11,9 +11,12 @@
                             <h2 class="sirs-card-title" ng-show="c.isNew">Nouveau/nouvelle {{c.type}}</h2>
                             <h2 class="sirs-card-title" ng-show="!c.isNew && !c.isClosed">Fermer un(e) {{c.type}}</h2>
                             <h2 class="sirs-card-title" ng-show="!c.isNew && c.isClosed">Détail d'un(e) {{c.type}}</h2>
+                            <div style="z-index: 9999; right: 60px; top: 5px; position: fixed;">
+                                <span>Précision du signal GPS :  {{c.gpsAccuracy}} m </span>
+                            </div>
 
                             <div class="sirs-nav-tabs"
-                                 ng-if="c.type !== 'BorneDigue' && c.type !== 'TronconDigue'">
+                                 ng-if="c.type !== 'BorneDigue' && c.type !== 'TronconDigue' && c.type !== 'Desordre'">
                                 <!-- Tab / Fields -->
                                 <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'fields'}" on-tap="c.setTab('fields')">Attributs</span>
                                 <!-- Tab / Medias -->
