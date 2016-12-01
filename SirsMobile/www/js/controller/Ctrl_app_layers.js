@@ -125,7 +125,6 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
 
         var self = this;
 
-
         self.available = [];
 
         self.isActive = function(layer) {

@@ -70,12 +70,10 @@ angular.module('app.controllers.main', ['app.services.context'])
                     $ionicLoading.show({
                         template: 'Chargement...'
                     }).then(function () {
-                        console.log("Afficher");
                     });
                 }
                 else {
                     $ionicLoading.hide().then(function () {
-                        console.log("caché");
                     });
                 }
             });

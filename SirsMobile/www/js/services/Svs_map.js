@@ -50,7 +50,7 @@ angular.module('app.services.map', ['app.services.context'])
 
         var appLayers = new ol.layer.Group({
             name: 'Objects',
-            visible: !EditionService.isEnabled(),
+            // visible: !EditionService.isEnabled(),
             layers: AppLayersService.getFavorites().map(createAppLayerInstance)
         });
 
@@ -534,7 +534,7 @@ angular.module('app.services.map', ['app.services.context'])
         });
 
         $rootScope.$on('editionModeChanged', function(event, isEnabled) {
-            appLayers.setVisible(!isEnabled);
+            // appLayers.setVisible(!isEnabled);
             editionLayer.setVisible(isEnabled);
         });
 
