@@ -51,7 +51,7 @@ angular.module('app.controllers.object_edit', [])
                                                                       $routeParams, GeolocationService, LocalDocument,
                                                                       EditionService, objectDoc, refTypes,
                                                                       uuid4, SirsDoc,$ionicModal, orientationsList,
-                                                                      cotesList, $rootScope, $cordovaGeolocation) {
+                                                                      cotesList, $rootScope, $cordovaGeolocation, listTroncons) {
 
         var self = this;
 
@@ -101,7 +101,71 @@ angular.module('app.controllers.object_edit', [])
 
         self.type = $routeParams.type;
 
+        // L'objet qui contient les information de l'objet à ajouter à la base de données
         self.doc = objectDoc;
+
+        //************************************************************************
+        //Réfere au Tronçon Id
+
+        var listeCool = cleanTronconsListe(listTroncons);
+
+        $scope.$watch(function() { return self.doc.positionDebut; }, function(newValue) {
+                if(angular.isDefined(newValue)){
+                    var troncons = calculateDistanceObjectTroncon(
+                        newValue,
+                        listeCool);
+                    self.troncons = troncons;
+                }
+        });
+
+        //@hb
+        function cleanTronconsListe(liste){
+            var indexes=[];
+            var listCool=[];
+            // Get the indexes list of not validated Tronçons
+            angular.forEach(liste,function (elt,ind) {
+                if ( elt.value.valid || angular.isDefined(elt.value.geometry)) {
+                    listCool.push(elt);
+                }
+            });
+            return listCool;
+        }
+
+        //@hb
+        function calculateDistanceObjectTroncon(point,liste){
+            var nearTronconList = [];
+            // geomatryPosition is instance of ol.geom.Point
+            var geomatryPosition = new ol.format.WKT().readGeometry(point, {
+                    dataProjection: SirsDoc.get().epsgCode,
+                    featureProjection: 'EPSG:3857'
+                });
+
+            var positionCoord = geomatryPosition.getCoordinates();
+            var geom,geomTronc;
+            // Get of the LineStrings from the list of Troncons
+            angular.forEach(liste,function(elt,i){
+                    try{
+                        geom = new ol.format.WKT().readGeometry(elt.value.geometry,{
+                            dataProjection: SirsDoc.get().epsgCode,
+                            featureProjection: 'EPSG:3857'
+                        });
+                    }
+                    catch (e){console.log(e);}
+                     geomTronc = geom.getClosestPoint(positionCoord);
+                    // Calculate the distance between two point
+
+                    var wgs84Sphere= new ol.Sphere(6378137);
+                    // The distance
+                    var dist = wgs84Sphere.haversineDistance(ol.proj.transform(positionCoord, 'EPSG:3857', 'EPSG:4326'),
+                            ol.proj.transform(geomTronc, 'EPSG:3857', 'EPSG:4326'))/1000;
+                    if(dist <= 1){
+                        nearTronconList.push(elt.value);
+                    }
+            });
+            // The list of the nearest Troncons
+            return nearTronconList;
+        }
+        // **********************************************************************
 
         self.isNew = !$routeParams.id;
 

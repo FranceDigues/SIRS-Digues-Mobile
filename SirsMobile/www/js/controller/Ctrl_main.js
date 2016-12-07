@@ -60,8 +60,6 @@ angular.module('app.controllers.main', ['app.services.context'])
             $rootScope.loadingflag = true;
         }
 
-
-
         // @hb
         $rootScope.$watch(function(){
             return $rootScope.loadingflag;

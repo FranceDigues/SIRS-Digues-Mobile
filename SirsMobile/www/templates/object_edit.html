@@ -57,6 +57,25 @@
                                         </button>
                                     </div>
                                 </div>
+
+                                <!--Test Hilmi Pour calculer le plus proche Trançon-->
+
+
+
+                                <div class="row" ng-if="c.type !== 'BorneDigue' && c.type !== 'TronconDigue' && c.type !== 'berge' && c.doc.positionDebut">
+                                    <div class="sirs-field col col-100">
+                                        <label for="trancon" class="active">La liste des Tronçons les plus proche (environ  1000 mètres): </label>
+                                        <select id="trancon"
+                                                class="browser-default"
+                                                ng-model="c.doc.linearId">
+                                            <option ng-repeat="troncon in c.troncons"
+                                                    value="{{troncon._id}}">{{troncon.libelle}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--Fin de Test Hilmi Pour calculer le plus proche Trançon-->
+
                                 <!-- Content / Fields / Specific -->
                                 <div class="specific" ng-include="'templates/forms/' +  c.type + '.html'"></div>
                                 <!-- Content / Fields / Description -->
@@ -65,6 +84,8 @@
                                     <textarea id="description" class="materialize-textarea" ng-model="c.doc.description"></textarea>
                                 </div>
                             </div>
+
+                            <!--************************* Fin field Form ***************************-->
 
                             <!-- Content / Medias -->
                             <div class="medias" ng-switch-when="medias">
