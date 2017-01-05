@@ -60,19 +60,24 @@ angular.module('app.controllers.main', ['app.services.context'])
             $rootScope.loadingflag = true;
         }
 
+        self.ionicLoading;
         // @hb
         $rootScope.$watch(function(){
             return $rootScope.loadingflag;
         }, function(){
+                // var ionicLoading;
                 if($rootScope.loadingflag){
-                    $ionicLoading.show({
+                    self.ionicLoading = $ionicLoading.show({
                         template: 'Chargement...'
-                    }).then(function () {
                     });
+                    //     .then(function () {
+                    // });
                 }
                 else {
-                    $ionicLoading.hide().then(function () {
-                    });
+                    $ionicLoading.hide();
+                    // $ionicLoading.hide().then(function () {
+                    //     angular.noop;
+                    // });
                 }
             });
 

@@ -1,6 +1,6 @@
 .sirs-card {
     position: relative;
-    overflow: hidden;
+    overflow: scroll;
     margin-top: 30px;
     background-color: #ffffff;
     transition: box-shadow .25s;
@@ -24,4 +24,5 @@
 .sirs-card > .sirs-card-action {
     padding: 14px 20px;
     border-top: 1px solid rgba(160, 160, 160, 0.2);
+    overflow: hidden;
 }

@@ -137,7 +137,7 @@ angular.module('SirsMobile', [
             $rootScope.$apply(function() {
                 $rootScope.online = true;
                 $cordovaToast
-                    .showLongTop('La connexion avec succés ');
+                    .showLongTop('Connexion établie avec succès');
             });
         }, false);
 
