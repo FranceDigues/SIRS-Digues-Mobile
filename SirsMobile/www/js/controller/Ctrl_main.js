@@ -3,7 +3,7 @@ angular.module('app.controllers.main', ['app.services.context'])
     .controller('MainController', function MainController($location, $ionicSideMenuDelegate,
                                                           sirsDoc, AuthService, SidePanelService,
                                                           $scope,$rootScope, $ionicLoading, AppLayersService,
-                                                          $cordovaGeolocation) {
+                                                          $cordovaGeolocation, $interval) {
 
         var self = this;
 
@@ -70,14 +70,9 @@ angular.module('app.controllers.main', ['app.services.context'])
                     self.ionicLoading = $ionicLoading.show({
                         template: 'Chargement...'
                     });
-                    //     .then(function () {
-                    // });
                 }
                 else {
                     $ionicLoading.hide();
-                    // $ionicLoading.hide().then(function () {
-                    //     angular.noop;
-                    // });
                 }
             });
 
@@ -94,10 +89,16 @@ angular.module('app.controllers.main', ['app.services.context'])
         }
 
         self.gpsAccuracy=0;
-        //@hb
         $cordovaGeolocation.getCurrentPosition({}).then(function (position) {
             self.gpsAccuracy = Math.round(position.coords.accuracy);
         });
+        //@hb
+        $interval(function () {
+            $cordovaGeolocation.getCurrentPosition({}).then(function (position) {
+                self.gpsAccuracy = Math.round(position.coords.accuracy);
+            });
+        },10000);
+
 
 
 
