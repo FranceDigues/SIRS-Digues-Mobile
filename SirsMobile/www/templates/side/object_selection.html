@@ -7,7 +7,8 @@
         <!--List for only the Border layer -->
         <ion-list ng-if="c.hbfeaturesCollection !== []">
             <ion-item ng-repeat="ft in c.hbfeaturesCollection track by $index" on-tap="c.openDisorderDetails(ft)" ng-class="{visited: ft.get('visited')}">
-                {{ft.get('title') || ft.get('designation') || ft.get('id')}}
+                <!--{{ft.get('title') || ft.get('designation') || ft.get('id')}}-->
+                {{ft.get('designation')}}
                 <div class="layer-categories">{{ft.get('categories').join(' / ') || 'Sans catégorie'}}</div>
             </ion-item>
         </ion-list>
@@ -15,8 +16,8 @@
         <!-- List for the other layers types-->
         <ion-list>
             <ion-item ng-repeat="ft in c.selection.list track by $index" on-tap="c.openDisorderDetails(ft)" ng-class="{visited: ft.get('visited')}">
-                {{ft.get('title') || ft.get('designation') || ft.get('id')}}
-                <div class="layer-categories">{{ft.get('categories').join(' / ') || 'Sans catégorie'}}</div>
+                {{ft.get('designation')}}
+                <div class="layer-categories">{{ft.get('@class').split(".")[4] || 'Sans catégorie' }}</div>
             </ion-item>
         </ion-list>
 

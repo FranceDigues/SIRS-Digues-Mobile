@@ -3,7 +3,7 @@ angular.module('app.controllers.main', ['app.services.context'])
     .controller('MainController', function MainController($location, $ionicSideMenuDelegate,
                                                           sirsDoc, AuthService, SidePanelService,
                                                           $scope,$rootScope, $ionicLoading, AppLayersService,
-                                                          $cordovaGeolocation, $interval) {
+                                                          $cordovaGeolocation, $interval,EditionService,MapManager) {
 
         var self = this;
 
@@ -93,14 +93,27 @@ angular.module('app.controllers.main', ['app.services.context'])
             self.gpsAccuracy = Math.round(position.coords.accuracy);
         });
         //@hb
-        $interval(function () {
-            $cordovaGeolocation.getCurrentPosition({}).then(function (position) {
-                self.gpsAccuracy = Math.round(position.coords.accuracy);
-            });
-        },10000);
+        // $interval(function () {
+        //     $cordovaGeolocation.getCurrentPosition({}).then(function (position) {
+        //         self.gpsAccuracy = Math.round(position.coords.accuracy);
+        //     });
+        // },60000);
+
+    //@hb
+        self.EditionService = EditionService;
+
+        self.toggleArchiveObjects = function () {
+            var layer = MapManager.getEditionLayer();
+            if(layer.getVisible()===true){
+                layer.set('arch_objects',!layer.get('arch_objects'));
+                console.log(layer.get('arch_objects'));
+                MapManager.redrawEditionModeLayer(layer);
+            }
+            // console.log(layer);
 
 
 
+        };
 
 
 

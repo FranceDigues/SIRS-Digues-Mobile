@@ -115,6 +115,10 @@ angular.module('app.services.map', ['app.services.context'])
                 }).extend([selectInteraction])
             };
         };
+        //@hb
+        self.getEditionLayer = function () {
+            return editionLayer;
+        };
 
         // TODO → find a way to do this through event
         self.syncAppLayer = function(layerModel) {
@@ -166,6 +170,12 @@ angular.module('app.services.map', ['app.services.context'])
         self.syncBackLayer = function() {
             var olLayer = createBackLayerInstance(BackLayerService.getActive());
             backLayers.getLayers().setAt(0, olLayer);
+        };
+
+        self.redrawEditionModeLayer = function (layer) {
+            editionLayer = layer;
+            console.log(editionLayer.get('arch_objects'));
+            setEditionLayerFeatures(editionLayer);
         };
 
 
@@ -373,10 +383,11 @@ angular.module('app.services.map', ['app.services.context'])
                     // TODO → handle error
                 });
         }
-
+        // Create the edition layer instance that contain the new objects
         function createEditionLayerInstance() {
             var olLayer = new ol.layer.Image({
                 name: 'Edition',
+                arch_objects : false,
                 visible: EditionService.isEnabled(),
                 source: new ol.source.ImageVector({
                     source: new ol.source.Vector({ useSpatialIndex: false })
@@ -386,7 +397,7 @@ angular.module('app.services.map', ['app.services.context'])
             setEditionLayerFeatures(olLayer);
             return olLayer;
         }
-
+            // Create the feature of the edition layer
         function createEditionFeatureInstance(featureDoc) {
             // Compute geometry.
             var geometry = wktFormat.readGeometry(featureDoc.positionDebut);
@@ -400,26 +411,60 @@ angular.module('app.services.map', ['app.services.context'])
 
             // Create feature.
             var feature = new ol.Feature({ geometry: geometry });
-            feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
-            feature.set('id', featureDoc._id);
-            feature.set('rev', featureDoc._rev);
-            feature.set('title', featureDoc.libelle);
+            if(self.getEditionLayer().get('arch_objects')===true){
+                console.log("affiche tous");
+                feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
+                feature.set('id', featureDoc._id);
+                feature.set('rev', featureDoc._rev);
+                feature.set('auteur', featureDoc.auteur);
+                feature.set('description', featureDoc.description);
+                feature.set('designation', featureDoc.designation);
+                feature.set('@class', featureDoc['@class']);
+            } else if(self.getEditionLayer().get('arch_objects')===false){
+                console.log("affiche les archevés");
+                if(!featureDoc.date_fin || featureDoc.date_fin === ""){
+                    feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
+                    feature.set('id', featureDoc._id);
+                    feature.set('rev', featureDoc._rev);
+                    feature.set('auteur', featureDoc.auteur);
+                    feature.set('description', featureDoc.description);
+                    feature.set('designation', featureDoc.designation);
+                    feature.set('@class', featureDoc['@class']);
+                }
+                else {
+                    feature.set('id', featureDoc._id);
+                    feature.setStyle(new ol.style.Style({
+                        fill : new ol.style.Fill({
+                            color : [0, 0, 255, 0]
+                        })
+                    }));
+                }
+            }
+            // feature.set('id', featureDoc._id);
+            // feature.set('rev', featureDoc._rev);
+            // feature.set('auteur', featureDoc.auteur);
+            // feature.set('description', featureDoc.description);
+            // feature.set('designation', featureDoc.designation);
+            // feature.set('@class', featureDoc['@class']);
+            console.log(feature);
             return feature;
         }
-
+        // Create the features of the edition layer that contain the new objects
         function createEditionFeatureInstances(featureDocs) {
             var features = [];
             angular.forEach(featureDocs, function(featureDoc) {
-                features.push(createEditionFeatureInstance(featureDoc.value));
+                features.push(createEditionFeatureInstance(featureDoc.doc));
             });
             return features;
         }
 
+        // Set the layer that contains the new objects of the edition mode
         function setEditionLayerFeatures(olLayer) {
             var olSource = olLayer.getSource().getSource();
-
+                // Display only the closed objects
             EditionService.getClosedObjects().then(
                 function onSuccess(results) {
+                    console.log(results);
                     olSource.clear();
                     olSource.addFeatures(createEditionFeatureInstances(results));
                 },

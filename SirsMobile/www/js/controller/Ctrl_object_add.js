@@ -6,7 +6,6 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
 
         var self = this;
 
-
         self.tab = 'layers';
 
         self.allLayers = AppLayersService.getFavorites();
