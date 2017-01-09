@@ -64,7 +64,7 @@ function BergeController(tracker, AuthService, LocalDocument, EditionService, Si
         self.tracking = false;
         self.document = {
             '@class': 'fr.sirs.core.model.TraitBerge',
-            'auteur': AuthService.getValue()._id,
+            'author': AuthService.getValue()._id,
             'valid': false,
             'geometry': serializeCoordinates(),
             'date_debut': undefined,

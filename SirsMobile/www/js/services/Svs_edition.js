@@ -47,7 +47,7 @@ angular.module('app.services.edition', ['app.services.context'])
                 newObject: function(type) {
                     var objectDoc = {
                         '@class': 'fr.sirs.core.model.' + type,
-                        'auteur': AuthService.getValue()._id,
+                        'author': AuthService.getValue()._id,
                         'valid': false,
                         'linearId': null
                     };
