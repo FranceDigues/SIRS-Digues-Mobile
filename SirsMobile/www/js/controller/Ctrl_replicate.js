@@ -9,20 +9,22 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
         var remoteDB = PouchService.getRemoteDB();
 
+        // Les vues de couchdb indexé afin de rendre l'application rapide
         var indexedViews = [
             'Utilisateur/byLogin',
             'Element/byClassAndLinear',
-            'Document/byPath'
+            'Document/byPath',
+            'TronconDigue/streamLight'
         ]; // TODO → make it configurable ?
 
         var designDocs = [
             {
                 _id: '_design/objetsNonClos',
                 views: {
-                    byAuteur: {
+                    byAuthor: {
                         map: function(doc) {
-                            if (doc.auteur && !doc.valid && doc.positionDebut && !doc.positionFin) {
-                                emit(doc.auteur);
+                            if (doc.author && !doc.valid && doc.positionDebut && !doc.positionFin) {
+                                emit(doc.author);
                             }
                         }.toString()
                     }
@@ -31,10 +33,10 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             {
                 _id: '_design/objetsClos',
                 views: {
-                    byAuteur: {
+                    byAuthor: {
                         map: function(doc) {
-                            if (doc.auteur && !doc.valid && doc.positionDebut && doc.positionFin) {
-                                emit(doc.auteur, {
+                            if (doc.author && !doc.valid && doc.positionDebut && doc.positionFin) {
+                                emit(doc.author, {
                                     '@class': doc['@class'],
                                     'id': doc._id,
                                     'rev': doc._rev,

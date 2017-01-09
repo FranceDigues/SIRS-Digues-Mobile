@@ -57,7 +57,6 @@ angular.module('app.services.dao', ['app.services.context'])
 
         var self = this;
 
-
         self.get = function(id) {
             var deferred = $q.defer();
 

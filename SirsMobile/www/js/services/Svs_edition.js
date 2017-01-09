@@ -65,14 +65,14 @@ angular.module('app.services.edition', ['app.services.context'])
                 },
 
                 getClosableObjects: function() {
-                    return LocalDocument.query('objetsNonClos/byAuteur', {
+                    return LocalDocument.query('objetsNonClos/byAuthor', {
                         key: AuthService.getValue()._id,
                         include_docs: true
                     });
                 },
 
                 getClosedObjects: function() {
-                    return LocalDocument.query('objetsClos/byAuteur', {
+                    return LocalDocument.query('objetsClos/byAuthor', {
                         key: AuthService.getValue()._id,
                         include_docs: true
                     });
@@ -115,6 +115,7 @@ angular.module('app.services.edition', ['app.services.context'])
                     $rootScope.editionModeFlag = !$rootScope.editionModeFlag;
                     $rootScope.$broadcast('editionModeChanged', context.settings.edition);
                 }
+
             };
         };
     });

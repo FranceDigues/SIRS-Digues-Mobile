@@ -102,19 +102,5 @@ angular.module('app.controllers.main', ['app.services.context'])
     //@hb
         self.EditionService = EditionService;
 
-        self.toggleArchiveObjects = function () {
-            var layer = MapManager.getEditionLayer();
-            if(layer.getVisible()===true){
-                layer.set('arch_objects',!layer.get('arch_objects'));
-                console.log(layer.get('arch_objects'));
-                MapManager.redrawEditionModeLayer(layer);
-            }
-            // console.log(layer);
-
-
-
-        };
-
-
 
     });

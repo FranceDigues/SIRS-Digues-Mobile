@@ -54,7 +54,6 @@ angular.module('app.controllers.database', ['app.services.context'])
 
         var self = this;
 
-
         self.db = {
             name: null,
             url: 'http://',

@@ -1,6 +1,6 @@
 angular.module('app.controllers.sync', ['app.services.context'])
 
-    .controller('SyncController', function SyncController($q, $timeout, DatabaseService, PouchService) {
+    .controller('SyncController', function SyncController($q, $timeout, DatabaseService, PouchService, MapManager) {
 
         var self = this;
 
@@ -61,6 +61,8 @@ angular.module('app.controllers.sync', ['app.services.context'])
             $timeout(function() {
                 self.db.lastSync = new Date().getTime(); // store sync timestamp
                 self.status = 2;
+                var layer = MapManager.getEditionLayer();
+                MapManager.redrawEditionModeLayer(layer);
             }, 1000);
         }
 

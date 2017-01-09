@@ -416,7 +416,7 @@ angular.module('app.services.map', ['app.services.context'])
                 feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
                 feature.set('id', featureDoc._id);
                 feature.set('rev', featureDoc._rev);
-                feature.set('auteur', featureDoc.auteur);
+                feature.set('author', featureDoc.author);
                 feature.set('description', featureDoc.description);
                 feature.set('designation', featureDoc.designation);
                 feature.set('@class', featureDoc['@class']);
@@ -426,7 +426,7 @@ angular.module('app.services.map', ['app.services.context'])
                     feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
                     feature.set('id', featureDoc._id);
                     feature.set('rev', featureDoc._rev);
-                    feature.set('auteur', featureDoc.auteur);
+                    feature.set('author', featureDoc.author);
                     feature.set('description', featureDoc.description);
                     feature.set('designation', featureDoc.designation);
                     feature.set('@class', featureDoc['@class']);
@@ -442,7 +442,7 @@ angular.module('app.services.map', ['app.services.context'])
             }
             // feature.set('id', featureDoc._id);
             // feature.set('rev', featureDoc._rev);
-            // feature.set('auteur', featureDoc.auteur);
+            // feature.set('author', featureDoc.author);
             // feature.set('description', featureDoc.description);
             // feature.set('designation', featureDoc.designation);
             // feature.set('@class', featureDoc['@class']);
