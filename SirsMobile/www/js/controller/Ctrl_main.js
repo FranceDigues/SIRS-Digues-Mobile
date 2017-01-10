@@ -8,6 +8,7 @@ angular.module('app.controllers.main', ['app.services.context'])
         var self = this;
 
         var plugins = Object.keys(sirsDoc.moduleDescriptions);
+        console.log(sirsDoc);
 
         proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
 

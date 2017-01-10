@@ -155,9 +155,9 @@ angular.module('app.services.dao', ['app.services.context'])
 
         var doc = undefined;
 
-
         self.get = function() {
             return doc;
+            console.log(doc);
         };
 
         self.getOrLoad = function() {

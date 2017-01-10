@@ -59,13 +59,11 @@ angular.module('app.controllers.object_edit', [])
 
         var dataProjection = SirsDoc.get().epsgCode;
 
-
         self.gpsAccuracy=0;
         //@hb
         $cordovaGeolocation.getCurrentPosition({}).then(function (position) {
             self.gpsAccuracy = Math.round(position.coords.accuracy);
         });
-
 
         // Navigation
         // -----------
@@ -103,6 +101,7 @@ angular.module('app.controllers.object_edit', [])
 
         // L'objet qui contient les information de l'objet à ajouter à la base de données
         self.doc = objectDoc;
+        console.log(objectDoc);
 
         //************************************************************************
         //Réfere au Tronçon Id
