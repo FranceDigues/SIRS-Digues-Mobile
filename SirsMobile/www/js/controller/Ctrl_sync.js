@@ -1,6 +1,6 @@
 angular.module('app.controllers.sync', ['app.services.context'])
 
-    .controller('SyncController', function SyncController($q, $timeout, DatabaseService, PouchService, MapManager) {
+    .controller('SyncController', function SyncController($q, $timeout, DatabaseService, PouchService, MapManager, featureCache) {
 
         var self = this;
 
@@ -8,6 +8,14 @@ angular.module('app.controllers.sync', ['app.services.context'])
 
         var remoteDB = PouchService.getRemoteDB();
 
+        /*
+         ___ ___ .__.__          .__     __________                    .__  .__
+         /   |   \|__|  |   _____ |__|    \______   \ ____  __ _______  |  | |  |   ____   ____  __ __   ____
+         /    ~    \  |  |  /     \|  |     |    |  _//  _ \|  |  \__  \ |  | |  | _/ __ \ / ___\|  |  \_/ __ \
+         \    Y    /  |  |_|  Y Y  \  |     |    |   (  <_> )  |  // __ \|  |_|  |_\  ___// /_/  >  |  /\  ___/
+         \___|_  /|__|____/__|_|  /__|     |______  /\____/|____/(____  /____/____/\___  >___  /|____/  \___  >
+         \/               \/                \/                  \/               \/_____/             \/
+         */
         var syncViews = [
             'Utilisateur/byLogin',
             'Element/byClassAndLinear'
@@ -69,6 +77,7 @@ angular.module('app.controllers.sync', ['app.services.context'])
 
             }, 1000);
         }
+
 
         function syncError() {
             $timeout(function() {

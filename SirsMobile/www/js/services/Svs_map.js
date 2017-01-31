@@ -352,7 +352,8 @@ angular.module('app.services.map', ['app.services.context'])
                 }
 
             // Try to get the promise of a previous query.
-            var promise = featureCache.get(layerModel.title);
+            // var promise = featureCache.get(layerModel.title);
+                var promise = undefined;
 
             if (angular.isUndefined(promise)) {
 
