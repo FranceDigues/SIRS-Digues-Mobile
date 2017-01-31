@@ -94,11 +94,9 @@ angular.module('app.controllers.main', ['app.services.context'])
             self.gpsAccuracy = Math.round(position.coords.accuracy);
         });
         //@hb
-        // $interval(function () {
-        //     $cordovaGeolocation.getCurrentPosition({}).then(function (position) {
-        //         self.gpsAccuracy = Math.round(position.coords.accuracy);
-        //     });
-        // },60000);
+        $cordovaGeolocation.watchPosition({}).then(function (position) {
+            self.gpsAccuracy = Math.round(position.coords.accuracy);
+        });
 
     //@hb
         self.EditionService = EditionService;
