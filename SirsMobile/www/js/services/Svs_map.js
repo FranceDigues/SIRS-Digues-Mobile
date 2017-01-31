@@ -353,6 +353,7 @@ angular.module('app.services.map', ['app.services.context'])
 
             // Try to get the promise of a previous query.
             var promise = featureCache.get(layerModel.title);
+
             if (angular.isUndefined(promise)) {
 
                 // Try to get the layer features.
@@ -369,7 +370,7 @@ angular.module('app.services.map', ['app.services.context'])
                     });
 
                 // Set and store the promise.
-                featureCache.put(layerModel.title, promise);
+                // featureCache.put(layerModel.title, promise);
             }
 
             // Wait for promise resolution or rejection.

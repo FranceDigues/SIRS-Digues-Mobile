@@ -63,6 +63,10 @@ angular.module('app.controllers.sync', ['app.services.context'])
                 self.status = 2;
                 var layer = MapManager.getEditionLayer();
                 MapManager.redrawEditionModeLayer(layer);
+                // ToDo clear the cache of the backlayers after the synchronisation
+
+
+
             }, 1000);
         }
 

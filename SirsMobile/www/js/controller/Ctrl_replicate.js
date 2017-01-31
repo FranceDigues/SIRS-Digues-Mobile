@@ -17,6 +17,13 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             'TronconDigue/streamLight'
         ]; // TODO → make it configurable ?
 
+        var syncViews = [
+            'Utilisateur/byLogin',
+            'Element/byClassAndLinear',
+            'Document/byPath',
+            'TronconDigue/streamLight'
+        ]; // TODO → make it configurable ?
+
         var designDocs = [
             {
                 _id: '_design/objetsNonClos',
@@ -238,6 +245,89 @@ angular.module('app.controllers.replicate', ['app.services.context'])
         }
         
         function fourthStepComplete() {
+            $timeout(fifthStep, 1000);
+        }
+
+        function fourthStepError(error) {
+            $log.debug(error);
+
+            $ionicPopup.alert({
+                title: 'Erreur',
+                template: 'Une erreur s\'est produite lors de la construction des index.'
+            }).then(backToDatabase);
+        }
+
+        function fifthStep() {
+
+            self.step = 5;
+            self.description = 'Synchronisation avec la base de données distantes...';
+            self.percent = 0;
+            self.completion = '0/' + syncViews.length;
+            self.status = 1;
+
+            var promise = $q.when(); // empty promise for chaining
+
+                angular.forEach(syncViews, function(view, i) {
+                    promise = promise.then(function() {
+                        var deferred = $q.defer(),
+                            options = { live: false, retry: true, filter: '_view', view: view };
+
+                        localDB.sync(remoteDB, options)
+                            .on('complete', function() {
+                                deferred.notify(i + 1);
+                                deferred.resolve();
+                            })
+                            .on('error', function(error) {
+                                deferred.notify(i + 1);
+                                deferred.reject(error);
+                            });
+
+                        return deferred.promise;
+                    });
+                });
+
+            promise.then(fifthStepComplete, fifthStepError, fifthStepProgress);
+
+
+
+
+            /*
+
+             __---___---_________________________________________________________---___---__
+             ===============================================================================
+             ||||                             # HILMI #                                 ||||
+             |---------------------------------------------------------------------------|
+             |___-----___-----___-----___-----___-----___-----___-----___-----___-----___|
+             / _ \===/ _ \   / _ \===/ _ \   / _ \===/ _ \   / _ \===/ _ \   / _ \===/ _ \
+             ( (.\ oOo /.) ) ( (.\ oOo /.) ) ( (.\ oOo /.) ) ( (.\ oOo /.) ) ( (.\ oOo /.) )
+             \__/=====\__/   \__/=====\__/   \__/=====\__/   \__/=====\__/   \__/=====\__/
+                |||||||         |||||||         |||||||         |||||||         |||||||
+                |||||||         |||||||         |||||||         |||||||         |||||||
+                |||||||         |||||||         |||||||         |||||||         |||||||
+                |||||||         |||||||         |||||||         |||||||         |||||||
+                |||||||         |||||||         |||||||         |||||||         |||||||
+                |||||||         |||||||         |||||||         |||||||         |||||||
+                |||||||         |||||||         |||||||         |||||||         |||||||
+                |||||||         |||||||         |||||||         |||||||         |||||||
+                (oOoOo)         (oOoOo)         (oOoOo)         (oOoOo)         (oOoOo)
+                J%%%%%L         J%%%%%L         J%%%%%L         J%%%%%L         J%%%%%L
+                ZZZZZZZZZ      ZZZZZZZZZ       ZZZZZZZZZ       ZZZZZZZZZ       ZZZZZZZZZ
+             ===========================================================================
+             __|_________________________________________________________________________|__
+             _|___________________________________________________________________________|_
+             |_____________________________________________________________________________|
+             _______________________________________________________________________________
+
+*/
+
+        }
+
+        function fifthStepProgress(proceedViews) {
+            self.percent = (proceedViews / syncViews.length) * 100;
+            self.completion = proceedViews + '/' + syncViews.length;
+        }
+
+        function fifthStepComplete() {
             DatabaseService.getActive().replicated = true;
             $timeout(function() {
                 if (AuthService.isNull()) {
@@ -248,12 +338,12 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             }, 1000);
         }
 
-        function fourthStepError(error) {
+        function fifthStepError(error) {
             $log.debug(error);
 
             $ionicPopup.alert({
                 title: 'Erreur',
-                template: 'Une erreur s\'est produite lors de la construction des index.'
+                template: 'Une erreur s\'est produite lors de la synchronisation'
             }).then(backToDatabase);
         }
 
