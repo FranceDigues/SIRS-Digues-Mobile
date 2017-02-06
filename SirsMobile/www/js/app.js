@@ -93,7 +93,7 @@ angular.module('SirsMobile', [
             .otherwise('/database');
     })
 
-    .run(function ($rootScope, $location, $ionicPlatform, $cordovaFile, sContext,$window, $cordovaToast) {
+    .run(function ($rootScope, $location, $ionicPlatform, $cordovaFile, sContext,$window, $cordovaToast, $cordovaGeolocation) {
 
         // Wait for "deviceready" event.
         $ionicPlatform.ready(function () {
@@ -122,32 +122,10 @@ angular.module('SirsMobile', [
                     $cordovaFile.createFile(cordova.file.externalDataDirectory + "documents/", "_keepMtpOpen");
                 });
         });
-
-        //@hb add an Event listener for the online/offline events
-        $rootScope.online = navigator.onLine;
-        $window.addEventListener("offline", function() {
-            $rootScope.$apply(function() {
-                $rootScope.online = false;
-                $cordovaToast
-                    .showLongTop('La connexion est échoué');
-            });
-        }, false);
-
-        $window.addEventListener("online", function() {
-            $rootScope.$apply(function() {
-                $rootScope.online = true;
-                $cordovaToast
-                    .showLongTop('Connexion établie avec succès');
-            });
-        }, false);
-
-
         // Listen some $rootScope events.
         $rootScope.$on('logoutSuccess', function() {
             $location.path('/login');
         });
-
-
     })
 
     .constant('routeResolve', {

@@ -2,13 +2,13 @@ angular.module('app.controllers.main', ['app.services.context'])
 
     .controller('MainController', function MainController($location, $ionicSideMenuDelegate,
                                                           sirsDoc, AuthService, SidePanelService,
-                                                          $scope,$rootScope, $ionicLoading, AppLayersService,
-                                                          $cordovaGeolocation, $interval,EditionService,MapManager) {
+                                                          $scope,$rootScope, $ionicLoading, AppLayersService, $interval,
+                                                          EditionService,MapManager,$cordovaToast,
+                                                          $ionicPlatform, GeolocationService, $window) {
 
         var self = this;
 
         var plugins = Object.keys(sirsDoc.moduleDescriptions);
-        console.log(sirsDoc);
 
         proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
 
@@ -90,15 +90,64 @@ angular.module('app.controllers.main', ['app.services.context'])
         }
 
         self.gpsAccuracy=0;
-        $cordovaGeolocation.getCurrentPosition({}).then(function (position) {
-            self.gpsAccuracy = Math.round(position.coords.accuracy);
-        });
-        //@hb
-        $cordovaGeolocation.watchPosition({}).then(function (position) {
+
+        self.gpsAccuracy = GeolocationService.getLastLocation().coords.accuracy;
+
+        //@hb Watch the gps location
+
+        GeolocationService.trackLocation().then(angular.noop, angular.noop, function (position) {
             self.gpsAccuracy = Math.round(position.coords.accuracy);
         });
 
-    //@hb
+        // Add a handler for cordova event types
+        // $ionicPlatform.on();
+
+        /** Add listener to the pause event
+         * The pause event fires when the native platform puts the application into the background,
+         * typically when the user switches to a different application.
+         */
+
+
+        //@hb add an Event listener for the online/offline events
+
+        var offlineHandler = function() {
+                $rootScope.$apply(function() {
+                    $rootScope.online = false;
+                    $cordovaToast
+                        .showLongTop('La connexion est échoué');
+                });
+            };
+
+        var onlineHandler = function() {
+            $rootScope.$apply(function() {
+                $rootScope.online = true;
+                $cordovaToast
+                    .showLongTop('Connexion établie avec succès');
+            });
+        };
+
+        $rootScope.online = navigator.onLine;
+
+        $window.addEventListener("offline", offlineHandler, false);
+
+        $window.addEventListener("online", onlineHandler, false);
+
+
+        $ionicPlatform.on("pause",function (event) {
+            GeolocationService.stop();
+            $rootScope.online = undefined;
+            $window.removeEventListener("offline", offlineHandler, false);
+            $window.removeEventListener("online", onlineHandler, false);
+        });
+
+        $ionicPlatform.on("resume",function (event) {
+            GeolocationService.start();
+            $rootScope.online = navigator.onLine;
+            $window.addEventListener("offline", offlineHandler, false);
+            $window.addEventListener("online", onlineHandler, false);
+        });
+
+        //@hb
         self.EditionService = EditionService;
 
 
