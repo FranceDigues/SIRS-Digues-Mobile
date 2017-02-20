@@ -4,16 +4,15 @@ angular.module('app.controllers.login', ['app.services.context'])
 
         var self = this;
 
-
         self.username = undefined;
 
         self.password = undefined;
 
-
         self.login = function() {
             AuthService.login(self.username, self.password).then(
                 function() {
-                    $location.path('/main');
+                    // $location.path('/main');
+                    $location.path('/first_sync');
                 },
                 function() {
                     $ionicPopup.alert({

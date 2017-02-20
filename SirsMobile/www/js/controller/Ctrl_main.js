@@ -91,8 +91,6 @@ angular.module('app.controllers.main', ['app.services.context'])
 
         self.gpsAccuracy=0;
 
-        self.gpsAccuracy = GeolocationService.getLastLocation().coords.accuracy;
-
         //@hb Watch the gps location
 
         GeolocationService.trackLocation().then(angular.noop, angular.noop, function (position) {

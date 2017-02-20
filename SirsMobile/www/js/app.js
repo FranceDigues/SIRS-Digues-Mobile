@@ -61,6 +61,11 @@ angular.module('SirsMobile', [
                 controller: 'SyncController as c',
                 resolve: routeResolve['sync']
             })
+            .when('/first_sync', {
+                templateUrl: 'templates/firstSync.html',
+                controller: 'FirstSyncController as c',
+                resolve: routeResolve['sync']
+            })
             .when('/forgot_password', {
                 templateUrl: 'templates/forgot_password.html',
                 resolve: routeResolve['forgotPassword']

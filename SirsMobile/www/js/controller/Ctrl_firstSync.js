@@ -1,6 +1,7 @@
-angular.module('app.controllers.sync', ['app.services.context'])
+angular.module('app.controllers.first_sync', ['app.services.context'])
 
-    .controller('SyncController', function SyncController($q, $timeout, DatabaseService, PouchService, MapManager, featureCache) {
+    .controller('FirstSyncController', function SyncController($q, $timeout, DatabaseService, PouchService,
+                                                               MapManager, featureCache, $location) {
 
         var self = this;
 
@@ -21,12 +22,11 @@ angular.module('app.controllers.sync', ['app.services.context'])
             'Element/byClassAndLinear'
         ]; // TODO → make it configurable ?
 
-
         self.db = DatabaseService.getActive();
 
         self.status = 0;
 
-        self.launch = sync;
+        sync.call();
 
         function sync() {
             self.percent = 0;
@@ -68,12 +68,7 @@ angular.module('app.controllers.sync', ['app.services.context'])
             $timeout(function() {
                 self.db.lastSync = new Date().getTime(); // store sync timestamp
                 self.status = 2;
-                var layer = MapManager.getEditionLayer();
-                MapManager.redrawEditionModeLayer(layer);
-                // ToDo clear the cache of the backlayers after the synchronisation
-
-
-
+                $location.path('/main');
             }, 1000);
         }
 

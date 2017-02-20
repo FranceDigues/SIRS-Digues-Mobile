@@ -18,10 +18,8 @@ angular.module('app.controllers.replicate', ['app.services.context'])
         ]; // TODO → make it configurable ?
 
         var syncViews = [
-            'Utilisateur/byLogin',
-            'Element/byClassAndLinear',
-            'Document/byPath',
-            'TronconDigue/streamLight'
+            // 'Utilisateur/byLogin',
+            // 'Element/byClassAndLinear'
         ]; // TODO → make it configurable ?
 
         var designDocs = [
@@ -270,7 +268,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 angular.forEach(syncViews, function(view, i) {
                     promise = promise.then(function() {
                         var deferred = $q.defer(),
-                            options = { live: false, retry: true, filter: '_view', view: view };
+                            options = { live: false, retry: false, filter: '_view', view: view };
 
                         localDB.sync(remoteDB, options)
                             .on('complete', function() {

@@ -173,8 +173,9 @@ angular.module('app.services.map', ['app.services.context'])
         };
 
         self.redrawEditionModeLayer = function (layer) {
+            // Clear the layer source from the features
+            layer.getSource().getSource().clear();
             editionLayer = layer;
-            console.log(editionLayer.get('arch_objects'));
             setEditionLayerFeatures(editionLayer);
         };
 
@@ -423,8 +424,9 @@ angular.module('app.services.map', ['app.services.context'])
                 feature.set('designation', featureDoc.designation);
                 feature.set('@class', featureDoc['@class']);
             } else if(self.getEditionLayer().get('arch_objects')===false){
-                console.log("affiche les archevés");
+                console.log("affiche les non archevés");
                 if(!featureDoc.date_fin || featureDoc.date_fin === ""){
+                    // Show the feature in this case
                     feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
                     feature.set('id', featureDoc._id);
                     feature.set('rev', featureDoc._rev);
@@ -432,8 +434,8 @@ angular.module('app.services.map', ['app.services.context'])
                     feature.set('description', featureDoc.description);
                     feature.set('designation', featureDoc.designation);
                     feature.set('@class', featureDoc['@class']);
-                }
-                else {
+                } else {
+                    // Not show this feature in this case
                     feature.set('id', featureDoc._id);
                     feature.setStyle(new ol.style.Style({
                         fill : new ol.style.Fill({
