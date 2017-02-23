@@ -101,7 +101,6 @@ angular.module('app.controllers.object_edit', [])
 
         // L'objet qui contient les information de l'objet à ajouter à la base de données
         self.doc = objectDoc;
-        console.log(objectDoc);
 
         //************************************************************************
         //Réfere au Tronçon Id
@@ -202,8 +201,6 @@ angular.module('app.controllers.object_edit', [])
                 objectDoc["sourceId"] = "RefSource:4";
             }
 
-            console.log(objectDoc);
-
             EditionService.saveObject(objectDoc).then(function() {
                 $location.path('/main');
             });
@@ -268,7 +265,6 @@ angular.module('app.controllers.object_edit', [])
             $ionicLoading.show({ template: 'En attente de localisation...' });
             return locationPromise.then(function handleLocation(location) {
                 self.handlePos(location.coords);
-                console.log(location);
                 $ionicLoading.hide();
             });
         }

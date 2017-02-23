@@ -24,6 +24,8 @@ angular.module('app.controllers.menu', [])
 
         $rootScope.editionModeFlag = self.sEdition.isEnabled();
 
+        $rootScope.archiveObjectsFlag = false;
+
         self.setBabordView = SidePanelService.setBabordView;
 
         function centerOnLocation(location) {
@@ -35,17 +37,10 @@ angular.module('app.controllers.menu', [])
 
         //@hb
         self.toggleArchiveObjects = function () {
-            var layer = MapManager.getEditionLayer();
-            if(layer.getVisible()===true){
-                layer.set('arch_objects',!layer.get('arch_objects'));
-                console.log(layer.get('arch_objects'));
-                MapManager.redrawEditionModeLayer(layer);
-            }
+            $rootScope.archiveObjectsFlag = !$rootScope.archiveObjectsFlag;
+            // Synchronisation des apps layers
+            MapManager.syncAllAppLayer();
+
         };
-
-
-
-
-
 
     });

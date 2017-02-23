@@ -30,9 +30,6 @@ angular.module('app.controllers.object_selection', [])
         };
 
         self.openDisorderDetails = function(feature) {
-            console.log(feature);
-            console.log(self.selection);
-            console.log(self.hbfeaturesCollection);
             feature.set('visited', true);
             selection.active = feature;
             LocalDocument.get(feature.get('id')).then(onGetDocumentSuccess, onGetDocumentError);
@@ -40,7 +37,6 @@ angular.module('app.controllers.object_selection', [])
 
         function onGetDocumentSuccess(doc) {
             sContext.selectedObject = doc;
-            console.log(doc);
             SidePanelService.setTribordView('object_details');
         }
 

@@ -5,16 +5,9 @@ angular.module('app.controllers.object_details', [])
 
         var self = this;
 
-        //@hb
-        console.log(selection);
-
-
         self.activeTab = 'description';
 
         self.document = sContext.selectedObject;
-
-        //@hb
-        console.log(self.document);
 
         self.objectType = self.document['@class'].substring(
             self.document['@class'].lastIndexOf('.') + 1);

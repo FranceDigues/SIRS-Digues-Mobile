@@ -22,7 +22,6 @@ angular.module('app.services.map', ['app.services.context'])
 
         var self = this;
 
-
         // OpenLayers objects
         // ----------
 
@@ -138,6 +137,27 @@ angular.module('app.services.map', ['app.services.context'])
 
         };
 
+        //@hb
+        self.syncAllAppLayer = function() {
+            var layers = appLayers.getLayers();
+            angular.forEach(layers,function (layer) {
+                var layerModel = layer.get('model');
+                var olLayer = getAppLayerInstance(layerModel);
+                // Update OL layer.
+                olLayer.setVisible(layerModel.visible);
+
+                // Load data if necessary.
+                olLayer.getSource().getSource().clear();
+                if (layerModel.visible === true) {
+                    $rootScope.loadingflag = true;
+                    $window.setTimeout(function(){
+                        setAppLayerFeatures(olLayer);
+                    },1000);
+                }
+                
+            });
+        };
+
         // @hb Add label to the layer features
         self.addLabelFeatureLayer = function(layerModel) {
             var olLayer = getAppLayerInstance(layerModel);
@@ -149,16 +169,13 @@ angular.module('app.services.map', ['app.services.context'])
             setAppLayerFeatures(olLayer);
         };
 
-
         // @hb relod the ol map after make same change
         self.reloadLayer = function(layerModel) {
-
             var olLayer = getAppLayerInstance(layerModel);
             // Load data if necessary.
             olLayer.getSource().getSource().clear();
             setAppLayerFeatures(olLayer);
         };
-
 
         // TODO → find a way to do this through event
         self.moveAppLayer = function(from, to) {
@@ -178,7 +195,6 @@ angular.module('app.services.map', ['app.services.context'])
             editionLayer = layer;
             setEditionLayerFeatures(editionLayer);
         };
-
 
         // Private methods
         // ----------
@@ -309,7 +325,8 @@ angular.module('app.services.map', ['app.services.context'])
                 designation: featureDoc.designation,
                 title: featureDoc.libelle,
                 projGeometry: projGeometry,
-                realGeometry: realGeometry
+                realGeometry: realGeometry,
+                archive : featureDoc.date_fin ? true : false
             };
         }
 
@@ -319,23 +336,42 @@ angular.module('app.services.map', ['app.services.context'])
             var features = [];
             // get each feature from the featureModel
             angular.forEach(featureModels, function(featureModel) {
-
                 if ((layerModel.realPosition && featureModel.realGeometry) || (!layerModel.realPosition && featureModel.projGeometry)) {
-                    // Create the feature object
-                    var feature = new ol.Feature();
-                    if (layerModel.realPosition) {
-                        feature.setGeometry(featureModel.realGeometry);
-                        feature.setStyle(RealPositionStyle(layerModel.color, featureModel.realGeometry.getType(),featureModel,layerModel));
+                    if($rootScope.archiveObjectsFlag){
+                        // Show all the objects
+                        var feature = new ol.Feature();
+                        if (layerModel.realPosition) {
+                            feature.setGeometry(featureModel.realGeometry);
+                            feature.setStyle(RealPositionStyle(layerModel.color, featureModel.realGeometry.getType(),featureModel,layerModel));
+                        } else {
+                            feature.setGeometry(featureModel.projGeometry);
+                            feature.setStyle(DefaultStyle(layerModel.color, featureModel.projGeometry.getType(),featureModel,layerModel));
+                        }
+                        feature.set('id', featureModel.id);
+                        feature.set('categories', layerModel.categories);
+                        feature.set('rev', featureModel.rev);
+                        feature.set('designation', featureModel.designation);
+                        feature.set('title', featureModel.libelle);
+                        features.push(feature);
                     } else {
-                        feature.setGeometry(featureModel.projGeometry);
-                        feature.setStyle(DefaultStyle(layerModel.color, featureModel.projGeometry.getType(),featureModel,layerModel));
+                        //Show only not archived objects
+                        if(!featureModel.archive){
+                            var feature = new ol.Feature();
+                            if (layerModel.realPosition) {
+                                feature.setGeometry(featureModel.realGeometry);
+                                feature.setStyle(RealPositionStyle(layerModel.color, featureModel.realGeometry.getType(),featureModel,layerModel));
+                            } else {
+                                feature.setGeometry(featureModel.projGeometry);
+                                feature.setStyle(DefaultStyle(layerModel.color, featureModel.projGeometry.getType(),featureModel,layerModel));
+                            }
+                            feature.set('id', featureModel.id);
+                            feature.set('categories', layerModel.categories);
+                            feature.set('rev', featureModel.rev);
+                            feature.set('designation', featureModel.designation);
+                            feature.set('title', featureModel.libelle);
+                            features.push(feature);
+                        }
                     }
-                    feature.set('id', featureModel.id);
-                    feature.set('categories', layerModel.categories);
-                    feature.set('rev', featureModel.rev);
-                    feature.set('designation', featureModel.designation);
-                    feature.set('title', featureModel.libelle);
-                    features.push(feature);
                 }
             });
             return features;
@@ -349,7 +385,6 @@ angular.module('app.services.map', ['app.services.context'])
                 }
                 else {
                     var olSource = olLayer.getSource().getSource();
-                    console.log(olSource);
                 }
 
             // Try to get the promise of a previous query.
@@ -411,11 +446,8 @@ angular.module('app.services.map', ['app.services.context'])
                 ]);
             }
             geometry.transform(SirsDoc.get().epsgCode, 'EPSG:3857');
-
             // Create feature.
             var feature = new ol.Feature({ geometry: geometry });
-            if(self.getEditionLayer().get('arch_objects')===true){
-                console.log("affiche tous");
                 feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
                 feature.set('id', featureDoc._id);
                 feature.set('rev', featureDoc._rev);
@@ -423,34 +455,7 @@ angular.module('app.services.map', ['app.services.context'])
                 feature.set('description', featureDoc.description);
                 feature.set('designation', featureDoc.designation);
                 feature.set('@class', featureDoc['@class']);
-            } else if(self.getEditionLayer().get('arch_objects')===false){
-                console.log("affiche les non archevés");
-                if(!featureDoc.date_fin || featureDoc.date_fin === ""){
-                    // Show the feature in this case
-                    feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
-                    feature.set('id', featureDoc._id);
-                    feature.set('rev', featureDoc._rev);
-                    feature.set('author', featureDoc.author);
-                    feature.set('description', featureDoc.description);
-                    feature.set('designation', featureDoc.designation);
-                    feature.set('@class', featureDoc['@class']);
-                } else {
-                    // Not show this feature in this case
-                    feature.set('id', featureDoc._id);
-                    feature.setStyle(new ol.style.Style({
-                        fill : new ol.style.Fill({
-                            color : [0, 0, 255, 0]
-                        })
-                    }));
-                }
-            }
-            // feature.set('id', featureDoc._id);
-            // feature.set('rev', featureDoc._rev);
-            // feature.set('author', featureDoc.author);
-            // feature.set('description', featureDoc.description);
-            // feature.set('designation', featureDoc.designation);
-            // feature.set('@class', featureDoc['@class']);
-            console.log(feature);
+
             return feature;
         }
         // Create the features of the edition layer that contain the new objects
@@ -468,7 +473,6 @@ angular.module('app.services.map', ['app.services.context'])
                 // Display only the closed objects
             EditionService.getClosedObjects().then(
                 function onSuccess(results) {
-                    console.log(results);
                     olSource.clear();
                     olSource.addFeatures(createEditionFeatureInstances(results));
                 },
@@ -507,7 +511,6 @@ angular.module('app.services.map', ['app.services.context'])
                 layer.getSource().changed();
             });
         }
-
 
         // Event listeners
         // ----------

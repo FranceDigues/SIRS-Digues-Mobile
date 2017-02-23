@@ -58,8 +58,6 @@ angular.module('app.controllers.note_edit', [])
 
                     window.canvas2ImagePlugin.saveImageDataToLibrary(
                         function(msg){
-                            console.log(msg);
-
                             window.resolveLocalFileSystemURL("file://"+msg, me.success, me.error);
                             me.exit();
                         },
