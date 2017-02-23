@@ -9,8 +9,8 @@ angular.module('app.controllers.sync', ['app.services.context'])
         var remoteDB = PouchService.getRemoteDB();
 
         /*
-         ___ ___ .__.__          .__     __________                    .__  .__
-         /   |   \|__|  |   _____ |__|    \______   \ ____  __ _______  |  | |  |   ____   ____  __ __   ____
+           ___ ___ .__.__          .__     __________                    .__  .__
+          /   |   \|__|  |   _____ |__|    \______   \ ____  __ _______  |  | |  |   ____   ____  __ __   ____
          /    ~    \  |  |  /     \|  |     |    |  _//  _ \|  |  \__  \ |  | |  | _/ __ \ / ___\|  |  \_/ __ \
          \    Y    /  |  |_|  Y Y  \  |     |    |   (  <_> )  |  // __ \|  |_|  |_\  ___// /_/  >  |  /\  ___/
          \___|_  /|__|____/__|_|  /__|     |______  /\____/|____/(____  /____/____/\___  >___  /|____/  \___  >
@@ -68,11 +68,6 @@ angular.module('app.controllers.sync', ['app.services.context'])
             $timeout(function() {
                 self.db.lastSync = new Date().getTime(); // store sync timestamp
                 self.status = 2;
-                var layer = MapManager.getEditionLayer();
-                MapManager.redrawEditionModeLayer(layer);
-                // ToDo clear the cache of the backlayers after the synchronisation
-
-
 
             }, 1000);
         }
