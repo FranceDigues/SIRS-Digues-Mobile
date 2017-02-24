@@ -145,6 +145,14 @@ angular.module('app.controllers.main', ['app.services.context'])
             $window.addEventListener("online", onlineHandler, false);
         });
 
+        //Handle the Hardware BackButton
+        $ionicPlatform.onHardwareBackButton(function(event) {
+            GeolocationService.stop();
+            $rootScope.online = undefined;
+            $window.removeEventListener("offline", offlineHandler, false);
+            $window.removeEventListener("online", onlineHandler, false);
+        });
+
         //@hb
         self.EditionService = EditionService;
 
