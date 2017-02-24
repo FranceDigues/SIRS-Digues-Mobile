@@ -38,7 +38,8 @@ angular.module('app.controllers.sync', ['app.services.context'])
             angular.forEach(syncViews, function(view, i) {
                 promise = promise.then(function() {
                     var deferred = $q.defer(),
-                        options = { live: false, retry: true, filter: '_view', view: view };
+                        // options = { live: false, retry: true, filter: '_view', view: view };
+                    options = { live: false, retry: true, filter: '_view', view: view, batch_size : 10 };
 
                     self.view = view;
 
