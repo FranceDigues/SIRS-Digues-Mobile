@@ -124,7 +124,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
             var deferred = $q.defer();
 
-            remoteDB.replicate.to(localDB, { live: false, retry: true, batch_size : 10 })
+            remoteDB.replicate.to(localDB, { live: false, retry: true, batch_size : 10000 })
                 .on('change', function(result) {
                     deferred.notify({
                         repCount: Math.min(result.last_seq, docCount),
