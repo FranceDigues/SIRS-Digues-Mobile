@@ -18,8 +18,8 @@ angular.module('app.controllers.first_sync', ['app.services.context'])
          \/               \/                \/                  \/               \/_____/             \/
          */
         var syncViews = [
-            'Utilisateur/byLogin',
-            'Element/byClassAndLinear'
+            // 'Utilisateur/byLogin',
+            // 'Element/byClassAndLinear'
         ]; // TODO → make it configurable ?
 
         self.db = DatabaseService.getActive();
