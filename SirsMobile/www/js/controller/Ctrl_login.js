@@ -10,30 +10,25 @@ angular.module('app.controllers.login', ['app.services.context','app.services.da
 
         self.login = function() {
 
-            var db =
+            // PouchService.getLocalDB().query('Utilisateur/byLogin', { include_docs: true }).then(function (result) {
+            //     console.log(result);
+            // }).catch(function (err) {
+            //     console.log(err);
+            // });
+            //
+            // console.log("Username "+self.username);
+            // console.log("password "+self.password);
 
-
-                new pouchdb("meetups");
-            db.allDocs({
-                include_docs: true,
-                attachments: true
-            }).then(function (result) {
-                console.log(result);
-                res.json({"users": result.rows});
-            }).catch(function (err) {
-                console.log(err);
-            });
-
-            // AuthService.login(self.username, self.password).then(
-            //     function() {
-            //         // $location.path('/main');
-            //         $location.path('/first_sync');
-            //     },
-            //     function() {
-            //         $ionicPopup.alert({
-            //             title: 'Erreur',
-            //             template: 'Impossible de s\'authentifier. Veuillez vérifier vos informations de connexion.'
-            //         });
-            //     });
+            AuthService.login(self.username, self.password).then(
+                function() {
+                    // $location.path('/main');
+                    $location.path('/first_sync');
+                },
+                function() {
+                    $ionicPopup.alert({
+                        title: 'Erreur',
+                        template: 'Impossible de s\'authentifier. Veuillez vérifier vos informations de connexion.'
+                    });
+                });
         };
     });

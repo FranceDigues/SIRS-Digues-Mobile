@@ -329,7 +329,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             DatabaseService.getActive().replicated = true;
             $timeout(function() {
                 if (AuthService.isNull()) {
-                    $location.path('/main');
+                    $location.path('/login');
                 } else {
                     $location.path('/main');
                 }

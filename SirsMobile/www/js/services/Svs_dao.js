@@ -42,7 +42,6 @@ angular.module('app.services.dao', ['app.services.context'])
             }
             if (!localDB && activeDb) {
                 localDB = new PouchDB(activeDb.name, {adapter: 'websql',location:'default'});
-                window.a = localDB;
             }
             return localDB;
         };
@@ -77,6 +76,8 @@ angular.module('app.services.dao', ['app.services.context'])
 
             PouchService.getLocalDB().query(fun, options)
                 .then(function(result) {
+                    console.log("res ");
+                    console.log(result);
                     if (result.rows.length === 1) {
                         deferred.resolve(result.rows[0]);
                     } else {
