@@ -91,6 +91,29 @@ angular.module('app.services.dao', ['app.services.context'])
             return deferred.promise;
         };
 
+        self.queryLogin = function(fun, options,key) {
+            var deferred = $q.defer();
+
+            PouchService.getLocalDB().query(fun, options)
+                .then(function(result) {
+                    if (result.rows.length > 0) {
+                        for(var t=0; t < result.rows.length; t++){
+                            if(result.rows[t].key === key){
+                                deferred.resolve(result.rows[t])}
+                        }
+                        // deferred.resolve(result.rows[0]);
+                        deferred.reject();
+                    } else {
+                        deferred.reject();
+                    }
+                })
+                .catch(function(error) {
+                    deferred.reject(error);
+                });
+
+            return deferred.promise;
+        };
+
         self.query = function(fun, options) {
             var deferred = $q.defer();
 

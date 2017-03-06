@@ -1,10 +1,10 @@
-angular.module('app.controllers.main', ['app.services.context'])
+angular.module('app.controllers.main', ['app.services.context','app.services.dao'])
 
     .controller('MainController', function MainController($location, $ionicSideMenuDelegate,
                                                           sirsDoc, AuthService, SidePanelService,
                                                           $scope,$rootScope, $ionicLoading, AppLayersService, $interval,
                                                           EditionService,MapManager,$cordovaToast,
-                                                          $ionicPlatform, GeolocationService, $window) {
+                                                          $ionicPlatform, GeolocationService, $window,PouchService) {
 
         var self = this;
 
@@ -155,6 +155,13 @@ angular.module('app.controllers.main', ['app.services.context'])
 
         //@hb
         self.EditionService = EditionService;
+
+        //@hb
+        PouchService.getLocalDB().query('Utilisateur/byLogin', { include_docs: true }).then(function (result) {
+            console.log(result);
+        }).catch(function (err) {
+            console.log(err);
+        });
 
 
     });
