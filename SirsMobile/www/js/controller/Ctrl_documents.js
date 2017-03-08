@@ -24,10 +24,16 @@ angular.module('app.controllers.documents', [])
                     shortPath = node._entry.fullPath.substring(prefix.length);
 
                 return LocalDocument.queryOne('Document/byPath', { key: shortPath, include_docs: false }).then(function(doc) {
+                        console.log(doc);
+                    //   TODO DoSomthing Hilmi
+                    if (true){
                     self.fileDoc = angular.extend({
                         libelle: node._entry.name,
                         description: 'Pas de description.'
                     }, doc);
+                }
+
+
                 });
             }
         };

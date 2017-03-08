@@ -154,16 +154,34 @@ angular.module('SirsMobile', [
             orientationsList : function (LocalDocument) {
                 //@hb
                 return LocalDocument.query('Element/byClassAndLinear', {
-                    startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
-                    endkey: ['fr.sirs.core.model.RefOrientationPhoto',{}]
-                });
+                    // startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
+                    // endkey: ['fr.sirs.core.model.RefOrientationPhoto',{}]
+                }).then(function(results) {
+                        console.log(results);
+                        var matches = [];
+                        results.forEach(function(elt) {
+                            if (elt.key.indexOf('fr.sirs.core.model.RefOrientationPhoto') !== -1) {
+                                matches.push(elt);
+                            }
+                        });
+                        return matches;
+                    });
 
             },
             cotesList: function (LocalDocument) {
                 //@hb
                 return LocalDocument.query('Element/byClassAndLinear', {
-                    startkey: ['fr.sirs.core.model.RefCote'],
-                    endkey: ['fr.sirs.core.model.RefCote',{}]
+                    // startkey: ['fr.sirs.core.model.RefCote'],
+                    // endkey: ['fr.sirs.core.model.RefCote',{}]
+                }).then(function(results) {
+                    console.log(results);
+                    var matches = [];
+                    results.forEach(function(elt) {
+                        if (elt.key.indexOf('fr.sirs.core.model.RefCote') !== -1) {
+                            matches.push(elt);
+                        }
+                    });
+                    return matches;
                 });
             },
             listTroncons: function (LocalDocument) {

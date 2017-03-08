@@ -157,11 +157,34 @@ angular.module('app.controllers.main', ['app.services.context','app.services.dao
         self.EditionService = EditionService;
 
         //@hb
-        PouchService.getLocalDB().query('Utilisateur/byLogin', { include_docs: true }).then(function (result) {
+        window.hb = PouchService.getLocalDB();
+        var options = { key : 'jordan', stale: 'update_after' , descending: true, include_docs: true};
+        PouchService.getLocalDB().query('Utilisateur/byLogin', options).then(function (result) {
             console.log(result);
         }).catch(function (err) {
             console.log(err);
         });
+
+        // PouchService.getLocalDB().allDocs({keys : ['fr.sirs.core.model.BorneDigue']}).then(function (result) {
+        //     console.log(result);
+        // }).catch(function (err) {
+        //     console.log(err);
+        // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     });
