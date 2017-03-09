@@ -403,23 +403,12 @@ angular.module('app.services.map', ['app.services.context'])
                 // })
 
                 promise = LocalDocument.query('Element/byClassAndLinear', {
+                    startkey: [layerModel.filterValue],
+                    endkey: [layerModel.filterValue, {}],
                     include_docs: true
                 }).then(
                     function(results) {
-                        // console.log(results);
-                        var matches = [];
-                        results.forEach(function(elt) {
-                                if (elt.key.indexOf(layerModel.filterValue) !== -1) {
-                                    matches.push(elt);
-                                }});
-                        // var res = results.filter(function(elt){
-                        //     if (elt.key.indexOf(layerModel.filterValue) !== -1){
-                        //     return true;
-                        // } else {return false;}
-                        // });
-                        // console.log(res);
-                        // return results.map(createAppFeatureModel);
-                        return matches.map(createAppFeatureModel);
+                        return results.map(createAppFeatureModel);
                     },
                     function(error) {
                         // TODO → handle error

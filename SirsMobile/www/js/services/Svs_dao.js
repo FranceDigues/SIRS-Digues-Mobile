@@ -31,7 +31,9 @@ angular.module('app.services.dao', ['app.services.context'])
                 throw new Error('No active database.');
             }
             if (!localDB && activeDb) {
-                localDB = new PouchDB(activeDb.name,{adapter: 'websql', location:'default'});
+                localDB = new PouchDB(activeDb.name,{adapter: 'cordova-sqlite',
+                    iosDatabaseLocation: 'Library',
+                    androidDatabaseImplementation: 2});
             }
             return localDB;
         };
@@ -41,7 +43,9 @@ angular.module('app.services.dao', ['app.services.context'])
                 throw new Error('No active database or active database is not replicated yet.');
             }
             if (!localDB && activeDb) {
-                localDB = new PouchDB(activeDb.name, {adapter: 'websql',location:'default'});
+                localDB = new PouchDB(activeDb.name, {adapter: 'cordova-sqlite',
+                    iosDatabaseLocation: 'Library',
+                    androidDatabaseImplementation: 2});
             }
             return localDB;
         };
@@ -76,33 +80,8 @@ angular.module('app.services.dao', ['app.services.context'])
 
             PouchService.getLocalDB().query(fun, options)
                 .then(function(result) {
-                    console.log("res ");
-                    console.log(result);
                     if (result.rows.length === 1) {
                         deferred.resolve(result.rows[0]);
-                    } else {
-                        deferred.reject();
-                    }
-                })
-                .catch(function(error) {
-                    deferred.reject(error);
-                });
-
-            return deferred.promise;
-        };
-
-        self.queryLogin = function(fun, options,key) {
-            var deferred = $q.defer();
-
-            PouchService.getLocalDB().query(fun, options)
-                .then(function(result) {
-                    if (result.rows.length > 0) {
-                        for(var t=0; t < result.rows.length; t++){
-                            if(result.rows[t].key === key){
-                                deferred.resolve(result.rows[t])}
-                        }
-                        // deferred.resolve(result.rows[0]);
-                        deferred.reject();
                     } else {
                         deferred.reject();
                     }

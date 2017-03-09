@@ -309,7 +309,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
 
             $rootScope.$broadcast('loginStart', login);
 
-            LocalDocument.queryLogin('Utilisateur/byLogin', { include_docs: true },login).then(
+            LocalDocument.queryOne('Utilisateur/byLogin', { key: login, include_docs: true }).then(
                 function onGetUserSuccess(result) {
                     if (result.doc.password === md5.createHash(password).toUpperCase()) {
                         context.authUser = result.doc;
