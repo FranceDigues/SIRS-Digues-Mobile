@@ -9,16 +9,6 @@ angular.module('app.controllers.login', ['app.services.context','app.services.da
         self.password = undefined;
 
         self.login = function() {
-
-            // PouchService.getLocalDB().query('Utilisateur/byLogin', { include_docs: true }).then(function (result) {
-            //     console.log(result);
-            // }).catch(function (err) {
-            //     console.log(err);
-            // });
-            //
-            // console.log("Username "+self.username);
-            // console.log("password "+self.password);
-
             AuthService.login(self.username, self.password).then(
                 function() {
                     // $location.path('/main');
