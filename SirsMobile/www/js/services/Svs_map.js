@@ -388,19 +388,9 @@ angular.module('app.services.map', ['app.services.context'])
                 }
 
             // Try to get the promise of a previous query.
-            // var promise = featureCache.get(layerModel.title);
-                var promise = undefined;
+            var promise = featureCache.get(layerModel.title);
 
             if (angular.isUndefined(promise)) {
-
-                // console.log(layerModel.filterValue);
-                // Try to get the layer features.
-
-                // promise = LocalDocument.query('Element/byClassAndLinear', {
-                //     startkey: [layerModel.filterValue],
-                //     endkey: [layerModel.filterValue, {}],
-                //     include_docs: true
-                // })
 
                 promise = LocalDocument.query('Element/byClassAndLinear', {
                     startkey: [layerModel.filterValue],
@@ -408,7 +398,7 @@ angular.module('app.services.map', ['app.services.context'])
                     include_docs: true
                 }).then(
                     function(results) {
-                        console.log(results);
+                        // console.log(results);
                         return results.map(createAppFeatureModel);
                     },
                     function(error) {
@@ -416,7 +406,7 @@ angular.module('app.services.map', ['app.services.context'])
                     });
 
                 // Set and store the promise.
-                // featureCache.put(layerModel.title, promise);
+                featureCache.put(layerModel.title, promise);
             }
 
             // Wait for promise resolution or rejection.
