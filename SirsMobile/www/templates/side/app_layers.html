@@ -42,6 +42,10 @@
                 <ion-option-button class="button" on-tap="c.openColorModal(layer)">
                     <i class="icon ion-paintbrush"></i>
                 </ion-option-button>
+                <!--@hb add the button of Force refresh -->
+                <ion-option-button class="button" on-tap="c.forceRefresh(layer)">
+                    <i class="icon ion-android-refresh"></i>
+                </ion-option-button>
 
                 <ion-reorder-button class="ion-navicon" on-reorder="c.move($fromIndex, $toIndex)"></ion-reorder-button>
 

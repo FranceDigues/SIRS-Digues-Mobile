@@ -2,7 +2,7 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
 
     .controller('AppLayersController', function AppLayersController($scope,
                                                                     $location, AppLayersService,
-                                                                    SidePanelService, MapManager,
+                                                                    SidePanelService, MapManager,featureCache,
                                                                     $ionicModal, $ionicSideMenuDelegate,
                                                                     $rootScope, $timeout,colorsFactory,$filter) {
 
@@ -118,6 +118,18 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
             colorsFactory.selectedElement = angular.element(e.target);
             colorsFactory.selectedElement.addClass('active');
         };
+
+        //@hb Refresh handler for the layer
+        self.forceRefresh = function (layer) {
+            var cache = featureCache.get(layer.title);
+            if(angular.isDefined(cache)){
+                featureCache.remove(layer.title);
+                if(layer.visible){
+                    MapManager.syncAppLayer(layer);
+                }
+            }
+        };
+
 
     })
 
