@@ -408,6 +408,7 @@ angular.module('app.services.map', ['app.services.context'])
                     include_docs: true
                 }).then(
                     function(results) {
+                        console.log(results);
                         return results.map(createAppFeatureModel);
                     },
                     function(error) {

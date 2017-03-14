@@ -157,12 +157,12 @@ angular.module('app.controllers.main', ['app.services.context','app.services.dao
         self.EditionService = EditionService;
 
         //@hb
-        // window.hb = PouchService.getLocalDB();
+        window.hb = PouchService.getLocalDB();
         // var options = { key : 'jordan', stale: 'update_after' , descending: true, include_docs: true};
-        // PouchService.getLocalDB().query('Utilisateur/byLogin', options).then(function (result) {
-        //     console.log(result);
-        // }).catch(function (err) {
-        //     console.log(err);
-        // });
+        PouchService.getLocalDB().query('Element/byClassAndLinear').then(function (result) {
+            console.log(result);
+        }).catch(function (err) {
+            console.log(err);
+        });
 
     });

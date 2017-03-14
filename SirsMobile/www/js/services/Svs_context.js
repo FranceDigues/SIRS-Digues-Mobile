@@ -8,16 +8,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         // Database.
         database: {
             active: 'amanin_db',
-            list: [
-                {
-                    name: 'test_ovh',
-                    url: 'http://51.255.38.183:5984/adidr',
-                    username: 'geouser',
-                    password: 'geopw',
-                    replicated: false,
-                    favorites: []
-                }
-            ]
+            list: []
         },
 
         // Authentication.
