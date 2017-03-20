@@ -76,7 +76,19 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                         }.toString()
                     }
                 }
+            },
+            {
+            _id: '_design/ElementSpecial',
+            views: {
+                'ElementSpecial': {
+                    map: function(doc) {if(doc['@class']) {emit([doc['@class'], doc.linearId], {id: doc._id, rev: doc._rev,
+                        designation: doc.designation, libelle: doc.libelle,
+                        date_fin : doc.date_fin, positionDebut : doc.positionDebut,
+                        positionFin : doc.positionFin,
+                        geometry: doc.geometry })}}.toString()
+                }
             }
+        }
         ]; // TODO → make it configurable ?
 
 

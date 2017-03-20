@@ -300,34 +300,35 @@ angular.module('app.services.map', ['app.services.context'])
             // featureDoc = featureDoc.value || featureDoc;
             featureDoc = featureDoc.doc || featureDoc.value; // depending on "include_docs" option when querying docs
 
-            var dataProjection = SirsDoc.get().epsgCode,
-                projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
+                var dataProjection = SirsDoc.get().epsgCode,
+                    projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
 
-            if (projGeometry instanceof ol.geom.LineString && projGeometry.getCoordinates().length === 2 &&
-                projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
-                projGeometry.getCoordinates()[0][1] === projGeometry.getCoordinates()[1][1]) {
-                projGeometry = new ol.geom.Point(projGeometry.getCoordinates()[0]);
-            }
+                if (projGeometry instanceof ol.geom.LineString && projGeometry.getCoordinates().length === 2 &&
+                    projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
+                    projGeometry.getCoordinates()[0][1] === projGeometry.getCoordinates()[1][1]) {
+                    projGeometry = new ol.geom.Point(projGeometry.getCoordinates()[0]);
+                }
 
-            var realGeometry = featureDoc.positionDebut ?
-                wktFormat.readGeometry(featureDoc.positionDebut).transform(dataProjection, 'EPSG:3857') : undefined;
+                var realGeometry = featureDoc.positionDebut ?
+                    wktFormat.readGeometry(featureDoc.positionDebut).transform(dataProjection, 'EPSG:3857') : undefined;
 
-            if (realGeometry && featureDoc.positionFin && featureDoc.positionFin !== featureDoc.positionDebut) {
-                realGeometry = new ol.geom.LineString([
-                    realGeometry.getFirstCoordinate(),
-                    wktFormat.readGeometry(featureDoc.positionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
-                ]);
-            }
+                if (realGeometry && featureDoc.positionFin && featureDoc.positionFin !== featureDoc.positionDebut) {
+                    realGeometry = new ol.geom.LineString([
+                        realGeometry.getFirstCoordinate(),
+                        wktFormat.readGeometry(featureDoc.positionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
+                    ]);
+                }
 
-            return {
-                id: featureDoc.id || featureDoc._id,
-                rev: featureDoc.rev || featureDoc._rev,
-                designation: featureDoc.designation,
-                title: featureDoc.libelle,
-                projGeometry: projGeometry,
-                realGeometry: realGeometry,
-                archive : featureDoc.date_fin ? true : false
+                return {
+                    id: featureDoc.id || featureDoc._id,
+                    rev: featureDoc.rev || featureDoc._rev,
+                    designation: featureDoc.designation,
+                    title: featureDoc.libelle,
+                    projGeometry: projGeometry,
+                    realGeometry: realGeometry,
+                    archive : featureDoc.date_fin ? true : false
             };
+
         }
 
         // @hb the method to create the features of the layer
@@ -392,13 +393,13 @@ angular.module('app.services.map', ['app.services.context'])
 
             if (angular.isUndefined(promise)) {
 
-                promise = LocalDocument.query('Element/byClassAndLinear', {
+                //@hb : Element/byClassAndLinear before
+                promise = LocalDocument.query('ElementSpecial', {
                     startkey: [layerModel.filterValue],
                     endkey: [layerModel.filterValue, {}],
                     include_docs: true
                 }).then(
                     function(results) {
-                        // console.log(results);
                         return results.map(createAppFeatureModel);
                     },
                     function(error) {
@@ -640,8 +641,6 @@ angular.module('app.services.map', ['app.services.context'])
             var fill = new ol.style.Fill({ color: fillColor });
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
             var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
-
-            // console.log(featureModel);
             if(layerModel){
                 if(layerModel.featLabels){
                     //@hb

@@ -157,12 +157,30 @@ angular.module('app.controllers.main', ['app.services.context','app.services.dao
         self.EditionService = EditionService;
 
         //@hb
-        // window.hb = PouchService.getLocalDB();
-        // var options = { key : 'jordan', stale: 'update_after' , descending: true, include_docs: true};
-        // PouchService.getLocalDB().query('Element/byClassAndLinear').then(function (result) {
-        //     console.log(result);
+        window.hb = PouchService.getLocalDB();
+
+        // var designDoc = {
+        //     _id: '_design/ElementSpecial',
+        //     views: {
+        //         'ElementSpecial': {
+        //             map: function(doc) {if(doc['@class']) {emit([doc['@class'], doc.linearId], {id: doc._id, rev: doc._rev,
+        //                 designation: doc.designation, libelle: doc.libelle,
+        //                 date_fin : doc.date_fin, positionDebut : doc.positionDebut,
+        //                 positionFin : doc.positionFin,
+        //                 geometry: doc.geometry })}}.toString()
+        //         }
+        //     }
+        // };
+        //
+        // PouchService.getLocalDB().put(designDoc).then(function (info) {
+        //     console.log(info);
+        // });
+        //
+        // PouchService.getLocalDB().query('hb2').then(function (results) {
+        //     console.log(results);
         // }).catch(function (err) {
         //     console.log(err);
         // });
+
 
     });
