@@ -14,7 +14,8 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             'Utilisateur/byLogin',
             'Element/byClassAndLinear',
             'Document/byPath',
-            'TronconDigue/streamLight'
+            'TronconDigue/streamLight',
+            'Digue/bySystemeEndiguementId'
         ]; // TODO → make it configurable ?
 
         var syncViews = [
