@@ -1,0 +1,41 @@
+<div id="apptroncons" ng-controller="TronconsChoiceMenu as TMCtrl">
+    <ion-header-bar align-title="center" style="background-color: #0097A7;">
+        <button type="button" style="color: #FFFFFF;"
+                class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="TMCtrl.backToMenu()"></button>
+        <h1 class="title" style="color: #FFFFFF;">Tronçons</h1>
+    </ion-header-bar>
+
+    <ion-content class="has-header has-fab-bottom">
+
+        <ion-view id="tronconChoice">
+            <!--Choix de systéme d'endigument-->
+            <div ng-if="TMCtrl.view === 'SE'" ng-controller="SystemEndigumentController as seCtrl">
+                <!--Circulaire Preloder-->
+                    <!--<div class="preloader-wrapper big active" ng-if="seCtrl.prelod">-->
+                        <!--<div class="spinner-layer spinner-blue-only">-->
+                            <!--<div class="circle-clipper left">-->
+                                <!--<div class="circle"></div>-->
+                            <!--</div><div class="gap-patch">-->
+                        <!--<div class="circle"></div>-->
+                    <!--</div><div class="circle-clipper right">-->
+                    <!--<div class="circle"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+                    <!--La liste de tous les systéme d'endigument dans la base-->
+                    <ion-list>
+                <ion-item ng-repeat="SystemeEndiguement in seCtrl.SystemeEndiguements">
+                    <p ng-click="TMCtrl.changeView('D'); seCtrl.putSE(SystemeEndiguement.id)">{{SystemeEndiguement.id}}</p>
+                </ion-item>
+
+            </ion-list>
+            </div>
+
+            <div ng-if="TMCtrl.view === 'D'" ng-init="seCtrl.getDigues()"></div>
+
+            <!--Choix de troncon-->
+            <div ng-if="TMCtrl.view === 'T'"></div>
+
+        </ion-view>
+    </ion-content>
+</div>
