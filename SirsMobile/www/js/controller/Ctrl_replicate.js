@@ -14,7 +14,12 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             'Utilisateur/byLogin',
             'Element/byClassAndLinear',
             'Document/byPath',
-            'TronconDigue/streamLight'
+            'TronconDigue/streamLight',
+            // Local views
+            'ElementSpecial',
+            'bySEIdHB',
+            'byDigueIdHB'
+
         ]; // TODO → make it configurable ?
 
         var syncViews = [
@@ -106,25 +111,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                     map: function(doc) {if(doc['@class'] && doc.digueId) {emit(doc.digueId,{id : doc._id, libelle : doc.libelle})}}.toString()
                 }
             }
-        },
-            {
-                _id: '_design/Element2Keys',
-                views: {
-                    'Element2Keys': {
-                        map: function (doc) {
-                            if (doc['@class']) {
-                                emit([doc['@class'], doc.linearId], {
-                                    id: doc._id, rev: doc._rev,
-                                    designation: doc.designation, libelle: doc.libelle,
-                                    date_fin: doc.date_fin, positionDebut: doc.positionDebut,
-                                    positionFin: doc.positionFin,
-                                    geometry: doc.geometry
-                                })
-                            }
-                        }.toString()
-                    }
-                }
-            }
+        }
         ]; // TODO → make it configurable ?
 
 
