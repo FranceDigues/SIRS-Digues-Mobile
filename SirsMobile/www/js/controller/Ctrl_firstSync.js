@@ -18,8 +18,8 @@ angular.module('app.controllers.first_sync', ['app.services.context'])
          \/               \/                \/                  \/               \/_____/             \/
          */
         var syncViews = [
-            // 'Utilisateur/byLogin',
-            // 'Element/byClassAndLinear'
+            'Utilisateur/byLogin',
+            'Element/byClassAndLinear'
         ]; // TODO → make it configurable ?
 
         self.db = DatabaseService.getActive();
@@ -35,19 +35,25 @@ angular.module('app.controllers.first_sync', ['app.services.context'])
 
             var promise = $q.when(); // empty promise for chaining
 
-            promise = promise.then(function() {
-                    var deferred = $q.defer();
+            angular.forEach(syncViews, function(view, i) {
+                promise = promise.then(function() {
+                    var deferred = $q.defer(),
+                        options = { live: false, retry: true, filter: '_view' , view: view };
+                    self.view = view;
 
-                    PouchDB.sync(localDB,remoteDB)
+                    PouchDB.sync(localDB,remoteDB, options)
                         .on('complete', function() {
+                            deferred.notify(i + 1);
                             deferred.resolve();
                         })
                         .on('error', function(error) {
+                            deferred.notify(i + 1);
                             deferred.reject(error);
                         });
 
                     return deferred.promise;
                 });
+            });
 
 
             promise.then(syncComplete, syncError, syncProgress);
