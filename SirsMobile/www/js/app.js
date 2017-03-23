@@ -8,6 +8,7 @@ angular.module('SirsMobile', [
     'angular-md5',
     'rzModule',
     'pouchdb',
+    'LocalStorageModule',
     // App modules.
     'app.controllers',
     'app.services',

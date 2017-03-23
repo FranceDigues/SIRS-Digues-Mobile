@@ -2,7 +2,8 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
     .controller('TronconsChoiceMenu',TronconsChoiceMenu)
     .controller('SystemEndigumentController', SystemEndigumentController)
     .controller('DigueController',DigueController)
-    .controller('TronconController',TronconController);
+    .controller('TronconController',TronconController)
+    .factory('AppTronconsService',AppTronconsService);
 
     function TronconsChoiceMenu(SidePanelService) {
         var self = this;
@@ -59,8 +60,8 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
         self.digues = [];
 
         self.getDigues = function (SEID) {
-            if(angular.isDefined(SEID)){
-                PouchService.getLocalDB().query('Digue/bySystemeEndiguementId',{
+            if(SEID === "withoutSystem"){
+                PouchService.getLocalDB().query('bySEIdHB',{
                     key : null
                 }).then(function (results) {
                     $timeout(function () {
@@ -71,21 +72,33 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
                     console.log(err);
                 });
             }
+            else {
+                PouchService.getLocalDB().query('bySEIdHB',{
+                    key : SEID
+                }).then(function (results) {
+                    $timeout(function () {
+                        console.log(results);
+                        self.digues = results.rows;
+                    },100);
+                }).catch(function (err) {
+                    console.log(err);
+                });
+
+            }
 
 
         };
 
-        
     }
     
-    function TronconController($timeout,PouchService) {
+    function TronconController($timeout,PouchService, AppTronconsService, localStorageService) {
         var self = this;
 
         self.troncons = [];
 
         self.getTroncons = function (DID) {
             if(angular.isDefined(DID)){
-                PouchService.getLocalDB().query('Berge/byDigueId',{
+                PouchService.getLocalDB().query('byDigueIdHB',{
                     key : DID
                 }).then(function (results) {
                     $timeout(function () {
@@ -101,18 +114,33 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
         };
 
         self.isActive = function(id) {
-            // return AppLayersService.getFavorites().map(function(item) {
-            //         return item.title;
-            //     }).indexOf(layer.title) !== -1;
-            return false;
+            return AppTronconsService.favorites.map(function(item) {
+                    return item;
+                }).indexOf(id) !== -1;
         };
 
         self.toggleLayer = function(id) {
-            // if (self.isActive(layer)) {
-            //     AppLayersService.removeFavorite(layer);
-            // } else {
-            //     AppLayersService.addFavorite(layer);
-            // }
+            if (self.isActive(id)) {
+                AppTronconsService.favorites.splice(AppTronconsService.favorites.indexOf(id), 1);
+            } else {
+                AppTronconsService.favorites.push(id);
+            }
+
+            console.log(AppTronconsService.favorites);
+            localStorageService.add("AppTronconsFavorities",AppTronconsService.favorites);
+            console.log(localStorageService.get("AppTronconsFavorities"));
+        };
+        
+    }
+    
+    function AppTronconsService(localStorageService) {
+        var init = [];
+        if(localStorageService.get("AppTronconsFavorities") !== null){
+            init = localStorageService.get("AppTronconsFavorities");
+        }
+
+        return {
+            favorites : init
         };
         
     }

@@ -159,24 +159,30 @@ angular.module('app.controllers.main', ['app.services.context','app.services.dao
         //@hb
         window.hb = PouchService.getLocalDB();
 
-        // var designDoc = {
-        //     _id: '_design/ElementSpecial',
+        //
+        // PouchService.getLocalDB().query('bySEId',{
+        //     // key : null
+        // }).then(function (results) {
+        //         console.log(results);
+        // }).catch(function (err) {
+        //     console.log(err);
+        // });
+        //
+        // var ddoc = {
+        //     _id: '_design/riri',
         //     views: {
-        //         'ElementSpecial': {
-        //             map: function(doc) {if(doc['@class']) {emit([doc['@class'], doc.linearId], {id: doc._id, rev: doc._rev,
-        //                 designation: doc.designation, libelle: doc.libelle,
-        //                 date_fin : doc.date_fin, positionDebut : doc.positionDebut,
-        //                 positionFin : doc.positionFin,
-        //                 geometry: doc.geometry })}}.toString()
+        //         'riri': {
+        //             map:  function(doc) {if(doc['@class']=='fr.sirs.core.model.Digue') {emit(doc.systemeEndiguementId,{id : doc._id ,
+        //     libelle : doc.libelle})}}.toString()
         //         }
         //     }
         // };
         //
-        // PouchService.getLocalDB().put(designDoc).then(function (info) {
+        // PouchService.getLocalDB().put(ddoc).then(function (info) {
         //     console.log(info);
         // });
         //
-        // PouchService.getLocalDB().query('hb2').then(function (results) {
+        // PouchService.getLocalDB().query('riri').then(function (results) {
         //     console.log(results);
         // }).catch(function (err) {
         //     console.log(err);

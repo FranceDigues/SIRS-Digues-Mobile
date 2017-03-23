@@ -396,8 +396,8 @@ angular.module('app.services.map', ['app.services.context'])
                 //@hb : Element/byClassAndLinear before
                 promise = LocalDocument.query('ElementSpecial', {
                     startkey: [layerModel.filterValue],
-                    endkey: [layerModel.filterValue, {}],
-                    include_docs: true
+                    endkey: [layerModel.filterValue, {}]
+                    // include_docs: true
                 }).then(
                     function(results) {
                         return results.map(createAppFeatureModel);

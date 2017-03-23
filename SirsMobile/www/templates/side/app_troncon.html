@@ -12,16 +12,22 @@
             <!--Choix de systéme d'endigument-->
             <div ng-if="TMCtrl.view === 'SE'" ng-controller="SystemEndigumentController as seCtrl">
                 <p>Choisir un systéme d'indigument : </p>
-                    <!--La liste de tous les systéme d'endigument dans la base-->
+                        <!--Sans systéme d'endigument-->
+                        <ion-item>
+                            <p ng-click="TMCtrl.changeView('D'); TMCtrl.putSE('withoutSystem')">Sans systéme d'endigument</p>
+                        </ion-item>
+                        <!--La liste de tous les systéme d'endigument dans la base-->
                         <ion-item ng-repeat="SystemeEndiguement in seCtrl.SystemeEndiguements">
-                            <p ng-click="TMCtrl.changeView('D'); TMCtrl.putSE(SystemeEndiguement.id)">{{SystemeEndiguement.id}}</p>
+                            <p ng-click="TMCtrl.changeView('D'); TMCtrl.putSE(SystemeEndiguement.id)">
+                                {{SystemeEndiguement.value.libelle}}</p>
                         </ion-item>
             </div>
             <!--Choix d'un digue-->
             <div ng-if="TMCtrl.view === 'D'" ng-controller="DigueController as DCtrl"  ng-init="DCtrl.getDigues(TMCtrl.SEID)">
-                <!--La liste de tous les digues  de ce systéme d'endigument-->
+
+                    <!--La liste de tous les digues  de ce systéme d'endigument-->
                     <ion-item ng-repeat="digue in DCtrl.digues">
-                        <p ng-click="TMCtrl.changeView('T'); TMCtrl.putD(digue.id)">{{digue.id}}</p>
+                        <p ng-click="TMCtrl.changeView('T'); TMCtrl.putD(digue.id)">{{digue.value.libelle}}</p>
                     </ion-item>
             </div>
 
@@ -29,7 +35,7 @@
             <div ng-if="TMCtrl.view === 'T'" ng-controller="TronconController as TCtrl"  ng-init="TCtrl.getTroncons(TMCtrl.DID)">
                 <!--La liste de tous les tronçons d'un digue-->
                 <ion-checkbox ng-checked="TCtrl.isActive(troncon.id)" ng-click="TCtrl.toggleLayer(troncon.id)" ng-repeat="troncon in TCtrl.troncons">
-                        <p>{{troncon.id}}</p>
+                        <p>{{troncon.value.libelle}}</p>
                 </ion-checkbox>
             </div>
 

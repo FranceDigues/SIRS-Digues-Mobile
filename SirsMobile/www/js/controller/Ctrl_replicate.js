@@ -14,8 +14,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             'Utilisateur/byLogin',
             'Element/byClassAndLinear',
             'Document/byPath',
-            'TronconDigue/streamLight',
-            'Digue/bySystemeEndiguementId'
+            'TronconDigue/streamLight'
         ]; // TODO → make it configurable ?
 
         var syncViews = [
@@ -87,6 +86,24 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                         date_fin : doc.date_fin, positionDebut : doc.positionDebut,
                         positionFin : doc.positionFin,
                         geometry: doc.geometry })}}.toString()
+                }
+            }
+        },
+            {
+            _id: '_design/bySEIdHB',
+            views: {
+                'bySEIdHB': {
+                    map: function(doc) {if(doc['@class']=='fr.sirs.core.model.Digue') {emit(doc.systemeEndiguementId,{id : doc._id ,
+                        libelle : doc.libelle})
+                        }}.toString()
+                }
+            }
+        },
+            {
+            _id: '_design/byDigueIdHB',
+            views: {
+                'byDigueIdHB': {
+                    map: function(doc) {if(doc['@class'] && doc.digueId) {emit(doc.digueId,{id : doc._id, libelle : doc.libelle})}}.toString()
                 }
             }
         }
