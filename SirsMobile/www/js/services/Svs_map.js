@@ -18,7 +18,7 @@ angular.module('app.services.map', ['app.services.context'])
                                                DefaultStyle, RealPositionStyle,
                                                sContext, GeolocationService,
                                                SidePanelService, featureCache,
-                                               currentView, selection, SirsDoc, $window) {
+                                               currentView, selection, SirsDoc, $window, localStorageService) {
 
         var self = this;
 
@@ -393,18 +393,51 @@ angular.module('app.services.map', ['app.services.context'])
 
             if (angular.isUndefined(promise)) {
 
-                //@hb : Element/byClassAndLinear before
-                promise = LocalDocument.query('ElementSpecial', {
-                    startkey: [layerModel.filterValue],
-                    endkey: [layerModel.filterValue, {}]
-                    // include_docs: true
-                }).then(
-                    function(results) {
-                        return results.map(createAppFeatureModel);
-                    },
-                    function(error) {
-                        // TODO → handle error
-                    });
+                if(layerModel.filterValue !== "fr.sirs.core.model.BorneDigue" && layerModel.filterValue !== "fr.sirs.core.model.TronconDigue"){
+                        //Get all the favorites tronçons ids
+                        var favorites = localStorageService.get("AppTronconsFavorities");
+                        var keys = [];
+                        if(favorites !== null){
+                            angular.forEach(favorites,function (key) {
+                                keys.push([layerModel.filterValue,key]);
+                            });
+
+                            promise = LocalDocument.query('ElementSpecial',{
+                                keys :keys}).then(
+                                function(results) {
+                                    return results.map(createAppFeatureModel);
+                                },
+                                function(error) {
+                                    // TODO → handle error
+                                });
+                        } else {
+                            promise = LocalDocument.query('ElementSpecial', {
+                                startkey: [layerModel.filterValue],
+                                endkey: [layerModel.filterValue, {}]
+                                // include_docs: true
+                            }).then(
+                                function(results) {
+                                    return results.map(createAppFeatureModel);
+                                },
+                                function(error) {
+                                    // TODO → handle error
+                                });
+                        }
+                    } else {
+                    //@hb : Element/byClassAndLinear before
+                    promise = LocalDocument.query('ElementSpecial', {
+                        startkey: [layerModel.filterValue],
+                        endkey: [layerModel.filterValue, {}]
+                        // include_docs: true
+                    }).then(
+                        function(results) {
+                            return results.map(createAppFeatureModel);
+                        },
+                        function(error) {
+                            // TODO → handle error
+                        });
+                }
+
 
                 // Set and store the promise.
                 featureCache.put(layerModel.title, promise);

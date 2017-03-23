@@ -156,37 +156,4 @@ angular.module('app.controllers.main', ['app.services.context','app.services.dao
         //@hb
         self.EditionService = EditionService;
 
-        //@hb
-        window.hb = PouchService.getLocalDB();
-
-        //
-        // PouchService.getLocalDB().query('bySEId',{
-        //     // key : null
-        // }).then(function (results) {
-        //         console.log(results);
-        // }).catch(function (err) {
-        //     console.log(err);
-        // });
-        //
-        // var ddoc = {
-        //     _id: '_design/riri',
-        //     views: {
-        //         'riri': {
-        //             map:  function(doc) {if(doc['@class']=='fr.sirs.core.model.Digue') {emit(doc.systemeEndiguementId,{id : doc._id ,
-        //     libelle : doc.libelle})}}.toString()
-        //         }
-        //     }
-        // };
-        //
-        // PouchService.getLocalDB().put(ddoc).then(function (info) {
-        //     console.log(info);
-        // });
-        //
-        // PouchService.getLocalDB().query('riri').then(function (results) {
-        //     console.log(results);
-        // }).catch(function (err) {
-        //     console.log(err);
-        // });
-
-
     });
