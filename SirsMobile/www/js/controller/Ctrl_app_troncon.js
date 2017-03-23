@@ -8,7 +8,13 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
     function TronconsChoiceMenu(SidePanelService) {
         var self = this;
         self.backToMenu = function () {
-            SidePanelService.setBabordView('menu');
+            if(self.view === "T"){
+                self.view = "D";
+            } else if(self.view === "D"){
+                self.view = "SE";
+            } else {
+                SidePanelService.setBabordView('menu');
+            }
         };
 
         self.view = "SE";
