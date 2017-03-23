@@ -5,8 +5,16 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
     .controller('TronconController',TronconController)
     .factory('AppTronconsService',AppTronconsService);
 
-    function TronconsChoiceMenu(SidePanelService) {
+    function TronconsChoiceMenu(SidePanelService, $scope, AppTronconsService) {
         var self = this;
+
+        self.preload = AppTronconsService.preload;
+
+        $scope.$watch(AppTronconsService.preload, function(newVal) {
+            self.preload = newVal;
+        });
+
+
         self.backToMenu = function () {
             if(self.view === "T"){
                 self.view = "D";
@@ -20,6 +28,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
         self.view = "SE";
 
         self.changeView = function (view) {
+            AppTronconsService.preload = true;
             self.view = view;
         };
 
@@ -37,7 +46,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
 
     }
 
-    function SystemEndigumentController($timeout, PouchService) {
+    function SystemEndigumentController($timeout, PouchService, AppTronconsService) {
 
         var self = this;
 
@@ -52,6 +61,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
         }).then(function (results) {
             $timeout(function () {
                 console.log(results);
+                AppTronconsService.preload = false;
                 self.SystemeEndiguements = results.rows;
             },100);
             }).catch(function (err) {
@@ -61,7 +71,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
 
     }
     
-    function DigueController($timeout,PouchService) {
+    function DigueController($timeout,PouchService, AppTronconsService) {
         var self = this;
         self.digues = [];
 
@@ -72,6 +82,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
                 }).then(function (results) {
                     $timeout(function () {
                         console.log(results);
+                        AppTronconsService.preload = false;
                         self.digues = results.rows;
                     },100);
                 }).catch(function (err) {
@@ -84,6 +95,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
                 }).then(function (results) {
                     $timeout(function () {
                         console.log(results);
+                        AppTronconsService.preload = false;
                         self.digues = results.rows;
                     },100);
                 }).catch(function (err) {
@@ -109,6 +121,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
                 }).then(function (results) {
                     $timeout(function () {
                         console.log(results);
+                        AppTronconsService.preload = false;
                         self.troncons = results.rows;
                     },100);
                 }).catch(function (err) {
@@ -146,7 +159,8 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
         }
 
         return {
-            favorites : init
+            favorites : init,
+            preload : true
         };
         
     }
