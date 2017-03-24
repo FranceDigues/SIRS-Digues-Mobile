@@ -18,7 +18,9 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             // Local views
             'ElementSpecial',
             'bySEIdHB',
-            'byDigueIdHB'
+            'byDigueIdHB',
+            'getBornesFromTronconID',
+            'getBornesIdsHB'
 
         ]; // TODO → make it configurable ?
 
@@ -112,7 +114,6 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 }
             }
         },
-            // Hilmi Fuck les vues
             {
             _id: '_design/getBornesFromTronconID',
             views: {
@@ -137,6 +138,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 }
             }
         ]; // TODO → make it configurable ?
+
 
 
         (function firstStep() {
