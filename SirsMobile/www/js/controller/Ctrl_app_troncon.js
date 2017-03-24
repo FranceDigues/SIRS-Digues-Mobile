@@ -5,7 +5,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
     .controller('TronconController',TronconController)
     .factory('AppTronconsService',AppTronconsService);
 
-    function TronconsChoiceMenu(SidePanelService, $scope, AppTronconsService) {
+    function TronconsChoiceMenu(SidePanelService, $scope, AppTronconsService, localStorageService) {
         var self = this;
 
         self.preload = AppTronconsService.preload;
@@ -42,6 +42,10 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
             if(angular.isDefined(id)){
                 self.DID = id;
             }
+        };
+
+        self.cleanAll = function () {
+            localStorageService.remove("AppTronconsFavorities");
         };
 
     }

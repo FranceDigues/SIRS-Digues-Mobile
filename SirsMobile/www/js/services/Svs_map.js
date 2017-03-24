@@ -428,7 +428,7 @@ angular.module('app.services.map', ['app.services.context'])
                     }
                     else if(layerModel.filterValue === "fr.sirs.core.model.TronconDigue"){
                     promise = LocalDocument.query('TronconDigue/streamLight', {
-                        keys : localStorageService.get("AppTronconsFavorities")
+                        keys : localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService.get("AppTronconsFavorities")
                     }).then(
                         function(results) {
                             return results.map(createAppFeatureModel);
@@ -440,7 +440,7 @@ angular.module('app.services.map', ['app.services.context'])
                     else {
 
                     promise = LocalDocument.query('getBornesFromTronconID', {
-                        keys : localStorageService.get("AppTronconsFavorities")
+                        keys : localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService.get("AppTronconsFavorities")
                     }).then(
                         function(results) {
                             return LocalDocument.query('getBornesIdsHB', {
