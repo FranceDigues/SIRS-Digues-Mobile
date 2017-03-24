@@ -127,7 +127,13 @@ angular.module('app.services.map', ['app.services.context'])
             olLayer.setVisible(layerModel.visible);
 
             // Load data if necessary.
-            olLayer.getSource().getSource().clear();
+            if(layerModel.filterValue === "fr.sirs.core.model.BorneDigue"){
+                olLayer.getSource().getSource().getSource().clear();
+            }
+            else {
+                olLayer.getSource().getSource().clear();
+            }
+
             if (layerModel.visible === true) {
                     $rootScope.loadingflag = true;
                 $window.setTimeout(function(){
