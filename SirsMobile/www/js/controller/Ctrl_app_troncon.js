@@ -60,7 +60,6 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
             endkey: ['fr.sirs.core.model.SystemeEndiguement', {}]
         }).then(function (results) {
             $timeout(function () {
-                console.log(results);
                 AppTronconsService.preload = false;
                 self.SystemeEndiguements = results.rows;
             },100);
@@ -81,7 +80,6 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
                     key : null
                 }).then(function (results) {
                     $timeout(function () {
-                        console.log(results);
                         AppTronconsService.preload = false;
                         self.digues = results.rows;
                     },100);
@@ -94,7 +92,6 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
                     key : SEID
                 }).then(function (results) {
                     $timeout(function () {
-                        console.log(results);
                         AppTronconsService.preload = false;
                         self.digues = results.rows;
                     },100);
@@ -120,7 +117,6 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
                     key : DID
                 }).then(function (results) {
                     $timeout(function () {
-                        console.log(results);
                         AppTronconsService.preload = false;
                         self.troncons = results.rows;
                     },100);
@@ -144,10 +140,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
             } else {
                 AppTronconsService.favorites.push(id);
             }
-
-            console.log(AppTronconsService.favorites);
             localStorageService.add("AppTronconsFavorities",AppTronconsService.favorites);
-            console.log(localStorageService.get("AppTronconsFavorities"));
         };
         
     }

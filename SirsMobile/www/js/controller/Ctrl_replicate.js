@@ -111,7 +111,31 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                     map: function(doc) {if(doc['@class'] && doc.digueId) {emit(doc.digueId,{id : doc._id, libelle : doc.libelle})}}.toString()
                 }
             }
-        }
+        },
+            // Hilmi Fuck les vues
+            {
+            _id: '_design/getBornesFromTronconID',
+            views: {
+                'getBornesFromTronconID': {
+                    map: function(doc) {
+                        if(Array.isArray(doc.borneIds))
+                        {for (var i = 0 ; i < doc.borneIds.length ; i++) emit(doc._id, doc.borneIds[i])}}.toString()
+                }
+            }
+        },
+            {
+                _id: '_design/getBornesIdsHB',
+                views: {
+                    'getBornesIdsHB': {
+                        map:  function(doc) {if(doc['@class'] === 'fr.sirs.core.model.BorneDigue') {
+                            emit(doc._id, {id: doc._id, rev: doc._rev,
+                            designation: doc.designation, libelle: doc.libelle,
+                            date_fin : doc.date_fin, positionDebut : doc.positionDebut,
+                            positionFin : doc.positionFin,
+                            geometry: doc.geometry })}}.toString()
+                    }
+                }
+            }
         ]; // TODO → make it configurable ?
 
 

@@ -7,7 +7,7 @@
 
     <ion-content class="has-header">
 
-        <div ng-if="TMCtrl.preload" style="text-align: center">
+            <div ng-if="TMCtrl.preload" style="text-align: center">
             <div class="preloader-wrapper big active">
                 <div class="spinner-layer spinner-blue-only">
                     <div class="circle-clipper left">
@@ -21,15 +21,12 @@
             </div>
         </div>
 
-
-
-
             <!--Choix de systéme d'endigument-->
             <div ng-if="TMCtrl.view === 'SE'" ng-controller="SystemEndigumentController as seCtrl">
-                <p style="padding: 5px;"><b>Choisir un systéme d'indigument : </b></p>
+                <p style="padding: 5px;"><b>Choisir un système d'endiguement : </b></p>
                         <!--Sans systéme d'endigument-->
                         <ion-item>
-                            <p ng-click="TMCtrl.changeView('D'); TMCtrl.putSE('withoutSystem')">Sans systéme d'endigument</p>
+                            <p ng-click="TMCtrl.changeView('D'); TMCtrl.putSE('withoutSystem')">Sans système d'endiguement</p>
                         </ion-item>
                         <!--La liste de tous les systéme d'endigument dans la base-->
                         <ion-item ng-repeat="SystemeEndiguement in seCtrl.SystemeEndiguements">
@@ -39,7 +36,7 @@
             </div>
             <!--Choix d'un digue-->
             <div ng-if="TMCtrl.view === 'D'" ng-controller="DigueController as DCtrl"  ng-init="DCtrl.getDigues(TMCtrl.SEID)">
-                <p style="padding: 5px;"><b>Choisir un Digue : </b></p>
+                <p style="padding: 5px;"><b>Choisir une Digue : </b></p>
                     <!--La liste de tous les digues  de ce systéme d'endigument-->
                     <ion-item ng-repeat="digue in DCtrl.digues">
                         <p ng-click="TMCtrl.changeView('T'); TMCtrl.putD(digue.id)">{{digue.value.libelle}}</p>
@@ -48,7 +45,7 @@
 
             <!--Choix de troncon-->
             <div ng-if="TMCtrl.view === 'T'" ng-controller="TronconController as TCtrl"  ng-init="TCtrl.getTroncons(TMCtrl.DID)">
-                <p style="padding: 5px;"><b>Choisir les Tronçons favorites</b></p>
+                <p style="padding: 5px;"><b>Choisir les tronçons favoris</b></p>
                 <!--La liste de tous les tronçons d'un digue-->
                 <ion-checkbox ng-checked="TCtrl.isActive(troncon.id)" ng-click="TCtrl.toggleLayer(troncon.id)" ng-repeat="troncon in TCtrl.troncons">
                         <p>{{troncon.value.libelle}}</p>

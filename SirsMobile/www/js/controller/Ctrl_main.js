@@ -156,4 +156,8 @@ angular.module('app.controllers.main', ['app.services.context','app.services.dao
         //@hb
         self.EditionService = EditionService;
 
+        //@hb
+        window.hb = PouchService.getLocalDB();
+
+
     });

@@ -397,7 +397,7 @@ angular.module('app.services.map', ['app.services.context'])
                         //Get all the favorites tronçons ids
                         var favorites = localStorageService.get("AppTronconsFavorities");
                         var keys = [];
-                        if(favorites !== null){
+                        if(favorites !== null && favorites.length !== 0){
                             angular.forEach(favorites,function (key) {
                                 keys.push([layerModel.filterValue,key]);
                             });
@@ -410,49 +410,64 @@ angular.module('app.services.map', ['app.services.context'])
                                 function(error) {
                                     // TODO → handle error
                                 });
-                        } else {
-                            promise = LocalDocument.query('ElementSpecial', {
-                                startkey: [layerModel.filterValue],
-                                endkey: [layerModel.filterValue, {}]
-                                // include_docs: true
-                            }).then(
-                                function(results) {
-                                    return results.map(createAppFeatureModel);
-                                },
-                                function(error) {
-                                    // TODO → handle error
-                                });
                         }
-                    } else {
-                    //@hb : Element/byClassAndLinear before
-                    promise = LocalDocument.query('ElementSpecial', {
-                        startkey: [layerModel.filterValue],
-                        endkey: [layerModel.filterValue, {}]
-                        // include_docs: true
+                        else {
+                            var deferred = $q.defer();
+                            promise = deferred.promise.then(
+                                function() {
+                                    return [].map(createAppFeatureModel);
+                                });
+                            deferred.resolve();
+                        }
+                    }
+                    else if(layerModel.filterValue === "fr.sirs.core.model.TronconDigue"){
+                    promise = LocalDocument.query('TronconDigue/streamLight', {
+                        keys : localStorageService.get("AppTronconsFavorities")
                     }).then(
                         function(results) {
                             return results.map(createAppFeatureModel);
                         },
                         function(error) {
-                            // TODO → handle error
+                            console.log(error);
                         });
-                }
+                    }
+                    else {
+
+                    promise = LocalDocument.query('getBornesFromTronconID', {
+                        keys : localStorageService.get("AppTronconsFavorities")
+                    }).then(
+                        function(results) {
+                            return LocalDocument.query('getBornesIdsHB', {
+                                keys : results.map(function (obj) {
+                                    return obj.value;
+                                })
+                            }).then(
+                                function(results2) {
+                                    return results2.map(createAppFeatureModel);
+                                });
+                        },
+                        function(error) {
+                            console.log(error);
+                        });
+                    }
 
 
                 // Set and store the promise.
                 featureCache.put(layerModel.title, promise);
             }
 
-            // Wait for promise resolution or rejection.
-            promise.then(
-                function onSuccess(featureModels) {
-                    // @hb get the featureModels from the promise
-                    olSource.addFeatures(createAppFeatureInstances(featureModels, layerModel));
-                    $rootScope.loadingflag = false;
-                                    },
-                function onError(error) {
-                    // TODO → handle error
-                });
+                // Wait for promise resolution or rejection.
+                promise.then(
+                    function onSuccess(featureModels) {
+                        // @hb get the featureModels from the promise
+                        olSource.addFeatures(createAppFeatureInstances(featureModels, layerModel));
+                        $rootScope.loadingflag = false;
+                    },
+                    function onError(error) {
+                        // TODO → handle error
+                    });
+
+
         }
         // Create the edition layer instance that contain the new objects
         function createEditionLayerInstance() {
