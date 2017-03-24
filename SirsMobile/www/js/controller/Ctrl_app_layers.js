@@ -130,6 +130,14 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
             }
         };
 
+        self.clearAll = function () {
+            console.debug("app layers : ",self.layers);
+            angular.forEach(self.layers, function (layer) {
+               self.forceRefresh(layer);
+            });
+
+        };
+
 
     })
 
