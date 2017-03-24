@@ -45,7 +45,8 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
         };
 
         self.cleanAll = function () {
-            localStorageService.remove("AppTronconsFavorities");
+            AppTronconsService.favorites = [];
+            localStorageService.add("AppTronconsFavorities",[]);
         };
 
     }
