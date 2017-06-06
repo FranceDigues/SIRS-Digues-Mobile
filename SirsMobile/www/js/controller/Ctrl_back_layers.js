@@ -32,6 +32,13 @@ angular.module('app.controllers.back_layers', ['app.services.context'])
         self.goToAddLayer = function() {
             SidePanelService.setBabordView('back_layers_add');
         };
+        
+        self.toggleON_OFF_Line = function (layer) {
+            // Remove the cache object
+            delete layer.cache;
+            // Update the view
+            BackLayerService.setActive(layer.name);
+        }
     })
 
     .controller('BackLayersAddController', function BackLayersAddController(BackLayerService, SidePanelService) {
