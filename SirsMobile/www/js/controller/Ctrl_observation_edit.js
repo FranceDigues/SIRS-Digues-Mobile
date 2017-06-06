@@ -40,6 +40,11 @@ angular.module('app.controllers.observation_edit', [])
 
         self.save = function() {
             if (self.isNewObject) {
+
+                if(angular.isUndefined(objectDoc.observations)){
+                    objectDoc.observations = [];
+                }
+
                 // Push the new observation.
                 objectDoc.observations.push(self.doc);
             } else {

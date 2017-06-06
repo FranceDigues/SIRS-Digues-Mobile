@@ -650,7 +650,7 @@ angular.module('app.services.map', ['app.services.context'])
                     features = source.getFeatures(), i = features.length;
                 while (i--) {
                     if (features[i].get('id') === objectDoc._id) {
-                        features.removeAt(i);
+                        features.splice(i,1);
                         break;
                     }
                 }
