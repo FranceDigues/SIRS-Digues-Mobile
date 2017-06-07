@@ -206,6 +206,9 @@ angular.module('app.services.map', ['app.services.context'])
         // ----------
 
         function createBackLayerInstance(layerModel) {
+
+            console.debug('layer model in the create back layer instance',layerModel);
+
             var source = angular.copy(layerModel.source),
                 extent;
 
