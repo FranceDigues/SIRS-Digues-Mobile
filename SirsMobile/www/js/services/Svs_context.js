@@ -145,7 +145,6 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
 
         self.add = function(layer) {
             layerContext.list.push(layer);
-            $rootScope.$broadcast('backLayerAdded', layer);
         };
 
         self.remove = function(layer) {

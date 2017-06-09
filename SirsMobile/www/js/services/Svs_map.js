@@ -612,10 +612,6 @@ angular.module('app.services.map', ['app.services.context'])
             $rootScope.$digest();
         });
 
-        $rootScope.$on('backLayerAdded', function(event, layerModel){
-            // backLayers.getLayers().push(createBackLayerInstance(layerModel));
-        });
-
         $rootScope.$on('backLayerChanged', function(event, layerModel) {
             backLayers.getLayers().setAt(0, createBackLayerInstance(layerModel));
 
