@@ -76,53 +76,22 @@ angular.module('app.controllers.cache', [])
 
         self.setTargetLayer = function(layerModel) {
 
-            console.debug('The layer model', layerModel);
-
-            var projExtent = ol.proj.get('EPSG:3857').getExtent();
-            var startResolution = ol.extent.getWidth(projExtent) / 256;
-            var resolutions = new Array(22);
-            for (var i = 0, ii = resolutions.length; i < ii; ++i) {
-                resolutions[i] = startResolution / Math.pow(2, i);
-            }
-            // var tileGrid = new ol.tilegrid.TileGrid({
-            //     extent: self.getCurrentArea(),
-            //     resolutions: resolutions,
-            //     tileSize: [512, 256]
-            // });
-
-            // layerModel.source.tileGrid = tileGrid;
-
-            layerModel.source.tileGrid =  new ol.tilegrid.TileGrid({
-                extent : [-20037508.342789244, -20037508.342789244, 20037508.342789244, 20037508.342789244],
-                origin : [-20037508.342789244, 20037508.342789244],
-                resolutions : [156543.03392804097
-            ,78271.51696402048
-            ,39135.75848201024
-            ,19567.87924100512
-            ,9783.93962050256
-            ,4891.96981025128
-            ,2445.98490512564
-            ,1222.99245256282
-            ,611.49622628141
-            ,305.748113140705
-            , 152.8740565703525
-            , 76.43702828517625
-            , 38.21851414258813
-            , 19.109257071294063
-            , 9.554628535647032
-            , 4.777314267823516
-            , 2.388657133911758
-            , 1.194328566955879
-            , 0.5971642834779395
-            , 0.29858214173896974]
-            });
+            // if(layerModel.source.type = "TileWMS"){
+            //     var projExtent = ol.proj.get('EPSG:3857').getExtent();
+            //     var startResolution = ol.extent.getWidth(projExtent) / 256;
+            //     var resolutions = new Array(22);
+            //     for (var i = 0, ii = resolutions.length; i < ii; ++i) {
+            //         resolutions[i] = startResolution / Math.pow(2, i);
+            //     }
+            //     var tileGrid = new ol.tilegrid.TileGrid({
+            //         origin : [0,0],
+            //         resolutions: resolutions,
+            //         tileSize: [512, 256]
+            //     });
+            //     // layerModel.source.tileGrid = tileGrid;
+            // }
 
             targetLayer.setSource(new ol.source[layerModel.source.type](layerModel.source));
-
-
-            console.debug('the target layer', targetLayer);
-
-
 
             if (angular.isObject(layerModel.cache)) {
                 previousAreaLayer.getSource().addFeature(createFeatureInstance(layerModel.cache.extent));
@@ -151,12 +120,32 @@ angular.module('app.controllers.cache', [])
         };
 
         self.countTiles = function(minZoom, maxZoom) {
-            var tileGrid = targetLayer.getSource().getTileGrid(),
-                extent = self.getCurrentArea(), tileCount = 0;
-            for (var z = minZoom; z <= maxZoom; z++) {
-                var tileRange = tileGrid.getTileRangeForExtentAndZ(extent, z);
-                tileCount += (tileRange.getWidth() * tileRange.getHeight())
+
+            var tileGrid;
+
+            tileGrid = targetLayer.getSource().getTileGrid();
+
+            var extent = self.getCurrentArea(), tileCount = 0;
+
+            if(!tileGrid){
+                var projExtent = ol.proj.get('EPSG:3857').getExtent();
+                var startResolution = ol.extent.getWidth(projExtent) / 256;
+                var resolutions = new Array(22);
+                for (var i = 0, ii = resolutions.length; i < ii; ++i) {
+                    resolutions[i] = startResolution / Math.pow(2, i);
+                }
+                tileGrid = new ol.tilegrid.TileGrid({
+                    origin : [0,0],
+                    resolutions: resolutions,
+                    tileSize: [512, 256]
+                });
             }
+
+                for (var z = minZoom; z <= maxZoom; z++) {
+                    var tileRange = tileGrid.getTileRangeForExtentAndZ(extent, z);
+                    tileCount += (tileRange.getWidth() * tileRange.getHeight())
+                }
+
             return tileCount;
         };
     })
@@ -213,7 +202,6 @@ angular.module('app.controllers.cache', [])
         self.selectedCorner = null;
 
         self.setDefaultArea = function(map) {
-            console.debug('map object', map);
             if (angular.isObject(layerModel.cache)) {
                 // Use previous area.
                 CacheMapManager.setCurrentArea(layerModel.cache.extent);

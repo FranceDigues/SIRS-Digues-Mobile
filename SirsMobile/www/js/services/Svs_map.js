@@ -225,6 +225,7 @@ angular.module('app.services.map', ['app.services.context'])
                 model: layerModel,
                 source: new ol.source[source.type](source)
             });
+
         }
 
         //@hb create the layer of "couches métiers"
