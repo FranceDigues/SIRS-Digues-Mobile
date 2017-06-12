@@ -206,25 +206,39 @@ angular.module('app.services.map', ['app.services.context'])
         // ----------
 
         function createBackLayerInstance(layerModel) {
+            var layer, extent, source;
 
             console.debug('layer model in the create back layer instance',layerModel);
 
-            var source = angular.copy(layerModel.source),
-                extent;
+            // source = angular.copy(layerModel.source);
 
             // Override the source if the layer is available from cache.
             if (angular.isObject(layerModel.cache)) {
                 extent = layerModel.cache.extent;
-                source.type = 'XYZ';
-                source.url = layerModel.cache.url;
+
+
+                source = new ol.source.XYZ({
+                    url : layerModel.cache.url
+                });
+
+                layer = new ol.layer.Tile({
+                    name: layerModel.title,
+                    extent: extent,
+                    source : source
+                });
+            } else{
+                layer = new ol.layer.Tile({
+                    name: layerModel.title,
+                    model: layerModel,
+                    source: new ol.source[layerModel.source.type](layerModel.source)
+                });
             }
 
-            return new ol.layer.Tile({
-                name: layerModel.title,
-                extent: extent,
-                model: layerModel,
-                source: new ol.source[source.type](source)
-            });
+
+
+            console.debug('layer XXX :',layer);
+
+            return layer;
 
         }
 

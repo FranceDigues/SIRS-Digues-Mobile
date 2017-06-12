@@ -75,22 +75,6 @@ angular.module('app.controllers.cache', [])
         };
 
         self.setTargetLayer = function(layerModel) {
-
-            // if(layerModel.source.type = "TileWMS"){
-            //     var projExtent = ol.proj.get('EPSG:3857').getExtent();
-            //     var startResolution = ol.extent.getWidth(projExtent) / 256;
-            //     var resolutions = new Array(22);
-            //     for (var i = 0, ii = resolutions.length; i < ii; ++i) {
-            //         resolutions[i] = startResolution / Math.pow(2, i);
-            //     }
-            //     var tileGrid = new ol.tilegrid.TileGrid({
-            //         origin : [0,0],
-            //         resolutions: resolutions,
-            //         tileSize: [512, 256]
-            //     });
-            //     // layerModel.source.tileGrid = tileGrid;
-            // }
-
             targetLayer.setSource(new ol.source[layerModel.source.type](layerModel.source));
 
             if (angular.isObject(layerModel.cache)) {
@@ -127,6 +111,7 @@ angular.module('app.controllers.cache', [])
 
             var extent = self.getCurrentArea(), tileCount = 0;
 
+            // In the case the tileGrid not exist use the default tileGrid
             if(!tileGrid){
                 var projExtent = ol.proj.get('EPSG:3857').getExtent();
                 var startResolution = ol.extent.getWidth(projExtent) / 256;
@@ -136,8 +121,7 @@ angular.module('app.controllers.cache', [])
                 }
                 tileGrid = new ol.tilegrid.TileGrid({
                     origin : [0,0],
-                    resolutions: resolutions,
-                    tileSize: [512, 256]
+                    resolutions: resolutions
                 });
             }
 
