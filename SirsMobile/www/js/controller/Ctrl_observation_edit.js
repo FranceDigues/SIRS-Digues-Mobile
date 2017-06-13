@@ -3,9 +3,15 @@ angular.module('app.controllers.observation_edit', [])
     .controller('ObservationEditController', function ObservationEditController($scope, $filter, $location, $ionicScrollDelegate,
                                                                                 $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                                 $routeParams, GeolocationService, LocalDocument,
-                                                                                EditionService, objectDoc, uuid4) {
+                                                                                EditionService, objectDoc, uuid4, $rootScope) {
 
         var self = this;
+
+        $rootScope.loadingflag = false;
+
+        self.flagLoading = function () {
+            $rootScope.loadingflag = true;
+        };
 
         // Navigation
         // -----------

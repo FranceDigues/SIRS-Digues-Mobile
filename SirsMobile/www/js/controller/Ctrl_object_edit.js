@@ -13,7 +13,6 @@ angular.module('app.controllers.object_edit', [])
 
         var self = this;
 
-
         self.buildConfig = function() {
             var layerModel = BackLayerService.getActive(),
                 source = angular.copy(layerModel.source),

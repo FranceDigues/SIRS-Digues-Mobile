@@ -172,7 +172,7 @@ angular.module('SirsMobile', [
             }
         },
         observationEdit: {
-            objectDoc: function($route, sContext /*, LocalDocument*/) {
+            objectDoc: function($route, sContext/*, LocalDocument*/) {
                 return sContext.selectedObject;
                 //return LocalDocument.get($route.current.params.objectId);
             }

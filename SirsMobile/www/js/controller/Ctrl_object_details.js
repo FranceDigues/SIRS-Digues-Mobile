@@ -1,7 +1,8 @@
 
 angular.module('app.controllers.object_details', [])
 
-    .controller('ObjectDetailsController', function ObjectDetailsController($ionicPopup, $ionicScrollDelegate, sContext, SidePanelService, LocalDocument, selection) {
+    .controller('ObjectDetailsController', function ObjectDetailsController($ionicPopup, $ionicScrollDelegate, sContext, SidePanelService,
+                                                                            LocalDocument, selection, $rootScope) {
 
         var self = this;
 
@@ -53,6 +54,10 @@ angular.module('app.controllers.object_details', [])
                 }
                 return confirmed;
             });
+        };
+        
+        self.flagLoading = function () {
+            $rootScope.loadingflag = true;
         };
 
 
