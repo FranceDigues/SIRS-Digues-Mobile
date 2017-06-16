@@ -51,7 +51,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
 
     }
 
-    function SystemEndigumentController($timeout, PouchService, AppTronconsService) {
+    function SystemEndigumentController($timeout, PouchService, AppTronconsService, $rootScope) {
 
         var self = this;
 
@@ -60,6 +60,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
         self.SystemeEndiguements = [];
 
 
+        $rootScope.loadingflag = true;
         PouchService.getLocalDB().query('Element/byClassAndLinear',{
             startkey: ['fr.sirs.core.model.SystemeEndiguement'],
             endkey: ['fr.sirs.core.model.SystemeEndiguement', {}]
@@ -67,6 +68,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
             $timeout(function () {
                 AppTronconsService.preload = false;
                 self.SystemeEndiguements = results.rows;
+                $rootScope.loadingflag = false;
             },100);
             }).catch(function (err) {
                 console.log(err);
@@ -75,30 +77,36 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
 
     }
     
-    function DigueController($timeout,PouchService, AppTronconsService) {
+    function DigueController($timeout,PouchService, AppTronconsService, $rootScope) {
         var self = this;
         self.digues = [];
 
+
+
         self.getDigues = function (SEID) {
             if(SEID === "withoutSystem"){
+                $rootScope.loadingflag = true;
                 PouchService.getLocalDB().query('bySEIdHB',{
                     key : null
                 }).then(function (results) {
                     $timeout(function () {
                         AppTronconsService.preload = false;
                         self.digues = results.rows;
+                        $rootScope.loadingflag = false;
                     },100);
                 }).catch(function (err) {
                     console.log(err);
                 });
             }
             else {
+                $rootScope.loadingflag = true;
                 PouchService.getLocalDB().query('bySEIdHB',{
                     key : SEID
                 }).then(function (results) {
                     $timeout(function () {
                         AppTronconsService.preload = false;
                         self.digues = results.rows;
+                        $rootScope.loadingflag = true;
                     },100);
                 }).catch(function (err) {
                     console.log(err);
@@ -111,19 +119,22 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
 
     }
     
-    function TronconController($timeout,PouchService, AppTronconsService, localStorageService) {
+    function TronconController($timeout,PouchService, AppTronconsService, localStorageService, $rootScope) {
         var self = this;
 
         self.troncons = [];
 
         self.getTroncons = function (DID) {
+
             if(angular.isDefined(DID)){
+                $rootScope.loadingflag = true;
                 PouchService.getLocalDB().query('byDigueIdHB',{
                     key : DID
                 }).then(function (results) {
                     $timeout(function () {
                         AppTronconsService.preload = false;
                         self.troncons = results.rows;
+                        $rootScope.loadingflag = false;
                     },100);
                 }).catch(function (err) {
                     console.log(err);

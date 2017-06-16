@@ -94,7 +94,7 @@ angular.module('app.services.map', ['app.services.context'])
                 LocalDocument.get('$sirs').then(function(result) {
                     if (result.envelope) {
                         var geometry = new ol.format.WKT().readGeometry(result.envelope, {
-                            dataProjection: SirsDoc.get().epsgCode,
+                            dataProjection: SirsDoc.get().epsgCode || "EPSG:2154",
                             featureProjection: 'EPSG:3857'
                         });
                         currentView.fit(geometry, [element.width(), element.height()]);
@@ -324,7 +324,7 @@ angular.module('app.services.map', ['app.services.context'])
             // featureDoc = featureDoc.value || featureDoc;
             featureDoc = featureDoc.doc || featureDoc.value; // depending on "include_docs" option when querying docs
 
-                var dataProjection = SirsDoc.get().epsgCode,
+                var dataProjection = SirsDoc.get().epsgCode || "EPSG:2154",
                     projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
 
                 if (projGeometry instanceof ol.geom.LineString && projGeometry.getCoordinates().length === 2 &&
@@ -517,7 +517,9 @@ angular.module('app.services.map', ['app.services.context'])
                     wktFormat.readGeometry(featureDoc.positionFin).getFirstCoordinate()
                 ]);
             }
-            geometry.transform(SirsDoc.get().epsgCode, 'EPSG:3857');
+
+            var dataProjection = SirsDoc.get().epsgCode || "EPSG:2154";
+            geometry.transform(dataProjection, 'EPSG:3857');
             // Create feature.
             var feature = new ol.Feature({ geometry: geometry });
                 feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
