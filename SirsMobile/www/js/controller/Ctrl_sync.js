@@ -68,6 +68,7 @@ angular.module('app.controllers.sync', ['app.services.context'])
             $timeout(function() {
                 self.db.lastSync = new Date().getTime(); // store sync timestamp
                 self.status = 2;
+                MapManager.redrawEditionLayerAfterSynchronization();
 
             }, 1000);
         }

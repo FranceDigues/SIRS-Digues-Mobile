@@ -1,8 +1,8 @@
 
-angular.module('app.controllers.object_details', [])
+angular.module('app.controllers.object_details', ['app.services.map'])
 
     .controller('ObjectDetailsController', function ObjectDetailsController($ionicPopup, $ionicScrollDelegate, sContext, SidePanelService,
-                                                                            LocalDocument, selection, $rootScope) {
+                                                                            LocalDocument, selection, $rootScope,MapManager) {
 
         var self = this;
 
@@ -50,6 +50,7 @@ angular.module('app.controllers.object_details', [])
                         }
                         // Return to the selection list view.
                         self.backToDisorderList();
+                        MapManager.redrawEditionLayerAfterSynchronization();
                     });
                 }
                 return confirmed;

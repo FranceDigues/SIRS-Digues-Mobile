@@ -201,14 +201,18 @@ angular.module('app.services.map', ['app.services.context'])
             editionLayer = layer;
             setEditionLayerFeatures(editionLayer);
         };
+        //Redraw edition layer after synchronization
+        self.redrawEditionLayerAfterSynchronization = function () {
+            // Clear the layer source from the features
+            editionLayer.getSource().getSource().clear();
+            setEditionLayerFeatures(editionLayer);
+        };
 
         // Private methods
         // ----------
 
         function createBackLayerInstance(layerModel) {
             var layer, extent, source;
-
-            console.debug('layer model in the create back layer instance',layerModel);
 
             // source = angular.copy(layerModel.source);
 
@@ -233,10 +237,6 @@ angular.module('app.services.map', ['app.services.context'])
                     source: new ol.source[layerModel.source.type](layerModel.source)
                 });
             }
-
-
-
-            console.debug('layer XXX :',layer);
 
             return layer;
 

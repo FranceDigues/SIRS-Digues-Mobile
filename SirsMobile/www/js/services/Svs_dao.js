@@ -80,7 +80,6 @@ angular.module('app.services.dao', ['app.services.context'])
 
             PouchService.getLocalDB().query(fun, options)
                 .then(function(result) {
-                    // console.log(result);
                     if (result.rows.length === 1) {
                         deferred.resolve(result.rows[0]);
                     } else {
