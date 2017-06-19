@@ -3,7 +3,7 @@ angular.module('app.controllers.observation_edit', [])
     .controller('ObservationEditController', function ObservationEditController($scope, $filter, $location, $ionicScrollDelegate,
                                                                                 $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                                 $routeParams, GeolocationService, LocalDocument,
-                                                                                EditionService, objectDoc, uuid4, $rootScope) {
+                                                                                EditionService, objectDoc, uuid4, $rootScope,contactList, urgenceList) {
 
         var self = this;
 
@@ -37,6 +37,10 @@ angular.module('app.controllers.observation_edit', [])
             self.setView('form');
         };
 
+        self.contactList = contactList;
+
+        self.urgenceList = urgenceList;
+
         // Form
         // ----------
 
@@ -45,6 +49,7 @@ angular.module('app.controllers.observation_edit', [])
         self.doc = self.isNewObject ? createNewObservation() : angular.copy(getTargetObservation());
 
         self.save = function() {
+            console.log(self.doc);
             if (self.isNewObject) {
 
                 if(angular.isUndefined(objectDoc.observations)){
@@ -69,6 +74,8 @@ angular.module('app.controllers.observation_edit', [])
                 'id': uuid4.generate(),
                 '@class': 'fr.sirs.core.model.Observation',
                 'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
+                'nombreDesordres': 0,
+                'urgenceId': "RefUrgence:1",
                 'photos': []
             };
         }

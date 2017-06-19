@@ -175,6 +175,21 @@ angular.module('SirsMobile', [
             objectDoc: function($route, sContext/*, LocalDocument*/) {
                 return sContext.selectedObject;
                 //return LocalDocument.get($route.current.params.objectId);
+            },
+            contactList : function (LocalDocument) {
+                //@hb
+                return LocalDocument.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.Contact'],
+                    endkey: ['fr.sirs.core.model.Contact',{}],
+                    include_docs : true
+                });
+            },
+            urgenceList : function (LocalDocument) {
+                //@hb
+                return LocalDocument.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.RefUrgence'],
+                    endkey: ['fr.sirs.core.model.RefUrgence',{}]
+                });
             }
         }
     });

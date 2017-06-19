@@ -21,16 +21,16 @@
                                       on-tap="c.setTab('evolution')">Évolution</span>
                                 <!-- Tab / urgence -->
                                 <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'urgence'}"
-                                      on-tap="c.setTab('evolution')">Urgence</span>
+                                      on-tap="c.setTab('urgence')">Urgence</span>
                                 <!-- Tab / nombre -->
                                 <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'nombre'}"
-                                      on-tap="c.setTab('evolution')">Nombre</span>
+                                      on-tap="c.setTab('nombre')">Nombre</span>
                                 <!-- Tab / suite à apporter -->
                                 <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'suite'}"
-                                      on-tap="c.setTab('evolution')">Suite à apporter</span>
+                                      on-tap="c.setTab('suite')">Suite à apporter</span>
                                 <!-- Tab / observateur -->
                                 <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'observateur'}"
-                                      on-tap="c.setTab('evolution')">Observateur</span>
+                                      on-tap="c.setTab('observateur')">Observateur</span>
                             </div>
 
                             <!-- Content / Medias -->
@@ -64,35 +64,38 @@
                             </div>
 
                             <!-- Content / urgence -->
-                            <div class="evolution" ng-switch-when="evolution">
-                                <div class="sirs-field">
-                                    <label for="description" class="active">Description</label>
-                                    <textarea id="description" class="materialize-textarea" ng-model="c.doc.evolution"></textarea>
-                                </div>
+                            <div class="urgence" ng-switch-when="urgence">
+                                <select id="urgenceList" class="browser-default"
+                                        ng-model="c.doc.urgenceId">
+                                    <option ng-repeat="urgence in c.urgenceList"
+                                            value="{{urgence.value.id}}">{{urgence.value.libelle}}</option>
+                                </select>
                             </div>
 
                             <!-- Content / nombre -->
-                            <div class="evolution" ng-switch-when="evolution">
+                            <div class="nombre" ng-switch-when="nombre">
                                 <div class="sirs-field">
-                                    <label for="description" class="active">Description</label>
-                                    <textarea id="description" class="materialize-textarea" ng-model="c.doc.evolution"></textarea>
+                                    <label for="nombre_Desordres" class="active">Nombre Desordres</label>
+                                    <input type="number" id="nombre_Desordres" class="materialize-textarea"
+                                              ng-model="c.doc.nombreDesordres"/>
                                 </div>
                             </div>
 
                             <!-- Content / suite à apporter -->
-                            <div class="evolution" ng-switch-when="evolution">
+                            <div class="suite" ng-switch-when="suite">
                                 <div class="sirs-field">
-                                    <label for="description" class="active">Description</label>
-                                    <textarea id="description" class="materialize-textarea" ng-model="c.doc.evolution"></textarea>
+                                    <label for="suite_feild" class="active">Suite à apporter</label>
+                                    <textarea id="suite_feild" class="materialize-textarea" ng-model="c.doc.suite"></textarea>
                                 </div>
                             </div>
 
                             <!-- Content / observateur -->
-                            <div class="evolution" ng-switch-when="evolution">
-                                <div class="sirs-field">
-                                    <label for="description" class="active">Description</label>
-                                    <textarea id="description" class="materialize-textarea" ng-model="c.doc.evolution"></textarea>
-                                </div>
+                            <div class="observateur" ng-switch-when="observateur">
+                                <select id="contactList" class="browser-default"
+                                        ng-model="c.doc.observateurId">
+                                    <option ng-repeat="contact in c.contactList"
+                                            value="{{contact.id}}">{{contact.doc.prenom}} {{contact.doc.nom}}</option>
+                                </select>
                             </div>
 
                         </div>
