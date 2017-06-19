@@ -13,10 +13,24 @@
                             <h2 class="sirs-card-title" ng-hide="c.isNewObject">Editer une Observation</h2>
 
                             <div class="sirs-nav-tabs">
-                                <!-- Tab / Fields -->
-                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'medias'}" on-tap="c.setTab('medias')">Medias</span>
                                 <!-- Tab / Medias -->
-                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'evolution'}" on-tap="c.setTab('evolution')">Évolution</span>
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'medias'}"
+                                      on-tap="c.setTab('medias')">Medias</span>
+                                <!-- Tab / evolution -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'evolution'}"
+                                      on-tap="c.setTab('evolution')">Évolution</span>
+                                <!-- Tab / urgence -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'urgence'}"
+                                      on-tap="c.setTab('evolution')">Urgence</span>
+                                <!-- Tab / nombre -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'nombre'}"
+                                      on-tap="c.setTab('evolution')">Nombre</span>
+                                <!-- Tab / suite à apporter -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'suite'}"
+                                      on-tap="c.setTab('evolution')">Suite à apporter</span>
+                                <!-- Tab / observateur -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'observateur'}"
+                                      on-tap="c.setTab('evolution')">Observateur</span>
                             </div>
 
                             <!-- Content / Medias -->
@@ -48,6 +62,39 @@
                                     <textarea id="description" class="materialize-textarea" ng-model="c.doc.evolution"></textarea>
                                 </div>
                             </div>
+
+                            <!-- Content / urgence -->
+                            <div class="evolution" ng-switch-when="evolution">
+                                <div class="sirs-field">
+                                    <label for="description" class="active">Description</label>
+                                    <textarea id="description" class="materialize-textarea" ng-model="c.doc.evolution"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Content / nombre -->
+                            <div class="evolution" ng-switch-when="evolution">
+                                <div class="sirs-field">
+                                    <label for="description" class="active">Description</label>
+                                    <textarea id="description" class="materialize-textarea" ng-model="c.doc.evolution"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Content / suite à apporter -->
+                            <div class="evolution" ng-switch-when="evolution">
+                                <div class="sirs-field">
+                                    <label for="description" class="active">Description</label>
+                                    <textarea id="description" class="materialize-textarea" ng-model="c.doc.evolution"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Content / observateur -->
+                            <div class="evolution" ng-switch-when="evolution">
+                                <div class="sirs-field">
+                                    <label for="description" class="active">Description</label>
+                                    <textarea id="description" class="materialize-textarea" ng-model="c.doc.evolution"></textarea>
+                                </div>
+                            </div>
+
                         </div>
 
                         <!-- Actions -->
