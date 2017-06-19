@@ -49,7 +49,6 @@ angular.module('app.controllers.observation_edit', [])
         self.doc = self.isNewObject ? createNewObservation() : angular.copy(getTargetObservation());
 
         self.save = function() {
-            console.log(self.doc);
             if (self.isNewObject) {
 
                 if(angular.isUndefined(objectDoc.observations)){

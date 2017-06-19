@@ -94,7 +94,7 @@ angular.module('app.services.map', ['app.services.context'])
                 LocalDocument.get('$sirs').then(function(result) {
                     if (result.envelope) {
                         var geometry = new ol.format.WKT().readGeometry(result.envelope, {
-                            dataProjection: SirsDoc.get().epsgCode || "EPSG:2154",
+                            dataProjection: angular.isUndefined(SirsDoc.get().epsgCode) ? "EPSG:2154" : SirsDoc.get().epsgCode,
                             featureProjection: 'EPSG:3857'
                         });
                         currentView.fit(geometry, [element.width(), element.height()]);
@@ -324,8 +324,9 @@ angular.module('app.services.map', ['app.services.context'])
             // featureDoc = featureDoc.value || featureDoc;
             featureDoc = featureDoc.doc || featureDoc.value; // depending on "include_docs" option when querying docs
 
-                var dataProjection = SirsDoc.get().epsgCode || "EPSG:2154",
-                    projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
+                var dataProjection = angular.isUndefined(SirsDoc.get().epsgCode) ? "EPSG:2154" : SirsDoc.get().epsgCode;
+
+                var projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
 
                 if (projGeometry instanceof ol.geom.LineString && projGeometry.getCoordinates().length === 2 &&
                     projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
@@ -518,7 +519,8 @@ angular.module('app.services.map', ['app.services.context'])
                 ]);
             }
 
-            var dataProjection = SirsDoc.get().epsgCode || "EPSG:2154";
+            var dataProjection = angular.isUndefined(SirsDoc.get().epsgCode) ? "EPSG:2154" : SirsDoc.get().epsgCode;
+
             geometry.transform(dataProjection, 'EPSG:3857');
             // Create feature.
             var feature = new ol.Feature({ geometry: geometry });
