@@ -8,13 +8,6 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
     function TronconsChoiceMenu(SidePanelService, $scope, AppTronconsService, localStorageService) {
         var self = this;
 
-        self.preload = AppTronconsService.preload;
-
-        $scope.$watch(AppTronconsService.preload, function(newVal) {
-            self.preload = newVal;
-        });
-
-
         self.backToMenu = function () {
             if(self.view === "T"){
                 self.view = "D";
@@ -28,7 +21,6 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
         self.view = "SE";
 
         self.changeView = function (view) {
-            AppTronconsService.preload = true;
             self.view = view;
         };
 
@@ -66,12 +58,12 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
             endkey: ['fr.sirs.core.model.SystemeEndiguement', {}]
         }).then(function (results) {
             $timeout(function () {
-                AppTronconsService.preload = false;
                 self.SystemeEndiguements = results.rows;
                 $rootScope.loadingflag = false;
             },100);
             }).catch(function (err) {
                 console.log(err);
+                $rootScope.loadingflag = false;
             });
 
 
@@ -90,12 +82,12 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
                     key : null
                 }).then(function (results) {
                     $timeout(function () {
-                        AppTronconsService.preload = false;
                         self.digues = results.rows;
                         $rootScope.loadingflag = false;
                     },100);
                 }).catch(function (err) {
                     console.log(err);
+                    $rootScope.loadingflag = false;
                 });
             }
             else {
@@ -104,12 +96,12 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
                     key : SEID
                 }).then(function (results) {
                     $timeout(function () {
-                        AppTronconsService.preload = false;
                         self.digues = results.rows;
-                        $rootScope.loadingflag = true;
+                        $rootScope.loadingflag = false;
                     },100);
                 }).catch(function (err) {
                     console.log(err);
+                    $rootScope.loadingflag = false;
                 });
 
             }
@@ -132,12 +124,12 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
                     key : DID
                 }).then(function (results) {
                     $timeout(function () {
-                        AppTronconsService.preload = false;
                         self.troncons = results.rows;
                         $rootScope.loadingflag = false;
                     },100);
                 }).catch(function (err) {
                     console.log(err);
+                    $rootScope.loadingflag = false;
                 });
             }
 
@@ -168,8 +160,7 @@ angular.module('app.controllers.app_troncons', ['app.services.context','app.serv
         }
 
         return {
-            favorites : init,
-            preload : true
+            favorites : init
         };
         
     }
