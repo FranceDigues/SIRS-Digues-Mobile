@@ -5,9 +5,13 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
         var self = this;
 
-        var localDB = PouchService.getOrCreateLocalDB();
+        var localDB, remoteDB = null;
 
-        var remoteDB = PouchService.getRemoteDB();
+        PouchService.cleanRemoteAndLocalDB();
+
+        localDB = PouchService.getOrCreateLocalDB();
+
+        remoteDB = PouchService.getRemoteDB();
 
         // Les vues de couchdb indexé afin de rendre l'application rapide
         var indexedViews = [
@@ -138,8 +142,6 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 }
             }
         ]; // TODO → make it configurable ?
-
-
 
         (function firstStep() {
             self.step = 1;

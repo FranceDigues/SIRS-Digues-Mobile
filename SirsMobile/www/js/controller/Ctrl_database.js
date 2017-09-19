@@ -72,11 +72,9 @@ angular.module('app.controllers.database', ['app.services.context'])
 
         var self = this;
 
-
         self.db = dataBaseEditionFactory.oldDb;
 
         self.update = function() {
-
             DatabaseService.oldEditionRemove(dataBaseEditionFactory.oldDb);
             DatabaseService.add(self.db);
             $location.path('/setup');

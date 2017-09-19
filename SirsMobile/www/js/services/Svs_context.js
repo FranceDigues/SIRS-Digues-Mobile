@@ -55,7 +55,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var value = angular.extend(defaultContext, contextStorage.read());
 
 
-        self.getValue = function() {
+        this.getValue = function() {
             return value;
         };
 
@@ -67,7 +67,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         });
 
         // Store the new value in the local storage on changes.
-        $rootScope.$watch(self.getValue, contextStorage.write, true);
+        $rootScope.$watch(this.getValue, contextStorage.write, true);
     })
 
     .service('DatabaseService', function DatabaseService($rootScope, $ionicPopup, ContextService) {
@@ -77,16 +77,16 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var dbContext = ContextService.getValue().database;
 
 
-        self.list = function() {
+        this.list = function() {
             return dbContext.list;
         };
 
-        self.add = function(db) {
+        this.add = function(db) {
             dbContext.list.push(db);
             $rootScope.$broadcast('databaseAdded', db);
         };
 
-        self.remove = function(db) {
+        this.remove = function(db) {
             return $ionicPopup.confirm({
                 title: 'Suppression d\'une base de données',
                 template: 'Voulez vous vraiment supprimer cette base de données ?'
@@ -103,7 +103,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             });
         };
 
-        self.oldEditionRemove = function(db) {
+        this.oldEditionRemove = function(db) {
                     // Destroy the local database (if exists).
                     new PouchDB(db.name).destroy();
                     // Unregister the remove database.
@@ -112,7 +112,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
                     $rootScope.$broadcast('databaseRemoved', db);
         };
 
-        self.getActive = function() {
+        this.getActive = function() {
             var i = dbContext.list.length;
             while(i--) {
                 var db = dbContext.list[i];
@@ -123,11 +123,11 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return null;
         };
 
-        self.setActive = function(name) {
+        this.setActive = function(name) {
             var oldValue = dbContext.active;
             dbContext.active = name;
             if (oldValue !== name) {
-                $rootScope.$broadcast('databaseChanged', self.getActive(), oldValue);
+                $rootScope.$broadcast('databaseChanged', this.getActive(), oldValue);
             }
         };
     })
@@ -139,15 +139,15 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var layerContext = ContextService.getValue().backLayer;
 
 
-        self.list = function() {
+        this.list = function() {
             return layerContext.list;
         };
 
-        self.add = function(layer) {
+        this.add = function(layer) {
             layerContext.list.push(layer);
         };
 
-        self.remove = function(layer) {
+        this.remove = function(layer) {
             return $ionicPopup.confirm({
                 title: 'Suppression d\'une couche',
                 template: 'Voulez vous vraiment supprimer cette couche ?'
@@ -162,11 +162,11 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             });
         };
 
-        self.getActive = function() {
-            return self.getByName(layerContext.active);
+        this.getActive = function() {
+            return this.getByName(layerContext.active);
         };
 
-        self.getByName = function(name) {
+        this.getByName = function(name) {
             var i = layerContext.list.length;
             while(i--) {
                 var layer = layerContext.list[i];
@@ -177,10 +177,10 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return null;
         };
 
-        self.setActive = function(name) {
+        this.setActive = function(name) {
             var oldValue = layerContext.active;
             layerContext.active = name;
-            $rootScope.$broadcast('backLayerChanged', self.getActive(), oldValue);
+            $rootScope.$broadcast('backLayerChanged', this.getActive(), oldValue);
         };
     })
 
@@ -225,7 +225,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         }
 
 
-        self.getAvailable = function() {
+        this.getAvailable = function() {
             var deferred = $q.defer();
 
             moduleDescriptions().then(
@@ -243,11 +243,11 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return deferred.promise;
         };
 
-        self.getFavorites = function() {
+        this.getFavorites = function() {
             return favorites;
         };
 
-        self.addFavorite = function(layer) {
+        this.addFavorite = function(layer) {
             layer.editable = false;
             layer.featLabels = false;
             layer.realPosition = false;
@@ -263,7 +263,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             $rootScope.$broadcast('appLayerAdded', layer);
         };
 
-        self.removeFavorite = function(layer) {
+        this.removeFavorite = function(layer) {
             var index = favorites.map(function(item) {
                 return item.title;
             }).indexOf(layer.title);
@@ -284,16 +284,16 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var context = ContextService.getValue();
 
 
-        self.isNull = function() {
+        this.isNull = function() {
             return !context.authUser;
         };
 
-        self.getValue = function() {
+        this.getValue = function() {
             return context.authUser;
         };
 
-        self.login = function(login, password) {
-            self.logout();
+        this.login = function(login, password) {
+            this.logout();
 
             var deferred = $q.defer();
 
@@ -318,8 +318,8 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return deferred.promise;
         };
 
-        self.logout = function() {
-            if (!self.isNull()) {
+        this.logout = function() {
+            if (!this.isNull()) {
                 context.authUser = null;
                 $rootScope.$broadcast('logoutSuccess');
             }
@@ -340,22 +340,22 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var tribordView = 'object_add';
 
 
-        self.getBabordView = function() {
+        this.getBabordView = function() {
             return babordView;
         };
 
-        self.setBabordView = function(view) {
+        this.setBabordView = function(view) {
             babordView = view;
             if (!$ionicSideMenuDelegate.isOpenLeft()) {
                 $ionicSideMenuDelegate.toggleLeft();
             }
         };
 
-        self.getTribordView = function() {
+        this.getTribordView = function() {
             return tribordView;
         };
 
-        self.setTribordView = function(view) {
+        this.setTribordView = function(view) {
             tribordView = view;
             if (!$ionicSideMenuDelegate.isOpenRight()) {
                 $ionicSideMenuDelegate.toggleRight();
@@ -371,18 +371,18 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         // Paths
         // ----------
 
-        self.photoDir=null;
+        this.photoDir=null;
 
-        self.notesDir=null;
+        this.notesDir=null;
 
-        self.docDir=null;
+        this.docDir=null;
 
         // Selections
         // ----------
 
-        self.selectedFeatures = [];
+        this.selectedFeatures = [];
 
-        self.selectedObject = null;
+        this.selectedObject = null;
 
-        self.selectedObservation = null;
+        this.selectedObservation = null;
     });

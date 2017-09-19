@@ -8,10 +8,16 @@ angular.module('app.services.dao', ['app.services.context'])
 
         var localDB = null;
 
-        var activeDb = DatabaseService.getActive();
+        var activeDb = null;
 
+        activeDb = DatabaseService.getActive();
 
-        self.getRemoteDB = function() {
+        this.cleanRemoteAndLocalDB = function () {
+            localDB = null;
+            remoteDB = null;
+        };
+
+        this.getRemoteDB = function() {
             if (!activeDb) {
                 throw new Error('No active database.');
             }
@@ -26,7 +32,7 @@ angular.module('app.services.dao', ['app.services.context'])
             return remoteDB;
         };
 
-        self.getOrCreateLocalDB = function() {
+        this.getOrCreateLocalDB = function() {
             if (!activeDb) {
                 throw new Error('No active database.');
             }
@@ -38,7 +44,7 @@ angular.module('app.services.dao', ['app.services.context'])
             return localDB;
         };
 
-        self.getLocalDB = function() {
+        this.getLocalDB = function() {
             if (!activeDb || !activeDb.replicated) {
                 throw new Error('No active database or active database is not replicated yet.');
             }
