@@ -25,7 +25,7 @@
         <div ng-switch-when="closable">
             <ion-list>
                 <ion-radio ng-model="c.selectedClosable" ng-value="closable" ng-repeat="closable in c.closable">
-                    {{closable.libelle || closable.designation || closable.id}}
+                    {{closable.libelle || closable.designation || closable.id || 'temp '+closable._id }}
                 </ion-radio>
             </ion-list>
         </div>

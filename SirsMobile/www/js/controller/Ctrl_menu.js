@@ -24,8 +24,6 @@ angular.module('app.controllers.menu', [])
 
         $rootScope.editionModeFlag = self.sEdition.isEnabled();
 
-        $rootScope.archiveObjectsFlag = false;
-
         self.setBabordView = SidePanelService.setBabordView;
 
         function centerOnLocation(location) {
@@ -36,6 +34,10 @@ angular.module('app.controllers.menu', [])
         }
 
         //@hb
+        if(angular.isUndefined($rootScope.archiveObjectsFlag)){
+            $rootScope.archiveObjectsFlag = false;
+        }
+
         self.toggleArchiveObjects = function () {
             $rootScope.archiveObjectsFlag = !$rootScope.archiveObjectsFlag;
             // Synchronisation des apps layers

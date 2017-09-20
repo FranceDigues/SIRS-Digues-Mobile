@@ -23,7 +23,7 @@
         <img ng-if="c.mediaPath" ng-repeat="photo in c.doc.photos track by photo.id" alt="Photo non disponible sur le mobile" ng-src="{{c.getPhotoPath(photo)}}"/>
     </ion-content>
 
-    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;">
+    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;" on-tap="c.flagLoading();">
         <a ng-href="#/observation/{{c.objectId}}/{{c.doc.id}}" class="btn-floating btn-large waves-effect waves-light pink">
             <i class="large material-icons">edit</i>
         </a>

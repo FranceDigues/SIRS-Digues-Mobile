@@ -76,6 +76,7 @@ angular.module('app.controllers.cache', [])
 
         self.setTargetLayer = function(layerModel) {
             targetLayer.setSource(new ol.source[layerModel.source.type](layerModel.source));
+
             if (angular.isObject(layerModel.cache)) {
                 previousAreaLayer.getSource().addFeature(createFeatureInstance(layerModel.cache.extent));
             }
@@ -103,12 +104,32 @@ angular.module('app.controllers.cache', [])
         };
 
         self.countTiles = function(minZoom, maxZoom) {
-            var tileGrid = targetLayer.getSource().getTileGrid(),
-                extent = self.getCurrentArea(), tileCount = 0;
-            for (var z = minZoom; z <= maxZoom; z++) {
-                var tileRange = tileGrid.getTileRangeForExtentAndZ(extent, z);
-                tileCount += (tileRange.getWidth() * tileRange.getHeight())
+
+            var tileGrid;
+
+            tileGrid = targetLayer.getSource().getTileGrid();
+
+            var extent = self.getCurrentArea(), tileCount = 0;
+
+            // In the case the tileGrid not exist use the default tileGrid
+            if(!tileGrid){
+                var projExtent = ol.proj.get('EPSG:3857').getExtent();
+                var startResolution = ol.extent.getWidth(projExtent) / 256;
+                var resolutions = new Array(22);
+                for (var i = 0, ii = resolutions.length; i < ii; ++i) {
+                    resolutions[i] = startResolution / Math.pow(2, i);
+                }
+                tileGrid = new ol.tilegrid.TileGrid({
+                    origin : [0,0],
+                    resolutions: resolutions
+                });
             }
+
+                for (var z = minZoom; z <= maxZoom; z++) {
+                    var tileRange = tileGrid.getTileRangeForExtentAndZ(extent, z);
+                    tileCount += (tileRange.getWidth() * tileRange.getHeight())
+                }
+
             return tileCount;
         };
     })

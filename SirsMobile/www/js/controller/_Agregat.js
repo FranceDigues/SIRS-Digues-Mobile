@@ -17,5 +17,6 @@ angular.module('app.controllers', [
     'app.controllers.observation_edit',
     'app.controllers.replicate',
     'app.controllers.sync',
-    'app.controllers.first_sync'
+    'app.controllers.first_sync',
+    'app.controllers.app_troncons'
 ]);

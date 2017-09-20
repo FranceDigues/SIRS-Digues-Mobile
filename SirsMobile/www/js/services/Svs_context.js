@@ -8,16 +8,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         // Database.
         database: {
             active: 'amanin_db',
-            list: [
-                {
-                    name: 'test_ovh',
-                    url: 'http://51.255.38.183:5984/adidr',
-                    username: 'geouser',
-                    password: 'geopw',
-                    replicated: false,
-                    favorites: []
-                }
-            ]
+            list: []
         },
 
         // Authentication.
@@ -52,7 +43,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
 
         // Others.
         lastLocation: null,
-        version: '0.2.8'
+        version: '0.2.24'
     })
 
     .service('ContextService', function ContextService($rootScope, $location, LocalStorageItem, defaultContext) {
@@ -154,7 +145,6 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
 
         self.add = function(layer) {
             layerContext.list.push(layer);
-            $rootScope.$broadcast('backLayerAdded', layer);
         };
 
         self.remove = function(layer) {

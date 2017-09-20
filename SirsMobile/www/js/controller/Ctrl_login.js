@@ -1,6 +1,6 @@
-angular.module('app.controllers.login', ['app.services.context'])
+angular.module('app.controllers.login', ['app.services.context','app.services.dao'])
 
-    .controller('LoginController', function LoginController($location, $ionicPopup, AuthService) {
+    .controller('LoginController', function LoginController($location, $ionicPopup, AuthService,$q,PouchService) {
 
         var self = this;
 

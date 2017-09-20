@@ -14,7 +14,14 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             'Utilisateur/byLogin',
             'Element/byClassAndLinear',
             'Document/byPath',
-            'TronconDigue/streamLight'
+            'TronconDigue/streamLight',
+            // Local views
+            'ElementSpecial',
+            'bySEIdHB',
+            'byDigueIdHB',
+            'getBornesFromTronconID',
+            'getBornesIdsHB'
+
         ]; // TODO → make it configurable ?
 
         var syncViews = [
@@ -76,8 +83,62 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                         }.toString()
                     }
                 }
+            },
+            {
+            _id: '_design/ElementSpecial',
+            views: {
+                'ElementSpecial': {
+                    map: function(doc) {if(doc['@class']) {emit([doc['@class'], doc.linearId], {id: doc._id, rev: doc._rev,
+                        designation: doc.designation, libelle: doc.libelle,
+                        date_fin : doc.date_fin, positionDebut : doc.positionDebut,
+                        positionFin : doc.positionFin,
+                        geometry: doc.geometry })}}.toString()
+                }
+            }
+        },
+            {
+            _id: '_design/bySEIdHB',
+            views: {
+                'bySEIdHB': {
+                    map: function(doc) {if(doc['@class']=='fr.sirs.core.model.Digue') {emit(doc.systemeEndiguementId,{id : doc._id ,
+                        libelle : doc.libelle})
+                        }}.toString()
+                }
+            }
+        },
+            {
+            _id: '_design/byDigueIdHB',
+            views: {
+                'byDigueIdHB': {
+                    map: function(doc) {if(doc['@class'] && doc.digueId) {emit(doc.digueId,{id : doc._id, libelle : doc.libelle})}}.toString()
+                }
+            }
+        },
+            {
+            _id: '_design/getBornesFromTronconID',
+            views: {
+                'getBornesFromTronconID': {
+                    map: function(doc) {
+                        if(Array.isArray(doc.borneIds))
+                        {for (var i = 0 ; i < doc.borneIds.length ; i++) emit(doc._id, doc.borneIds[i])}}.toString()
+                }
+            }
+        },
+            {
+                _id: '_design/getBornesIdsHB',
+                views: {
+                    'getBornesIdsHB': {
+                        map:  function(doc) {if(doc['@class'] === 'fr.sirs.core.model.BorneDigue') {
+                            emit(doc._id, {id: doc._id, rev: doc._rev,
+                            designation: doc.designation, libelle: doc.libelle,
+                            date_fin : doc.date_fin, positionDebut : doc.positionDebut,
+                            positionFin : doc.positionFin,
+                            geometry: doc.geometry })}}.toString()
+                    }
+                }
             }
         ]; // TODO → make it configurable ?
+
 
 
         (function firstStep() {
@@ -124,7 +185,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
             var deferred = $q.defer();
 
-            remoteDB.replicate.to(localDB, { live: false, retry: true, batch_size : 10000 })
+            remoteDB.replicate.to(localDB, { live: false, retry: true })
                 .on('change', function(result) {
                     deferred.notify({
                         repCount: Math.min(result.last_seq, docCount),

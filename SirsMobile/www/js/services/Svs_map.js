@@ -18,7 +18,7 @@ angular.module('app.services.map', ['app.services.context'])
                                                DefaultStyle, RealPositionStyle,
                                                sContext, GeolocationService,
                                                SidePanelService, featureCache,
-                                               currentView, selection, SirsDoc, $window) {
+                                               currentView, selection, SirsDoc, $window, localStorageService) {
 
         var self = this;
 
@@ -94,7 +94,7 @@ angular.module('app.services.map', ['app.services.context'])
                 LocalDocument.get('$sirs').then(function(result) {
                     if (result.envelope) {
                         var geometry = new ol.format.WKT().readGeometry(result.envelope, {
-                            dataProjection: SirsDoc.get().epsgCode,
+                            dataProjection: angular.isUndefined(SirsDoc.get().epsgCode) ? "EPSG:2154" : SirsDoc.get().epsgCode,
                             featureProjection: 'EPSG:3857'
                         });
                         currentView.fit(geometry, [element.width(), element.height()]);
@@ -127,7 +127,13 @@ angular.module('app.services.map', ['app.services.context'])
             olLayer.setVisible(layerModel.visible);
 
             // Load data if necessary.
-            olLayer.getSource().getSource().clear();
+            if(layerModel.filterValue === "fr.sirs.core.model.BorneDigue"){
+                olLayer.getSource().getSource().getSource().clear();
+            }
+            else {
+                olLayer.getSource().getSource().clear();
+            }
+
             if (layerModel.visible === true) {
                     $rootScope.loadingflag = true;
                 $window.setTimeout(function(){
@@ -195,27 +201,45 @@ angular.module('app.services.map', ['app.services.context'])
             editionLayer = layer;
             setEditionLayerFeatures(editionLayer);
         };
+        //Redraw edition layer after synchronization
+        self.redrawEditionLayerAfterSynchronization = function () {
+            // Clear the layer source from the features
+            editionLayer.getSource().getSource().clear();
+            setEditionLayerFeatures(editionLayer);
+        };
 
         // Private methods
         // ----------
 
         function createBackLayerInstance(layerModel) {
-            var source = angular.copy(layerModel.source),
-                extent;
+            var layer, extent, source;
+
+            // source = angular.copy(layerModel.source);
 
             // Override the source if the layer is available from cache.
             if (angular.isObject(layerModel.cache)) {
                 extent = layerModel.cache.extent;
-                source.type = 'XYZ';
-                source.url = layerModel.cache.url;
+
+
+                source = new ol.source.XYZ({
+                    url : layerModel.cache.url
+                });
+
+                layer = new ol.layer.Tile({
+                    name: layerModel.title,
+                    extent: extent,
+                    source : source
+                });
+            } else{
+                layer = new ol.layer.Tile({
+                    name: layerModel.title,
+                    model: layerModel,
+                    source: new ol.source[layerModel.source.type](layerModel.source)
+                });
             }
 
-            return new ol.layer.Tile({
-                name: layerModel.title,
-                extent: extent,
-                model: layerModel,
-                source: new ol.source[source.type](source)
-            });
+            return layer;
+
         }
 
         //@hb create the layer of "couches métiers"
@@ -300,34 +324,36 @@ angular.module('app.services.map', ['app.services.context'])
             // featureDoc = featureDoc.value || featureDoc;
             featureDoc = featureDoc.doc || featureDoc.value; // depending on "include_docs" option when querying docs
 
-            var dataProjection = SirsDoc.get().epsgCode,
-                projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
+                var dataProjection = angular.isUndefined(SirsDoc.get().epsgCode) ? "EPSG:2154" : SirsDoc.get().epsgCode;
 
-            if (projGeometry instanceof ol.geom.LineString && projGeometry.getCoordinates().length === 2 &&
-                projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
-                projGeometry.getCoordinates()[0][1] === projGeometry.getCoordinates()[1][1]) {
-                projGeometry = new ol.geom.Point(projGeometry.getCoordinates()[0]);
-            }
+                var projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
 
-            var realGeometry = featureDoc.positionDebut ?
-                wktFormat.readGeometry(featureDoc.positionDebut).transform(dataProjection, 'EPSG:3857') : undefined;
+                if (projGeometry instanceof ol.geom.LineString && projGeometry.getCoordinates().length === 2 &&
+                    projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
+                    projGeometry.getCoordinates()[0][1] === projGeometry.getCoordinates()[1][1]) {
+                    projGeometry = new ol.geom.Point(projGeometry.getCoordinates()[0]);
+                }
 
-            if (realGeometry && featureDoc.positionFin && featureDoc.positionFin !== featureDoc.positionDebut) {
-                realGeometry = new ol.geom.LineString([
-                    realGeometry.getFirstCoordinate(),
-                    wktFormat.readGeometry(featureDoc.positionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
-                ]);
-            }
+                var realGeometry = featureDoc.positionDebut ?
+                    wktFormat.readGeometry(featureDoc.positionDebut).transform(dataProjection, 'EPSG:3857') : undefined;
 
-            return {
-                id: featureDoc.id || featureDoc._id,
-                rev: featureDoc.rev || featureDoc._rev,
-                designation: featureDoc.designation,
-                title: featureDoc.libelle,
-                projGeometry: projGeometry,
-                realGeometry: realGeometry,
-                archive : featureDoc.date_fin ? true : false
+                if (realGeometry && featureDoc.positionFin && featureDoc.positionFin !== featureDoc.positionDebut) {
+                    realGeometry = new ol.geom.LineString([
+                        realGeometry.getFirstCoordinate(),
+                        wktFormat.readGeometry(featureDoc.positionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
+                    ]);
+                }
+
+                return {
+                    id: featureDoc.id || featureDoc._id,
+                    rev: featureDoc.rev || featureDoc._rev,
+                    designation: featureDoc.designation,
+                    title: featureDoc.libelle,
+                    projGeometry: projGeometry,
+                    realGeometry: realGeometry,
+                    archive : featureDoc.date_fin ? true : false
             };
+
         }
 
         // @hb the method to create the features of the layer
@@ -388,38 +414,85 @@ angular.module('app.services.map', ['app.services.context'])
                 }
 
             // Try to get the promise of a previous query.
-            // var promise = featureCache.get(layerModel.title);
-                var promise = undefined;
+            var promise = featureCache.get(layerModel.title);
 
             if (angular.isUndefined(promise)) {
 
-                // Try to get the layer features.
-                promise = LocalDocument.query('Element/byClassAndLinear', {
-                    startkey: [layerModel.filterValue],
-                    endkey: [layerModel.filterValue, {}],
-                    include_docs: true
-                }).then(
-                    function(results) {
-                        return results.map(createAppFeatureModel);
+                if(layerModel.filterValue !== "fr.sirs.core.model.BorneDigue" && layerModel.filterValue !== "fr.sirs.core.model.TronconDigue"){
+                        //Get all the favorites tronçons ids
+                        var favorites = localStorageService.get("AppTronconsFavorities");
+                        var keys = [];
+                        if(favorites !== null && favorites.length !== 0){
+                            angular.forEach(favorites,function (key) {
+                                keys.push([layerModel.filterValue,key]);
+                            });
+
+                            promise = LocalDocument.query('ElementSpecial',{
+                                keys :keys}).then(
+                                function(results) {
+                                    return results.map(createAppFeatureModel);
+                                },
+                                function(error) {
+                                    // TODO → handle error
+                                });
+                        }
+                        else {
+                            var deferred = $q.defer();
+                            promise = deferred.promise.then(
+                                function() {
+                                    return [].map(createAppFeatureModel);
+                                });
+                            deferred.resolve();
+                        }
+                    }
+                    else if(layerModel.filterValue === "fr.sirs.core.model.TronconDigue"){
+                    promise = LocalDocument.query('TronconDigue/streamLight', {
+                        keys : localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService.get("AppTronconsFavorities")
+                    }).then(
+                        function(results) {
+                            return results.map(createAppFeatureModel);
+                        },
+                        function(error) {
+                            console.log(error);
+                        });
+                    }
+                    else {
+
+                    promise = LocalDocument.query('getBornesFromTronconID', {
+                        keys : localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService.get("AppTronconsFavorities")
+                    }).then(
+                        function(results) {
+                            return LocalDocument.query('getBornesIdsHB', {
+                                keys : results.map(function (obj) {
+                                    return obj.value;
+                                })
+                            }).then(
+                                function(results2) {
+                                    return results2.map(createAppFeatureModel);
+                                });
+                        },
+                        function(error) {
+                            console.log(error);
+                        });
+                    }
+
+
+                // Set and store the promise.
+                featureCache.put(layerModel.title, promise);
+            }
+
+                // Wait for promise resolution or rejection.
+                promise.then(
+                    function onSuccess(featureModels) {
+                        // @hb get the featureModels from the promise
+                        olSource.addFeatures(createAppFeatureInstances(featureModels, layerModel));
+                        $rootScope.loadingflag = false;
                     },
-                    function(error) {
+                    function onError(error) {
                         // TODO → handle error
                     });
 
-                // Set and store the promise.
-                // featureCache.put(layerModel.title, promise);
-            }
 
-            // Wait for promise resolution or rejection.
-            promise.then(
-                function onSuccess(featureModels) {
-                    // @hb get the featureModels from the promise
-                    olSource.addFeatures(createAppFeatureInstances(featureModels, layerModel));
-                    $rootScope.loadingflag = false;
-                                    },
-                function onError(error) {
-                    // TODO → handle error
-                });
         }
         // Create the edition layer instance that contain the new objects
         function createEditionLayerInstance() {
@@ -445,7 +518,10 @@ angular.module('app.services.map', ['app.services.context'])
                     wktFormat.readGeometry(featureDoc.positionFin).getFirstCoordinate()
                 ]);
             }
-            geometry.transform(SirsDoc.get().epsgCode, 'EPSG:3857');
+
+            var dataProjection = angular.isUndefined(SirsDoc.get().epsgCode) ? "EPSG:2154" : SirsDoc.get().epsgCode;
+
+            geometry.transform(dataProjection, 'EPSG:3857');
             // Create feature.
             var feature = new ol.Feature({ geometry: geometry });
                 feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
@@ -596,7 +672,7 @@ angular.module('app.services.map', ['app.services.context'])
                     features = source.getFeatures(), i = features.length;
                 while (i--) {
                     if (features[i].get('id') === objectDoc._id) {
-                        features.removeAt(i);
+                        features.splice(i,1);
                         break;
                     }
                 }
@@ -641,8 +717,6 @@ angular.module('app.services.map', ['app.services.context'])
             var fill = new ol.style.Fill({ color: fillColor });
             var stroke = new ol.style.Stroke({ color: strokeColor, width: strokeWidth });
             var circle = new ol.style.Circle({ fill: fill, stroke: stroke, radius: circleRadius });
-
-            // console.log(featureModel);
             if(layerModel){
                 if(layerModel.featLabels){
                     //@hb

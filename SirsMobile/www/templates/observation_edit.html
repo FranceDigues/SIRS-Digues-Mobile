@@ -13,10 +13,24 @@
                             <h2 class="sirs-card-title" ng-hide="c.isNewObject">Editer une Observation</h2>
 
                             <div class="sirs-nav-tabs">
-                                <!-- Tab / Fields -->
-                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'medias'}" on-tap="c.setTab('medias')">Medias</span>
                                 <!-- Tab / Medias -->
-                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'evolution'}" on-tap="c.setTab('evolution')">Évolution</span>
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'medias'}"
+                                      on-tap="c.setTab('medias')">Medias</span>
+                                <!-- Tab / evolution -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'evolution'}"
+                                      on-tap="c.setTab('evolution')">Évolution</span>
+                                <!-- Tab / urgence -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'urgence'}"
+                                      on-tap="c.setTab('urgence')">Urgence</span>
+                                <!-- Tab / nombre -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'nombre'}"
+                                      on-tap="c.setTab('nombre')">Nombre</span>
+                                <!-- Tab / suite à apporter -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'suite'}"
+                                      on-tap="c.setTab('suite')">Suite à apporter</span>
+                                <!-- Tab / observateur -->
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'observateur'}"
+                                      on-tap="c.setTab('observateur')">Observateur</span>
                             </div>
 
                             <!-- Content / Medias -->
@@ -48,6 +62,42 @@
                                     <textarea id="description" class="materialize-textarea" ng-model="c.doc.evolution"></textarea>
                                 </div>
                             </div>
+
+                            <!-- Content / urgence -->
+                            <div class="urgence" ng-switch-when="urgence">
+                                <select id="urgenceList" class="browser-default"
+                                        ng-model="c.doc.urgenceId">
+                                    <option ng-repeat="urgence in c.urgenceList"
+                                            value="{{urgence.value.id}}">{{urgence.value.libelle}}</option>
+                                </select>
+                            </div>
+
+                            <!-- Content / nombre -->
+                            <div class="nombre" ng-switch-when="nombre">
+                                <div class="sirs-field">
+                                    <label for="nombre_Desordres" class="active">Nombre Desordres</label>
+                                    <input type="number" id="nombre_Desordres" class="materialize-textarea"
+                                              ng-model="c.doc.nombreDesordres"/>
+                                </div>
+                            </div>
+
+                            <!-- Content / suite à apporter -->
+                            <div class="suite" ng-switch-when="suite">
+                                <div class="sirs-field">
+                                    <label for="suite_feild" class="active">Suite à apporter</label>
+                                    <textarea id="suite_feild" class="materialize-textarea" ng-model="c.doc.suite"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Content / observateur -->
+                            <div class="observateur" ng-switch-when="observateur">
+                                <select id="contactList" class="browser-default"
+                                        ng-model="c.doc.observateurId">
+                                    <option ng-repeat="contact in c.contactList"
+                                            value="{{contact.id}}">{{contact.doc.prenom}} {{contact.doc.nom}}</option>
+                                </select>
+                            </div>
+
                         </div>
 
                         <!-- Actions -->

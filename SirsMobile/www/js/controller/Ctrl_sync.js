@@ -17,8 +17,9 @@ angular.module('app.controllers.sync', ['app.services.context'])
          \/               \/                \/                  \/               \/_____/             \/
          */
         var syncViews = [
-            'Utilisateur/byLogin',
-            'Element/byClassAndLinear'
+            // 'Utilisateur/byLogin',
+            // 'Element/byClassAndLinear',
+            'Synchronisation avec la base de données ...'
         ]; // TODO → make it configurable ?
 
 
@@ -38,12 +39,10 @@ angular.module('app.controllers.sync', ['app.services.context'])
             angular.forEach(syncViews, function(view, i) {
                 promise = promise.then(function() {
                     var deferred = $q.defer(),
-                        // options = { live: false, retry: true, filter: '_view', view: view };
-                    options = { live: false, retry: true, filter: '_view', view: view, batch_size : 10 };
-
+                        options = { live: false, retry: true};
                     self.view = view;
 
-                    localDB.sync(remoteDB, options)
+                    PouchDB.sync(localDB,remoteDB, options)
                         .on('complete', function() {
                             deferred.notify(i + 1);
                             deferred.resolve();
@@ -69,6 +68,7 @@ angular.module('app.controllers.sync', ['app.services.context'])
             $timeout(function() {
                 self.db.lastSync = new Date().getTime(); // store sync timestamp
                 self.status = 2;
+                MapManager.redrawEditionLayerAfterSynchronization();
 
             }, 1000);
         }

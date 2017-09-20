@@ -1,7 +1,8 @@
 
 angular.module('app.controllers.observation_details', [])
 
-    .controller('ObservationDetailsController', function ObservationDetailsController($ionicPlatform, sContext, SidePanelService, LocalDocument) {
+    .controller('ObservationDetailsController', function ObservationDetailsController($ionicPlatform, sContext,
+                                                                                      SidePanelService, LocalDocument, $rootScope) {
 
         var self = this;
 
@@ -24,6 +25,10 @@ angular.module('app.controllers.observation_details', [])
 
         self.backToDisorderDetails = function() {
             SidePanelService.setTribordView('object_details');
+        };
+
+        self.flagLoading = function () {
+            $rootScope.loadingflag = true;
         };
 
 

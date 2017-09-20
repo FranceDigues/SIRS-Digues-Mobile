@@ -8,6 +8,7 @@ angular.module('SirsMobile', [
     'angular-md5',
     'rzModule',
     'pouchdb',
+    'LocalStorageModule',
     // App modules.
     'app.controllers',
     'app.services',
@@ -157,7 +158,6 @@ angular.module('SirsMobile', [
                     startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
                     endkey: ['fr.sirs.core.model.RefOrientationPhoto',{}]
                 });
-
             },
             cotesList: function (LocalDocument) {
                 //@hb
@@ -172,9 +172,24 @@ angular.module('SirsMobile', [
             }
         },
         observationEdit: {
-            objectDoc: function($route, sContext /*, LocalDocument*/) {
+            objectDoc: function($route, sContext/*, LocalDocument*/) {
                 return sContext.selectedObject;
                 //return LocalDocument.get($route.current.params.objectId);
+            },
+            contactList : function (LocalDocument) {
+                //@hb
+                return LocalDocument.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.Contact'],
+                    endkey: ['fr.sirs.core.model.Contact',{}],
+                    include_docs : true
+                });
+            },
+            urgenceList : function (LocalDocument) {
+                //@hb
+                return LocalDocument.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.RefUrgence'],
+                    endkey: ['fr.sirs.core.model.RefUrgence',{}]
+                });
             }
         }
     });

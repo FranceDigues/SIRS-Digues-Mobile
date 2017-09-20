@@ -2,6 +2,7 @@
     <ion-header-bar align-title="center">
         <button type="button" class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="c.backToMenu()"></button>
         <h1 class="title">Couches métiers</h1>
+        <button type="button" class="col-20 button button-icon button-clear ion-android-refresh" on-tap="c.clearAll()"></button>
     </ion-header-bar>
 
     <ion-content class="has-header has-fab-bottom">
@@ -42,6 +43,10 @@
                 <ion-option-button class="button" on-tap="c.openColorModal(layer)">
                     <i class="icon ion-paintbrush"></i>
                 </ion-option-button>
+                <!--@hb add the button of Force refresh -->
+                <ion-option-button class="button" on-tap="c.forceRefresh(layer)">
+                    <i class="icon ion-android-refresh"></i>
+                </ion-option-button>
 
                 <ion-reorder-button class="ion-navicon" on-reorder="c.move($fromIndex, $toIndex)"></ion-reorder-button>
 
@@ -50,10 +55,10 @@
         </ion-list>
     </ion-content>
 
-    <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 135px;" on-tap="c.reorder = !c.reorder">
+    <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 185px;" on-tap="c.reorder = !c.reorder">
         <i class="large material-icons">list</i>
     </button>
-    <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 200px;" on-tap="c.goToLayerList()">
+    <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 250px;" on-tap="c.goToLayerList()">
         <i class="large material-icons">add</i>
     </button>
 

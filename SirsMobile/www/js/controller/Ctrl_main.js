@@ -1,10 +1,10 @@
-angular.module('app.controllers.main', ['app.services.context'])
+angular.module('app.controllers.main', ['app.services.context','app.services.dao'])
 
     .controller('MainController', function MainController($location, $ionicSideMenuDelegate,
                                                           sirsDoc, AuthService, SidePanelService,
                                                           $scope,$rootScope, $ionicLoading, AppLayersService, $interval,
                                                           EditionService,MapManager,$cordovaToast,
-                                                          $ionicPlatform, GeolocationService, $window) {
+                                                          $ionicPlatform, GeolocationService, $window,PouchService) {
 
         var self = this;
 

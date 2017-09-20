@@ -31,7 +31,9 @@ angular.module('app.services.dao', ['app.services.context'])
                 throw new Error('No active database.');
             }
             if (!localDB && activeDb) {
-                localDB = new PouchDB(activeDb.name);
+                localDB = new PouchDB(activeDb.name,{adapter: 'cordova-sqlite',
+                    iosDatabaseLocation: 'Library',
+                    androidDatabaseImplementation: 2});
             }
             return localDB;
         };
@@ -41,7 +43,9 @@ angular.module('app.services.dao', ['app.services.context'])
                 throw new Error('No active database or active database is not replicated yet.');
             }
             if (!localDB && activeDb) {
-                localDB = new PouchDB(activeDb.name);
+                localDB = new PouchDB(activeDb.name, {adapter: 'cordova-sqlite',
+                    iosDatabaseLocation: 'Library',
+                    androidDatabaseImplementation: 2});
             }
             return localDB;
         };

@@ -46,6 +46,7 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
 
         self.closeObject = function() {
             if (angular.isDefined(self.selectedClosable)) {
+                $rootScope.loadingflag = true;
                 var type = self.selectedClosable['@class'].substring(
                     self.selectedClosable['@class'].lastIndexOf('.') + 1); // TODO → improve type detection
                 $location.path('/object/' + encodeURIComponent(type) + '/' + self.selectedClosable._id);

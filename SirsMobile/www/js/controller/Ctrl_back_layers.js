@@ -7,7 +7,6 @@ angular.module('app.controllers.back_layers', ['app.services.context'])
 
         self.sLayer = BackLayerService;
 
-
         self.useLayer = function(layer) {
             BackLayerService.setActive(layer.name);
         };
@@ -16,7 +15,7 @@ angular.module('app.controllers.back_layers', ['app.services.context'])
             var isCurrent = (layer === BackLayerService.getActive());
             BackLayerService.remove(layer).then(function(removed) {
                 if (removed && isCurrent) {
-                    self.useLayer(self.available[0]);
+                    self.useLayer(BackLayerService.list()[0]);
                 }
             });
         };
@@ -32,6 +31,13 @@ angular.module('app.controllers.back_layers', ['app.services.context'])
         self.goToAddLayer = function() {
             SidePanelService.setBabordView('back_layers_add');
         };
+
+        self.toggleON_OFF_Line = function (layer) {
+            // Remove the cache object
+            delete layer.cache;
+            // Update the view
+            BackLayerService.setActive(layer.name);
+        }
     })
 
     .controller('BackLayersAddController', function BackLayersAddController(BackLayerService, SidePanelService) {

@@ -18,8 +18,9 @@ angular.module('app.controllers.first_sync', ['app.services.context'])
          \/               \/                \/                  \/               \/_____/             \/
          */
         var syncViews = [
-            'Utilisateur/byLogin',
-            'Element/byClassAndLinear'
+            // 'Utilisateur/byLogin',
+            // 'Element/byClassAndLinear'
+            'Première synchronisation'
         ]; // TODO → make it configurable ?
 
         self.db = DatabaseService.getActive();
@@ -30,7 +31,7 @@ angular.module('app.controllers.first_sync', ['app.services.context'])
 
         function sync() {
             self.percent = 0;
-            self.completion = '0/' + syncViews.length;
+            self.completion = '0/' + 1;
             self.status = 1;
 
             var promise = $q.when(); // empty promise for chaining
@@ -38,11 +39,10 @@ angular.module('app.controllers.first_sync', ['app.services.context'])
             angular.forEach(syncViews, function(view, i) {
                 promise = promise.then(function() {
                     var deferred = $q.defer(),
-                        options = { live: false, retry: true, filter: '_view', view: view };
-
+                        options = { live: false, retry: true};
                     self.view = view;
 
-                    localDB.sync(remoteDB, options)
+                    PouchDB.sync(localDB,remoteDB, options)
                         .on('complete', function() {
                             deferred.notify(i + 1);
                             deferred.resolve();
@@ -55,6 +55,7 @@ angular.module('app.controllers.first_sync', ['app.services.context'])
                     return deferred.promise;
                 });
             });
+
 
             promise.then(syncComplete, syncError, syncProgress);
         }
