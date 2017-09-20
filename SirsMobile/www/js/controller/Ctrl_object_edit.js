@@ -331,6 +331,25 @@ angular.module('app.controllers.object_edit', [])
                         'chemin': '/' + fileName
                     });
 
+                    objectDoc._attachments = objectDoc._attachments || {};
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.onload = function() {
+                        var reader = new FileReader();
+                        reader.onloadend = function() {
+                            // Save the photo like attachment to the object
+                            objectDoc._attachments[photoId] = {
+                                content_type: 'image/png',
+                                data:reader.result
+                            };
+                        };
+
+                        reader.readAsDataURL(xhr.response);
+                    };
+                    xhr.open('GET', self.getPhotoPath(objectDoc.photos[objectDoc.photos.length-1]));
+                    xhr.responseType = 'blob';
+                    xhr.send();
+
                     // Force digest.
                     $scope.$digest();
                 });
@@ -384,6 +403,26 @@ angular.module('app.controllers.object_edit', [])
 
         self.save = function(){
             $scope.c.doc.photos.push(self.mediaOptions);
+
+            $scope.c.doc._attachments = $scope.c.doc._attachments || {};
+
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                var reader = new FileReader();
+                reader.onloadend = function() {
+                    // Save the photo like attachment to the object
+                    $scope.c.doc._attachments[self.mediaOptions.id] = {
+                        content_type: 'image/png',
+                        data:reader.result
+                    };
+                };
+
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length-1]));
+            xhr.responseType = 'blob';
+            xhr.send();
+
             $scope.c.setView('form');
         };
 
@@ -481,12 +520,4 @@ angular.module('app.controllers.object_edit', [])
             // Acquire the medias storage path when the device is ready.
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });
-
-
-
-
-
-
-
-
     });

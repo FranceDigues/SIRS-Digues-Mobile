@@ -75,7 +75,8 @@ angular.module('app.controllers.observation_edit', [])
                 'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
                 'nombreDesordres': 0,
                 'urgenceId': "RefUrgence:1",
-                'photos': []
+                'photos': [],
+                '_attachments' : {}
             };
         }
 
@@ -147,6 +148,23 @@ angular.module('app.controllers.observation_edit', [])
                         '@class': 'fr.sirs.core.model.Photo',
                         'chemin': '/' + fileName
                     });
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.onload = function() {
+                        var reader = new FileReader();
+                        reader.onloadend = function() {
+                            // Save the photo like attachment to the object
+                            self.doc._attachments[photoId] = {
+                                content_type: 'image/png',
+                                data:reader.result
+                            };
+                        };
+
+                        reader.readAsDataURL(xhr.response);
+                    };
+                    xhr.open('GET', self.getPhotoPath(self.photos[self.photos.length-1]));
+                    xhr.responseType = 'blob';
+                    xhr.send();
 
                     // Force digest.
                     $scope.$digest();

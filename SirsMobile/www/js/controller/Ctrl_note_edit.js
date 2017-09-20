@@ -22,7 +22,7 @@ angular.module('app.controllers.note_edit', [])
 
             $location.path("/main");
 
-        }
+        };
 
         me.currentText = "";
         me.tmpFileName=null;
@@ -41,7 +41,6 @@ angular.module('app.controllers.note_edit', [])
         };
 
         $ionicPlatform.ready(function () {
-
 
             me.load = function () {
                 var $ = function (id) {
@@ -93,19 +92,19 @@ angular.module('app.controllers.note_edit', [])
                             );
                         },
                         me._onCopyFail);
-                }
+                };
 
                 //kill not edited file
                 me._onCopySuccess= function (msg) {
-                    $log.debug(msg)
+                    $log.debug(msg);
                     sContext.noteImg=null;
 
-                }
+                };
 
                 me._onCopyFail = function fail(error) {
                     $log.debug(error)
                     console.log("fail: " + error.code);
-                }
+                };
 
 
                 $timeout(function(){
@@ -113,7 +112,7 @@ angular.module('app.controllers.note_edit', [])
                     canvas.setWidth(window.innerWidth - (window.innerWidth * 0.25));
                     canvas.calcOffset();
                     canvas.renderAll();
-                },300)
+                },300);
 
 
                 fabric.Object.prototype.transparentCorners = false;
@@ -326,7 +325,7 @@ angular.module('app.controllers.note_edit', [])
                     left: 100,
                     top: 100 ,
                 }));
-            }
+            };
 
 
             me.load();
@@ -335,6 +334,6 @@ angular.module('app.controllers.note_edit', [])
 
 
         });
-    })
+    });
 
 
