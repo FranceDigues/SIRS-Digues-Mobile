@@ -156,7 +156,7 @@ angular.module('app.controllers.observation_edit', [])
                             // Save the photo like attachment to the object
                             self.doc._attachments[photoId] = {
                                 content_type: 'image/png',
-                                data:reader.result
+                                data:reader.result.replace('data:image/png;base64,','')
                             };
                         };
 
