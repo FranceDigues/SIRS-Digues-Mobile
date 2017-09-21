@@ -113,6 +113,20 @@ angular.module('app.services.dao', ['app.services.context'])
             return deferred.promise;
         };
 
+        self.getAttachment = function(docId,attachmentId) {
+            var deferred = $q.defer();
+
+            PouchService.getLocalDB().getAttachment(docId, attachmentId)
+                .then(function(result) {
+                    deferred.resolve(result.rows);
+                })
+                .catch(function(error) {
+                    deferred.reject(error);
+                });
+
+            return deferred.promise;
+        };
+
         self.save = function(doc) {
             var deferred = $q.defer();
 

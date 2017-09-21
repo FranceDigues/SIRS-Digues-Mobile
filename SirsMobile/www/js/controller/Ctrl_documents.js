@@ -1,15 +1,51 @@
 angular.module('app.controllers.documents', [])
 
-    .controller('DocumentController', function DocumentController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocument) {
+    .controller('DocumentController', function DocumentController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocument, $rootScope) {
 
         var self = this;
 
         var selected = undefined;
 
-
         self.roots = [];
 
         self.fileDoc = undefined;
+
+        self.downloadRemoteDocuments = function(){
+            $rootScope.loadingflag = true;
+            LocalDocument.query('getAllFilesAttachments').then(function(results) {
+                results.forEach(function (item) {
+                    angular.forEach(item.value.attachments,function (value, key) {
+                        if(!value.content_type.startsWith("image/")){
+                        $.ajax({url:window.cordova.file.externalDataDirectory + 'documents'+'/'+item.value.chemin.substring(item.value.chemin.lastIndexOf('/')+1),
+                            type:'HEAD',
+                            error : function () {
+                                LocalDocument.getAttachment(item.id,key).then(function (blob) {
+                                    window.resolveLocalFileSystemURL(window.cordova.file.externalDataDirectory + 'documents', function(targetDir) {
+                                        targetDir.getFile(item.value.chemin.substring(item.value.chemin.lastIndexOf('/')+1), {create:true}, function(file) {
+                                            file.createWriter(function(fileWriter) {
+                                                fileWriter.write(blob);
+                                                window.setTimeout(function () {
+                                                    $scope.$digest();
+                                                },10);
+                                            }, function(){
+                                                console.log('cannot write the data to the file');
+                                            });
+                                        });
+                                    });
+                                },function (error) {
+                                    console.log(error);
+                                });
+                            }
+                        });
+
+
+                        }
+                    });
+
+                });
+                $rootScope.loadingflag = false;
+            });
+        };
 
         self.children = function(node) {
             return visitDirectory(node._entry);

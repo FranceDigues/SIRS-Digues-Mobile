@@ -140,6 +140,17 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                             geometry: doc.geometry })}}.toString()
                     }
                 }
+            },
+            {
+                _id: '_design/getAllFilesAttachments',
+                views: {
+                    'getAllFilesAttachments': {
+                        map:  function(doc) {
+                            if(doc._attachments){
+                                emit(doc._id, {chemin : doc.chemin, attachments : doc._attachments});
+                            }}.toString()
+                    }
+                }
             }
         ]; // TODO → make it configurable ?
 
