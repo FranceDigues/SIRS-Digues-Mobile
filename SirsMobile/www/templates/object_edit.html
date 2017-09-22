@@ -65,9 +65,11 @@
                                         <label for="trancon" class="active">La liste des Tronçons les plus proche (environ  1000 mètres): </label>
                                         <select id="trancon"
                                                 class="browser-default"
-                                                ng-model="c.doc.linearId">
-                                            <option ng-repeat="troncon in c.troncons"
-                                                    value="{{troncon._id}}">{{troncon.libelle}}</option>
+                                                ng-model="c.doc.linearId"
+                                                ng-options="troncon._id as troncon.libelle for troncon in c.troncons">
+                                            <option></option>
+                                            <!--<option ng-repeat="troncon in c.troncons track by troncon._id"-->
+                                                    <!--value="{{troncon._id}}">{{troncon.libelle}}</option>-->
                                         </select>
                                     </div>
                                 </div>
