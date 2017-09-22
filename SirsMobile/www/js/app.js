@@ -190,6 +190,20 @@ angular.module('SirsMobile', [
                     startkey: ['fr.sirs.core.model.RefUrgence'],
                     endkey: ['fr.sirs.core.model.RefUrgence',{}]
                 });
+            },
+            orientationsList : function (LocalDocument) {
+                //@hb
+                return LocalDocument.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
+                    endkey: ['fr.sirs.core.model.RefOrientationPhoto',{}]
+                });
+            },
+            cotesList: function (LocalDocument) {
+                //@hb
+                return LocalDocument.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.RefCote'],
+                    endkey: ['fr.sirs.core.model.RefCote',{}]
+                });
             }
         }
     });

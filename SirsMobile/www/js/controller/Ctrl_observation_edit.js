@@ -3,7 +3,10 @@ angular.module('app.controllers.observation_edit', [])
     .controller('ObservationEditController', function ObservationEditController($scope, $filter, $location, $ionicScrollDelegate,
                                                                                 $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                                 $routeParams, GeolocationService, LocalDocument,
-                                                                                EditionService, objectDoc, uuid4, $rootScope,contactList, urgenceList) {
+                                                                                EditionService, objectDoc, uuid4, $rootScope,contactList,
+                                                                                urgenceList, orientationsList, cotesList)
+
+    {
 
         var self = this;
 
@@ -40,6 +43,11 @@ angular.module('app.controllers.observation_edit', [])
         self.contactList = contactList;
 
         self.urgenceList = urgenceList;
+
+        //@hb
+        self.orientations = orientationsList;
+        //@hb
+        self.cotes = cotesList;
 
         // Form
         // ----------
@@ -165,6 +173,145 @@ angular.module('app.controllers.observation_edit', [])
                     xhr.open('GET', self.getPhotoPath(self.photos[self.photos.length-1]));
                     xhr.responseType = 'blob';
                     xhr.send();
+
+                    // Force digest.
+                    $scope.$digest();
+                });
+            });
+        }
+
+        //@hb get the value of Orientation & Côté from the Data Base
+        self.goToMedia = function () {
+            self.setView('media');
+        };
+
+        $ionicPlatform.ready(function() {
+            // Acquire the medias storage path when the device is ready.
+            self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
+        });
+    })
+    .controller('MediaObservationController', function ($window, SirsDoc,
+                                             uuid4, $ionicPlatform, $scope) {
+        var self = this;
+
+        var dataProjection = SirsDoc.get().epsgCode;
+
+        self.orientations = $scope.c.orientations;
+
+        self.cotes = $scope.c.cotes;
+
+        self.back = function(){
+            $scope.c.setView('form');
+        };
+
+        self.save = function(){
+            $scope.c.doc.photos.push(self.mediaOptions);
+
+            $scope.c.doc._attachments = $scope.c.doc._attachments || {};
+
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                var reader = new FileReader();
+                reader.onloadend = function() {
+                    // Save the photo like attachment to the object
+                    $scope.c.doc._attachments[self.mediaOptions.id] = {
+                        content_type: 'image/png',
+                        data:reader.result.replace('data:image/png;base64,','')
+                    };
+                };
+
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length-1]));
+            xhr.responseType = 'blob';
+            xhr.send();
+
+            $scope.c.setView('form');
+        };
+
+        self.selectPos = function() {
+            self.setView('map');
+        };
+
+        //@hb
+        self.mediaOptions = {
+            id: '',
+            chemin:'',
+            designation:"",
+            positionDebut:"",
+            orientationPhoto:"",
+            coteId:"",
+            commentaire: ""
+        };
+
+        self.setView = function(name) {
+            if (name !== self.view) {
+                self.view = name;
+            }
+        };
+
+        self.view = 'form';
+
+        self.handlePos = function(pos) {
+
+            var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
+            self.mediaOptions.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+
+        };
+
+        self.backToForm = function() {
+            self.setView('form');
+        };
+
+        self.takePhoto = function() {
+
+            self.mediaOptions['id'] = '';
+            self.mediaOptions['chemin'] = '';
+
+            navigator.camera.getPicture(photoCaptureSuccess, photoCaptureError, {
+                quality: 50,
+                destinationType: navigator.camera.DestinationType.FILE_URI,
+                encodingType: navigator.camera.EncodingType.PNG
+            });
+        };
+
+        self.drawNote = function() {
+            self.setView('note');
+        };
+
+        self.saveNote = savePicture;
+
+        function photoCaptureSuccess(imageURI) {
+            window.resolveLocalFileSystemURL(imageURI, savePicture);
+        }
+
+        self.getPhotoPath = function(photo) {
+            var path = photo.chemin.replace(/\\/g, '/');
+            if (path.charAt(0) !== '/') {
+                path = '/' + path;
+            }
+            return self.mediaPath + path;
+        };
+
+        function photoCaptureError() {
+            // TODO → handle error
+        }
+
+        function savePicture(imageFile) {
+            if (!self.mediaPath) {
+                return;
+            }
+            window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
+                var photoId = uuid4.generate(),
+                    fileName = photoId + '.png';
+
+                // Copy image file in its final directory.
+                imageFile.copyTo(targetDir, fileName, function() {
+                    // Store the photo in the object document.
+
+                    self.mediaOptions['id'] = photoId;
+                    self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
+                    self.mediaOptions['chemin'] = '/' + fileName;
 
                     // Force digest.
                     $scope.$digest();

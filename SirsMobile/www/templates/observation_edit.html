@@ -46,12 +46,17 @@
                                     <!--<button type="button" class="btn waves-effect waves-teal" on-tap="c.recordAudio()">-->
                                     <!--<i class="material-icons center">mic</i>-->
                                     <!--</button>-->
-                                    <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.takePhoto()">
-                                        <i class="material-icons left">camera_alt</i>Prendre une photo
+
+                                    <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.goToMedia()">
+                                        <i class="material-icons left">perm_media</i>Ajouter un media
                                     </button>
-                                    <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.drawNote()">
-                                        <i class="material-icons left">border_color</i>Déssiner une note
-                                    </button>
+
+                                    <!--<button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.takePhoto()">-->
+                                        <!--<i class="material-icons left">camera_alt</i>Prendre une photo-->
+                                    <!--</button>-->
+                                    <!--<button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.drawNote()">-->
+                                        <!--<i class="material-icons left">border_color</i>Déssiner une note-->
+                                    <!--</button>-->
                                 </div>
                             </div>
 
@@ -119,4 +124,8 @@
     <!-- Note -->
     <div ng-include="'templates/note_edit.html'" ng-if="c.view === 'note'"
          ng-init="save = c.saveNote; exit = c.backToForm"></div>
+
+    <!-- Add Media View -->
+    <div ng-include="'templates/media.html'" ng-if="c.view === 'media'"
+         ng-controller="MediaObservationController as mdc" ></div>
 </ion-view>
