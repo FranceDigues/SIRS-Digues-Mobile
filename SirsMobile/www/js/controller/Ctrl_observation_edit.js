@@ -190,7 +190,7 @@ angular.module('app.controllers.observation_edit', [])
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });
     })
-    .controller('MediaObservationController', function ($window, SirsDoc,
+    .controller('MediaObservationController', function ($window, SirsDoc, $ionicLoading, GeolocationService,
                                              uuid4, $ionicPlatform, $scope) {
         var self = this;
 
@@ -318,6 +318,18 @@ angular.module('app.controllers.observation_edit', [])
                 });
             });
         }
+
+        self.waitForLocation = function (locationPromise) {
+            $ionicLoading.show({ template: 'En attente de localisation...' });
+            return locationPromise.then(function handleLocation(location) {
+                self.handlePos(location.coords);
+                $ionicLoading.hide();
+            });
+        };
+
+        self.locateMe = function () {
+            self.waitForLocation(GeolocationService.start()).then(GeolocationService.stop);
+        };
 
         $ionicPlatform.ready(function() {
             // Acquire the medias storage path when the device is ready.

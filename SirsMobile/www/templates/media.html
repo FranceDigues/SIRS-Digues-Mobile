@@ -40,9 +40,15 @@
             <div class="spacer"></div>
             <span class="left blue-text text-darken-2">Position</span><br>
             <div class="spacer"></div>
-            <button type="button" class="left btn btn-large waves-effect waves-teal"
-                on-tap="mdc.selectPos()">
-                Enregistrer une position GPS
+            <!--<button type="button" class="left btn btn-large waves-effect waves-teal"-->
+                <!--on-tap="mdc.selectPos()">-->
+                <!--Enregistrer une position GPS-->
+            <!--</button>-->
+            <button class="btn waves-effect waves-light" on-tap="mdc.selectPos()">
+                <i class="material-icons center">edit</i>
+            </button>
+            <button class="btn waves-effect waves-light" on-tap="mdc.locateMe()">
+                <i class="material-icons center">gps_fixed</i>
             </button>
 
             <div ng-if="mdc.mediaOptions.positionDebut !== ''" class="sirs-field-inline">

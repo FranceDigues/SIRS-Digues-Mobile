@@ -450,8 +450,8 @@ angular.module('app.controllers.object_edit', [])
             self.exit();
         }
     })
-    .controller('MediaController', function ($window, SirsDoc,
-                                             uuid4, $ionicPlatform, $scope) {
+    .controller('MediaController', function ($window, SirsDoc, $ionicLoading,
+                                             uuid4, $ionicPlatform, $scope, GeolocationService) {
         var self = this;
 
         var dataProjection = SirsDoc.get().epsgCode;
@@ -578,6 +578,18 @@ angular.module('app.controllers.object_edit', [])
                 });
             });
         }
+
+        self.waitForLocation = function (locationPromise) {
+            $ionicLoading.show({ template: 'En attente de localisation...' });
+            return locationPromise.then(function handleLocation(location) {
+                self.handlePos(location.coords);
+                $ionicLoading.hide();
+            });
+        };
+
+        self.locateMe = function () {
+            self.waitForLocation(GeolocationService.start()).then(GeolocationService.stop);
+        };
 
         $ionicPlatform.ready(function() {
             // Acquire the medias storage path when the device is ready.
