@@ -25,6 +25,11 @@ angular.module('app.controllers.documents', [])
                                             file.createWriter(function(fileWriter) {
                                                 fileWriter.write(blob);
                                                 window.setTimeout(function () {
+                                                    $cordovaFile.checkDir(window.cordova.file.externalDataDirectory, 'documents').then(function(directory) {
+                                                        visitDirectory(directory).then(function(files) {
+                                                            self.roots = files;
+                                                        });
+                                                    });
                                                     $scope.$digest();
                                                 },10);
                                             }, function(){
