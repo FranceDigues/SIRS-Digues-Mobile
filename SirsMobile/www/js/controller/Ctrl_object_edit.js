@@ -451,7 +451,7 @@ angular.module('app.controllers.object_edit', [])
         }
     })
     .controller('MediaController', function ($window, SirsDoc, $ionicLoading,
-                                             uuid4, $ionicPlatform, $scope, GeolocationService) {
+                                             uuid4, $ionicPlatform, $scope, GeolocationService, AuthService) {
         var self = this;
 
         var dataProjection = SirsDoc.get().epsgCode;
@@ -501,7 +501,8 @@ angular.module('app.controllers.object_edit', [])
             positionDebut:"",
             orientationPhoto:"",
             coteId:"",
-            commentaire: ""
+            commentaire: "",
+            author : AuthService.getValue()._id
         };
 
         self.setView = function(name) {

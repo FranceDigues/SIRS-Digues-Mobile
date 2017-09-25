@@ -1,6 +1,6 @@
 angular.module('app.controllers.documents', [])
 
-    .controller('DocumentController', function DocumentController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocument, $rootScope) {
+    .controller('DocumentController', function DocumentController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocument) {
 
         var self = this;
 
@@ -11,7 +11,6 @@ angular.module('app.controllers.documents', [])
         self.fileDoc = undefined;
 
         self.downloadRemoteDocuments = function(){
-            $rootScope.loadingflag = true;
             LocalDocument.query('getAllFilesAttachments').then(function(results) {
                 results.forEach(function (item) {
                     angular.forEach(item.value.attachments,function (value, key) {
@@ -48,7 +47,6 @@ angular.module('app.controllers.documents', [])
                     });
 
                 });
-                $rootScope.loadingflag = false;
             });
         };
 

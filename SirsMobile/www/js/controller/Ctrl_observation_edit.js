@@ -4,7 +4,7 @@ angular.module('app.controllers.observation_edit', [])
                                                                                 $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                                 $routeParams, GeolocationService, LocalDocument,
                                                                                 EditionService, objectDoc, uuid4, $rootScope,contactList,
-                                                                                urgenceList, orientationsList, cotesList)
+                                                                                urgenceList, orientationsList, cotesList, AuthService)
 
     {
 
@@ -56,9 +56,12 @@ angular.module('app.controllers.observation_edit', [])
 
         self.doc = self.isNewObject ? createNewObservation() : angular.copy(getTargetObservation());
 
+        var author = AuthService.getValue();
+
+        self.doc.author = author._id;
+
         self.save = function() {
             if (self.isNewObject) {
-
                 if(angular.isUndefined(objectDoc.observations)){
                     objectDoc.observations = [];
                 }
@@ -191,7 +194,7 @@ angular.module('app.controllers.observation_edit', [])
         });
     })
     .controller('MediaObservationController', function ($window, SirsDoc, $ionicLoading, GeolocationService,
-                                             uuid4, $ionicPlatform, $scope) {
+                                             uuid4, $ionicPlatform, $scope, AuthService) {
         var self = this;
 
         var dataProjection = SirsDoc.get().epsgCode;
@@ -241,7 +244,8 @@ angular.module('app.controllers.observation_edit', [])
             positionDebut:"",
             orientationPhoto:"",
             coteId:"",
-            commentaire: ""
+            commentaire: "",
+            author : AuthService.getValue()._id
         };
 
         self.setView = function(name) {
