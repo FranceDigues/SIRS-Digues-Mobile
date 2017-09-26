@@ -39,6 +39,18 @@
                 <input id="layers" type="text" class="validate" required ng-model="c.source.params.layers"/>
             </div>
         </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <label for="logina">Identifiant dans le cas d'un WMS sécuriser</label>
+                <input id="logina" type="text" class="validate" ng-model="c.authorization.login"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <label for="pw">Mot de passe dans le cas d'un WMS sécuriser</label>
+                <input id="pw" type="password" class="validate" ng-model="c.authorization.pw"/>
+            </div>
+        </div>
     </ion-content>
 
     <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 200px;"

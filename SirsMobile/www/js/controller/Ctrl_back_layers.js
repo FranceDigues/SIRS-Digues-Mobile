@@ -40,7 +40,7 @@ angular.module('app.controllers.back_layers', ['app.services.context'])
         }
     })
 
-    .controller('BackLayersAddController', function BackLayersAddController(BackLayerService, SidePanelService) {
+    .controller('BackLayersAddController', function BackLayersAddController($scope,BackLayerService, SidePanelService) {
 
         var self = this;
 
@@ -52,6 +52,10 @@ angular.module('app.controllers.back_layers', ['app.services.context'])
 
         self.name = null;
 
+        self.authorization = {
+            login : '',
+            pw : ''
+        };
         self.source = { type: 'TileWMS', url: 'http://', params: { version: '1.3.0' } };
 
         self.prepareType = function() {
@@ -65,6 +69,28 @@ angular.module('app.controllers.back_layers', ['app.services.context'])
         };
 
         self.add = function() {
+
+            if(self.authorization.login !=="" && self.authorization.pw !==""){
+                self.source.tileLoadFunction = function (imageTile, src) {
+                    var oReq = new XMLHttpRequest();
+                    oReq.open("GET", src, true);
+                    oReq.setRequestHeader("Authorization",'Basic '+btoa(self.authorization.login+":"+self.authorization.pw));
+                    oReq.responseType = "blob";
+                    oReq.onload = function(oEvent) {
+                        var blob = oReq.response;
+                        var reader = new FileReader();
+                        reader.onload = function(event){
+                            imageTile.getImage().src = event.target.result; //event.target.results contains the base64 code to create the image.
+                        };
+                        reader.readAsDataURL(blob);//Convert the blob from clipboard to base64
+                    };
+
+                    oReq.send();
+                };
+            }
+
+
+
             BackLayerService.add({ type: 'Tile', name: self.name, source: self.source });
             self.backToList();
         };
