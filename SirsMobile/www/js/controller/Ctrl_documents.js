@@ -1,6 +1,6 @@
 angular.module('app.controllers.documents', [])
 
-    .controller('DocumentController', function DocumentController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocument) {
+    .controller('DocumentController', function DocumentController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocument,PouchService) {
 
         var self = this;
 
@@ -11,14 +11,15 @@ angular.module('app.controllers.documents', [])
         self.fileDoc = undefined;
 
         self.downloadRemoteDocuments = function(){
-            LocalDocument.query('getAllFilesAttachments').then(function(results) {
+            window.p = PouchService.getLocalDB();
+            LocalDocument.query('getAllFilesAttachments',{attachments: true}).then(function(results) {
                 results.forEach(function (item) {
                     angular.forEach(item.value.attachments,function (value, key) {
                         if(!value.content_type.startsWith("image/")){
                         $.ajax({url:window.cordova.file.externalDataDirectory + 'documents'+'/'+item.value.chemin.substring(item.value.chemin.lastIndexOf('/')+1),
                             type:'HEAD',
                             error : function () {
-                                LocalDocument.getAttachment(item.id,key).then(function (blob) {
+                                PouchService.getLocalDB().getAttachment(item.id,key,function (err, blob) {
                                     window.resolveLocalFileSystemURL(window.cordova.file.externalDataDirectory + 'documents', function(targetDir) {
                                         targetDir.getFile(item.value.chemin.substring(item.value.chemin.lastIndexOf('/')+1), {create:true}, function(file) {
                                             file.createWriter(function(fileWriter) {
@@ -36,8 +37,6 @@ angular.module('app.controllers.documents', [])
                                             });
                                         });
                                     });
-                                },function (error) {
-                                    console.log(error);
                                 });
                             }
                         });

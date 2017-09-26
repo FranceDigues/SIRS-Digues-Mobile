@@ -298,7 +298,7 @@ angular.module('app.controllers.object_edit', [])
 
         self.loaded = {};
 
-        b64toBlob = function (b64Data, contentType, sliceSize) {
+        window.b64toBlob = function (b64Data, contentType, sliceSize) {
             contentType = contentType || '';
             sliceSize = sliceSize || 512;
 
