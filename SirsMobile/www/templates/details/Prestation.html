@@ -1,20 +1,56 @@
 <div class="sirs-panel">
     <div class="sirs-field-inline">
         <span class="sirs-field-title">Numéro de désignation :</span>
-        <span class="sirs-field-value" ng-bind="c.document.designation"></span>
+        <span class="sirs-field-value" ng-bind="c.document.designation || 'Non définie'"></span>
     </div>
 </div>
 <div class="sirs-section">
     <div class="sirs-field">
-        <span class="sirs-field-title">Position Debut</span>
-        <span class="sirs-field-value" ng-bind="c.document.positionDebut"></span>
+        <span class="sirs-field-title">Libelle</span>
+        <span class="sirs-field-value" ng-bind="c.document.libelle || 'Non définie'"></span>
     </div>
     <div class="sirs-field">
-        <span class="sirs-field-title">Position Fin</span>
-        <span class="sirs-field-value" ng-bind="c.document.positionFin"></span>
+        <span class="sirs-field-title">Date de début</span>
+        <span class="sirs-field-value" ng-bind="c.document.date_debut || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Date de fin</span>
+        <span class="sirs-field-value" ng-bind="c.document.date_fin || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Position Id</span>
+        <span class="sirs-field-value" ng-bind="c.document.positionId || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Source Id</span>
+        <span class="sirs-field-value" ng-bind="c.document.sourceId || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Tronçon Id</span>
+        <span class="sirs-field-value" ng-bind="c.document.linearId || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Type de Prestation Id</span>
+        <span class="sirs-field-value" ng-bind="c.document.typePrestationId || 'Non définie'"></span>
     </div>
     <div class="sirs-field">
         <span class="sirs-field-title">Commentaire</span>
-        <span class="sirs-field-value" ng-bind="c.document.commentaire"></span>
+        <span class="sirs-field-value" ng-bind="c.document.commentaire || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Coût Globale</span>
+        <span class="sirs-field-value" ng-bind="c.document.coutGlobal || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Coût Metre</span>
+        <span class="sirs-field-value" ng-bind="c.document.coutMetre || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Réalisation Interne</span>
+        <span class="sirs-field-value" ng-bind="c.document.realisationInterne || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+        <span class="sirs-field-title">Réalisation Interne</span>
+        <span class="sirs-field-value" ng-bind="c.document.realisationInterne || 'Non définie'"></span>
     </div>
 </div>

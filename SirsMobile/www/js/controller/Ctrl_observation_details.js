@@ -1,7 +1,7 @@
 
 angular.module('app.controllers.observation_details', [])
 
-    .controller('ObservationDetailsController', function ObservationDetailsController($ionicPlatform, sContext, $scope,
+    .controller('ObservationDetailsController', function ObservationDetailsController($ionicPlatform, sContext, $scope,$ionicPopup,
                                                                                       SidePanelService, LocalDocument, $rootScope) {
 
         var self = this;
@@ -15,6 +15,33 @@ angular.module('app.controllers.observation_details', [])
         self.objectId = sContext.selectedObject._id;
 
         self.loaded = {};
+
+        self.remove = function () {
+            return $ionicPopup.confirm({
+                title: 'Suppression d\'une observation',
+                template: 'Voulez vous vraiment supprimer cette observation ?'
+            }).then(function(confirmed) {
+                if (confirmed) {
+                    // LocalDocument.remove(self.doc).then(function() {
+                        // Remove the feature from the selection list.
+                        var i = sContext.selectedObject.observations.length;
+                        while (i--) {
+                            if (sContext.selectedObject.observations[i].id === self.doc.id) {
+                                sContext.selectedObject.observations.splice(i, 1);
+                                break;
+                            }
+                        }
+                        LocalDocument.save(sContext.selectedObject).then(function () {
+                            // Return to the selection list view.
+                            self.backToDisorderDetails();
+                        });
+                    // },function (err) {
+                    //     console.log(err);
+                    // });
+                }
+                return confirmed;
+            });
+        };
 
         b64toBlob = function (b64Data, contentType, sliceSize) {
             contentType = contentType || '';
@@ -95,7 +122,6 @@ angular.module('app.controllers.observation_details', [])
         self.flagLoading = function () {
             $rootScope.loadingflag = true;
         };
-
 
         if (self.doc.urgenceId) {
             // Acquire label for urgency identifier.
