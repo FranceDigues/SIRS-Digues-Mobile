@@ -1,26 +1,23 @@
-<ion-view id="documents" ng-controller="DocumentGalleryController as c1" ng-init="c1.downloadRemoteDocuments();">
-    <ion-header-bar>
-        <a href="#/main" class="col-10 button button-icon button-clear ion-arrow-left-a"></a>
-        <h1 class="title">Annuler</h1>
-    </ion-header-bar>
-
-    <ion-content class="has-header">
-        <!-- Content / Description -->
-        <div style="position:relative;">
-            <h-tree ng-hide="c1.fileDoc" size="3" tops="c1.roots" children="c1.children(node)" onselect="c1.select(node)"></h-tree>
-            <div ng-show="c1.fileDoc" class="description">
-                <h3 ng-bind="c1.fileDoc.libelle"></h3>
-                <p ng-bind="c1.fileDoc.description"></p>
-                <button type="button" class="btn waves-effect waves-light" ng-click="c1.fileDoc = undefined">
-                    <i class="material-icons">keyboard_arrow_left</i>&nbsp;Retour
-                </button>
-                <button type="button" class="btn waves-effect waves-light" ng-click="c1.open()">
-                    <i class="material-icons">folder_open</i>&nbsp;Ouvrir
-                </button>
-                <button type="button" class="btn waves-effect waves-light" ng-click="c1.deleteFile()">
-                    <i class="material-icons">delete_forever</i>&nbsp;Supprimer
-                </button>
-            </div>
+<div id="documents" ng-init="c.downloadRemoteDocuments();">
+    <div class="row" style="padding-top: 50px;">
+        <div class="col col-50" >
+            <ion-list>
+                <ion-item on-tap="c.select(file)" ng-class="{'selected' : true}"
+                          ng-repeat="file in c.availableFiles">
+                    <span style="text-overflow:ellipsis">{{ file.label}}</span>
+                </ion-item>
+            </ion-list>
         </div>
-    </ion-content>
-</ion-view>
+        <div ng-show="c.fileDoc" class="col col-50">
+            <h5 ng-bind="c.fileDoc.libelle"></h5>
+            <p ng-bind="c.fileDoc.description"></p>
+            <button type="button" class="btn waves-effect waves-light" ng-click="c.open()">
+                <i class="material-icons">folder_open</i>&nbsp;Ouvrir
+            </button>
+            <button type="button" class="btn waves-effect waves-light" ng-click="c.deleteFile()">
+                <i class="material-icons">delete_forever</i>&nbsp;Supprimer
+            </button>
+        </div>
+    </div>
+
+</div>

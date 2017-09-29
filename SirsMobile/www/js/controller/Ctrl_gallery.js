@@ -1,34 +1,24 @@
 angular.module('app.controllers.gallery', [])
-    .controller('GalleryController',GalleryController)
-    .controller('DocumentGalleryController', DocumentGalleryController);
+    .controller('GalleryController',GalleryController);
 
-
-
-function GalleryController() {
+function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocument,PouchService, $ionicPopup, $rootScope) {
     var self = this;
 
     self.activeTab = 'documents';
 
     self.setActiveTab = function (tab) {
         self.activeTab = tab;
+        self.fileDoc = undefined;
+        self.initDirectory();
     };
-    
-}
-
-function DocumentGalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocument,PouchService, $ionicPopup) {
-
-    var self = this;
-
-    self.galleryType = $scope.c.activeTab;
 
     var selected = undefined;
 
-    self.roots = [];
+    self.availableFiles = [];
 
     self.fileDoc = undefined;
 
     self.downloadRemoteDocuments = function(){
-        window.p = PouchService.getLocalDB();
         LocalDocument.query('getAllFilesAttachments',{attachments: true}).then(function(results) {
             results.forEach(function (item) {
                 angular.forEach(item.value.attachments,function (value, key) {
@@ -44,7 +34,7 @@ function DocumentGalleryController($q, $scope, $ionicPlatform, $cordovaFile, Loc
                                                 window.setTimeout(function () {
                                                     $cordovaFile.checkDir(window.cordova.file.externalDataDirectory, 'documents').then(function(directory) {
                                                         visitDirectory(directory).then(function(files) {
-                                                            self.roots = files;
+                                                            self.availableFiles = files;
                                                         });
                                                     });
                                                     $scope.$digest();
@@ -66,13 +56,8 @@ function DocumentGalleryController($q, $scope, $ionicPlatform, $cordovaFile, Loc
         });
     };
 
-    self.children = function(node) {
-        return visitDirectory(node._entry);
-    };
-
     self.select = function(node) {
         selected = node;
-        window.h = node;
 
         self.fileDoc = undefined;
         if (!node.isDirectory) {
@@ -103,16 +88,35 @@ function DocumentGalleryController($q, $scope, $ionicPlatform, $cordovaFile, Loc
                 selected._entry.remove(function(){
                     console.log('The file has been removed succesfully');
                     self.fileDoc = undefined;
-                    $cordovaFile.checkDir(window.cordova.file.externalDataDirectory, self.galleryType).then(function(directory) {
-                        visitDirectory(directory).then(function(files) {
-                            self.roots = files;
-                        });
-                    });
+                    self.initDirectory();
                 },function(error){
                     console.log('Error deleting the file');
                 },function(){
                     console.log("The file doesn't exist");
                 });
+            }
+            return confirmed;
+        });
+    };
+
+    self.deleteAllFiles = function () {
+        return $ionicPopup.confirm({
+            title: 'Suppression tous les fichiers',
+            template: 'Voulez vous vraiment supprimer tous les fichiers de ce répertoire ?'
+        }).then(function(confirmed) {
+            if (confirmed) {
+                $rootScope.loadingflag = true;
+                var promises = [];
+                angular.forEach(self.availableFiles,function (file) {
+                    promises.push(file._entry.remove());
+                });
+                $q.all(promises).then(function(values){
+                    console.log('The files has been removed succesfully');
+                    self.fileDoc = undefined;
+                    self.initDirectory();
+                    $rootScope.loadingflag = false;
+                });
+
             }
             return confirmed;
         });
@@ -142,13 +146,20 @@ function DocumentGalleryController($q, $scope, $ionicPlatform, $cordovaFile, Loc
         return deferred.promise;
     }
 
-
-    $ionicPlatform.ready(function() {
-        $cordovaFile.checkDir(window.cordova.file.externalDataDirectory, self.galleryType).then(function(directory) {
+    self.initDirectory = function () {
+        $cordovaFile.checkDir(window.cordova.file.externalDataDirectory, self.activeTab)
+            .then(function(directory) {
             visitDirectory(directory).then(function(files) {
-                self.roots = files;
+                self.availableFiles = files;
             });
         });
+    };
+
+
+    $ionicPlatform.ready(function() {
+        self.initDirectory();
     }); // fill root documents when the device is ready
+    
 }
+
 

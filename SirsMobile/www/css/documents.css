@@ -1,3 +1,12 @@
-#documents .description {
+#gallery{
+.description {
     padding: 20px;
 }
+
+.selected {
+    background-color : #ddd;
+    }
+}
+
+
+
