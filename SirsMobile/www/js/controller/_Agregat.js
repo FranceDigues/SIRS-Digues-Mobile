@@ -4,7 +4,7 @@ angular.module('app.controllers', [
     'app.controllers.berges',
     'app.controllers.cache',
     'app.controllers.database',
-    'app.controllers.documents',
+    'app.controllers.gallery',
     'app.controllers.login',
     'app.controllers.main',
     'app.controllers.menu',

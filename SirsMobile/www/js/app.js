@@ -91,10 +91,10 @@ angular.module('SirsMobile', [
                 controller: 'ObservationEditController as c',
                 resolve: routeResolve['observationEdit']
             })
-            .when('/documents', {
-                templateUrl: 'templates/documents.html',
-                controller: 'DocumentController as c',
-                resolve: routeResolve['documents']
+            .when('/gallery', {
+                templateUrl: 'templates/gallery.html',
+                controller: 'GalleryController as c',
+                resolve: routeResolve['gallery']
             })
             .otherwise('/database');
     })

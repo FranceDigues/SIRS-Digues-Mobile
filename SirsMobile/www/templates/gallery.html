@@ -1,0 +1,23 @@
+<ion-view id="documents" ng-init="c.downloadRemoteDocuments();">
+    <ion-header-bar>
+        <a href="#/main" class="col-10 button button-icon button-clear ion-arrow-left-a"></a>
+        <h1 class="title">Annuler</h1>
+    </ion-header-bar>
+
+    <div class="tabs-striped tabs-top">
+        <div class="tabs tabs-sirs" style="background-color: aqua">
+            <!-- Tab / Documents -->
+            <a class="tab-item" ng-class="{active: c.activeTab === 'documents'}" on-tap="c.setActiveTab('documents')">Documents</a>
+            <!-- Tab / Photos -->
+            <a class="tab-item" ng-class="{active: c.activeTab === 'medias'}" on-tap="c.setActiveTab('medias')">Medias</a>
+        </div>
+    </div>
+
+    <ion-content class="has-header has-fab-bottom">
+        <!-- Content -->
+        <div ng-if="c.activeTab === 'documents'"
+             ng-include="'templates/documents_gallery.html'"></div>
+        <div ng-if="c.activeTab === 'medias'"
+             ng-include="'templates/medias_gallery.html'"></div>
+    </ion-content>
+</ion-view>

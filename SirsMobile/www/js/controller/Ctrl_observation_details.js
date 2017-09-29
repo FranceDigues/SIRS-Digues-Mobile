@@ -16,14 +16,13 @@ angular.module('app.controllers.observation_details', [])
 
         self.loaded = {};
 
+        // @hb remove observation
         self.remove = function () {
             return $ionicPopup.confirm({
                 title: 'Suppression d\'une observation',
                 template: 'Voulez vous vraiment supprimer cette observation ?'
             }).then(function(confirmed) {
                 if (confirmed) {
-                    // LocalDocument.remove(self.doc).then(function() {
-                        // Remove the feature from the selection list.
                         var i = sContext.selectedObject.observations.length;
                         while (i--) {
                             if (sContext.selectedObject.observations[i].id === self.doc.id) {
@@ -35,9 +34,6 @@ angular.module('app.controllers.observation_details', [])
                             // Return to the selection list view.
                             self.backToDisorderDetails();
                         });
-                    // },function (err) {
-                    //     console.log(err);
-                    // });
                 }
                 return confirmed;
             });
