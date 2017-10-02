@@ -1,20 +1,15 @@
 <ion-view id="gallery">
-    <ion-header-bar>
-        <a href="#/main" class="col-10 button button-icon button-clear ion-arrow-left-a"></a>
-        <h1 class="title">Annuler</h1>
-        <a class="button btn waves-effect waves-light" ng-click="c.deleteAllFiles()">
-            <i class="material-icons">delete_forever</i>&nbsp;Supprimer Tous</a>
-    </ion-header-bar>
-
-    <div class="tabs-striped tabs-top">
-        <div class="tabs tabs-sirs" style="background-color: aqua">
-            <!-- Tab / Documents -->
-            <a class="tab-item" ng-class="{active: c.activeTab === 'documents'}" on-tap="c.setActiveTab('documents')">Documents</a>
-            <!-- Tab / Photos -->
-            <a class="tab-item" ng-class="{active: c.activeTab === 'medias'}" on-tap="c.setActiveTab('medias')">Medias</a>
+    <ion-content>
+        <div class="tabs-striped">
+            <div class="tabs tabs-sirs" style="background-color: #00BCD4;">
+                <!-- Tab / Documents -->
+                <a class="tab-item" ng-class="{active: c.activeTab === 'documents'}" style="color: white;"
+                   on-tap="c.setActiveTab('documents')">Documents</a>
+                <!-- Tab / Photos -->
+                <a class="tab-item" ng-class="{active: c.activeTab === 'medias'}" style="color: white;"
+                   on-tap="c.setActiveTab('medias')">Medias</a>
+            </div>
         </div>
-    </div>
-    <ion-content class="has-header has-fab-bottom">
         <!-- Content -->
         <div ng-if="c.activeTab === 'documents'"
              ng-include="'templates/documents_gallery.html'"></div>

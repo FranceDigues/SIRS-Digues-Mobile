@@ -1,9 +1,17 @@
-<div id="medias">
-    <!-- Content / Description -->
-    <div style="padding-top: 50px;" class="row">
-        <div class="col col-50">
+<div id="medias" style="overflow: scroll;">
+    <div class="sirs-card-action" style="background-color: #0097A7;padding:5px;">
+        <a href="#/main" class="btn-flat waves-effect waves-teal">
+            <i class="material-icons left">arrow_back</i>Annuler
+        </a>
+        <button type="button" class="btn pink waves-effect waves-teal right"
+                ng-click="c.deleteAllFiles()">
+            <i class="material-icons left">delete_forever</i>Supprimer Tous
+        </button>
+    </div>
+    <div class="row" style="padding-top: 0px;padding-left: 0px;">
+        <div class="col col-50" style="padding-left: 0px;">
             <ion-list>
-                <ion-item on-tap="c.select(file)" ng-class="{'selected' : true}"
+                <ion-item on-tap="c.select(file)" ng-class="{hb: file.label === c.fileDoc.libelle}"
                           ng-repeat="file in c.availableFiles">
                     <span style="text-overflow:ellipsis">{{ file.label}}</span>
                 </ion-item>
@@ -19,6 +27,9 @@
             <button type="button" class="btn waves-effect waves-light" ng-click="c.deleteFile()">
                 <i class="material-icons">delete_forever</i>&nbsp;Supprimer
             </button>
+            <img class="row col col-100" style="margin-top: 10px;"
+                alt="Photo non disponible sur le mobile" ng-src="{{c.getPhotoPath()}}"/>
+
         </div>
     </div>
 </div>

@@ -102,7 +102,8 @@ function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocume
     self.deleteAllFiles = function () {
         return $ionicPopup.confirm({
             title: 'Suppression tous les fichiers',
-            template: 'Voulez vous vraiment supprimer tous les fichiers de ce répertoire ?'
+            template: 'Voulez vous vraiment supprimer tous les fichiers de ce répertoire ?' +
+            'NB: Cette operation ne supprime pas les fichiers dans la base de données.'
         }).then(function(confirmed) {
             if (confirmed) {
                 $rootScope.loadingflag = true;
@@ -124,6 +125,10 @@ function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocume
 
     self.open = function() {
         window.cordova.plugins.FileOpener.openFile(decodeURI(selected._entry.nativeURL));
+    };
+    
+    self.getPhotoPath = function () {
+        return selected ? decodeURI(selected._entry.nativeURL):'';
     };
 
     function visitDirectory(directory) {
@@ -154,7 +159,6 @@ function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocume
             });
         });
     };
-
 
     $ionicPlatform.ready(function() {
         self.initDirectory();

@@ -1,8 +1,17 @@
-<div id="documents" ng-init="c.downloadRemoteDocuments();">
-    <div class="row" style="padding-top: 50px;">
-        <div class="col col-50" >
+<div id="documents" ng-init="c.downloadRemoteDocuments();" style="overflow: scroll;">
+    <div class="sirs-card-action" style="background-color: #0097A7;padding:5px;">
+        <a href="#/main" class="btn-flat waves-effect waves-teal">
+            <i class="material-icons left">arrow_back</i>Annuler
+        </a>
+        <button type="button" class="btn pink waves-effect waves-teal right"
+                ng-click="c.deleteAllFiles()">
+            <i class="material-icons left">delete_forever</i>Supprimer Tous
+        </button>
+    </div>
+    <div class="row" style="padding-top: 0px;padding-left: 0px;">
+        <div class="col col-50" style="padding-left: 0px;">
             <ion-list>
-                <ion-item on-tap="c.select(file)" ng-class="{'selected' : true}"
+                <ion-item on-tap="c.select(file)" ng-class="{hb: file.label === c.fileDoc.libelle}"
                           ng-repeat="file in c.availableFiles">
                     <span style="text-overflow:ellipsis">{{ file.label}}</span>
                 </ion-item>
@@ -10,7 +19,6 @@
         </div>
         <div ng-show="c.fileDoc" class="col col-50">
             <h5 ng-bind="c.fileDoc.libelle"></h5>
-            <p ng-bind="c.fileDoc.description"></p>
             <button type="button" class="btn waves-effect waves-light" ng-click="c.open()">
                 <i class="material-icons">folder_open</i>&nbsp;Ouvrir
             </button>
