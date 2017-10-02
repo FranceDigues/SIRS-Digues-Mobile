@@ -99,7 +99,7 @@ angular.module('SirsMobile', [
             .otherwise('/database');
     })
 
-    .run(function ($rootScope, $location, $ionicPlatform, $cordovaFile, sContext,$window, $cordovaToast, $cordovaGeolocation) {
+    .run(function ($rootScope, $location, $ionicPlatform, $cordovaFile, sContext) {
 
         // Wait for "deviceready" event.
         $ionicPlatform.ready(function () {

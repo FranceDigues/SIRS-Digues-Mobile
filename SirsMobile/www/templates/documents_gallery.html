@@ -9,13 +9,15 @@
         </button>
     </div>
     <div class="row" style="padding-top: 0px;padding-left: 0px;">
-        <div class="col col-50" style="padding-left: 0px;">
-            <ion-list>
-                <ion-item on-tap="c.select(file)" ng-class="{hb: file.label === c.fileDoc.libelle}"
-                          ng-repeat="file in c.availableFiles">
-                    <span style="text-overflow:ellipsis">{{ file.label}}</span>
-                </ion-item>
-            </ion-list>
+        <div class="col col-50" style="padding-left: 0px;border-right: 1px solid cadetblue;">
+            <ion-scroll style="height: 410px;margin-top: 1px;">
+                <ion-list>
+                    <ion-item on-tap="c.select(file)" ng-class="{hb: file.label === c.fileDoc.libelle}"
+                              ng-repeat="file in c.availableFiles">
+                        <span style="text-overflow:ellipsis">{{ file.label}}</span>
+                    </ion-item>
+                </ion-list>
+            </ion-scroll>
         </div>
         <div ng-show="c.fileDoc" class="col col-50">
             <h5 ng-bind="c.fileDoc.libelle"></h5>
