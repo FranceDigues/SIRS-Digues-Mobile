@@ -8,16 +8,10 @@ angular.module('app.services.dao', ['app.services.context'])
 
         var localDB = null;
 
-        var activeDb = null;
+        var activeDb = DatabaseService.getActive();
 
-        activeDb = DatabaseService.getActive();
 
-        this.cleanRemoteAndLocalDB = function () {
-            localDB = null;
-            remoteDB = null;
-        };
-
-        this.getRemoteDB = function() {
+        self.getRemoteDB = function() {
             if (!activeDb) {
                 throw new Error('No active database.');
             }
@@ -32,7 +26,7 @@ angular.module('app.services.dao', ['app.services.context'])
             return remoteDB;
         };
 
-        this.getOrCreateLocalDB = function() {
+        self.getOrCreateLocalDB = function() {
             if (!activeDb) {
                 throw new Error('No active database.');
             }
@@ -44,7 +38,7 @@ angular.module('app.services.dao', ['app.services.context'])
             return localDB;
         };
 
-        this.getLocalDB = function() {
+        self.getLocalDB = function() {
             if (!activeDb || !activeDb.replicated) {
                 throw new Error('No active database or active database is not replicated yet.');
             }
@@ -61,6 +55,7 @@ angular.module('app.services.dao', ['app.services.context'])
             remoteDB = localDB = null;
             activeDb = newDb;
         });
+
     })
 
     .service('LocalDocument', function LocalDocument($q, PouchService) {
@@ -112,8 +107,6 @@ angular.module('app.services.dao', ['app.services.context'])
 
             return deferred.promise;
         };
-
-        self.getAttachment = PouchService.getLocalDB().getAttachment;
 
         self.save = function(doc) {
             var deferred = $q.defer();

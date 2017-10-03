@@ -43,7 +43,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
 
         // Others.
         lastLocation: null,
-        version: '0.2.25'
+        version: '0.2.26'
     })
 
     .service('ContextService', function ContextService($rootScope, $location, LocalStorageItem, defaultContext) {
@@ -77,16 +77,16 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var dbContext = ContextService.getValue().database;
 
 
-        this.list = function() {
+        self.list = function() {
             return dbContext.list;
         };
 
-        this.add = function(db) {
+        self.add = function(db) {
             dbContext.list.push(db);
             $rootScope.$broadcast('databaseAdded', db);
         };
 
-        this.remove = function(db) {
+        self.remove = function(db) {
             return $ionicPopup.confirm({
                 title: 'Suppression d\'une base de données',
                 template: 'Voulez vous vraiment supprimer cette base de données ?'
@@ -103,16 +103,16 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             });
         };
 
-        this.oldEditionRemove = function(db) {
-                    // Destroy the local database (if exists).
-                    new PouchDB(db.name).destroy();
-                    // Unregister the remove database.
-                    dbContext.list.splice(dbContext.list.indexOf(db), 1);
-                    // Broadcast application event.
-                    $rootScope.$broadcast('databaseRemoved', db);
+        self.oldEditionRemove = function(db) {
+            // Destroy the local database (if exists).
+            new PouchDB(db.name).destroy();
+            // Unregister the remove database.
+            dbContext.list.splice(dbContext.list.indexOf(db), 1);
+            // Broadcast application event.
+            $rootScope.$broadcast('databaseRemoved', db);
         };
 
-        this.getActive = function() {
+        self.getActive = function() {
             var i = dbContext.list.length;
             while(i--) {
                 var db = dbContext.list[i];
@@ -123,11 +123,11 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return null;
         };
 
-        this.setActive = function(name) {
+        self.setActive = function(name) {
             var oldValue = dbContext.active;
             dbContext.active = name;
             if (oldValue !== name) {
-                $rootScope.$broadcast('databaseChanged', this.getActive(), oldValue);
+                $rootScope.$broadcast('databaseChanged', self.getActive(), oldValue);
             }
         };
     })
