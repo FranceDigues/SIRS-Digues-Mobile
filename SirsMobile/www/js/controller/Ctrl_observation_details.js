@@ -8,6 +8,8 @@ angular.module('app.controllers.observation_details', [])
 
         self.doc = sContext.selectedObservation;
 
+        self.objectDoc = sContext.selectedObject;
+
         self.urgencyLabel = null;
 
         self.mediaPath = null;
@@ -26,6 +28,11 @@ angular.module('app.controllers.observation_details', [])
                         var i = sContext.selectedObject.observations.length;
                         while (i--) {
                             if (sContext.selectedObject.observations[i].id === self.doc.id) {
+                                // Delete the photos of the observation
+                                for(var j=0; j<sContext.selectedObject.observations[i].photos.length;j++){
+                                    delete sContext.selectedObject._attachments[sContext.selectedObject.observations[i].photos[j].id];
+                                }
+
                                 sContext.selectedObject.observations.splice(i, 1);
                                 break;
                             }
@@ -67,9 +74,9 @@ angular.module('app.controllers.observation_details', [])
             var image_url = self.getPhotoPath(photo);
             $.ajax({url:image_url,type:'HEAD',
                     error:function () {
-                        if(self.doc._attachments && self.doc._attachments[photo.id] && self.doc._attachments[photo.id].data){
+                        if(self.objectDoc._attachments && self.objectDoc._attachments[photo.id] && self.objectDoc._attachments[photo.id].data){
                             var fileName = photo.id+'.png';
-                            var blobImage = b64toBlob(self.doc._attachments[photo.id].data,'image/png');
+                            var blobImage = b64toBlob(self.objectDoc._attachments[photo.id].data,'image/png');
 
                             window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
                                 targetDir.getFile(fileName, {create:true}, function(file) {

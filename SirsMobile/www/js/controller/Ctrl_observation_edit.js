@@ -16,6 +16,8 @@ angular.module('app.controllers.observation_edit', [])
             $rootScope.loadingflag = true;
         };
 
+        self.objectDoc = objectDoc;
+
         // Navigation
         // -----------
 
@@ -72,7 +74,6 @@ angular.module('app.controllers.observation_edit', [])
                 // Apply modifications on target observation.
                 angular.extend(getTargetObservation(), self.doc);
             }
-
             // Save document.
             EditionService.saveObject(objectDoc).then(function() {
                 $location.path('/main');
@@ -86,8 +87,7 @@ angular.module('app.controllers.observation_edit', [])
                 'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
                 'nombreDesordres': 0,
                 'urgenceId': "RefUrgence:1",
-                'photos': [],
-                '_attachments' : {}
+                'photos': []
             };
         }
 
@@ -165,7 +165,7 @@ angular.module('app.controllers.observation_edit', [])
                         var reader = new FileReader();
                         reader.onloadend = function() {
                             // Save the photo like attachment to the object
-                            self.doc._attachments[photoId] = {
+                            self.objectDoc._attachments[photoId] = {
                                 content_type: 'image/png',
                                 data:reader.result.replace('data:image/png;base64,','')
                             };
@@ -208,16 +208,18 @@ angular.module('app.controllers.observation_edit', [])
         };
 
         self.save = function(){
-            $scope.c.doc.photos.push(self.mediaOptions);
 
-            $scope.c.doc._attachments = $scope.c.doc._attachments || {};
+            $scope.c.doc.photos.push(self.mediaOptions);
 
             var xhr = new XMLHttpRequest();
             xhr.onload = function() {
                 var reader = new FileReader();
                 reader.onloadend = function() {
+                    if(angular.isUndefined($scope.c.objectDoc._attachments)){
+                        $scope.c.objectDoc._attachments = {};
+                    }
                     // Save the photo like attachment to the object
-                    $scope.c.doc._attachments[self.mediaOptions.id] = {
+                    $scope.c.objectDoc._attachments[self.mediaOptions.id] = {
                         content_type: 'image/png',
                         data:reader.result.replace('data:image/png;base64,','')
                     };
