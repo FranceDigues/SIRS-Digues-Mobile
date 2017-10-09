@@ -43,7 +43,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
 
         // Others.
         lastLocation: null,
-        version: '0.2.26'
+        version: '0.2.27'
     })
 
     .service('ContextService', function ContextService($rootScope, $location, LocalStorageItem, defaultContext) {
@@ -55,7 +55,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var value = angular.extend(defaultContext, contextStorage.read());
 
 
-        this.getValue = function() {
+        self.getValue = function() {
             return value;
         };
 
@@ -67,7 +67,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         });
 
         // Store the new value in the local storage on changes.
-        $rootScope.$watch(this.getValue, contextStorage.write, true);
+        $rootScope.$watch(self.getValue, contextStorage.write, true);
     })
 
     .service('DatabaseService', function DatabaseService($rootScope, $ionicPopup, ContextService) {
@@ -139,15 +139,15 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var layerContext = ContextService.getValue().backLayer;
 
 
-        this.list = function() {
+        self.list = function() {
             return layerContext.list;
         };
 
-        this.add = function(layer) {
+        self.add = function(layer) {
             layerContext.list.push(layer);
         };
 
-        this.remove = function(layer) {
+        self.remove = function(layer) {
             return $ionicPopup.confirm({
                 title: 'Suppression d\'une couche',
                 template: 'Voulez vous vraiment supprimer cette couche ?'
@@ -162,11 +162,11 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             });
         };
 
-        this.getActive = function() {
-            return this.getByName(layerContext.active);
+        self.getActive = function() {
+            return self.getByName(layerContext.active);
         };
 
-        this.getByName = function(name) {
+        self.getByName = function(name) {
             var i = layerContext.list.length;
             while(i--) {
                 var layer = layerContext.list[i];
@@ -177,10 +177,10 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return null;
         };
 
-        this.setActive = function(name) {
+        self.setActive = function(name) {
             var oldValue = layerContext.active;
             layerContext.active = name;
-            $rootScope.$broadcast('backLayerChanged', this.getActive(), oldValue);
+            $rootScope.$broadcast('backLayerChanged', self.getActive(), oldValue);
         };
     })
 
@@ -225,7 +225,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         }
 
 
-        this.getAvailable = function() {
+        self.getAvailable = function() {
             var deferred = $q.defer();
 
             moduleDescriptions().then(
@@ -243,11 +243,11 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return deferred.promise;
         };
 
-        this.getFavorites = function() {
+        self.getFavorites = function() {
             return favorites;
         };
 
-        this.addFavorite = function(layer) {
+        self.addFavorite = function(layer) {
             layer.editable = false;
             layer.featLabels = false;
             layer.realPosition = false;
@@ -263,7 +263,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             $rootScope.$broadcast('appLayerAdded', layer);
         };
 
-        this.removeFavorite = function(layer) {
+        self.removeFavorite = function(layer) {
             var index = favorites.map(function(item) {
                 return item.title;
             }).indexOf(layer.title);
@@ -284,16 +284,16 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var context = ContextService.getValue();
 
 
-        this.isNull = function() {
+        self.isNull = function() {
             return !context.authUser;
         };
 
-        this.getValue = function() {
+        self.getValue = function() {
             return context.authUser;
         };
 
-        this.login = function(login, password) {
-            this.logout();
+        self.login = function(login, password) {
+            self.logout();
 
             var deferred = $q.defer();
 
@@ -318,8 +318,8 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return deferred.promise;
         };
 
-        this.logout = function() {
-            if (!this.isNull()) {
+        self.logout = function() {
+            if (!self.isNull()) {
                 context.authUser = null;
                 $rootScope.$broadcast('logoutSuccess');
             }
@@ -340,22 +340,22 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var tribordView = 'object_add';
 
 
-        this.getBabordView = function() {
+        self.getBabordView = function() {
             return babordView;
         };
 
-        this.setBabordView = function(view) {
+        self.setBabordView = function(view) {
             babordView = view;
             if (!$ionicSideMenuDelegate.isOpenLeft()) {
                 $ionicSideMenuDelegate.toggleLeft();
             }
         };
 
-        this.getTribordView = function() {
+        self.getTribordView = function() {
             return tribordView;
         };
 
-        this.setTribordView = function(view) {
+        self.setTribordView = function(view) {
             tribordView = view;
             if (!$ionicSideMenuDelegate.isOpenRight()) {
                 $ionicSideMenuDelegate.toggleRight();
@@ -371,18 +371,18 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         // Paths
         // ----------
 
-        this.photoDir=null;
+        self.photoDir=null;
 
-        this.notesDir=null;
+        self.notesDir=null;
 
-        this.docDir=null;
+        self.docDir=null;
 
         // Selections
         // ----------
 
-        this.selectedFeatures = [];
+        self.selectedFeatures = [];
 
-        this.selectedObject = null;
+        self.selectedObject = null;
 
-        this.selectedObservation = null;
+        self.selectedObservation = null;
     });
