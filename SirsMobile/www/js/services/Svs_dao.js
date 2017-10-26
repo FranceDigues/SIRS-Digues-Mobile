@@ -154,6 +154,21 @@ angular.module('app.services.dao', ['app.services.context'])
 
             return deferred.promise;
         };
+
+        self.getAttachment = function (docId,attachmentId) {
+            var deferred = $q.defer();
+
+            PouchService.getLocalDB().getAttachment(docId,attachmentId)
+                .then(function(result) {
+                    deferred.resolve(result);
+                })
+                .catch(function(error) {
+                    deferred.reject(error);
+                });
+
+            return deferred.promise;
+
+        };
     })
 
     .service('SirsDoc', function SirsDoc($rootScope, $q, LocalDocument) {

@@ -127,11 +127,9 @@ angular.module('app.controllers.observation_edit', [])
         self.saveNote = savePicture;
 
         self.getPhotoPath = function(photo) {
-            var path = photo.chemin.replace(/\\/g, '/');
-            if (path.charAt(0) !== '/') {
-                path = '/' + path;
-            }
-            return self.mediaPath + path;
+            var path = photo.id+photo.chemin.substring(photo.chemin.indexOf('.'));
+            var image_url = self.mediaPath +'/'+ path;
+            return image_url;
         };
 
         function photoCaptureSuccess(imageURI) {
@@ -208,9 +206,7 @@ angular.module('app.controllers.observation_edit', [])
         };
 
         self.save = function(){
-
             $scope.c.doc.photos.push(self.mediaOptions);
-
             var xhr = new XMLHttpRequest();
             xhr.onload = function() {
                 var reader = new FileReader();
@@ -219,7 +215,7 @@ angular.module('app.controllers.observation_edit', [])
                         $scope.c.objectDoc._attachments = {};
                     }
                     // Save the photo like attachment to the object
-                    $scope.c.objectDoc._attachments[self.mediaOptions.id] = {
+                    $scope.c.objectDoc._attachments[self.mediaOptions.id+'.png'] = {
                         content_type: 'image/png',
                         data:reader.result.replace('data:image/png;base64,','')
                     };
@@ -292,11 +288,9 @@ angular.module('app.controllers.observation_edit', [])
         }
 
         self.getPhotoPath = function(photo) {
-            var path = photo.chemin.replace(/\\/g, '/');
-            if (path.charAt(0) !== '/') {
-                path = '/' + path;
-            }
-            return self.mediaPath + path;
+            var path = photo.id+photo.chemin.substring(photo.chemin.indexOf('.'));
+            var image_url = self.mediaPath +'/'+ path;
+            return image_url;
         };
 
         function photoCaptureError() {

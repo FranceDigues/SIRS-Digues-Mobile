@@ -326,25 +326,37 @@ angular.module('app.controllers.object_edit', [])
             var image_url = self.getPhotoPath(photo);
             $.ajax({url:image_url,type:'HEAD',
                 error:function () {
-                    if(self.doc._attachments && self.doc._attachments[photo.id] && self.doc._attachments[photo.id].data){
-                        var fileName = photo.id+'.png';
-                        var blobImage = b64toBlob(self.doc._attachments[photo.id].data,'image/png');
-
-                        window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
-                            targetDir.getFile(fileName, {create:true}, function(file) {
-                                file.createWriter(function(fileWriter) {
-                                    fileWriter.write(blobImage);
-                                    window.setTimeout(function () {
-                                        self.loaded[photo.id] = true;
-                                        $scope.$digest();
-                                    },10);
-                                }, function(){
-                                    console.log('cannot write the data to the file');
-                                });
-                            });
+                    if(self.doc._attachments){
+                        var keyAttachment = null;
+                        var objAttachment;
+                        angular.forEach(Object.keys(self.doc._attachments),function (key) {
+                            if(key.indexOf(photo.id) != -1){
+                                keyAttachment = key;
+                            }
                         });
-                    } else {
-                        console.log("no attachment exit to load image");
+                        objAttachment = self.doc._attachments[keyAttachment];
+                        if(objAttachment){
+                            LocalDocument.getAttachment(self.doc._id, keyAttachment)
+                                .then(function (blob) {
+                                    var blobImage = blob;
+                                    var fileName = keyAttachment;
+                                    window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
+                                        targetDir.getFile(fileName, {create:true}, function(file) {
+                                            file.createWriter(function(fileWriter) {
+                                                fileWriter.write(blobImage);
+                                                window.setTimeout(function () {
+                                                    self.loaded[photo.id] = true;
+                                                    $scope.$digest();
+                                                },10);
+                                            }, function(){
+                                                console.log('cannot write the data to the file');
+                                            });
+                                        });
+                                    });
+                                });
+                        } else {
+                            console.log("no attachment exit to load image");
+                        }
                     }
                 },
                 success:function () {
@@ -356,15 +368,12 @@ angular.module('app.controllers.object_edit', [])
                     },10);
                 }
             });
-
         };
 
         self.getPhotoPath = function(photo) {
-            var path = photo.chemin.replace(/\\/g, '/');
-            if (path.charAt(0) !== '/') {
-                path = '/' + path;
-            }
-            return self.mediaPath + path;
+            var path = photo.id+photo.chemin.substring(photo.chemin.indexOf('.'));
+            var image_url = self.mediaPath +'/'+ path;
+            return image_url;
         };
 
         function photoCaptureSuccess(imageURI) {
@@ -474,7 +483,7 @@ angular.module('app.controllers.object_edit', [])
                 var reader = new FileReader();
                 reader.onloadend = function() {
                     // Save the photo like attachment to the object
-                    $scope.c.doc._attachments[self.mediaOptions.id] = {
+                    $scope.c.doc._attachments[self.mediaOptions.id+'.png'] = {
                         content_type: 'image/png',
                         data:reader.result.replace('data:image/png;base64,','')
                     };
