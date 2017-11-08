@@ -63,7 +63,25 @@ angular.module('app.controllers.observation_details', [])
                                 LocalDocument.getAttachment(self.objectDoc._id, keyAttachment)
                                     .then(function (blob) {
                                         var blobImage = blob;
-                                        var fileName = keyAttachment;
+                                        var fileName;
+                                        if(keyAttachment.indexOf('.')!=-1){
+                                            fileName = keyAttachment;
+                                        } else{
+                                            var ext;
+                                            switch (objAttachment.content_type){
+                                                case "image/jpeg":
+                                                    ext=".jpg";
+                                                    break;
+                                                case "image/png":
+                                                    ext=".png";break;
+                                                case "image/gif":
+                                                    ext=".gif";break;
+                                                case "image/tiff":
+                                                    ext=".tif";break;
+                                            }
+                                            fileName = keyAttachment+ext;
+                                        }
+
                                         window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
                                             targetDir.getFile(fileName, {create:true}, function(file) {
                                                 file.createWriter(function(fileWriter) {
