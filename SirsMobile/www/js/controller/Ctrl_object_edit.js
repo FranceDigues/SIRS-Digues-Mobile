@@ -500,7 +500,7 @@ angular.module('app.controllers.object_edit', [])
                 var reader = new FileReader();
                 reader.onloadend = function() {
                     // Save the photo like attachment to the object
-                    $scope.c.doc._attachments[self.mediaOptions.id+'.png'] = {
+                    $scope.c.doc._attachments[self.mediaOptions.id] = {
                         content_type: 'image/png',
                         data:reader.result.replace('data:image/png;base64,','')
                     };

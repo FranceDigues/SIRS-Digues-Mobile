@@ -215,7 +215,7 @@ angular.module('app.controllers.observation_edit', [])
                         $scope.c.objectDoc._attachments = {};
                     }
                     // Save the photo like attachment to the object
-                    $scope.c.objectDoc._attachments[self.mediaOptions.id+'.png'] = {
+                    $scope.c.objectDoc._attachments[self.mediaOptions.id] = {
                         content_type: 'image/png',
                         data:reader.result.replace('data:image/png;base64,','')
                     };
