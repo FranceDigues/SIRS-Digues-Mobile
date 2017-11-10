@@ -381,7 +381,7 @@ angular.module('app.controllers.object_edit', [])
                         window.setTimeout(function () {
                             self.loaded[photo.id] = true;
                             $scope.$digest();
-                        },10);
+                        },100);
                     },10);
                 }
             });

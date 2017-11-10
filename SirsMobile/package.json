@@ -1,6 +1,6 @@
 {
   "name": "SIRS-Mobile",
-  "version": "0.2.31",
+  "version": "0.2.32",
   "description": "SIRS Mobile Application",
   "devDependencies": {
     "cordova": "5.4.0",

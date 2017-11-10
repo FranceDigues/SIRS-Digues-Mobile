@@ -89,7 +89,7 @@ angular.module('app.controllers.observation_details', [])
                                                     window.setTimeout(function () {
                                                         self.loaded[photo.id] = true;
                                                         $scope.$digest();
-                                                    },10);
+                                                    },100);
                                                 }, function(){
                                                     console.log('cannot write the data to the file');
                                                 });
