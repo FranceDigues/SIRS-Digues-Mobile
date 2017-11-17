@@ -87,7 +87,8 @@ angular.module('app.controllers.observation_edit', [])
                 'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
                 'nombreDesordres': 0,
                 'urgenceId': "RefUrgence:1",
-                'photos': []
+                'photos': [],
+                'valid':false
             };
         }
 
@@ -155,7 +156,8 @@ angular.module('app.controllers.observation_edit', [])
                     self.photos.push({
                         'id': photoId,
                         '@class': 'fr.sirs.core.model.Photo',
-                        'chemin': '/' + fileName
+                        'chemin': '/' + fileName,
+                        'valid':false
                     });
 
                     var xhr = new XMLHttpRequest();
@@ -312,6 +314,7 @@ angular.module('app.controllers.observation_edit', [])
                     self.mediaOptions['id'] = photoId;
                     self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
                     self.mediaOptions['chemin'] = '/' + fileName;
+                    self.mediaOptions['valid'] = false;
 
                     // Force digest.
                     $scope.$digest();

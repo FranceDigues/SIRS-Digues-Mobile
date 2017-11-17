@@ -417,7 +417,8 @@ angular.module('app.controllers.object_edit', [])
                     objectDoc.photos.push({
                         'id': photoId,
                         '@class': 'fr.sirs.core.model.Photo',
-                        'chemin': '/' + fileName
+                        'chemin': '/' + fileName,
+                        'valid':false
                     });
 
                     objectDoc._attachments = objectDoc._attachments || {};
@@ -599,6 +600,7 @@ angular.module('app.controllers.object_edit', [])
                     self.mediaOptions['id'] = photoId;
                     self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
                     self.mediaOptions['chemin'] = '/' + fileName;
+                    self.mediaOptions['valid'] = false;
 
                     // Force digest.
                     $scope.$digest();

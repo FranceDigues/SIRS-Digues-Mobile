@@ -84,7 +84,8 @@ angular.module('app.controllers.note_edit', [])
                                         // Store the photo in the object document.
                                         me.photos.push({
                                             '@class': 'fr.sirs.core.model.Photo',
-                                            'chemin': fileName
+                                            'chemin': fileName,
+                                            'valid':false
                                         });
                                     });
                                 },
