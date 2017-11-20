@@ -35,13 +35,18 @@
                             <p>Une erreur s'est produite pendant la synchronisation.</p>
                         </div>
                     </div>
-                    <div class="sirs-card-action" ng-if="c.status !== 1">
+                    <div class="sirs-card-action">
                         <div ng-if="c.status === 0">
                             <a href="#/main" class="btn-flat waves-effect waves-teal">
                                 <i class="material-icons left">arrow_back</i>Retour
                             </a>
-                            <button type="button" class="btn pink waves-effect waves-teal right" on-tap="c.launch()" >
+                            <button type="button" class="btn pink waves-effect waves-teal right" on-tap="c.launch()">
                                 <i class="material-icons left">launch</i>Lancer la synchronisation
+                            </button>
+                        </div>
+                        <div ng-if="c.status === 1" class="text-right">
+                            <button type="button" class="btn pink waves-effect waves-teal right" on-tap="c.cancelSync()">
+                                <i class="material-icons left">cancel</i>Annuler la synchronisation
                             </button>
                         </div>
                         <div ng-if="c.status === 2" class="text-right">

@@ -1,6 +1,6 @@
 angular.module('app.controllers.sync', ['app.services.context'])
 
-    .controller('SyncController', function SyncController($q, $timeout, DatabaseService, PouchService, MapManager, featureCache) {
+    .controller('SyncController', function SyncController($q, $timeout, DatabaseService, PouchService, MapManager,$location) {
 
         var self = this;
 
@@ -8,19 +8,9 @@ angular.module('app.controllers.sync', ['app.services.context'])
 
         var remoteDB = PouchService.getRemoteDB();
 
-        /*
-           ___ ___ .__.__          .__     __________                    .__  .__
-          /   |   \|__|  |   _____ |__|    \______   \ ____  __ _______  |  | |  |   ____   ____  __ __   ____
-         /    ~    \  |  |  /     \|  |     |    |  _//  _ \|  |  \__  \ |  | |  | _/ __ \ / ___\|  |  \_/ __ \
-         \    Y    /  |  |_|  Y Y  \  |     |    |   (  <_> )  |  // __ \|  |_|  |_\  ___// /_/  >  |  /\  ___/
-         \___|_  /|__|____/__|_|  /__|     |______  /\____/|____/(____  /____/____/\___  >___  /|____/  \___  >
-         \/               \/                \/                  \/               \/_____/             \/
-         */
         var syncViews = [
-            // 'Utilisateur/byLogin',
-            // 'Element/byClassAndLinear',
             'Synchronisation avec la base de données ...'
-        ]; // TODO → make it configurable ?
+        ];
 
 
         self.db = DatabaseService.getActive();
@@ -28,6 +18,11 @@ angular.module('app.controllers.sync', ['app.services.context'])
         self.status = 0;
 
         self.launch = sync;
+
+        self.cancelSync = function () {
+            self.sync ? self.sync.cancel() : angular.noop();
+            $location.path('/main');
+        };
 
         function sync() {
             self.percent = 0;
@@ -39,17 +34,27 @@ angular.module('app.controllers.sync', ['app.services.context'])
             angular.forEach(syncViews, function(view, i) {
                 promise = promise.then(function() {
                     var deferred = $q.defer(),
-                        options = { live: false, retry: true};
+                        options = {live:false,retry:true};
                     self.view = view;
 
-                    PouchDB.sync(localDB,remoteDB, options)
+                    self.sync = PouchDB.sync(localDB,remoteDB,options)
                         .on('complete', function() {
                             deferred.notify(i + 1);
                             deferred.resolve();
+                            console.debug("complete");
                         })
                         .on('error', function(error) {
                             deferred.notify(i + 1);
                             deferred.reject(error);
+                            console.debug("error",error);
+                        }).on('change', function (info) {
+                            console.debug("change",info);
+                        }).on('paused', function (err) {
+                            console.debug("paused",err);
+                        }).on('active', function () {
+                            console.debug("active");
+                        }).on('denied', function (err) {
+                            console.debug("denied",err);
                         });
 
                     return deferred.promise;
