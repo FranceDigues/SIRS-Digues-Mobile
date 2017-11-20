@@ -49,7 +49,7 @@ angular.module('app.controllers.object_edit', [])
                                                                       $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                       $routeParams, GeolocationService, LocalDocument,
                                                                       EditionService, objectDoc, refTypes,
-                                                                      uuid4, SirsDoc,$ionicModal, orientationsList,
+                                                                      uuid4, SirsDoc,$ionicModal, orientationsList,$filter,
                                                                       cotesList, $rootScope, $cordovaGeolocation, listTroncons) {
 
         var self = this;
@@ -417,6 +417,7 @@ angular.module('app.controllers.object_edit', [])
                     objectDoc.photos.push({
                         'id': photoId,
                         '@class': 'fr.sirs.core.model.Photo',
+                        'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
                         'chemin': '/' + fileName,
                         'valid':false
                     });
@@ -477,7 +478,7 @@ angular.module('app.controllers.object_edit', [])
             self.exit();
         }
     })
-    .controller('MediaController', function ($window, SirsDoc, $ionicLoading,
+    .controller('MediaController', function ($window, SirsDoc, $ionicLoading, $filter,
                                              uuid4, $ionicPlatform, $scope, GeolocationService, AuthService) {
         var self = this;
 
@@ -599,6 +600,7 @@ angular.module('app.controllers.object_edit', [])
 
                     self.mediaOptions['id'] = photoId;
                     self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
+                    self.mediaOptions['date'] = $filter('date')(new Date(), 'yyyy-MM-dd');
                     self.mediaOptions['chemin'] = '/' + fileName;
                     self.mediaOptions['valid'] = false;
 

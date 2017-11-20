@@ -5,7 +5,7 @@
 
 angular.module('app.controllers.note_edit', [])
 
-    .controller('NoteEditController', function NoteEditController($scope, $log, $ionicPlatform,$location,sContext,$timeout,uuid4) {
+    .controller('NoteEditController', function NoteEditController($scope, $log, $ionicPlatform,$location,sContext,$timeout,uuid4,$filter) {
 
         var me = this;
 
@@ -85,6 +85,7 @@ angular.module('app.controllers.note_edit', [])
                                         me.photos.push({
                                             '@class': 'fr.sirs.core.model.Photo',
                                             'chemin': fileName,
+                                            'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
                                             'valid':false
                                         });
                                     });

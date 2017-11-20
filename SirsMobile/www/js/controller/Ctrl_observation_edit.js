@@ -156,6 +156,7 @@ angular.module('app.controllers.observation_edit', [])
                     self.photos.push({
                         'id': photoId,
                         '@class': 'fr.sirs.core.model.Photo',
+                        'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
                         'chemin': '/' + fileName,
                         'valid':false
                     });
@@ -194,7 +195,7 @@ angular.module('app.controllers.observation_edit', [])
         });
     })
     .controller('MediaObservationController', function ($window, SirsDoc, $ionicLoading, GeolocationService,
-                                             uuid4, $ionicPlatform, $scope, AuthService) {
+                                             uuid4, $ionicPlatform, $scope, AuthService, $filter) {
         var self = this;
 
         var dataProjection = SirsDoc.get().epsgCode;
@@ -313,6 +314,7 @@ angular.module('app.controllers.observation_edit', [])
 
                     self.mediaOptions['id'] = photoId;
                     self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
+                    self.mediaOptions['date'] = $filter('date')(new Date(), 'yyyy-MM-dd');
                     self.mediaOptions['chemin'] = '/' + fileName;
                     self.mediaOptions['valid'] = false;
 
