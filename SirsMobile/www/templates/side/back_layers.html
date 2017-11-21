@@ -11,7 +11,7 @@
                 <h2>{{layer.name}}<span ng-if="layer.cache"> (hors ligne)</span></h2>
 
                 <!-- Swipe actions -->
-                <ion-option-button class="button" ng-click="c.toggleON_OFF_Line(layer)" ion-stop-event>
+                <ion-option-button class="button" ng-class="{'icon-green':layer === c.sLayer.getActive() && !layer.cache}" ng-click="c.toggleON_OFF_Line(layer)" ion-stop-event>
                     <i class="material-icons">settings_remote</i>
                 </ion-option-button>
                 <ion-option-button class="button" ng-click="c.goToCache(layer)" ion-stop-event>
