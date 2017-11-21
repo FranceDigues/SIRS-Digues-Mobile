@@ -46,6 +46,10 @@
     position: absolute;
 }
 
-.icon-green {
-    color: green;
+.icon-grey {
+    color: rgba(128, 128, 128, 1);
+}
+
+.icon-grey-half {
+    color: rgba(128, 128, 128, 0.5);
 }
