@@ -379,8 +379,8 @@ angular.module('app.controllers.object_edit', [])
                 success:function () {
                     window.setTimeout(function () {
                         window.setTimeout(function () {
-                            $scope.$digest();
                             self.loaded[photo.id] = true;
+                            $scope.$digest();
                         },100);
                     },10);
                 }

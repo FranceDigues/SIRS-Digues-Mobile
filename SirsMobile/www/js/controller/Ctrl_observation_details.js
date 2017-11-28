@@ -104,8 +104,8 @@ angular.module('app.controllers.observation_details', [])
                     success:function () {
                         window.setTimeout(function () {
                             window.setTimeout(function () {
-                                $scope.$digest();
                                 self.loaded[photo.id] = true;
+                                $scope.$digest();
                             },10);
                         },10);
                     }
