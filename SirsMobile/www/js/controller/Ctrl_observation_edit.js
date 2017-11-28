@@ -115,7 +115,7 @@ angular.module('app.controllers.observation_edit', [])
 
         self.takePhoto = function() {
             navigator.camera.getPicture(photoCaptureSuccess, photoCaptureError, {
-                quality: 90,
+                quality: 50,
                 destinationType: navigator.camera.DestinationType.FILE_URI,
                 encodingType:navigator.camera.EncodingType.JPEG
             });
@@ -195,7 +195,7 @@ angular.module('app.controllers.observation_edit', [])
         });
     })
     .controller('MediaObservationController', function ($window, SirsDoc, $ionicLoading, GeolocationService,
-                                             uuid4, $ionicPlatform, $scope, AuthService, $filter) {
+                                             uuid4, $ionicPlatform, $scope, AuthService, $filter,$cordovaToast) {
         var self = this;
 
         var dataProjection = SirsDoc.get().epsgCode;
@@ -272,7 +272,7 @@ angular.module('app.controllers.observation_edit', [])
             self.mediaOptions['id'] = '';
             self.mediaOptions['chemin'] = '';
             navigator.camera.getPicture(photoCaptureSuccess, photoCaptureError, {
-                quality: 90,
+                quality: 50,
                 destinationType: navigator.camera.DestinationType.FILE_URI,
                 encodingType: navigator.camera.EncodingType.JPEG
             });
@@ -299,27 +299,36 @@ angular.module('app.controllers.observation_edit', [])
         }
 
         function savePicture(imageFile) {
-            if (!self.mediaPath) {
-                return;
-            }
-            window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
-                var photoId = uuid4.generate(),
-                    fileName = photoId + '.jpg';
+            //Check image size
+            imageFile.file(function (fileObj) {
+                if (fileObj.size > 1048576){
+                    $cordovaToast
+                        .showLongTop("S'il vous plaît, il faut choisir une image inférieure à 1,2 Mo");
+                } else {
+                    if (!self.mediaPath) {
+                        return;
+                    }
+                    window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
+                        var photoId = uuid4.generate(),
+                            fileName = photoId + '.jpg';
 
-                // Copy image file in its final directory.
-                imageFile.copyTo(targetDir, fileName, function() {
-                    // Store the photo in the object document.
+                        // Copy image file in its final directory.
+                        imageFile.copyTo(targetDir, fileName, function() {
+                            // Store the photo in the object document.
 
-                    self.mediaOptions['id'] = photoId;
-                    self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
-                    self.mediaOptions['date'] = $filter('date')(new Date(), 'yyyy-MM-dd');
-                    self.mediaOptions['chemin'] = '/' + fileName;
-                    self.mediaOptions['valid'] = false;
+                            self.mediaOptions['id'] = photoId;
+                            self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
+                            self.mediaOptions['date'] = $filter('date')(new Date(), 'yyyy-MM-dd');
+                            self.mediaOptions['chemin'] = '/' + fileName;
+                            self.mediaOptions['valid'] = false;
 
-                    // Force digest.
-                    $scope.$digest();
-                });
+                            // Force digest.
+                            $scope.$digest();
+                        });
+                    });
+                }
             });
+
         }
 
         self.waitForLocation = function (locationPromise) {
