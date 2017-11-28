@@ -115,9 +115,9 @@ angular.module('app.controllers.observation_edit', [])
 
         self.takePhoto = function() {
             navigator.camera.getPicture(photoCaptureSuccess, photoCaptureError, {
-                quality: 50,
+                quality: 90,
                 destinationType: navigator.camera.DestinationType.FILE_URI,
-                encodingType:navigator.camera.EncodingType.PNG
+                encodingType:navigator.camera.EncodingType.JPEG
             });
         };
 
@@ -147,7 +147,7 @@ angular.module('app.controllers.observation_edit', [])
             }
             window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
                 var photoId = uuid4.generate(),
-                    fileName = photoId + '.png';
+                    fileName = photoId + '.jpg';
 
                 // Copy image file in its final directory.
                 imageFile.copyTo(targetDir, fileName, function() {
@@ -167,8 +167,8 @@ angular.module('app.controllers.observation_edit', [])
                         reader.onloadend = function() {
                             // Save the photo like attachment to the object
                             self.objectDoc._attachments[photoId] = {
-                                content_type: 'image/png',
-                                data:reader.result.replace('data:image/png;base64,','')
+                                content_type: 'image/jpeg',
+                                data:reader.result.replace('data:image/jpeg;base64,','')
                             };
                         };
 
@@ -219,8 +219,8 @@ angular.module('app.controllers.observation_edit', [])
                     }
                     // Save the photo like attachment to the object
                     $scope.c.objectDoc._attachments[self.mediaOptions.id] = {
-                        content_type: 'image/png',
-                        data:reader.result.replace('data:image/png;base64,','')
+                        content_type: 'image/jpeg',
+                        data:reader.result.replace('data:image/jpeg;base64,','')
                     };
                 };
 
@@ -269,14 +269,12 @@ angular.module('app.controllers.observation_edit', [])
         };
 
         self.takePhoto = function() {
-
             self.mediaOptions['id'] = '';
             self.mediaOptions['chemin'] = '';
-
             navigator.camera.getPicture(photoCaptureSuccess, photoCaptureError, {
-                quality: 50,
+                quality: 90,
                 destinationType: navigator.camera.DestinationType.FILE_URI,
-                encodingType: navigator.camera.EncodingType.PNG
+                encodingType: navigator.camera.EncodingType.JPEG
             });
         };
 
@@ -306,7 +304,7 @@ angular.module('app.controllers.observation_edit', [])
             }
             window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
                 var photoId = uuid4.generate(),
-                    fileName = photoId + '.png';
+                    fileName = photoId + '.jpg';
 
                 // Copy image file in its final directory.
                 imageFile.copyTo(targetDir, fileName, function() {

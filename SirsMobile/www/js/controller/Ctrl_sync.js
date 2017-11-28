@@ -34,7 +34,7 @@ angular.module('app.controllers.sync', ['app.services.context'])
             angular.forEach(syncViews, function(view, i) {
                 promise = promise.then(function() {
                     var deferred = $q.defer(),
-                        options = {live:false,retry:true};
+                        options = {live:false,retry:true,batch_size:1,batches_limit:1};
                     self.view = view;
 
                     self.sync = PouchDB.sync(localDB,remoteDB,options)
