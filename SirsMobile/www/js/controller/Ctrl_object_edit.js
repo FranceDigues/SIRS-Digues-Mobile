@@ -362,8 +362,8 @@ angular.module('app.controllers.object_edit', [])
                                             file.createWriter(function(fileWriter) {
                                                 fileWriter.write(blobImage);
                                                 window.setTimeout(function () {
-                                                    self.loaded[photo.id] = true;
                                                     $scope.$digest();
+                                                    self.loaded[photo.id] = true;
                                                 },10);
                                             }, function(){
                                                 console.log('cannot write the data to the file');
@@ -379,8 +379,8 @@ angular.module('app.controllers.object_edit', [])
                 success:function () {
                     window.setTimeout(function () {
                         window.setTimeout(function () {
-                            self.loaded[photo.id] = true;
                             $scope.$digest();
+                            self.loaded[photo.id] = true;
                         },100);
                     },10);
                 }

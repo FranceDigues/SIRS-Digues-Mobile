@@ -20,9 +20,10 @@
             </div>
         </div>
         <div ng-if="c.mediaPath" ng-init="c.loadImage(photo);" ng-repeat="photo in c.doc.photos track by photo.id">
-            <img ng-if="c.loaded[photo.id]"
-                 alt="Photo non disponible sur le mobile"
-                 ng-src="{{c.getPhotoPath(photo)}}"/>
+            <div class="progress" ng-if="!c.loaded[photo.id]">
+                <div class="indeterminate"></div>
+            </div>
+            <img ng-if="c.loaded[photo.id]" alt="Photo non disponible sur le mobile" ng-src="{{c.getPhotoPath(photo)}}"/>
         </div>
     </ion-content>
 
