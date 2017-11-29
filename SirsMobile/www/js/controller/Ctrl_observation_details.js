@@ -124,7 +124,7 @@ angular.module('app.controllers.observation_details', [])
         };
 
         self.getPhotoPath = function(photo) {
-            var path = photo.id+photo.chemin.substring(photo.chemin.indexOf('.'));
+            var path = photo.id+'.'+photo.chemin.substring(photo.chemin.indexOf('.')+1).toLowerCase();
             var image_url = self.mediaPath +'/'+ path;
             return image_url;
         };
