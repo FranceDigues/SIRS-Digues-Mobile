@@ -46,6 +46,11 @@ angular.module('app.controllers.observation_details', [])
             });
         };
 
+        self.open = function(photo) {
+            var url = self.getPhotoPath(photo);
+            window.cordova.plugins.FileOpener.openFile(decodeURI(url));
+        };
+
         self.loadImage = function (photo) {
             var image_url = self.getPhotoPath(photo);
             $.ajax({url:image_url,type:'HEAD',
@@ -92,13 +97,18 @@ angular.module('app.controllers.observation_details', [])
                                                     },100);
                                                 }, function(){
                                                     console.log('cannot write the data to the file');
+                                                    self.loaded[photo.id] = true;
                                                 });
                                             });
                                         });
                                     });
                             } else {
+                                self.loaded[photo.id] = true;
                                 console.log("no attachment exit to load image");
                             }
+                        }
+                        else {
+                            self.loaded[photo.id] = true;
                         }
                     },
                     success:function () {
