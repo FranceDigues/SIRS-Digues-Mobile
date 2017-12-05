@@ -387,8 +387,13 @@ angular.module('app.controllers.object_edit', [])
             });
         };
 
+        self.open = function(photo) {
+            var url = self.getPhotoPath(photo);
+            window.cordova.plugins.FileOpener.openFile(decodeURI(url));
+        };
+
         self.getPhotoPath = function(photo) {
-            var path = photo.id+photo.chemin.substring(photo.chemin.indexOf('.'));
+            var path = photo.id+photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
             var image_url = self.mediaPath +'/'+ path;
             return image_url;
         };
