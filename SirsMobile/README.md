@@ -6,9 +6,15 @@ Installer **Android SDK** : http://developer.android.com/sdk/installing/index.ht
 
 Définir la variable d'environnement **ANDROID_HOME**.
 
-Installer **NodeJS**.
+Installer **NodeJS <= 6**.
 
-Installer **Bower**.
+Installer **Bower 1.6.6**.
+
+Installer **Cordova 5.4.0**.
+
+Installer **Ionic 1.7.16**.
+
+
 
 ## Première installation
 
