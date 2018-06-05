@@ -1,41 +1,46 @@
-angular.module('app.controllers.app_layers', ['app.services.context','app.services.colors'])
+angular.module('app.controllers.app_layers', ['app.services.context', 'app.services.colors'])
 
     .controller('AppLayersController', function AppLayersController($scope,
                                                                     $location, AppLayersService,
-                                                                    SidePanelService, MapManager,featureCache,
+                                                                    SidePanelService, MapManager, featureCache,
                                                                     $ionicModal, $ionicSideMenuDelegate,
-                                                                    $rootScope, $timeout,colorsFactory,$filter) {
+                                                                    $rootScope, $timeout, colorsFactory) {
 
         var self = this;
 
-        self.layers = $filter('orderBy')(AppLayersService.getFavorites(),'title');
+        self.layers = AppLayersService.getFavorites();
 
-        self.layerColor = function(layer) {
+        self.layerColor = function (layer) {
             return 'rgb(' + layer.color[0] + ',' + layer.color[1] + ',' + layer.color[2] + ')';
         };
 
-        self.move = function(from, to) {
+        self.move = function (from, to) {
+            if (from < to) {
+                var aux = from;
+                from = to;
+                to = aux;
+            }
             if (from !== to) {
                 self.layers.splice(to, 0, self.layers.splice(from, 1)[0]);
                 MapManager.moveAppLayer(from, to);
             }
         };
 
-        self.toggleVisibility = function(layer) {
+        self.toggleVisibility = function (layer) {
             layer.visible = !layer.visible;
             MapManager.syncAppLayer(layer);
         };
 
-        self.togglePosition = function(layer) {
+        self.togglePosition = function (layer) {
             layer.realPosition = !layer.realPosition;
             MapManager.syncAppLayer(layer);
         };
 
-        self.backToMenu = function() {
+        self.backToMenu = function () {
             SidePanelService.setBabordView('menu');
         };
 
-        self.goToLayerList = function() {
+        self.goToLayerList = function () {
             SidePanelService.setBabordView('app_layers_select');
         };
 
@@ -49,11 +54,11 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
         self.selectedElement;
 
         // @hb
-        self.featureLabels = function(layer){
+        self.featureLabels = function (layer) {
             $rootScope.loadingflag = true;
-            $timeout(function(){
+            $timeout(function () {
                 MapManager.addLabelFeatureLayer(layer);
-            },1000);
+            }, 1000);
         };
 
         // @hb
@@ -61,17 +66,17 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
             scope: $scope,
             animation: 'slide-in-up',
             backdropClickToClose: false
-        }).then(function(modal) {
+        }).then(function (modal) {
             self.colorModal = modal;
         });
 
         // @hb
-        self.openColorModal = function(layer) {
+        self.openColorModal = function (layer) {
             colorsFactory.selectedLayer = layer;
             self.colorModal.show();
         };
         // @hb
-        self.closeColorModal = function() {
+        self.closeColorModal = function () {
             clearColorChoose();
             self.colorModal.hide();
         };
@@ -81,30 +86,30 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
         };
 
         // @hb
-        var changeColor = function(colArr){
+        var changeColor = function (colArr) {
             colorsFactory.selectedLayer.color[0] = colArr[0];
             colorsFactory.selectedLayer.color[1] = colArr[1];
             colorsFactory.selectedLayer.color[2] = colArr[2];
         };
 
-        var clearColorChoose = function() {
+        var clearColorChoose = function () {
             colorsFactory.selectedColor = undefined;
-            if(colorsFactory.selectedElement) {
+            if (colorsFactory.selectedElement) {
                 colorsFactory.selectedElement.removeClass('active');
             }
             colorsFactory.selectedElement = undefined;
         };
 
         //@hb
-        self.chooseColor = function (){
-            if(colorsFactory.selectedColor){
+        self.chooseColor = function () {
+            if (colorsFactory.selectedColor) {
                 // Change the color of the selected layer
                 changeColor(colorsFactory.selectedColor);
                 // Update the change to the view
-                $rootScope.loadingflag= true;
+                $rootScope.loadingflag = true;
                 $timeout(function () {
                     MapManager.reloadLayer(colorsFactory.selectedLayer);
-                },1000);
+                }, 1000);
                 //Close the Modal after the change
                 self.colorModal.hide();
                 clearColorChoose();
@@ -112,7 +117,7 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
 
         };
 
-        self.selectColor = function (color,e) {
+        self.selectColor = function (color, e) {
             clearColorChoose();
             colorsFactory.selectedColor = color;
             colorsFactory.selectedElement = angular.element(e.target);
@@ -122,9 +127,9 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
         //@hb Refresh handler for the layer
         self.forceRefresh = function (layer) {
             var cache = featureCache.get(layer.title);
-            if(angular.isDefined(cache)){
+            if (angular.isDefined(cache)) {
                 featureCache.remove(layer.title);
-                if(layer.visible){
+                if (layer.visible) {
                     MapManager.syncAppLayer(layer);
                 }
             }
@@ -132,7 +137,7 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
 
         self.clearAll = function () {
             angular.forEach(self.layers, function (layer) {
-               self.forceRefresh(layer);
+                self.forceRefresh(layer);
             });
 
         };
@@ -146,13 +151,13 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
 
         self.available = [];
 
-        self.isActive = function(layer) {
-            return AppLayersService.getFavorites().map(function(item) {
-                return item.title;
-            }).indexOf(layer.title) !== -1;
+        self.isActive = function (layer) {
+            return AppLayersService.getFavorites().map(function (item) {
+                    return item.title;
+                }).indexOf(layer.title) !== -1;
         };
 
-        self.toggleLayer = function(layer) {
+        self.toggleLayer = function (layer) {
             if (self.isActive(layer)) {
                 AppLayersService.removeFavorite(layer);
             } else {
@@ -160,12 +165,12 @@ angular.module('app.controllers.app_layers', ['app.services.context','app.servic
             }
         };
 
-        self.backToList = function() {
+        self.backToList = function () {
             SidePanelService.setBabordView('app_layers');
         };
 
 
-        AppLayersService.getAvailable().then(function(layers) {
-            self.available = $filter('orderBy')(layers,'title');
+        AppLayersService.getAvailable().then(function (layers) {
+            self.available = $filter('orderBy')(layers, 'title');
         });
     });
