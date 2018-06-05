@@ -70,10 +70,9 @@
 
                             <!-- Content / urgence -->
                             <div class="urgence" ng-switch-when="urgence">
-                                <select id="urgenceList" class="browser-default"
-                                        ng-model="c.doc.urgenceId">
+                                <select id="urgenceList" class="browser-default" ng-model="c.doc.urgenceId">
                                     <option ng-repeat="urgence in c.urgenceList"
-                                            value="{{urgence.value.id}}">{{urgence.value.libelle}}</option>
+                                            value="{{urgence.id}}">{{urgence.libelle}}</option>
                                 </select>
                             </div>
 
@@ -99,7 +98,7 @@
                                 <select id="contactList" class="browser-default"
                                         ng-model="c.doc.observateurId">
                                     <option ng-repeat="contact in c.contactList"
-                                            value="{{contact.id}}">{{contact.doc.prenom}} {{contact.doc.nom}}</option>
+                                            ng-value="contact.id">{{contact.doc.prenom}} {{contact.doc.nom}}</option>
                                 </select>
                             </div>
 

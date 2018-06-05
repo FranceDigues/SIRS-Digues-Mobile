@@ -1,7 +1,7 @@
 angular.module('app.controllers.object_edit', [])
 
-    .filter('lonlat', function($filter) {
-        return function(coordinate, fallback) {
+    .filter('lonlat', function ($filter) {
+        return function (coordinate, fallback) {
             if (coordinate) {
                 return $filter('number')(coordinate[0], 3) + ', ' + $filter('number')(coordinate[1], 3);
             }
@@ -13,7 +13,7 @@ angular.module('app.controllers.object_edit', [])
 
         var self = this;
 
-        self.buildConfig = function() {
+        self.buildConfig = function () {
             var layerModel = BackLayerService.getActive(),
                 source = angular.copy(layerModel.source),
                 extent;
@@ -49,8 +49,8 @@ angular.module('app.controllers.object_edit', [])
                                                                       $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                       $routeParams, GeolocationService, LocalDocument,
                                                                       EditionService, objectDoc, refTypes,
-                                                                      uuid4, SirsDoc,$ionicModal, orientationsList,$filter,
-                                                                      cotesList, $rootScope, $cordovaGeolocation, listTroncons) {
+                                                                      uuid4, SirsDoc, $ionicModal, orientationsList, $filter,
+                                                                      cotesList, $rootScope, listTroncons) {
 
         var self = this;
 
@@ -58,9 +58,11 @@ angular.module('app.controllers.object_edit', [])
 
         var dataProjection = SirsDoc.get().epsgCode;
 
-        self.gpsAccuracy=0;
-        //@hb
-        $cordovaGeolocation.getCurrentPosition({}).then(function (position) {
+        self.gpsAccuracy = '-';
+
+        //@hb Watch the gps location
+
+        GeolocationService.trackLocation().then(angular.noop, angular.noop, function (position) {
             self.gpsAccuracy = Math.round(position.coords.accuracy);
         });
 
@@ -71,20 +73,20 @@ angular.module('app.controllers.object_edit', [])
 
         self.tab = 'fields';
 
-        self.setTab = function(name) {
+        self.setTab = function (name) {
             if (name !== self.tab) {
                 self.tab = name;
                 $ionicScrollDelegate.$getByHandle('formScroll').scrollTop(false);
             }
         };
 
-        self.setView = function(name) {
+        self.setView = function (name) {
             if (name !== self.view) {
                 self.view = name;
             }
         };
 
-        self.backToForm = function() {
+        self.backToForm = function () {
             self.setView('form');
         };
 
@@ -106,22 +108,24 @@ angular.module('app.controllers.object_edit', [])
 
         var listeCool = cleanTronconsListe(listTroncons);
 
-        $scope.$watch(function() { return self.doc.positionDebut; }, function(newValue) {
-                if(angular.isDefined(newValue)){
-                    var troncons = calculateDistanceObjectTroncon(
-                        newValue,
-                        listeCool);
-                    self.troncons = troncons;
-                }
+        $scope.$watch(function () {
+            return self.doc.positionDebut;
+        }, function (newValue) {
+            if (angular.isDefined(newValue)) {
+                var troncons = calculateDistanceObjectTroncon(
+                    newValue,
+                    listeCool);
+                self.troncons = troncons;
+            }
         });
 
         //@hb
-        function cleanTronconsListe(liste){
-            var indexes=[];
-            var listCool=[];
+        function cleanTronconsListe(liste) {
+            var indexes = [];
+            var listCool = [];
             // Get the indexes list of not validated Tronçons
-            angular.forEach(liste,function (elt,ind) {
-                if ( elt.value.valid || angular.isDefined(elt.value.geometry)) {
+            angular.forEach(liste, function (elt, ind) {
+                if (elt.value.valid || angular.isDefined(elt.value.geometry)) {
                     listCool.push(elt);
                 }
             });
@@ -129,50 +133,53 @@ angular.module('app.controllers.object_edit', [])
         }
 
         //@hb
-        function calculateDistanceObjectTroncon(point,liste){
+        function calculateDistanceObjectTroncon(point, liste) {
             var nearTronconList = [];
             // geomatryPosition is instance of ol.geom.Point
             var geomatryPosition = new ol.format.WKT().readGeometry(point, {
-                    dataProjection: SirsDoc.get().epsgCode,
-                    featureProjection: 'EPSG:3857'
-                });
+                dataProjection: SirsDoc.get().epsgCode,
+                featureProjection: 'EPSG:3857'
+            });
 
             var positionCoord = geomatryPosition.getCoordinates();
-            var geom,geomTronc;
+            var geom, geomTronc;
             // Get of the LineStrings from the list of Troncons
-            angular.forEach(liste,function(elt,i){
-                    try{
-                        geom = new ol.format.WKT().readGeometry(elt.value.geometry,{
-                            dataProjection: SirsDoc.get().epsgCode,
-                            featureProjection: 'EPSG:3857'
-                        });
-                    }
-                    catch (e){console.log(e);}
-                     geomTronc = geom.getClosestPoint(positionCoord);
-                    // Calculate the distance between two point
+            angular.forEach(liste, function (elt, i) {
+                try {
+                    geom = new ol.format.WKT().readGeometry(elt.value.geometry, {
+                        dataProjection: SirsDoc.get().epsgCode,
+                        featureProjection: 'EPSG:3857'
+                    });
+                }
+                catch (e) {
+                    console.log(e);
+                }
+                geomTronc = geom.getClosestPoint(positionCoord);
+                // Calculate the distance between two point
 
-                    var wgs84Sphere= new ol.Sphere(6378137);
-                    // The distance
-                    var dist = wgs84Sphere.haversineDistance(ol.proj.transform(positionCoord, 'EPSG:3857', 'EPSG:4326'),
-                            ol.proj.transform(geomTronc, 'EPSG:3857', 'EPSG:4326'))/1000;
-                    if(dist <= 1){
-                        nearTronconList.push(elt.value);
-                    }
+                var wgs84Sphere = new ol.Sphere(6378137);
+                // The distance
+                var dist = wgs84Sphere.haversineDistance(ol.proj.transform(positionCoord, 'EPSG:3857', 'EPSG:4326'),
+                        ol.proj.transform(geomTronc, 'EPSG:3857', 'EPSG:4326')) / 1000;
+                if (dist <= 1) {
+                    nearTronconList.push(elt.value);
+                }
             });
             // The list of the nearest Troncons
             return nearTronconList;
         }
+
         // **********************************************************************
 
         self.isNew = !$routeParams.id;
 
         self.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry);
 
-        self.isLinear = (self.isNew || !self.isClosed || (objectDoc.positionDebut !== objectDoc.positionFin));
+        self.isLinear = (self.isNew || !self.isClosed || (objectDoc.positionDebut !== objectDoc.positionFin));
 
         self.refs = refTypes;
 
-        self.setupRef = function(field, defaultRef, isMultiple) {
+        self.setupRef = function (field, defaultRef, isMultiple) {
             if (angular.isDefined(objectDoc[field])) {
                 return;
             }
@@ -183,7 +190,7 @@ angular.module('app.controllers.object_edit', [])
             }
         };
 
-        self.createMeasure = function() {
+        self.createMeasure = function () {
             var defaultRef = self.refs.RefReferenceHauteur[0];
             return {
                 '_id': uuid4.generate(),
@@ -194,24 +201,26 @@ angular.module('app.controllers.object_edit', [])
             };
         };
 
-        self.save = function() {
+        self.save = function () {
             //@hb Add the source of the Desordre
-            if(objectDoc['@class'] === "fr.sirs.core.model.Desordre"){
+            if (objectDoc['@class'] === "fr.sirs.core.model.Desordre") {
                 objectDoc["sourceId"] = "RefSource:4";
             }
 
-            EditionService.saveObject(objectDoc).then(function() {
+            EditionService.saveObject(objectDoc).then(function () {
                 $location.path('/main');
             });
         };
 
-        self.delete = function() {
-            LocalDocument.remove(objectDoc).then(function() {
+        self.delete = function () {
+            LocalDocument.remove(objectDoc).then(function () {
                 $location.path('/main');
             });
         };
 
-        $scope.$watch(function() { return self.isLinear; }, function(newValue) {
+        $scope.$watch(function () {
+            return self.isLinear;
+        }, function (newValue) {
             if (newValue === true) {
                 delete objectDoc.positionFin;
             } else if (newValue === false) {
@@ -224,33 +233,33 @@ angular.module('app.controllers.object_edit', [])
 
         self.geoloc = undefined;
 
-        self.locateMe = function() {
+        self.locateMe = function () {
             // if (GeolocationService.isEnabled()) {
             //     waitForLocation(GeolocationService.getLocationPromise());
             // } else {
-                waitForLocation(GeolocationService.start()).then(GeolocationService.stop);
+            waitForLocation(GeolocationService.start()).then(GeolocationService.stop);
             // }
         };
 
-        self.selectPos = function() {
+        self.selectPos = function () {
             self.setView('map');
         };
 
-        self.handlePos = function(pos) {
+        self.handlePos = function (pos) {
             var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
             if (self.isNew) {
                 objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
             }
-            if ((self.isNew && !self.isLinear) || (!self.isNew && !self.isClosed)) {
+            if ((self.isNew && !self.isLinear) || (!self.isNew && !self.isClosed)) {
                 objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
             }
         };
 
-        self.getStartPos = function() {
+        self.getStartPos = function () {
             return objectDoc.positionDebut ? parsePos(objectDoc.positionDebut) : undefined;
         };
 
-        self.getEndPos = function() {
+        self.getEndPos = function () {
             return objectDoc.positionFin ? parsePos(objectDoc.positionFin) : undefined;
         };
 
@@ -261,7 +270,7 @@ angular.module('app.controllers.object_edit', [])
         }
 
         function waitForLocation(locationPromise) {
-            $ionicLoading.show({ template: 'En attente de localisation...' });
+            $ionicLoading.show({template: 'En attente de localisation...'});
             return locationPromise.then(function handleLocation(location) {
                 self.handlePos(location.coords);
                 $ionicLoading.hide();
@@ -278,11 +287,11 @@ angular.module('app.controllers.object_edit', [])
             self.setView('media');
         };
 
-        self.recordAudio = function() {
+        self.recordAudio = function () {
             // TODO → to implement
         };
 
-        self.takePhoto = function() {
+        self.takePhoto = function () {
             navigator.camera.getPicture(photoCaptureSuccess, photoCaptureError, {
                 quality: 50,
                 destinationType: navigator.camera.DestinationType.FILE_URI,
@@ -290,7 +299,7 @@ angular.module('app.controllers.object_edit', [])
             });
         };
 
-        self.drawNote = function() {
+        self.drawNote = function () {
             self.setView('note');
         };
 
@@ -324,48 +333,52 @@ angular.module('app.controllers.object_edit', [])
 
         self.loadImage = function (photo) {
             var image_url = self.getPhotoPath(photo);
-            $.ajax({url:image_url,type:'HEAD',
-                error:function () {
-                    if(self.doc._attachments){
+            $.ajax({
+                url: image_url, type: 'HEAD',
+                error: function () {
+                    if (self.doc._attachments) {
                         var keyAttachment = null;
                         var objAttachment;
-                        angular.forEach(Object.keys(self.doc._attachments),function (key) {
-                            if(key.indexOf(photo.id) != -1){
+                        angular.forEach(Object.keys(self.doc._attachments), function (key) {
+                            if (key.indexOf(photo.id) != -1) {
                                 keyAttachment = key;
                             }
                         });
                         objAttachment = self.doc._attachments[keyAttachment];
-                        if(objAttachment){
+                        if (objAttachment) {
                             LocalDocument.getAttachment(self.doc._id, keyAttachment)
                                 .then(function (blob) {
                                     var blobImage = blob;
                                     var fileName;
-                                    if(keyAttachment.indexOf('.')!=-1){
+                                    if (keyAttachment.indexOf('.') != -1) {
                                         fileName = keyAttachment;
-                                    } else{
+                                    } else {
                                         var ext;
-                                        switch (objAttachment.content_type){
+                                        switch (objAttachment.content_type) {
                                             case "image/jpeg":
-                                                ext=".jpg";
+                                                ext = ".jpg";
                                                 break;
                                             case "image/png":
-                                                ext=".png";break;
+                                                ext = ".png";
+                                                break;
                                             case "image/gif":
-                                                ext=".gif";break;
+                                                ext = ".gif";
+                                                break;
                                             case "image/tiff":
-                                                ext=".tif";break;
+                                                ext = ".tif";
+                                                break;
                                         }
-                                        fileName = keyAttachment+ext;
+                                        fileName = keyAttachment + ext;
                                     }
-                                    window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
-                                        targetDir.getFile(fileName, {create:true}, function(file) {
-                                            file.createWriter(function(fileWriter) {
+                                    window.resolveLocalFileSystemURL(self.mediaPath, function (targetDir) {
+                                        targetDir.getFile(fileName, {create: true}, function (file) {
+                                            file.createWriter(function (fileWriter) {
                                                 fileWriter.write(blobImage);
                                                 window.setTimeout(function () {
                                                     $scope.$digest();
                                                     self.loaded[photo.id] = true;
-                                                },10);
-                                            }, function(){
+                                                }, 10);
+                                            }, function () {
                                                 console.log('cannot write the data to the file');
                                             });
                                         });
@@ -376,25 +389,25 @@ angular.module('app.controllers.object_edit', [])
                         }
                     }
                 },
-                success:function () {
+                success: function () {
                     window.setTimeout(function () {
                         window.setTimeout(function () {
                             self.loaded[photo.id] = true;
                             $scope.$digest();
-                        },100);
-                    },10);
+                        }, 100);
+                    }, 10);
                 }
             });
         };
 
-        self.open = function(photo) {
+        self.open = function (photo) {
             var url = self.getPhotoPath(photo);
             window.cordova.plugins.FileOpener.openFile(decodeURI(url));
         };
 
-        self.getPhotoPath = function(photo) {
-            var path = photo.id+photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
-            var image_url = self.mediaPath +'/'+ path;
+        self.getPhotoPath = function (photo) {
+            var path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
+            var image_url = self.mediaPath + '/' + path;
             return image_url;
         };
 
@@ -410,13 +423,13 @@ angular.module('app.controllers.object_edit', [])
             if (!self.mediaPath) {
                 return;
             }
-            window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
+            window.resolveLocalFileSystemURL(self.mediaPath, function (targetDir) {
                 var photoId = uuid4.generate(),
                     fileName = photoId + '.jpg';
 
                 // Copy image file in its final directory.
-                imageFile.copyTo(targetDir, fileName, function() {
-                    objectDoc.photos = objectDoc.photos || [];
+                imageFile.copyTo(targetDir, fileName, function () {
+                    objectDoc.photos = objectDoc.photos || [];
 
                     // Store the photo in the object document.
                     objectDoc.photos.push({
@@ -424,25 +437,25 @@ angular.module('app.controllers.object_edit', [])
                         '@class': 'fr.sirs.core.model.Photo',
                         'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
                         'chemin': '/' + fileName,
-                        'valid':false
+                        'valid': false
                     });
 
                     objectDoc._attachments = objectDoc._attachments || {};
 
                     var xhr = new XMLHttpRequest();
-                    xhr.onload = function() {
+                    xhr.onload = function () {
                         var reader = new FileReader();
-                        reader.onloadend = function() {
+                        reader.onloadend = function () {
                             // Save the photo like attachment to the object
                             objectDoc._attachments[photoId] = {
                                 content_type: 'image/jpeg',
-                                data:reader.result
+                                data: reader.result
                             };
                         };
 
                         reader.readAsDataURL(xhr.response);
                     };
-                    xhr.open('GET', self.getPhotoPath(objectDoc.photos[objectDoc.photos.length-1]));
+                    xhr.open('GET', self.getPhotoPath(objectDoc.photos[objectDoc.photos.length - 1]));
                     xhr.responseType = 'blob';
                     xhr.send();
 
@@ -452,13 +465,13 @@ angular.module('app.controllers.object_edit', [])
             });
         }
 
-        $ionicPlatform.ready(function() {
+        $ionicPlatform.ready(function () {
             // Acquire the medias storage path when the device is ready.
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });
     })
 
-    .controller('ObjectEditPosController', function(currentView) {
+    .controller('ObjectEditPosController', function (currentView) {
 
         var self = this;
 
@@ -468,12 +481,12 @@ angular.module('app.controllers.object_edit', [])
         self.exit = angular.noop;
 
 
-        self.setup = function(success, exit) {
+        self.setup = function (success, exit) {
             self.success = success;
             self.exit = exit;
         };
 
-        self.validate = function() {
+        self.validate = function () {
             var coordinate = ol.proj.transform(currentView.getCenter(), 'EPSG:3857', 'EPSG:4326');
             self.success({
                 longitude: coordinate[0],
@@ -493,52 +506,52 @@ angular.module('app.controllers.object_edit', [])
 
         self.cotes = $scope.c.cotes;
 
-        self.back = function(){
+        self.back = function () {
             $scope.c.setView('form');
         };
 
-        self.save = function(){
+        self.save = function () {
             $scope.c.doc.photos.push(self.mediaOptions);
 
             $scope.c.doc._attachments = $scope.c.doc._attachments || {};
 
             var xhr = new XMLHttpRequest();
-            xhr.onload = function() {
+            xhr.onload = function () {
                 var reader = new FileReader();
-                reader.onloadend = function() {
+                reader.onloadend = function () {
                     // Save the photo like attachment to the object
                     $scope.c.doc._attachments[self.mediaOptions.id] = {
                         content_type: 'image/jpeg',
-                        data:reader.result.replace('data:image/jpeg;base64,','')
+                        data: reader.result.replace('data:image/jpeg;base64,', '')
                     };
                 };
 
                 reader.readAsDataURL(xhr.response);
             };
-            xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length-1]));
+            xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length - 1]));
             xhr.responseType = 'blob';
             xhr.send();
 
             $scope.c.setView('form');
         };
 
-        self.selectPos = function() {
+        self.selectPos = function () {
             self.setView('map');
         };
 
         //@hb
         self.mediaOptions = {
             id: '',
-            chemin:'',
-            designation:"",
-            positionDebut:"",
-            orientationPhoto:"",
-            coteId:"",
+            chemin: '',
+            designation: "",
+            positionDebut: "",
+            orientationPhoto: "",
+            coteId: "",
             commentaire: "",
-            author : AuthService.getValue()._id
+            author: AuthService.getValue()._id
         };
 
-        self.setView = function(name) {
+        self.setView = function (name) {
             if (name !== self.view) {
                 self.view = name;
             }
@@ -546,18 +559,18 @@ angular.module('app.controllers.object_edit', [])
 
         self.view = 'form';
 
-        self.handlePos = function(pos) {
+        self.handlePos = function (pos) {
 
             var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
             self.mediaOptions.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
 
         };
 
-        self.backToForm = function() {
+        self.backToForm = function () {
             self.setView('form');
         };
 
-        self.takePhoto = function() {
+        self.takePhoto = function () {
             self.mediaOptions['id'] = '';
             self.mediaOptions['chemin'] = '';
             navigator.camera.getPicture(photoCaptureSuccess, photoCaptureError, {
@@ -567,7 +580,7 @@ angular.module('app.controllers.object_edit', [])
             });
         };
 
-        self.drawNote = function() {
+        self.drawNote = function () {
             self.setView('note');
         };
 
@@ -577,7 +590,7 @@ angular.module('app.controllers.object_edit', [])
             window.resolveLocalFileSystemURL(imageURI, savePicture);
         }
 
-        self.getPhotoPath = function(photo) {
+        self.getPhotoPath = function (photo) {
             var path = photo.chemin.replace(/\\/g, '/');
             if (path.charAt(0) !== '/') {
                 path = '/' + path;
@@ -592,19 +605,19 @@ angular.module('app.controllers.object_edit', [])
         function savePicture(imageFile) {
             //Check image size
             imageFile.file(function (fileObj) {
-                if (fileObj.size > 1048576){
+                if (fileObj.size > 1048576) {
                     $cordovaToast
                         .showLongTop("S'il vous plaît, il faut choisir une image inférieure à 1,2 Mo");
                 } else {
                     if (!self.mediaPath) {
                         return;
                     }
-                    window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
+                    window.resolveLocalFileSystemURL(self.mediaPath, function (targetDir) {
                         var photoId = uuid4.generate(),
                             fileName = photoId + '.jpg';
 
                         // Copy image file in its final directory.
-                        imageFile.copyTo(targetDir, fileName, function() {
+                        imageFile.copyTo(targetDir, fileName, function () {
                             // Store the photo in the object document.
 
                             self.mediaOptions['id'] = photoId;
@@ -622,7 +635,7 @@ angular.module('app.controllers.object_edit', [])
         }
 
         self.waitForLocation = function (locationPromise) {
-            $ionicLoading.show({ template: 'En attente de localisation...' });
+            $ionicLoading.show({template: 'En attente de localisation...'});
             return locationPromise.then(function handleLocation(location) {
                 self.handlePos(location.coords);
                 $ionicLoading.hide();
@@ -633,7 +646,7 @@ angular.module('app.controllers.object_edit', [])
             self.waitForLocation(GeolocationService.start()).then(GeolocationService.stop);
         };
 
-        $ionicPlatform.ready(function() {
+        $ionicPlatform.ready(function () {
             // Acquire the medias storage path when the device is ready.
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });

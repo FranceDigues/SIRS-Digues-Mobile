@@ -3,14 +3,20 @@ angular.module('app.controllers.observation_edit', [])
     .controller('ObservationEditController', function ObservationEditController($scope, $filter, $location, $ionicScrollDelegate,
                                                                                 $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                                 $routeParams, GeolocationService, LocalDocument,
-                                                                                EditionService, objectDoc, uuid4, $rootScope,contactList,
-                                                                                urgenceList, orientationsList, cotesList, AuthService)
-
-    {
+                                                                                EditionService, objectDoc, uuid4, $rootScope, contactList,
+                                                                                urgenceList, orientationsList, cotesList, AuthService) {
 
         var self = this;
 
         $rootScope.loadingflag = false;
+
+        self.isNewObject = !$routeParams.obsId;
+
+        self.doc = self.isNewObject ? createNewObservation() : angular.copy(getTargetObservation());
+
+        var author = AuthService.getValue();
+
+        self.doc.author = author._id;
 
         self.flagLoading = function () {
             $rootScope.loadingflag = true;
@@ -25,46 +31,37 @@ angular.module('app.controllers.observation_edit', [])
 
         self.tab = 'medias';
 
-        self.setTab = function(name) {
+        self.setTab = function (name) {
             if (name !== self.tab) {
                 self.tab = name;
                 $ionicScrollDelegate.$getByHandle('formScroll').scrollTop(false);
             }
         };
 
-        self.setView = function(name) {
+        self.setView = function (name) {
             if (name !== self.view) {
                 self.view = name;
             }
         };
 
-        self.backToForm = function() {
+        self.backToForm = function () {
             self.setView('form');
         };
 
         self.contactList = contactList;
 
-        self.urgenceList = urgenceList;
+        self.urgenceList = urgenceList.map(function (item) {
+            return item.value;
+        });
 
         //@hb
         self.orientations = orientationsList;
         //@hb
         self.cotes = cotesList;
 
-        // Form
-        // ----------
-
-        self.isNewObject = !$routeParams.obsId;
-
-        self.doc = self.isNewObject ? createNewObservation() : angular.copy(getTargetObservation());
-
-        var author = AuthService.getValue();
-
-        self.doc.author = author._id;
-
-        self.save = function() {
+        self.save = function () {
             if (self.isNewObject) {
-                if(angular.isUndefined(objectDoc.observations)){
+                if (angular.isUndefined(objectDoc.observations)) {
                     objectDoc.observations = [];
                 }
 
@@ -75,7 +72,7 @@ angular.module('app.controllers.observation_edit', [])
                 angular.extend(getTargetObservation(), self.doc);
             }
             // Save document.
-            EditionService.saveObject(objectDoc).then(function() {
+            EditionService.saveObject(objectDoc).then(function () {
                 $location.path('/main');
             });
         };
@@ -88,7 +85,7 @@ angular.module('app.controllers.observation_edit', [])
                 'nombreDesordres': 0,
                 'urgenceId': "RefUrgence:1",
                 'photos': [],
-                'valid':false
+                'valid': false
             };
         }
 
@@ -109,33 +106,33 @@ angular.module('app.controllers.observation_edit', [])
 
         self.photos = self.doc.photos;
 
-        self.recordAudio = function() {
+        self.recordAudio = function () {
             // TODO → to implement
         };
 
-        self.takePhoto = function() {
+        self.takePhoto = function () {
             navigator.camera.getPicture(photoCaptureSuccess, photoCaptureError, {
                 quality: 50,
                 destinationType: navigator.camera.DestinationType.FILE_URI,
-                encodingType:navigator.camera.EncodingType.JPEG
+                encodingType: navigator.camera.EncodingType.JPEG
             });
         };
 
-        self.drawNote = function() {
+        self.drawNote = function () {
             self.setView('note');
         };
 
         self.saveNote = savePicture;
 
-        self.open = function(photo) {
+        self.open = function (photo) {
             var url = self.getPhotoPath(photo);
             window.cordova.plugins.FileOpener.openFile(decodeURI(url));
         };
 
 
-        self.getPhotoPath = function(photo) {
-            var path = photo.id+photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
-            var image_url = self.mediaPath +'/'+ path;
+        self.getPhotoPath = function (photo) {
+            var path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
+            var image_url = self.mediaPath + '/' + path;
             return image_url;
         };
 
@@ -151,12 +148,12 @@ angular.module('app.controllers.observation_edit', [])
             if (!self.mediaPath) {
                 return;
             }
-            window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
+            window.resolveLocalFileSystemURL(self.mediaPath, function (targetDir) {
                 var photoId = uuid4.generate(),
                     fileName = photoId + '.jpg';
 
                 // Copy image file in its final directory.
-                imageFile.copyTo(targetDir, fileName, function() {
+                imageFile.copyTo(targetDir, fileName, function () {
 
                     // Store the photo in the object document.
                     self.photos.push({
@@ -164,23 +161,23 @@ angular.module('app.controllers.observation_edit', [])
                         '@class': 'fr.sirs.core.model.Photo',
                         'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
                         'chemin': '/' + fileName,
-                        'valid':false
+                        'valid': false
                     });
 
                     var xhr = new XMLHttpRequest();
-                    xhr.onload = function() {
+                    xhr.onload = function () {
                         var reader = new FileReader();
-                        reader.onloadend = function() {
+                        reader.onloadend = function () {
                             // Save the photo like attachment to the object
                             self.objectDoc._attachments[photoId] = {
                                 content_type: 'image/jpeg',
-                                data:reader.result.replace('data:image/jpeg;base64,','')
+                                data: reader.result.replace('data:image/jpeg;base64,', '')
                             };
                         };
 
                         reader.readAsDataURL(xhr.response);
                     };
-                    xhr.open('GET', self.getPhotoPath(self.photos[self.photos.length-1]));
+                    xhr.open('GET', self.getPhotoPath(self.photos[self.photos.length - 1]));
                     xhr.responseType = 'blob';
                     xhr.send();
 
@@ -195,13 +192,13 @@ angular.module('app.controllers.observation_edit', [])
             self.setView('media');
         };
 
-        $ionicPlatform.ready(function() {
+        $ionicPlatform.ready(function () {
             // Acquire the medias storage path when the device is ready.
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });
     })
     .controller('MediaObservationController', function ($window, SirsDoc, $ionicLoading, GeolocationService,
-                                             uuid4, $ionicPlatform, $scope, AuthService, $filter,$cordovaToast) {
+                                                        uuid4, $ionicPlatform, $scope, AuthService, $filter, $cordovaToast) {
         var self = this;
 
         var dataProjection = SirsDoc.get().epsgCode;
@@ -210,52 +207,52 @@ angular.module('app.controllers.observation_edit', [])
 
         self.cotes = $scope.c.cotes;
 
-        self.back = function(){
+        self.back = function () {
             $scope.c.setView('form');
         };
 
-        self.save = function(){
+        self.save = function () {
             $scope.c.doc.photos.push(self.mediaOptions);
             var xhr = new XMLHttpRequest();
-            xhr.onload = function() {
+            xhr.onload = function () {
                 var reader = new FileReader();
-                reader.onloadend = function() {
-                    if(angular.isUndefined($scope.c.objectDoc._attachments)){
+                reader.onloadend = function () {
+                    if (angular.isUndefined($scope.c.objectDoc._attachments)) {
                         $scope.c.objectDoc._attachments = {};
                     }
                     // Save the photo like attachment to the object
                     $scope.c.objectDoc._attachments[self.mediaOptions.id] = {
                         content_type: 'image/jpeg',
-                        data:reader.result.replace('data:image/jpeg;base64,','')
+                        data: reader.result.replace('data:image/jpeg;base64,', '')
                     };
                 };
 
                 reader.readAsDataURL(xhr.response);
             };
-            xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length-1]));
+            xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length - 1]));
             xhr.responseType = 'blob';
             xhr.send();
 
             $scope.c.setView('form');
         };
 
-        self.selectPos = function() {
+        self.selectPos = function () {
             self.setView('map');
         };
 
         //@hb
         self.mediaOptions = {
             id: '',
-            chemin:'',
-            designation:"",
-            positionDebut:"",
-            orientationPhoto:"",
-            coteId:"",
+            chemin: '',
+            designation: "",
+            positionDebut: "",
+            orientationPhoto: "",
+            coteId: "",
             commentaire: "",
-            author : AuthService.getValue()._id
+            author: AuthService.getValue()._id
         };
 
-        self.setView = function(name) {
+        self.setView = function (name) {
             if (name !== self.view) {
                 self.view = name;
             }
@@ -263,18 +260,18 @@ angular.module('app.controllers.observation_edit', [])
 
         self.view = 'form';
 
-        self.handlePos = function(pos) {
+        self.handlePos = function (pos) {
 
             var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
             self.mediaOptions.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
 
         };
 
-        self.backToForm = function() {
+        self.backToForm = function () {
             self.setView('form');
         };
 
-        self.takePhoto = function() {
+        self.takePhoto = function () {
             self.mediaOptions['id'] = '';
             self.mediaOptions['chemin'] = '';
             navigator.camera.getPicture(photoCaptureSuccess, photoCaptureError, {
@@ -284,7 +281,7 @@ angular.module('app.controllers.observation_edit', [])
             });
         };
 
-        self.drawNote = function() {
+        self.drawNote = function () {
             self.setView('note');
         };
 
@@ -294,9 +291,9 @@ angular.module('app.controllers.observation_edit', [])
             window.resolveLocalFileSystemURL(imageURI, savePicture);
         }
 
-        self.getPhotoPath = function(photo) {
-            var path = photo.id+photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
-            var image_url = self.mediaPath +'/'+ path;
+        self.getPhotoPath = function (photo) {
+            var path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
+            var image_url = self.mediaPath + '/' + path;
             return image_url;
         };
 
@@ -307,19 +304,19 @@ angular.module('app.controllers.observation_edit', [])
         function savePicture(imageFile) {
             //Check image size
             imageFile.file(function (fileObj) {
-                if (fileObj.size > 1048576){
+                if (fileObj.size > 1048576) {
                     $cordovaToast
                         .showLongTop("S'il vous plaît, il faut choisir une image inférieure à 1,2 Mo");
                 } else {
                     if (!self.mediaPath) {
                         return;
                     }
-                    window.resolveLocalFileSystemURL(self.mediaPath, function(targetDir) {
+                    window.resolveLocalFileSystemURL(self.mediaPath, function (targetDir) {
                         var photoId = uuid4.generate(),
                             fileName = photoId + '.jpg';
 
                         // Copy image file in its final directory.
-                        imageFile.copyTo(targetDir, fileName, function() {
+                        imageFile.copyTo(targetDir, fileName, function () {
                             // Store the photo in the object document.
 
                             self.mediaOptions['id'] = photoId;
@@ -338,7 +335,7 @@ angular.module('app.controllers.observation_edit', [])
         }
 
         self.waitForLocation = function (locationPromise) {
-            $ionicLoading.show({ template: 'En attente de localisation...' });
+            $ionicLoading.show({template: 'En attente de localisation...'});
             return locationPromise.then(function handleLocation(location) {
                 self.handlePos(location.coords);
                 $ionicLoading.hide();
@@ -349,7 +346,7 @@ angular.module('app.controllers.observation_edit', [])
             self.waitForLocation(GeolocationService.start()).then(GeolocationService.stop);
         };
 
-        $ionicPlatform.ready(function() {
+        $ionicPlatform.ready(function () {
             // Acquire the medias storage path when the device is ready.
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });
