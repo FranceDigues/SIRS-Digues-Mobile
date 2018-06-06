@@ -51,8 +51,21 @@ angular.module('app.controllers.observation_edit', [])
         self.contactList = contactList;
 
         self.urgenceList = urgenceList.map(function (item) {
+            item.value.id = parseInt(item.value.id.substring(item.value.id.lastIndexOf(":") + 1), 10);
             return item.value;
         });
+
+        self.urgence = parseInt(self.doc.urgenceId.substring(self.doc.urgenceId.lastIndexOf(":") + 1), 10);
+
+        self.changeUrgence = function () {
+            self.doc.urgenceId = "RefUrgence:" + self.urgence;
+        };
+
+        self.changeContact = function () {
+            self.doc.observateurId = self.contact;
+        };
+
+        self.contact = self.doc.observateurId;
 
         //@hb
         self.orientations = orientationsList;
@@ -350,4 +363,22 @@ angular.module('app.controllers.observation_edit', [])
             // Acquire the medias storage path when the device is ready.
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });
+    })
+    .directive('pointsHandler', function () {
+        return {
+            restrict: 'A',
+            priority: 100,
+            require: 'ngModel',
+            link: function (scope, element, attrs, ngModel) {
+                if (ngModel) {
+                    ngModel.$parsers.push(function (value) {
+                        return "RefUrgence:" + value;
+                    });
+
+                    ngModel.$formatters.push(function (value) {
+                        return value.substring(value.lastIndexOf(":") + 1);
+                    });
+                }
+            }
+        };
     });
