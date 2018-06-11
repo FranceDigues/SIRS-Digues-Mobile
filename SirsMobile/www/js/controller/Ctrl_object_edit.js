@@ -95,13 +95,18 @@ angular.module('app.controllers.object_edit', [])
         //@hb
         self.cotes = cotesList;
 
-        // Form
-        // ----------
-
         self.type = $routeParams.type;
 
         // L'objet qui contient les information de l'objet à ajouter à la base de données
         self.doc = objectDoc;
+
+        self.isNew = !$routeParams.id;
+
+        self.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry);
+
+        self.isLinear = (self.isNew || !self.isClosed || (objectDoc.positionDebut !== objectDoc.positionFin));
+
+        self.refs = refTypes;
 
         //************************************************************************
         //Réfere au Tronçon Id
@@ -169,16 +174,6 @@ angular.module('app.controllers.object_edit', [])
             return nearTronconList;
         }
 
-        // **********************************************************************
-
-        self.isNew = !$routeParams.id;
-
-        self.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry);
-
-        self.isLinear = (self.isNew || !self.isClosed || (objectDoc.positionDebut !== objectDoc.positionFin));
-
-        self.refs = refTypes;
-
         self.setupRef = function (field, defaultRef, isMultiple) {
             if (angular.isDefined(objectDoc[field])) {
                 return;
@@ -234,11 +229,7 @@ angular.module('app.controllers.object_edit', [])
         self.geoloc = undefined;
 
         self.locateMe = function () {
-            // if (GeolocationService.isEnabled()) {
-            //     waitForLocation(GeolocationService.getLocationPromise());
-            // } else {
             waitForLocation(GeolocationService.start()).then(GeolocationService.stop);
-            // }
         };
 
         self.selectPos = function () {
@@ -249,9 +240,22 @@ angular.module('app.controllers.object_edit', [])
             var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
             if (self.isNew) {
                 objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-            }
-            if ((self.isNew && !self.isLinear) || (!self.isNew && !self.isClosed)) {
-                objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                if (!self.isLinear) {
+                    objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                }
+            } else {
+                if (self.isClosed) {
+                    objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                    if (!self.isLinear) {
+                        objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                    } else {
+                        // In the case of linear we need to re-close the object
+                        delete objectDoc.positionFin;
+                    }
+                } else {
+                    // only in the case of no linear object we can close
+                    objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                }
             }
         };
 

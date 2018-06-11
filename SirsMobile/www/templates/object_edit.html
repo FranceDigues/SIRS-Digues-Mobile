@@ -32,7 +32,7 @@
                                                ng-model="c.doc.designation"
                                                placeholder="Ne pas remplir la désignation si vous souhaitez appliquer l'auto-incrémentation."/>
                                     </div>
-                                    <div ng-if="c.isNew" class="switch">
+                                    <div ng-if="c.isNew || c.isClosed" class="switch">
                                         <label>
                                             Objet ponctuel
                                             <input type="checkbox" ng-model="c.isLinear"/>
@@ -49,7 +49,7 @@
                                         <span class="sirs-field-title">Position de fin :</span>
                                         <span class="sirs-field-value">{{c.getEndPos() | lonlat:'à définir'}}</span>
                                     </div>
-                                    <div ng-if="!c.isClosed" class="position-action">
+                                    <div class="position-action">
                                         <button class="btn waves-effect waves-light" on-tap="c.locateMe()">
                                             <i class="material-icons center">gps_fixed</i>
                                         </button>
