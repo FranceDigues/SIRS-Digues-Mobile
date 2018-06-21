@@ -43,7 +43,7 @@ function TronconsChoiceMenu(SidePanelService, $scope, AppTronconsService, localS
 
 }
 
-function SystemEndigumentController($timeout, PouchService, AppTronconsService, $rootScope) {
+function SystemEndigumentController($rootScope, $timeout, PouchService, AppTronconsService) {
 
     var self = this;
 
@@ -51,8 +51,8 @@ function SystemEndigumentController($timeout, PouchService, AppTronconsService, 
 
     self.SystemeEndiguements = [];
 
-
     $rootScope.loadingflag = true;
+
     PouchService.getLocalDB().query('Element/byClassAndLinear', {
         startkey: ['fr.sirs.core.model.SystemeEndiguement'],
         endkey: ['fr.sirs.core.model.SystemeEndiguement', {}]
