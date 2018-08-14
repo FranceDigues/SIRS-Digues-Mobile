@@ -62,7 +62,7 @@ cordova plugin rm cordova-plugin-console
 cordova build --release android
 keytool -genkey -v -keystore sirs-mobile.keystore -alias SIRS-Mobile -keyalg RSA -keysize 2048 -validity 10000
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore sirs-mobile.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk SIRS-Mobile
-$PATH_TO_SDK/build-tools/$SDK_VERSION/zipalign -v 4 platforms/android/build/outputs/apk/android-release-unsigned.apk SIRS-Mobile.apk
+`$PATH_TO_SDK/build-tools/$SDK_VERSION/zipalign -v 4 platforms/android/build/outputs/apk/android-release-unsigned.apk SIRS-Mobile.apk`
 ```
 
 Il est conseillé d'inclure le numéro de version de l'application dans le nom de l'APK.
