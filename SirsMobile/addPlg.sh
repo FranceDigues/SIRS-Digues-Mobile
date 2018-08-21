@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# @hb Modification
-# Install plugins from repository.
-#ionic plugin add com.ionic.keyboard@1.0.4; // Deprecated
-#ionic plugin add org.apache.cordova.camera@0.3.6;// Deprecated
-
 ionic plugin add ionic-plugin-keyboard@1.0.4;
 ionic plugin add cordova-plugin-console@1.0.2;
 ionic plugin add cordova-plugin-crosswalk-webview@1.4.0;
@@ -18,11 +13,11 @@ ionic plugin add cordova-plugin-splashscreen@3.0.0;
 ionic plugin add cordova-plugin-whitelist@1.2.0;
 ionic plugin add cordova-plugin-camera@0.3.6;
 cordova plugin add cordova-plugin-x-toast@2.6.0
-cordova plugin add cordova-plugin-geolocation@2.4.1;
+
+# Cordova geolocation plugin
+cordova plugin add cordova-plugin-geolocation@2.4.3;
 
 # Plugin for use SQLite Adapter
-#cordova plugin add cordova-sqlite-storage@2.0.1;
-
 cordova plugin add cordova-sqlite-storage@2.1.5;
 
 #cordova plugin add cordova-plugin-sqlite-2@1.0.5;
