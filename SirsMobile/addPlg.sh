@@ -17,10 +17,15 @@ ionic plugin add cordova-plugin-network-information@1.1.0;
 ionic plugin add cordova-plugin-splashscreen@3.0.0;
 ionic plugin add cordova-plugin-whitelist@1.2.0;
 ionic plugin add cordova-plugin-camera@0.3.6;
-cordova plugin add https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git;
-cordova plugin add cordova-plugin-geolocation;
+cordova plugin add cordova-plugin-x-toast@2.6.0
+cordova plugin add cordova-plugin-geolocation@2.4.1;
+
 # Plugin for use SQLite Adapter
-cordova plugin add cordova-sqlite-storage@2.0.1;
+#cordova plugin add cordova-sqlite-storage@2.0.1;
+
+cordova plugin add cordova-sqlite-storage@2.1.5;
+
+#cordova plugin add cordova-plugin-sqlite-2@1.0.5;
 
 
 

@@ -43,7 +43,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
 
         // Others.
         lastLocation: null,
-        version: '0.2.44'
+        version: '0.2.46'
     })
 
     .service('ContextService', function ContextService($rootScope, $location, LocalStorageItem, defaultContext) {
@@ -55,13 +55,13 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var value = angular.extend(defaultContext, contextStorage.read());
 
 
-        self.getValue = function() {
+        self.getValue = function () {
             return value;
         };
 
 
         // Listen navigation event to store the current view context.
-        $rootScope.$on('$locationChangeSuccess', function() {
+        $rootScope.$on('$locationChangeSuccess', function () {
             value.path = $location.path();
             value.search = $location.search();
         });
@@ -77,20 +77,20 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var dbContext = ContextService.getValue().database;
 
 
-        self.list = function() {
+        self.list = function () {
             return dbContext.list;
         };
 
-        self.add = function(db) {
+        self.add = function (db) {
             dbContext.list.push(db);
             $rootScope.$broadcast('databaseAdded', db);
         };
 
-        self.remove = function(db) {
+        self.remove = function (db) {
             return $ionicPopup.confirm({
                 title: 'Suppression d\'une base de données',
                 template: 'Voulez vous vraiment supprimer cette base de données ?'
-            }).then(function(confirmed) {
+            }).then(function (confirmed) {
                 if (confirmed) {
                     // Destroy the local database (if exists).
                     new PouchDB(db.name).destroy();
@@ -103,7 +103,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             });
         };
 
-        self.oldEditionRemove = function(db) {
+        self.oldEditionRemove = function (db) {
             // Destroy the local database (if exists).
             new PouchDB(db.name).destroy();
             // Unregister the remove database.
@@ -112,9 +112,9 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             $rootScope.$broadcast('databaseRemoved', db);
         };
 
-        self.getActive = function() {
+        self.getActive = function () {
             var i = dbContext.list.length;
-            while(i--) {
+            while (i--) {
                 var db = dbContext.list[i];
                 if (db.name === dbContext.active) {
                     return db;
@@ -123,7 +123,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return null;
         };
 
-        self.setActive = function(name) {
+        self.setActive = function (name) {
             var oldValue = dbContext.active;
             dbContext.active = name;
             if (oldValue !== name) {
@@ -139,19 +139,19 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var layerContext = ContextService.getValue().backLayer;
 
 
-        self.list = function() {
+        self.list = function () {
             return layerContext.list;
         };
 
-        self.add = function(layer) {
+        self.add = function (layer) {
             layerContext.list.push(layer);
         };
 
-        self.remove = function(layer) {
+        self.remove = function (layer) {
             return $ionicPopup.confirm({
                 title: 'Suppression d\'une couche',
                 template: 'Voulez vous vraiment supprimer cette couche ?'
-            }).then(function(confirmed) {
+            }).then(function (confirmed) {
                 if (confirmed) {
                     // Unregister the remove database.
                     layerContext.list.splice(layerContext.list.indexOf(layer), 1);
@@ -162,13 +162,13 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             });
         };
 
-        self.getActive = function() {
+        self.getActive = function () {
             return self.getByName(layerContext.active);
         };
 
-        self.getByName = function(name) {
+        self.getByName = function (name) {
             var i = layerContext.list.length;
-            while(i--) {
+            while (i--) {
                 var layer = layerContext.list[i];
                 if (layer.name === name) {
                     return layer;
@@ -177,7 +177,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return null;
         };
 
-        self.setActive = function(name) {
+        self.setActive = function (name) {
             var oldValue = layerContext.active;
             layerContext.active = name;
             $rootScope.$broadcast('backLayerChanged', self.getActive(), oldValue);
@@ -212,7 +212,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
 
         function extractLeaves(nodes, parent) {
             var leaves = [];
-            angular.forEach(nodes, function(node) {
+            angular.forEach(nodes, function (node) {
                 node.categories = angular.isObject(parent) ?
                     parent.categories.concat(parent.title) : [];
                 if (angular.isArray(node.children)) {
@@ -225,13 +225,13 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         }
 
 
-        self.getAvailable = function() {
+        self.getAvailable = function () {
             var deferred = $q.defer();
 
             moduleDescriptions().then(
                 function onSuccess(modules) {
                     var leaves = [];
-                    angular.forEach(modules, function(module) {
+                    angular.forEach(modules, function (module) {
                         leaves = leaves.concat(extractLeaves(module.layers));
                     });
                     deferred.resolve(leaves);
@@ -243,11 +243,11 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return deferred.promise;
         };
 
-        self.getFavorites = function() {
+        self.getFavorites = function () {
             return favorites;
         };
 
-        self.addFavorite = function(layer) {
+        self.addFavorite = function (layer) {
             layer.editable = false;
             layer.featLabels = false;
             layer.realPosition = false;
@@ -263,8 +263,8 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             $rootScope.$broadcast('appLayerAdded', layer);
         };
 
-        self.removeFavorite = function(layer) {
-            var index = favorites.map(function(item) {
+        self.removeFavorite = function (layer) {
+            var index = favorites.map(function (item) {
                 return item.title;
             }).indexOf(layer.title);
             favorites.splice(index, 1);
@@ -272,7 +272,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         };
 
 
-        $rootScope.$on('databaseChanged', function() {
+        $rootScope.$on('databaseChanged', function () {
             cachedDescriptions = null;
         });
     })
@@ -284,22 +284,22 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var context = ContextService.getValue();
 
 
-        self.isNull = function() {
+        self.isNull = function () {
             return !context.authUser;
         };
 
-        self.getValue = function() {
+        self.getValue = function () {
             return context.authUser;
         };
 
-        self.login = function(login, password) {
+        self.login = function (login, password) {
             self.logout();
 
             var deferred = $q.defer();
 
             $rootScope.$broadcast('loginStart', login);
 
-            LocalDocument.queryOne('Utilisateur/byLogin', { key: login, include_docs: true }).then(
+            LocalDocument.queryOne('Utilisateur/byLogin', {key: login, include_docs: true}).then(
                 function onGetUserSuccess(result) {
                     if (result.doc.password === md5.createHash(password).toUpperCase()) {
                         context.authUser = result.doc;
@@ -318,7 +318,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return deferred.promise;
         };
 
-        self.logout = function() {
+        self.logout = function () {
             if (!self.isNull()) {
                 context.authUser = null;
                 $rootScope.$broadcast('logoutSuccess');
@@ -326,7 +326,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         };
 
 
-        $rootScope.$on('databaseChanged', function() {
+        $rootScope.$on('databaseChanged', function () {
             context.authUser = null;
         });
     })
@@ -340,22 +340,22 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         var tribordView = 'object_add';
 
 
-        self.getBabordView = function() {
+        self.getBabordView = function () {
             return babordView;
         };
 
-        self.setBabordView = function(view) {
+        self.setBabordView = function (view) {
             babordView = view;
             if (!$ionicSideMenuDelegate.isOpenLeft()) {
                 $ionicSideMenuDelegate.toggleLeft();
             }
         };
 
-        self.getTribordView = function() {
+        self.getTribordView = function () {
             return tribordView;
         };
 
-        self.setTribordView = function(view) {
+        self.setTribordView = function (view) {
             tribordView = view;
             if (!$ionicSideMenuDelegate.isOpenRight()) {
                 $ionicSideMenuDelegate.toggleRight();
@@ -371,11 +371,11 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         // Paths
         // ----------
 
-        self.photoDir=null;
+        self.photoDir = null;
 
-        self.notesDir=null;
+        self.notesDir = null;
 
-        self.docDir=null;
+        self.docDir = null;
 
         // Selections
         // ----------
