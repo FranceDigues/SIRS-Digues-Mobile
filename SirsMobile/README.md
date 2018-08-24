@@ -10,7 +10,7 @@ Installer **NodeJS <= 6**.
 
 Installer **Bower 1.6.6**.
 
-Installer **Cordova 5.4.0**.
+Installer **Cordova 8.0.0**.
 
 Installer **Ionic 1.7.16**.
 
