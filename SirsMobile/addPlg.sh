@@ -14,6 +14,7 @@ ionic plugin add cordova-plugin-whitelist@1.3.3;
 ionic plugin add cordova-plugin-x-toast@2.7.0;
 cordova plugin add cordova-plugin-geolocation@4.0.1;
 ionic plugin add https://github.com/devgeeks/Canvas2ImagePlugin.git
+ionic plugin add cordova-plugin-googleplayservices@19.0.3;
 
 # Plugin for use SQLite Adapter
 cordova plugin add cordova-sqlite-storage@2.4.0;
@@ -27,7 +28,6 @@ cordova plugin add cordova-sqlite-storage@2.4.0;
 
 # Not work
 #ionic plugin add cordova-plugin-crosswalk-webview@2.4.0;
-#ionic plugin add cordova-plugin-googleplayservices;
 
 
 
