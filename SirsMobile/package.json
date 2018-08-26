@@ -32,6 +32,7 @@
     "cordova-plugin-whitelist": "1.3.3",
     "cordova-plugin-x-toast": "2.7.0",
     "cordova-sqlite-storage": "2.4.0",
+    "geomatys-geolocation": "file:///home/hilmi/Sources/EXTERNAL_GIT_DEP/geolocation-cordova",
     "ionic-plugin-keyboard": "2.2.1",
     "org.devgeeks.Canvas2ImagePlugin": "https://github.com/devgeeks/Canvas2ImagePlugin.git"
   },
@@ -55,7 +56,8 @@
       "cordova-plugin-x-toast": {},
       "cordova-plugin-geolocation": {},
       "org.devgeeks.Canvas2ImagePlugin": {},
-      "cordova-plugin-googleplayservices": {}
+      "cordova-plugin-googleplayservices": {},
+      "com.geomatys.android.cordova.geo": {}
     }
   },
   "cordovaPlugins": [

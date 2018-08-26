@@ -16,10 +16,6 @@ ionic platform add android@6.4.0
 pushd ../../
     mkdir EXTERNAL_GIT_DEP
     pushd ./EXTERNAL_GIT_DEP
-        git clone https://github.com/devgeeks/Canvas2ImagePlugin.git
-        pushd ./Canvas2ImagePlugin
-            git checkout tags/0.6.0 -b 0.6.0
-        popd
         git clone http://gitlab.geomatys.com/cmourette/geolocation-cordova.git
     popd
 popd
