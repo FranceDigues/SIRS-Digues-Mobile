@@ -8,6 +8,10 @@ Définir la variable d'environnement **ANDROID_HOME**.
 
 Installer **NodeJS <= 6**.
 
+**Pre-install gradle in the system** 
+
+sudo apt-get install gradle
+
 Installer **Bower 1.6.6**.
 
 Installer **Cordova 8.0.0**.

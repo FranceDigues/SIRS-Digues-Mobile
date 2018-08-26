@@ -10,7 +10,7 @@ bower install
 rm ./www/lib/fabric/dist/fabric.min.js.gz
 
 # Configure Ionic platform.
-ionic platform add android
+ionic platform add android@6.4.0
 
 # Clone sources of external plugins.
 pushd ../../
