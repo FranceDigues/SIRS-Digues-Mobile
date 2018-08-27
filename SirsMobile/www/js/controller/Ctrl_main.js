@@ -88,12 +88,6 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
 
         self.gpsAccuracy = '-';
 
-        //@hb Watch the gps location
-
-        GeolocationService.trackLocation().then(angular.noop, angular.noop, function (position) {
-            self.gpsAccuracy = Math.round(position.coords.accuracy);
-        });
-
         // Add a handler for cordova event types
         // $ionicPlatform.on();
 
@@ -152,6 +146,27 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
 
         //@hb
         self.EditionService = EditionService;
+
+
+        // onSuccess Callback
+        // This method accepts a Position object, which contains the
+        // current GPS coordinates
+        //
+        var onSuccess = function (position) {
+            //@hb Watch the gps location
+            GeolocationService.trackLocation().then(angular.noop, angular.noop, function (position) {
+                self.gpsAccuracy = Math.round(position.coords.accuracy);
+            });
+        };
+
+        // onError Callback receives a PositionError object
+        //
+        function onError(error) {
+            alert('code: ' + error.code + '\n' +
+                'message: ' + error.message + '\n');
+        }
+
+        navigator.geolocation.getCurrentPosition(onSuccess, onError);
 
 
     });
