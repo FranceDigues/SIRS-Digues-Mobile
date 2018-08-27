@@ -21,18 +21,12 @@ cordova plugin add cordova-sqlite-storage@2.4.0;
 #cordova plugin add cordova-plugin-sqlite-2@1.0.5;
 
 ionic plugin add ../../EXTERNAL_GIT_DEP/geolocation-cordova;
-
-
-
-
+ionic plugin add ../pulgin/cacheMap/;
 
 
 
 # Not work with cordova android 6.4.0
 #ionic plugin add cordova-plugin-crosswalk-webview@2.4.0;
-
-# Install plugins from their sources.
-#ionic plugin add ../pulgin/cacheMap/;
 
 #ionic plugin add cordova-android-support-v4;
 

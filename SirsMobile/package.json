@@ -1,6 +1,6 @@
 {
   "name": "SIRS-Mobile",
-  "version": "0.2.47",
+  "version": "0.2.48",
   "description": "SIRS Mobile Application",
   "devDependencies": {
     "cordova": "8.0.0",
@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "com.geomatys.android.cordova.geo": "../../EXTERNAL_GIT_DEP/geolocation-cordova",
+    "com.rde.cachemap": "file:../pulgin/cacheMap",
     "cordova-android": "6.4.0",
     "cordova-plugin-camera": "4.0.3",
     "cordova-plugin-canvas2image": "git+https://github.com/devgeeks/Canvas2ImagePlugin.git",
@@ -58,7 +59,8 @@
       "cordova-plugin-geolocation": {},
       "org.devgeeks.Canvas2ImagePlugin": {},
       "cordova-plugin-googleplayservices": {},
-      "com.geomatys.android.cordova.geo": {}
+      "com.geomatys.android.cordova.geo": {},
+      "com.rde.cachemap": {}
     }
   },
   "cordovaPlugins": [
