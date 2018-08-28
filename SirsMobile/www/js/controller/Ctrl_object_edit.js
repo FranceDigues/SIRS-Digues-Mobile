@@ -165,7 +165,7 @@ angular.module('app.controllers.object_edit', [])
                 var wgs84Sphere = new ol.Sphere(6378137);
                 // The distance
                 var dist = wgs84Sphere.haversineDistance(ol.proj.transform(positionCoord, 'EPSG:3857', 'EPSG:4326'),
-                        ol.proj.transform(geomTronc, 'EPSG:3857', 'EPSG:4326')) / 1000;
+                    ol.proj.transform(geomTronc, 'EPSG:3857', 'EPSG:4326')) / 1000;
                 if (dist <= 1) {
                     nearTronconList.push(elt.value);
                 }
@@ -406,7 +406,18 @@ angular.module('app.controllers.object_edit', [])
 
         self.open = function (photo) {
             var url = self.getPhotoPath(photo);
-            window.cordova.plugins.FileOpener.openFile(decodeURI(url));
+            window.cordova.plugins.fileOpener2.open(
+                decodeURI(url),
+                'image/jpeg',
+                {
+                    error: function (e) {
+                        console.log('Error ' + e);
+                    },
+                    success: function () {
+                        console.log('file opened successfully');
+                    }
+                }
+            );
         };
 
         self.getPhotoPath = function (photo) {

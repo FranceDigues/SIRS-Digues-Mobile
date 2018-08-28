@@ -41,7 +41,6 @@
     <plugin name="ionic-plugin-keyboard" spec="2.2.1" />
     <plugin name="cordova-plugin-device" spec="2.0.2" />
     <plugin name="cordova-plugin-file" spec="6.0.1" />
-    <plugin name="cordova-plugin-fileopener" spec="1.0.5" />
     <plugin name="cordova-plugin-media" spec="5.0.2" />
     <plugin name="cordova-plugin-media-capture" spec="3.0.2" />
     <plugin name="cordova-plugin-network-information" spec="2.0.1" />
@@ -52,5 +51,6 @@
     <plugin name="cordova-plugin-googleplayservices" spec="19.0.3" />
     <plugin name="com.geomatys.android.cordova.geo" spec="../../EXTERNAL_GIT_DEP/geolocation-cordova" />
     <plugin name="com.rde.cachemap" spec="../pulgin/cacheMap" />
+    <plugin name="cordova-plugin-file-opener2" spec="2.0.19" />
     <engine name="android" spec="6.4.0" />
 </widget>

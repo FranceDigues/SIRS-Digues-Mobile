@@ -5,7 +5,7 @@ ionic plugin add cordova-plugin-console@1.1.0;
 ionic plugin add cordova-plugin-camera@4.0.3;
 ionic plugin add cordova-plugin-device@2.0.2;
 ionic plugin add cordova-plugin-file@6.0.1;
-ionic plugin add cordova-plugin-fileopener@1.0.5;
+ionic plugin add cordova-plugin-file-opener2@2.0.19;
 ionic plugin add cordova-plugin-media@5.0.2;
 ionic plugin add cordova-plugin-media-capture@3.0.2;
 ionic plugin add cordova-plugin-network-information@2.0.1;

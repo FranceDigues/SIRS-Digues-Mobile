@@ -22,7 +22,7 @@
     "cordova-plugin-canvas2image": "git+https://github.com/devgeeks/Canvas2ImagePlugin.git",
     "cordova-plugin-device": "2.0.2",
     "cordova-plugin-file": "6.0.1",
-    "cordova-plugin-fileopener": "1.0.5",
+    "cordova-plugin-file-opener2": "2.0.19",
     "cordova-plugin-geolocation": "4.0.1",
     "cordova-plugin-googleplayservices": "19.0.3",
     "cordova-plugin-media": "5.0.2",
@@ -46,7 +46,6 @@
       "ionic-plugin-keyboard": {},
       "cordova-plugin-device": {},
       "cordova-plugin-file": {},
-      "cordova-plugin-fileopener": {},
       "cordova-plugin-media": {},
       "cordova-plugin-media-capture": {},
       "cordova-plugin-network-information": {},
@@ -57,13 +56,15 @@
       "org.devgeeks.Canvas2ImagePlugin": {},
       "cordova-plugin-googleplayservices": {},
       "com.geomatys.android.cordova.geo": {},
-      "com.rde.cachemap": {}
+      "com.rde.cachemap": {},
+      "cordova-plugin-file-opener2": {}
     }
   },
   "cordovaPlugins": [
     {
       "locator": "https://github.com/devgeeks/Canvas2ImagePlugin.git"
     },
-    "cordova-plugin-googleplayservices"
+    "cordova-plugin-googleplayservices",
+    "cordova-plugin-file-opener2"
   ]
 }
