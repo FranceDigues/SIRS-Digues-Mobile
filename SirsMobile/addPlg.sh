@@ -23,6 +23,8 @@ cordova plugin add cordova-sqlite-storage@2.4.0;
 ionic plugin add ../../EXTERNAL_GIT_DEP/geolocation-cordova;
 ionic plugin add ../pulgin/cacheMap/;
 
+ionic plugin add cordova-android-support-gradle-release --variable ANDROID_SUPPORT_VERSION=27.0.0
+
 
 
 # Not work with cordova android 6.4.0

@@ -52,5 +52,8 @@
     <plugin name="com.geomatys.android.cordova.geo" spec="../../EXTERNAL_GIT_DEP/geolocation-cordova" />
     <plugin name="com.rde.cachemap" spec="../pulgin/cacheMap" />
     <plugin name="cordova-plugin-file-opener2" spec="2.0.19" />
+    <plugin name="cordova-android-support-gradle-release" spec="1.4.4">
+        <variable name="ANDROID_SUPPORT_VERSION" value="27.0.0" />
+    </plugin>
     <engine name="android" spec="6.4.0" />
 </widget>
