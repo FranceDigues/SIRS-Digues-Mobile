@@ -1,6 +1,6 @@
 {
   "name": "SIRS-Mobile",
-  "version": "0.2.49",
+  "version": "0.2.50",
   "description": "SIRS Mobile Application",
   "devDependencies": {
     "cordova": "8.0.0",
@@ -17,10 +17,11 @@
   "dependencies": {
     "com.geomatys.android.cordova.geo": "../../EXTERNAL_GIT_DEP/geolocation-cordova",
     "com.rde.cachemap": "file:../pulgin/cacheMap",
-    "cordova-android": "6.4.0",
+    "cordova-android": "6.3.0",
     "cordova-android-support-gradle-release": "1.4.4",
     "cordova-plugin-camera": "4.0.3",
     "cordova-plugin-canvas2image": "git+https://github.com/devgeeks/Canvas2ImagePlugin.git",
+    "cordova-plugin-crosswalk-webview": "2.4.0",
     "cordova-plugin-device": "2.0.2",
     "cordova-plugin-file": "6.0.1",
     "cordova-plugin-file-opener2": "2.0.19",
@@ -61,6 +62,13 @@
       "cordova-plugin-file-opener2": {},
       "cordova-android-support-gradle-release": {
         "ANDROID_SUPPORT_VERSION": "27.0.0"
+      },
+      "cordova-plugin-crosswalk-webview": {
+        "XWALK_VERSION": "23+",
+        "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
+        "XWALK_COMMANDLINE": "--disable-pull-to-refresh-effect",
+        "XWALK_MODE": "embedded",
+        "XWALK_MULTIPLEAPK": "true"
       }
     }
   },
@@ -69,6 +77,11 @@
       "locator": "https://github.com/devgeeks/Canvas2ImagePlugin.git"
     },
     "cordova-plugin-googleplayservices",
-    "cordova-plugin-file-opener2"
+    "cordova-plugin-file-opener2",
+    "cordova-plugin-crosswalk-webview@2.4.0",
+    {
+      "locator": "../pulgin/cacheMap/",
+      "id": "cordova-android-support-gradle-release"
+    }
   ]
 }

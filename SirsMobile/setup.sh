@@ -18,4 +18,4 @@ pushd ../../
 popd
 
 # Configure Ionic platform.
-ionic platform add android@6.4.0
+ionic platform add android@6.3.0
