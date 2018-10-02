@@ -35,6 +35,7 @@
     "cordova-plugin-x-toast": "2.7.0",
     "cordova-sqlite-storage": "2.4.0",
     "geomatys-geolocation": "file:../../EXTERNAL_GIT_DEP/geolocation-cordova",
+    "himalaya": "1.1.0",
     "ionic-plugin-keyboard": "2.2.1",
     "org.devgeeks.Canvas2ImagePlugin": "https://github.com/devgeeks/Canvas2ImagePlugin.git"
   },

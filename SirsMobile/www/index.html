@@ -1,105 +1,107 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>SIRS Mobile</title>
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width, height=device-height">
-        <meta http-equiv="Content-Security-Policy" content="style-src &apos;self&apos; &apos;unsafe-inline&apos;; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos;">
 
-        <!-- Lib CSS -->
-        <link rel="stylesheet" href="lib/ionic/release/css/ionic.min.css">
-        <link rel="stylesheet" href="lib/materialize/dist/css/materialize.min.css">
-        <link rel="stylesheet" href="lib/angularjs-slider/dist/rzslider.min.css">
-        <link rel="stylesheet" href="lib/material-icons/material-icons.css">
-        <link rel="stylesheet" href="lib/ol/ol.css">
+<head>
+    <meta charset="UTF-8">
+    <title>SIRS Mobile</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width, height=device-height">
+    <meta http-equiv="Content-Security-Policy" content="style-src &apos;self&apos; &apos;unsafe-inline&apos;; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos;">
 
-        <!-- App CSS -->
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="css/app_layers.css">
-        <link rel="stylesheet" href="css/back_layers.css">
-        <link rel="stylesheet" href="css/berge_edition.css">
-        <link rel="stylesheet" href="css/cache.css">
-        <link rel="stylesheet" href="css/card.css">
-        <link rel="stylesheet" href="css/database.css">
-        <link rel="stylesheet" href="css/forgot_password.css">
-        <link rel="stylesheet" href="css/help.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/menu.css">
-        <link rel="stylesheet" href="css/navtabs.css">
-        <link rel="stylesheet" href="css/note_edit.css">
-        <link rel="stylesheet" href="css/object_edit.css">
-        <link rel="stylesheet" href="css/object_selection.css">
-        <link rel="stylesheet" href="css/observation_details.css">
-        <link rel="stylesheet" href="css/observation_edit.css">
-        <link rel="stylesheet" href="css/position_edit.css">
-        <link rel="stylesheet" href="css/h-tree.css">
-        <link rel="stylesheet" href="css/login.css">
-        <link rel="stylesheet" href="css/new_database.css">
-        <link rel="stylesheet" href="css/replicate.css">
-        <link rel="stylesheet" href="css/sync.css">
-        <link rel="stylesheet" href="css/gallery.css">
+    <!-- Lib CSS -->
+    <link rel="stylesheet" href="lib/ionic/release/css/ionic.min.css">
+    <link rel="stylesheet" href="lib/materialize/dist/css/materialize.min.css">
+    <link rel="stylesheet" href="lib/angularjs-slider/dist/rzslider.min.css">
+    <link rel="stylesheet" href="lib/material-icons/material-icons.css">
+    <link rel="stylesheet" href="lib/ol/ol.css">
 
-        <!-- Lib JS -->
-        <script src="cordova.js"></script>
-        <!--<script src="lib/ol/ol.min.js"></script>-->
-        <script src="lib/ol/ol-debug.js"></script>
-        <script src="lib/jquery/dist/jquery.min.js"></script>
-        <script src="lib/materialize/bin/materialize.js"></script>
-        <script src="lib/ionic/release/js/ionic.bundle.min.js"></script>
-        <script src="lib/angular-md5/angular-md5.min.js"></script>
-        <script src="lib/angular-ol/angular-ol.js"></script>
-        <script src="lib/ngCordova/dist/ng-cordova.js"></script>
-        <script src="lib/angularjs-slider/dist/rzslider.min.js"></script>
-        <script src="lib/angular-route/angular-route.min.js"></script>
+    <!-- App CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/app_layers.css">
+    <link rel="stylesheet" href="css/back_layers.css">
+    <link rel="stylesheet" href="css/berge_edition.css">
+    <link rel="stylesheet" href="css/cache.css">
+    <link rel="stylesheet" href="css/card.css">
+    <link rel="stylesheet" href="css/database.css">
+    <link rel="stylesheet" href="css/forgot_password.css">
+    <link rel="stylesheet" href="css/help.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/navtabs.css">
+    <link rel="stylesheet" href="css/note_edit.css">
+    <link rel="stylesheet" href="css/object_edit.css">
+    <link rel="stylesheet" href="css/object_selection.css">
+    <link rel="stylesheet" href="css/observation_details.css">
+    <link rel="stylesheet" href="css/observation_edit.css">
+    <link rel="stylesheet" href="css/position_edit.css">
+    <link rel="stylesheet" href="css/h-tree.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/new_database.css">
+    <link rel="stylesheet" href="css/replicate.css">
+    <link rel="stylesheet" href="css/sync.css">
+    <link rel="stylesheet" href="css/gallery.css">
 
-        <!--<script src="lib/pouchdb/dist/pouchdb.min.js"></script>-->
-        <script src="js/services/pouchdb-6.1.2.min.js"></script>
+    <!-- Lib JS -->
+    <script src="cordova.js"></script>
+    <!--<script src="lib/ol/ol.min.js"></script>-->
+    <script src="lib/ol/ol-debug.js"></script>
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/materialize/bin/materialize.js"></script>
+    <script src="lib/ionic/release/js/ionic.bundle.min.js"></script>
+    <script src="lib/angular-md5/angular-md5.min.js"></script>
+    <script src="lib/angular-ol/angular-ol.js"></script>
+    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
+    <script src="lib/angularjs-slider/dist/rzslider.min.js"></script>
+    <script src="lib/angular-route/angular-route.min.js"></script>
 
-        <script src="lib/angular-pouchdb/angular-pouchdb.min.js"></script>
-        <script src="lib/proj4/dist/proj4.js"></script>
-        <script src="lib/fabric/dist/fabric.min.js"></script>
-        <script src="lib/angular-uuid4/angular-uuid4.min.js"></script>
-        <script src="js/services/pouchdb.cordova-sqlite.js"></script>
-        <script src="js/services/angular-local-storage.min.js"></script>
+    <!--<script src="lib/pouchdb/dist/pouchdb.min.js"></script>-->
+    <script src="js/services/pouchdb-6.1.2.min.js"></script>
 
-        <!-- App JS -->
-        <script src="js/app.js"></script>
-        <script src="js/controller/_Agregat.js"></script>
-        <script src="js/controller/Ctrl_app_layers.js"></script>
-        <script src="js/controller/Ctrl_back_layers.js"></script>
-        <script src="js/controller/Ctrl_berges.js"></script>
-        <script src="js/controller/Ctrl_cache.js"></script>
-        <script src="js/controller/Ctrl_database.js"></script>
-        <script src="js/controller/Ctrl_gallery.js"></script>
-        <script src="js/controller/Ctrl_login.js"></script>
-        <script src="js/controller/Ctrl_main.js"></script>
-        <script src="js/controller/Ctrl_menu.js"></script>
-        <script src="js/controller/Ctrl_note_edit.js"></script>
-        <script src="js/controller/Ctrl_object_add.js"></script>
-        <script src="js/controller/Ctrl_object_details.js"></script>
-        <script src="js/controller/Ctrl_object_edit.js"></script>
-        <script src="js/controller/Ctrl_object_selection.js"></script>
-        <script src="js/controller/Ctrl_observation_details.js"></script>
-        <script src="js/controller/Ctrl_observation_edit.js"></script>
-        <script src="js/controller/Ctrl_sync.js"></script>
-        <script src="js/controller/Ctrl_firstSync.js"></script>
-        <script src="js/controller/Ctrl_replicate.js"></script>
-        <script src="js/controller/Ctrl_app_troncon.js"></script>
-        <script src="js/directive/_Agregat.js"></script>
-        <script src="js/directive/Dir_Materialize.js"></script>
-        <script src="js/directive/Dir_Horizontal_Tree.js"></script>
-        <script src="js/services/_Agregat.js"></script>
-        <script src="js/services/Svs_context.js"></script>
-        <script src="js/services/Svs_dao.js"></script>
-        <script src="js/services/Svs_map.js"></script>
-        <script src="js/services/Svs_geolocation.js"></script>
-        <script src="js/services/Svs_edition.js"></script>
-        <script src="js/services/Svs_tracker.js"></script>
-        <script src="js/services/Svs_utils.js"></script>
-        <script src="js/services/Svs_colorService.js"></script>
-    </head>
-    <body ng-app="SirsMobile">
-        <div class="view-container" ng-view></div>
+    <script src="lib/angular-pouchdb/angular-pouchdb.min.js"></script>
+    <script src="lib/proj4/dist/proj4.js"></script>
+    <script src="lib/fabric/dist/fabric.min.js"></script>
+    <script src="lib/angular-uuid4/angular-uuid4.min.js"></script>
+    <script src="js/services/pouchdb.cordova-sqlite.js"></script>
+    <script src="js/services/angular-local-storage.min.js"></script>
 
-    </body>
+    <!-- App JS -->
+    <script src="js/app.js"></script>
+    <script src="js/controller/_Agregat.js"></script>
+    <script src="js/controller/Ctrl_app_layers.js"></script>
+    <script src="js/controller/Ctrl_back_layers.js"></script>
+    <script src="js/controller/Ctrl_berges.js"></script>
+    <script src="js/controller/Ctrl_cache.js"></script>
+    <script src="js/controller/Ctrl_database.js"></script>
+    <script src="js/controller/Ctrl_gallery.js"></script>
+    <script src="js/controller/Ctrl_login.js"></script>
+    <script src="js/controller/Ctrl_main.js"></script>
+    <script src="js/controller/Ctrl_menu.js"></script>
+    <script src="js/controller/Ctrl_note_edit.js"></script>
+    <script src="js/controller/Ctrl_object_add.js"></script>
+    <script src="js/controller/Ctrl_object_details.js"></script>
+    <script src="js/controller/Ctrl_object_edit.js"></script>
+    <script src="js/controller/Ctrl_object_selection.js"></script>
+    <script src="js/controller/Ctrl_observation_details.js"></script>
+    <script src="js/controller/Ctrl_observation_edit.js"></script>
+    <script src="js/controller/Ctrl_sync.js"></script>
+    <script src="js/controller/Ctrl_firstSync.js"></script>
+    <script src="js/controller/Ctrl_replicate.js"></script>
+    <script src="js/controller/Ctrl_app_troncon.js"></script>
+    <script src="js/controller/Ctrl_app_versions.js"></script>
+    <script src="js/directive/_Agregat.js"></script>
+    <script src="js/directive/Dir_Materialize.js"></script>
+    <script src="js/directive/Dir_Horizontal_Tree.js"></script>
+    <script src="js/services/_Agregat.js"></script>
+    <script src="js/services/Svs_context.js"></script>
+    <script src="js/services/Svs_dao.js"></script>
+    <script src="js/services/Svs_map.js"></script>
+    <script src="js/services/Svs_geolocation.js"></script>
+    <script src="js/services/Svs_edition.js"></script>
+    <script src="js/services/Svs_tracker.js"></script>
+    <script src="js/services/Svs_utils.js"></script>
+    <script src="js/services/Svs_colorService.js"></script>
+</head>
+<body ng-app="SirsMobile">
+    <div class="view-container" ng-view></div>
+
+</body>
 </html>

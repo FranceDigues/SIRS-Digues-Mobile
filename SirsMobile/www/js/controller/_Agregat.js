@@ -18,5 +18,6 @@ angular.module('app.controllers', [
     'app.controllers.replicate',
     'app.controllers.sync',
     'app.controllers.first_sync',
-    'app.controllers.app_troncons'
+    'app.controllers.app_troncons',
+    'app.controllers.app_versions'
 ]);
