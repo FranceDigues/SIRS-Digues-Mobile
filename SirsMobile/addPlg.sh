@@ -27,4 +27,6 @@ ionic plugin add cordova-android-support-gradle-release --variable ANDROID_SUPPO
 
 ionic plugin add cordova-plugin-crosswalk-webview@2.4.0;
 
+ionic plugin add https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git;
+
 

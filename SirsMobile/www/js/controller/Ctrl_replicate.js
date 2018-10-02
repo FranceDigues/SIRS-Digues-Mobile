@@ -180,7 +180,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             self.completion = null;
 
             var deferred = $q.defer();
-
+            window.plugins.insomnia.keepAwake();
             remoteDB.info()
                 .then(function (result) {
                     deferred.resolve(result.doc_count);
@@ -420,6 +420,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
         function fifthStepComplete() {
             DatabaseService.getActive().replicated = true;
+            window.plugins.insomnia.allowSleepAgain();
             $timeout(function () {
                 if (AuthService.isNull()) {
                     $location.path('/login');
