@@ -6,7 +6,7 @@ var parse = require('himalaya').parse;
 
 var pathdir = 'www/js/data/';
 
-if (fs.existsSync('../../platforms/android/android.json')) {
+if (fs.existsSync('platforms/android/android.json')) {
   if (!fs.existsSync(pathdir)) {
     fs.mkdirSync(pathdir);
   }
