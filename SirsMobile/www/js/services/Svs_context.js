@@ -43,7 +43,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
 
         // Others.
         lastLocation: null,
-        version: '0.2.51'
+        version: '0.2.52'
     })
 
     .service('ContextService', function ContextService($rootScope, $location, LocalStorageItem, defaultContext) {

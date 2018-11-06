@@ -59,6 +59,8 @@ ionic platform add android
 
 ## Générer l'APK
 
+En cas de problème lors de l'exécution de la commande de build, rendez-vous dans `./platforms/android/build.gradle` et dans les objets `repository` mettez `jcenter()` après la propriété `maven`.
+
 Executer les commandes suivantes :
 
 ```
@@ -68,6 +70,8 @@ keytool -genkey -v -keystore sirs-mobile.keystore -alias SIRS-Mobile -keyalg RSA
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore sirs-mobile.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk SIRS-Mobile
 `$PATH_TO_SDK/build-tools/$SDK_VERSION/zipalign -v 4 platforms/android/build/outputs/apk/android-release-unsigned.apk SIRS-Mobile.apk`
 ```
+
+Le type d'apk utilisé est ARMV7.
 
 Il est conseillé d'inclure le numéro de version de l'application dans le nom de l'APK.
 
