@@ -1,8 +1,7 @@
-
 angular.module('app.controllers.object_details', ['app.services.map'])
 
     .controller('ObjectDetailsController', function ObjectDetailsController($ionicPopup, $ionicScrollDelegate, sContext, SidePanelService,
-                                                                            LocalDocument, selection, $rootScope,MapManager) {
+                                                                            LocalDocument, selection, $rootScope, MapManager, AuthService) {
 
         var self = this;
 
@@ -15,31 +14,31 @@ angular.module('app.controllers.object_details', ['app.services.map'])
 
         self.abstract = {};
 
-        self.setActiveTab = function(name) {
+        self.setActiveTab = function (name) {
             if (name !== self.activeTab) {
                 self.activeTab = name;
                 $ionicScrollDelegate.$getByHandle('disorderScroll').scrollTop(false);
             }
         };
 
-        self.backToDisorderList = function() {
+        self.backToDisorderList = function () {
             selection.active.changed();
             selection.active = undefined;
             SidePanelService.setTribordView('object_selection');
         };
 
-        self.openObservationDetails = function(observation) {
+        self.openObservationDetails = function (observation) {
             sContext.selectedObservation = observation;
             SidePanelService.setTribordView('observation_details');
         };
 
-        self.remove = function() {
+        self.remove = function () {
             return $ionicPopup.confirm({
                 title: 'Suppression d\'un objet',
                 template: 'Voulez vous vraiment supprimer cet objet ?'
-            }).then(function(confirmed) {
+            }).then(function (confirmed) {
                 if (confirmed) {
-                    LocalDocument.remove(self.document).then(function() {
+                    LocalDocument.remove(self.document).then(function () {
                         // Remove the feature from the selection list.
                         var i = sContext.selectedFeatures.length;
                         while (i--) {
@@ -56,16 +55,19 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 return confirmed;
             });
         };
-        
+
         self.flagLoading = function () {
             $rootScope.loadingflag = true;
         };
 
+        self.canShowEditionButtons = function () {
+            return self.objectType !== 'Desordre' || AuthService.getValue().role === 'ADMIN' ? true : AuthService.getValue()._id === self.document.author;
+        };
 
         (function loadAbstracts() {
-            angular.forEach(self.document, function(value, key) {
+            angular.forEach(self.document, function (value, key) {
                 if (/.*Id$/.test(key)) {
-                    LocalDocument.get(value).then(function(doc) {
+                    LocalDocument.get(value).then(function (doc) {
                         self.abstract[key.substr(0, key.length - 2)] = doc.libelle;
                     });
                 }

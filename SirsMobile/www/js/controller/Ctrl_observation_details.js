@@ -1,7 +1,7 @@
 angular.module('app.controllers.observation_details', [])
 
     .controller('ObservationDetailsController', function ObservationDetailsController($ionicPlatform, sContext, $scope, $ionicPopup,
-                                                                                      SidePanelService, LocalDocument, $rootScope) {
+                                                                                      SidePanelService, LocalDocument, $rootScope, AuthService) {
 
         var self = this;
 
@@ -149,6 +149,10 @@ angular.module('app.controllers.observation_details', [])
 
         self.flagLoading = function () {
             $rootScope.loadingflag = true;
+        };
+
+        self.canShowEditionButtons = function () {
+            return AuthService.getValue().role === 'ADMIN' ? true : AuthService.getValue()._id === self.doc.author;
         };
 
         if (self.doc.urgenceId) {
