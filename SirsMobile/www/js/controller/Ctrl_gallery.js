@@ -1,7 +1,7 @@
 angular.module('app.controllers.gallery', [])
-    .controller('GalleryController',GalleryController);
+    .controller('GalleryController', GalleryController);
 
-function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocument,PouchService, $ionicPopup, $rootScope) {
+function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocument, PouchService, $ionicPopup, $rootScope) {
     var self = this;
 
     self.activeTab = 'documents';
@@ -18,28 +18,29 @@ function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocume
 
     self.fileDoc = undefined;
 
-    self.downloadRemoteDocuments = function(){
-        LocalDocument.query('getAllFilesAttachments',{attachments: true}).then(function(results) {
+    self.downloadRemoteDocuments = function () {
+        LocalDocument.query('getAllFilesAttachments', {attachments: true}).then(function (results) {
             results.forEach(function (item) {
-                angular.forEach(item.value.attachments,function (value, key) {
-                    if(!value.content_type.startsWith("image/")){
-                        $.ajax({url:window.cordova.file.externalDataDirectory + 'documents'+'/'+item.value.chemin.substring(item.value.chemin.lastIndexOf('/')+1),
-                            type:'HEAD',
-                            error : function () {
-                                PouchService.getLocalDB().getAttachment(item.id,key,function (err, blob) {
-                                    window.resolveLocalFileSystemURL(window.cordova.file.externalDataDirectory + 'documents', function(targetDir) {
-                                        targetDir.getFile(item.value.chemin.substring(item.value.chemin.lastIndexOf('/')+1), {create:true}, function(file) {
-                                            file.createWriter(function(fileWriter) {
+                angular.forEach(item.value.attachments, function (value, key) {
+                    if (!value.content_type.startsWith("image/")) {
+                        $.ajax({
+                            url: window.cordova.file.externalDataDirectory + 'documents' + '/' + item.value.chemin.substring(item.value.chemin.lastIndexOf('/') + 1),
+                            type: 'HEAD',
+                            error: function () {
+                                PouchService.getLocalDB().getAttachment(item.id, key, function (err, blob) {
+                                    window.resolveLocalFileSystemURL(window.cordova.file.externalDataDirectory + 'documents', function (targetDir) {
+                                        targetDir.getFile(item.value.chemin.substring(item.value.chemin.lastIndexOf('/') + 1), {create: true}, function (file) {
+                                            file.createWriter(function (fileWriter) {
                                                 fileWriter.write(blob);
                                                 window.setTimeout(function () {
-                                                    $cordovaFile.checkDir(window.cordova.file.externalDataDirectory, 'documents').then(function(directory) {
-                                                        visitDirectory(directory).then(function(files) {
+                                                    $cordovaFile.checkDir(window.cordova.file.externalDataDirectory, 'documents').then(function (directory) {
+                                                        visitDirectory(directory).then(function (files) {
                                                             self.availableFiles = files;
                                                         });
                                                     });
                                                     $scope.$digest();
-                                                },10);
-                                            }, function(){
+                                                }, 10);
+                                            }, function () {
                                                 console.log('cannot write the data to the file');
                                             });
                                         });
@@ -56,7 +57,7 @@ function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocume
         });
     };
 
-    self.select = function(node) {
+    self.select = function (node) {
         selected = node;
 
         self.fileDoc = undefined;
@@ -83,15 +84,15 @@ function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocume
         return $ionicPopup.confirm({
             title: 'Suppression d\'un fichier',
             template: 'Voulez vous vraiment supprimer ce fichier ?'
-        }).then(function(confirmed) {
+        }).then(function (confirmed) {
             if (confirmed) {
-                selected._entry.remove(function(){
+                selected._entry.remove(function () {
                     console.log('The file has been removed succesfully');
                     self.fileDoc = undefined;
                     self.initDirectory();
-                },function(error){
+                }, function (error) {
                     console.log('Error deleting the file');
-                },function(){
+                }, function () {
                     console.log("The file doesn't exist");
                 });
             }
@@ -104,14 +105,14 @@ function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocume
             title: 'Suppression tous les fichiers',
             template: 'Voulez vous vraiment supprimer tous les fichiers de ce répertoire ?' +
             'NB: Cette operation ne supprime pas les fichiers dans la base de données.'
-        }).then(function(confirmed) {
+        }).then(function (confirmed) {
             if (confirmed) {
                 $rootScope.loadingflag = true;
                 var promises = [];
-                angular.forEach(self.availableFiles,function (file) {
+                angular.forEach(self.availableFiles, function (file) {
                     promises.push(file._entry.remove());
                 });
-                $q.all(promises).then(function(values){
+                $q.all(promises).then(function (values) {
                     console.log('The files has been removed succesfully');
                     self.fileDoc = undefined;
                     self.initDirectory();
@@ -123,20 +124,31 @@ function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocume
         });
     };
 
-    self.open = function() {
-        window.cordova.plugins.FileOpener.openFile(decodeURI(selected._entry.nativeURL));
+    self.open = function () {
+        window.cordova.plugins.fileOpener2.open(
+            decodeURI(selected._entry.nativeURL),
+            'image/jpeg',
+            {
+                error: function (e) {
+                    console.log('Error ' + e);
+                },
+                success: function () {
+                    console.log('file opened successfully');
+                }
+            }
+        );
     };
-    
+
     self.getPhotoPath = function () {
-        return selected ? decodeURI(selected._entry.nativeURL):'';
+        return selected ? decodeURI(selected._entry.nativeURL) : '';
     };
 
     function visitDirectory(directory) {
         var deferred = $q.defer();
 
-        directory.createReader().readEntries(function(entries) {
+        directory.createReader().readEntries(function (entries) {
             var files = [];
-            angular.forEach(entries, function(entry) {
+            angular.forEach(entries, function (entry) {
                 files.push({
                     id: entry.fullPath,
                     label: entry.name,
@@ -153,17 +165,17 @@ function GalleryController($q, $scope, $ionicPlatform, $cordovaFile, LocalDocume
 
     self.initDirectory = function () {
         $cordovaFile.checkDir(window.cordova.file.externalDataDirectory, self.activeTab)
-            .then(function(directory) {
-            visitDirectory(directory).then(function(files) {
-                self.availableFiles = files;
+            .then(function (directory) {
+                visitDirectory(directory).then(function (files) {
+                    self.availableFiles = files;
+                });
             });
-        });
     };
 
-    $ionicPlatform.ready(function() {
+    $ionicPlatform.ready(function () {
         self.initDirectory();
     }); // fill root documents when the device is ready
-    
+
 }
 
 

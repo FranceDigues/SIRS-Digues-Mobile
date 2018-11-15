@@ -34,7 +34,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 _id: '_design/objetsNonClos',
                 views: {
                     byAuthor: {
-                        map: function(doc) {
+                        map: function (doc) {
                             if (doc.author && !doc.valid && doc.positionDebut && !doc.positionFin) {
                                 emit(doc.author);
                             }
@@ -46,7 +46,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 _id: '_design/objetsClos',
                 views: {
                     byAuthor: {
-                        map: function(doc) {
+                        map: function (doc) {
                             if (doc.author && !doc.valid && doc.positionDebut && doc.positionFin) {
                                 emit(doc.author, {
                                     '@class': doc['@class'],
@@ -66,7 +66,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 _id: '_design/Document',
                 views: {
                     byPath: {
-                        map: function(doc) {
+                        map: function (doc) {
                             if (doc.chemin) {
                                 var path = doc.chemin.replace(/\\/g, '/');
                                 if (path.indexOf('/')) {
@@ -85,55 +85,77 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 }
             },
             {
-            _id: '_design/ElementSpecial',
-            views: {
-                'ElementSpecial': {
-                    map: function(doc) {if(doc['@class']) {emit([doc['@class'], doc.linearId], {id: doc._id, rev: doc._rev,
-                        designation: doc.designation, libelle: doc.libelle,
-                        date_fin : doc.date_fin, positionDebut : doc.positionDebut,
-                        positionFin : doc.positionFin,
-                        geometry: doc.geometry })}}.toString()
+                _id: '_design/ElementSpecial',
+                views: {
+                    'ElementSpecial': {
+                        map: function (doc) {
+                            if (doc['@class']) {
+                                emit([doc['@class'], doc.linearId], {
+                                    id: doc._id, rev: doc._rev,
+                                    designation: doc.designation, libelle: doc.libelle,
+                                    date_fin: doc.date_fin, positionDebut: doc.positionDebut,
+                                    positionFin: doc.positionFin,
+                                    geometry: doc.geometry
+                                })
+                            }
+                        }.toString()
+                    }
                 }
-            }
-        },
+            },
             {
-            _id: '_design/bySEIdHB',
-            views: {
-                'bySEIdHB': {
-                    map: function(doc) {if(doc['@class']=='fr.sirs.core.model.Digue') {emit(doc.systemeEndiguementId,{id : doc._id ,
-                        libelle : doc.libelle})
-                        }}.toString()
+                _id: '_design/bySEIdHB',
+                views: {
+                    'bySEIdHB': {
+                        map: function (doc) {
+                            if (doc['@class'] == 'fr.sirs.core.model.Digue') {
+                                emit(doc.systemeEndiguementId, {
+                                    id: doc._id,
+                                    libelle: doc.libelle
+                                })
+                            }
+                        }.toString()
+                    }
                 }
-            }
-        },
+            },
             {
-            _id: '_design/byDigueIdHB',
-            views: {
-                'byDigueIdHB': {
-                    map: function(doc) {if(doc['@class'] && doc.digueId) {emit(doc.digueId,{id : doc._id, libelle : doc.libelle})}}.toString()
+                _id: '_design/byDigueIdHB',
+                views: {
+                    'byDigueIdHB': {
+                        map: function (doc) {
+                            if (doc['@class'] && doc.digueId) {
+                                emit(doc.digueId, {id: doc._id, libelle: doc.libelle})
+                            }
+                        }.toString()
+                    }
                 }
-            }
-        },
+            },
             {
-            _id: '_design/getBornesFromTronconID',
-            views: {
-                'getBornesFromTronconID': {
-                    map: function(doc) {
-                        if(Array.isArray(doc.borneIds))
-                        {for (var i = 0 ; i < doc.borneIds.length ; i++) emit(doc._id, doc.borneIds[i])}}.toString()
+                _id: '_design/getBornesFromTronconID',
+                views: {
+                    'getBornesFromTronconID': {
+                        map: function (doc) {
+                            if (Array.isArray(doc.borneIds)) {
+                                for (var i = 0; i < doc.borneIds.length; i++) emit(doc._id, doc.borneIds[i])
+                            }
+                        }.toString()
+                    }
                 }
-            }
-        },
+            },
             {
                 _id: '_design/getBornesIdsHB',
                 views: {
                     'getBornesIdsHB': {
-                        map:  function(doc) {if(doc['@class'] === 'fr.sirs.core.model.BorneDigue') {
-                            emit(doc._id, {id: doc._id, rev: doc._rev,
-                            designation: doc.designation, libelle: doc.libelle,
-                            date_fin : doc.date_fin, positionDebut : doc.positionDebut,
-                            positionFin : doc.positionFin,
-                            geometry: doc.geometry })}}.toString()
+                        map: function (doc) {
+                            if (doc['@class'] === 'fr.sirs.core.model.BorneDigue') {
+                                emit(doc._id, {
+                                    id: doc._id, rev: doc._rev,
+                                    designation: doc.designation, libelle: doc.libelle,
+                                    date_fin: doc.date_fin, positionDebut: doc.positionDebut,
+                                    positionFin: doc.positionFin,
+                                    geometry: doc.geometry
+                                })
+                            }
+                        }.toString()
                     }
                 }
             },
@@ -141,10 +163,11 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 _id: '_design/getAllFilesAttachments',
                 views: {
                     'getAllFilesAttachments': {
-                        map:  function(doc) {
-                            if(doc._attachments){
-                                emit(doc._id, {chemin : doc.chemin, attachments : doc._attachments});
-                            }}.toString()
+                        map: function (doc) {
+                            if (doc._attachments) {
+                                emit(doc._id, {chemin: doc.chemin, attachments: doc._attachments});
+                            }
+                        }.toString()
                     }
                 }
             }
@@ -157,12 +180,12 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             self.completion = null;
 
             var deferred = $q.defer();
-
+            window.plugins.insomnia.keepAwake();
             remoteDB.info()
-                .then(function(result) {
+                .then(function (result) {
                     deferred.resolve(result.doc_count);
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     deferred.reject(error);
                 });
 
@@ -174,7 +197,9 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             self.percent = 100;
 
             // Wait 1000ms before launching the second step.
-            $timeout(function() { secondStep(docCount); }, 1000);
+            $timeout(function () {
+                secondStep(docCount);
+            }, 1000);
         }
 
         function firstStepError(error) {
@@ -194,17 +219,17 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
             var deferred = $q.defer();
 
-            remoteDB.replicate.to(localDB, { live: false, retry: true })
-                .on('change', function(result) {
+            remoteDB.replicate.to(localDB, {live: false, retry: true})
+                .on('change', function (result) {
                     deferred.notify({
-                        repCount: Math.min(result.last_seq, docCount),
+                        repCount: Math.min(result.docs_written, docCount),
                         docCount: docCount
                     });
                 })
-                .on('complete', function() {
+                .on('complete', function () {
                     deferred.resolve();
                 })
-                .on('error', function(error) {
+                .on('error', function (error) {
                     deferred.reject(error);
                 });
 
@@ -238,22 +263,22 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
             var promise = $q.when(); // empty promise for chaining
 
-            angular.forEach(designDocs, function(designDoc, i) {
-                promise = promise.then(function() {
+            angular.forEach(designDocs, function (designDoc, i) {
+                promise = promise.then(function () {
                     var deferred = $q.defer();
 
                     localDB.put(designDoc)
-                        .then(function() {
+                        .then(function () {
                             deferred.notify(i + 1);
                             deferred.resolve();
-                        }).catch(function(error) {
-                            deferred.notify(i + 1);
-                            if (error.status === 409) {
-                                deferred.resolve(); // already done
-                            } else {
-                                deferred.reject(error);
-                            }
-                        });
+                        }).catch(function (error) {
+                        deferred.notify(i + 1);
+                        if (error.status === 409) {
+                            deferred.resolve(); // already done
+                        } else {
+                            deferred.reject(error);
+                        }
+                    });
 
                     return deferred.promise;
                 });
@@ -287,18 +312,18 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
             var promise = $q.when(); // empty promise for chaining
 
-            angular.forEach(indexedViews, function(view, i) {
-                promise = promise.then(function() {
+            angular.forEach(indexedViews, function (view, i) {
+                promise = promise.then(function () {
                     var deferred = $q.defer();
 
-                    localDB.query(view, { limit: 0 })
-                        .then(function() {
+                    localDB.query(view, {limit: 0})
+                        .then(function () {
                             deferred.notify(i + 1);
                             deferred.resolve();
-                        }).catch(function(error) {
-                            deferred.notify(i + 1);
-                            deferred.reject(error);
-                        });
+                        }).catch(function (error) {
+                        deferred.notify(i + 1);
+                        deferred.reject(error);
+                    });
 
                     return deferred.promise;
                 });
@@ -311,7 +336,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             self.percent = (proceedViews / indexedViews.length) * 100;
             self.completion = proceedViews + '/' + indexedViews.length;
         }
-        
+
         function fourthStepComplete() {
             $timeout(fifthStep, 1000);
         }
@@ -335,28 +360,26 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
             var promise = $q.when(); // empty promise for chaining
 
-                angular.forEach(syncViews, function(view, i) {
-                    promise = promise.then(function() {
-                        var deferred = $q.defer(),
-                            options = { live: false, retry: false, filter: '_view', view: view };
+            angular.forEach(syncViews, function (view, i) {
+                promise = promise.then(function () {
+                    var deferred = $q.defer(),
+                        options = {live: false, retry: false, filter: '_view', view: view};
 
-                        localDB.sync(remoteDB, options)
-                            .on('complete', function() {
-                                deferred.notify(i + 1);
-                                deferred.resolve();
-                            })
-                            .on('error', function(error) {
-                                deferred.notify(i + 1);
-                                deferred.reject(error);
-                            });
+                    localDB.sync(remoteDB, options)
+                        .on('complete', function () {
+                            deferred.notify(i + 1);
+                            deferred.resolve();
+                        })
+                        .on('error', function (error) {
+                            deferred.notify(i + 1);
+                            deferred.reject(error);
+                        });
 
-                        return deferred.promise;
-                    });
+                    return deferred.promise;
                 });
+            });
 
             promise.then(fifthStepComplete, fifthStepError, fifthStepProgress);
-
-
 
 
             /*
@@ -397,7 +420,8 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
         function fifthStepComplete() {
             DatabaseService.getActive().replicated = true;
-            $timeout(function() {
+            window.plugins.insomnia.allowSleepAgain();
+            $timeout(function () {
                 if (AuthService.isNull()) {
                     $location.path('/login');
                 } else {

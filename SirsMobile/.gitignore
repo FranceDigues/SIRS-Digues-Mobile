@@ -14,3 +14,5 @@ www/lib/*
 !www/lib/angular-ol/
 !www/lib/material-icons/
 !www/lib/ol/
+
+package-lock.json

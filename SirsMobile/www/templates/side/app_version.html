@@ -1,0 +1,14 @@
+<div id="appversion" ng-controller="VersionsMenu as VCtrl">
+    <ion-header-bar align-title="center">
+        <button type="button" class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="VCtrl.backToMenu()"></button>
+        <h1 class="title">Versions Composants</h1>
+    </ion-header-bar>
+
+    <ion-content class="has-header">
+            <div ng-repeat="(key, value) in VCtrl.versions">
+                <ion-item class="item-text-wrap">
+                    {{key}}: {{value}}
+                </ion-item>
+            </div>
+    </ion-content>
+</div>

@@ -30,7 +30,7 @@ angular.module('app.controllers.sync', ['app.services.context'])
             self.status = 1;
 
             var promise = $q.when(); // empty promise for chaining
-
+            window.plugins.insomnia.keepAwake();
             angular.forEach(syncViews, function(view, i) {
                 promise = promise.then(function() {
                     var deferred = $q.defer(),
@@ -70,6 +70,7 @@ angular.module('app.controllers.sync', ['app.services.context'])
         }
 
         function syncComplete() {
+            window.plugins.insomnia.allowSleepAgain();
             $timeout(function() {
                 self.db.lastSync = new Date().getTime(); // store sync timestamp
                 self.status = 2;

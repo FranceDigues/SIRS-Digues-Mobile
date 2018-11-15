@@ -139,7 +139,18 @@ angular.module('app.controllers.observation_edit', [])
 
         self.open = function (photo) {
             var url = self.getPhotoPath(photo);
-            window.cordova.plugins.FileOpener.openFile(decodeURI(url));
+            window.cordova.plugins.fileOpener2.open(
+                decodeURI(url),
+                'image/jpeg',
+                {
+                    error: function (e) {
+                        console.log('Error ' + e);
+                    },
+                    success: function () {
+                        console.log('file opened successfully');
+                    }
+                }
+            );
         };
 
 
