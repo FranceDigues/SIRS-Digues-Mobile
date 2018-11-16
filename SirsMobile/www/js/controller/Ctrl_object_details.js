@@ -61,7 +61,7 @@ angular.module('app.controllers.object_details', ['app.services.map'])
         };
 
         self.canShowEditionButtons = function () {
-            return self.objectType !== 'Desordre' || AuthService.getValue().role === 'ADMIN' ? true : AuthService.getValue()._id === self.document.author;
+            return AuthService.getValue().role === 'ADMIN' ? true : AuthService.getValue()._id === self.document.author;
         };
 
         (function loadAbstracts() {

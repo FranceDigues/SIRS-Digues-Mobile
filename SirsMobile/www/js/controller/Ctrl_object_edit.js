@@ -202,6 +202,8 @@ angular.module('app.controllers.object_edit', [])
                 objectDoc["sourceId"] = "RefSource:4";
             }
 
+            objectDoc.valid = false;
+
             EditionService.saveObject(objectDoc).then(function () {
                 $location.path('/main');
             });
