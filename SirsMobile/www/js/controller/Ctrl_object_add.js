@@ -60,7 +60,11 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
         };
 
         self.showAddButtons = function () {
-            return AuthService.getValue().role !== 'GUEST';
+            var type = self.selectedLayer.filterValue.substring(
+                self.selectedLayer.filterValue.lastIndexOf('.') + 1);
+
+            return (AuthService.getValue().role !== 'GUEST' &&
+                type !== "BorneDigue" && type !== "TronconDigue");
         };
 
         // Get the closable object for the first time

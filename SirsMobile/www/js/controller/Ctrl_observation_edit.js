@@ -84,6 +84,9 @@ angular.module('app.controllers.observation_edit', [])
                 // Apply modifications on target observation.
                 angular.extend(getTargetObservation(), self.doc);
             }
+
+            objectDoc.valid = false;
+
             // Save document.
             EditionService.saveObject(objectDoc).then(function () {
                 $location.path('/main');

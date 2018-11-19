@@ -61,6 +61,10 @@ angular.module('app.controllers.object_details', ['app.services.map'])
         };
 
         self.canShowEditionButtons = function () {
+            if (self.document['@class'] === "fr.sirs.core.model.BorneDigue"
+                || self.document['@class'] === "fr.sirs.core.model.TronconDigue") {
+                return false;
+            }
             if (AuthService.getValue().role === 'USER' || AuthService.getValue().role === 'ADMIN') {
                 return true;
             }
@@ -68,7 +72,7 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 return false;
             }
             if (AuthService.getValue().role === 'EXTERN') {
-                return self.document.author && AuthService.getValue()._id === self.document.author && !self.document.valid;
+                return self.document.author && AuthService.getValue()._id === self.document.author;
             }
         };
 

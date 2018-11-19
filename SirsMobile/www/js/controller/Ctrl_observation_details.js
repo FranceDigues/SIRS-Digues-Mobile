@@ -159,7 +159,7 @@ angular.module('app.controllers.observation_details', [])
                 return false;
             }
             if (AuthService.getValue().role === 'EXTERN') {
-                return self.doc.author && AuthService.getValue()._id === self.doc.author && !self.doc.valid;
+                return self.doc.author && AuthService.getValue()._id === self.doc.author;
             }
         };
 
