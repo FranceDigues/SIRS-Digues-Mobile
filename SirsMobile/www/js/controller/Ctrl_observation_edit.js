@@ -98,7 +98,7 @@ angular.module('app.controllers.observation_edit', [])
                 'nombreDesordres': 0,
                 'urgenceId': "RefUrgence:1",
                 'photos': [],
-                'valid': false
+                'valid': (AuthService.getValue().role === 'USER' || AuthService.getValue().role === 'ADMIN')
             };
         }
 

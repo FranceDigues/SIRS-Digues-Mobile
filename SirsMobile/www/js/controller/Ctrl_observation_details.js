@@ -152,7 +152,15 @@ angular.module('app.controllers.observation_details', [])
         };
 
         self.canShowEditionButtons = function () {
-            return AuthService.getValue().role === 'ADMIN' ? true : AuthService.getValue()._id === self.doc.author;
+            if (AuthService.getValue().role === 'USER' || AuthService.getValue().role === 'ADMIN') {
+                return true;
+            }
+            if (AuthService.getValue().role === 'GUEST') {
+                return false;
+            }
+            if (AuthService.getValue().role === 'EXTERN') {
+                return self.doc.author && AuthService.getValue()._id === self.doc.author && !self.doc.valid;
+            }
         };
 
         if (self.doc.urgenceId) {

@@ -2,7 +2,7 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
 
     .controller('ObjectAddController', function ObjectAddController($filter, $location, $ionicScrollDelegate,
                                                                     LocalDocument, AuthService, GeolocationService,
-                                                                    EditionService, AppLayersService,$scope, $rootScope) {
+                                                                    EditionService, AppLayersService, $scope, $rootScope) {
 
         var self = this;
 
@@ -17,17 +17,16 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
         self.selectedClosable = undefined;
 
         // Get the closable objects
-        var getClosable = function() {
-            return EditionService.getClosableObjects().then(function(results) {
-                self.closable = results.map(function(row) {
+        var getClosable = function () {
+            return EditionService.getClosableObjects().then(function (results) {
+                self.closable = results.map(function (row) {
                     return row.doc;
                 });
             });
 
         };
 
-
-        self.setTab = function(name) {
+        self.setTab = function (name) {
             if (name !== self.tab) {
                 self.tab = name;
                 $ionicScrollDelegate.$getByHandle('editScroll').scrollTop(false);
@@ -35,7 +34,7 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
         };
 
         // Add the new object
-        self.newObject = function() {
+        self.newObject = function () {
             if (angular.isDefined(self.selectedLayer)) {
                 $rootScope.loadingflag = true;
                 var type = self.selectedLayer.filterValue.substring(
@@ -44,7 +43,7 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
             }
         };
 
-        self.closeObject = function() {
+        self.closeObject = function () {
             if (angular.isDefined(self.selectedClosable)) {
                 $rootScope.loadingflag = true;
                 var type = self.selectedClosable['@class'].substring(
@@ -53,13 +52,17 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
             }
         };
         // The methode for delete the object created
-        self.deleteObject = function(){
-            // console.log(self.selectedClosable);
+        self.deleteObject = function () {
             if (angular.isDefined(self.selectedClosable)) {
                 LocalDocument.remove(self.selectedClosable);
                 getClosable();
             }
         };
+
+        self.showAddButtons = function () {
+            return AuthService.getValue().role !== 'GUEST';
+        };
+
         // Get the closable object for the first time
         getClosable();
     });

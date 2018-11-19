@@ -33,7 +33,7 @@
 
     <div class="fixed-button-bar text-center" ng-if="c.tab === 'layers'">
         <!-- FBB / Editable Layers -->
-        <div ng-if="c.tab === 'layers'">
+        <div ng-if="c.tab === 'layers' && c.showAddButtons()">
             <button class="btn btn-large waves-effect waves-light" type="button"
                     ng-disabled="!c.selectedLayer" ng-click="c.newObject()">Ajouter un objet</button>
         </div>

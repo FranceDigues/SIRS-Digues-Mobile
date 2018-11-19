@@ -61,7 +61,15 @@ angular.module('app.controllers.object_details', ['app.services.map'])
         };
 
         self.canShowEditionButtons = function () {
-            return AuthService.getValue().role === 'ADMIN' ? true : AuthService.getValue()._id === self.document.author;
+            if (AuthService.getValue().role === 'USER' || AuthService.getValue().role === 'ADMIN') {
+                return true;
+            }
+            if (AuthService.getValue().role === 'GUEST') {
+                return false;
+            }
+            if (AuthService.getValue().role === 'EXTERN') {
+                return self.document.author && AuthService.getValue()._id === self.document.author && !self.document.valid;
+            }
         };
 
         (function loadAbstracts() {
