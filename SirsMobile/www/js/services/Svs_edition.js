@@ -48,7 +48,7 @@ angular.module('app.services.edition', ['app.services.context'])
                     var objectDoc = {
                         '@class': 'fr.sirs.core.model.' + type,
                         'author': AuthService.getValue()._id,
-                        'valid': (AuthService.getValue().role === 'USER' || AuthService.getValue().role === 'ADMIN'),
+                        'valid': false,
                         'linearId': null
                     };
                     if (type !== 'Desordre') {

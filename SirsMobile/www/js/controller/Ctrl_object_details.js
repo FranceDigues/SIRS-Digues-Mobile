@@ -60,6 +60,14 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             $rootScope.loadingflag = true;
         };
 
+        self.canShowObservationsTab = function () {
+            return self.objectType === 'Desordre'
+                || self.objectType === 'StationPompage'
+                || self.objectType === 'ReseauHydrauliqueFerme'
+                || self.objectType === 'OuvrageHydrauliqueAssocie'
+                || self.objectType === 'ReseauHydrauliqueCielOuvert';
+        };
+
         self.canShowEditionButtons = function () {
             if (self.document['@class'] === "fr.sirs.core.model.BorneDigue"
                 || self.document['@class'] === "fr.sirs.core.model.TronconDigue") {

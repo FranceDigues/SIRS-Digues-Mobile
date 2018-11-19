@@ -5,7 +5,7 @@
         <h1 class="title">Détail de l'objet</h1>
     </ion-header-bar>
 
-    <div class="tabs-striped tabs-top" ng-if="c.objectType === 'Desordre'">
+    <div class="tabs-striped tabs-top" ng-if="c.canShowObservationsTab()">
         <div class="tabs tabs-sirs">
             <!-- Tab / Description -->
             <a class="tab-item" ng-class="{active: c.activeTab === 'description'}"
