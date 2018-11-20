@@ -17,7 +17,7 @@
     </div>
 
     <ion-content class="has-header has-fab-bottom" delegate-handle="disorderScroll"
-                 ng-class="{'has-tabs-top': c.objectType === 'Desordre'}">
+                 ng-class="{'has-tabs-top': c.canShowObservationsTab()}">
         <!-- Content -->
         <div ng-include="'templates/details/' + c.objectType + '.html'"></div>
     </ion-content>

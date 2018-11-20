@@ -60,6 +60,9 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
         };
 
         self.showAddButtons = function () {
+            if (!self.selectedLayer) {
+                return false;
+            }
             var type = self.selectedLayer.filterValue.substring(
                 self.selectedLayer.filterValue.lastIndexOf('.') + 1);
 
