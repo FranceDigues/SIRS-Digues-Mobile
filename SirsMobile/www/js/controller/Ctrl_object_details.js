@@ -68,6 +68,10 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 || self.objectType === 'ReseauHydrauliqueCielOuvert';
         };
 
+        self.canAddObservation = function () {
+            return self.activeTab === 'observations' && AuthService.getValue().role !== 'GUEST';
+        };
+
         self.canShowEditionButtons = function () {
             if (self.document['@class'] === "fr.sirs.core.model.BorneDigue"
                 || self.document['@class'] === "fr.sirs.core.model.TronconDigue") {

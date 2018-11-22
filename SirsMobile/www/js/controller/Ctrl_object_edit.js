@@ -528,6 +528,10 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.save = function () {
+            if (angular.isUndefined($scope.c.doc.photos)) {
+                $scope.c.doc.photos = [];
+            }
+
             $scope.c.doc.photos.push(self.mediaOptions);
 
             $scope.c.doc._attachments = $scope.c.doc._attachments || {};

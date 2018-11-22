@@ -55,7 +55,10 @@ angular.module('app.controllers.observation_edit', [])
             return item.value;
         });
 
-        self.urgence = parseInt(self.doc.urgenceId.substring(self.doc.urgenceId.lastIndexOf(":") + 1), 10);
+        if (self.doc.urgenceId) {
+            self.urgence = parseInt(self.doc.urgenceId.substring(self.doc.urgenceId.lastIndexOf(":") + 1), 10);
+        }
+
 
         self.changeUrgence = function () {
             self.doc.urgenceId = "RefUrgence:" + self.urgence;
@@ -94,15 +97,34 @@ angular.module('app.controllers.observation_edit', [])
         };
 
         function createNewObservation() {
-            return {
+            var newObj = {
                 'id': uuid4.generate(),
-                '@class': 'fr.sirs.core.model.Observation',
                 'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
-                'nombreDesordres': 0,
-                'urgenceId': "RefUrgence:1",
                 'photos': [],
                 'valid': false
             };
+
+            switch (objectDoc['@class']) {
+                case 'fr.sirs.core.model.StationPompage':
+                    newObj['@class'] = 'fr.sirs.core.model.ObservationStationPompage';
+                    break;
+                case 'fr.sirs.core.model.ReseauHydrauliqueFerme':
+                    newObj['@class'] = 'fr.sirs.core.model.ObservationReseauHydrauliqueFerme';
+                    break;
+                case 'fr.sirs.core.model.OuvrageHydrauliqueAssocie':
+                    newObj['@class'] = 'fr.sirs.core.model.ObservationOuvrageHydrauliqueAssocie';
+                    break;
+                case 'fr.sirs.core.model.ReseauHydrauliqueCielOuvert':
+                    newObj['@class'] = 'fr.sirs.core.model.ObservationReseauHydrauliqueCielOuvert';
+                    break;
+                default :
+                    newObj['@class'] = 'fr.sirs.core.model.Observation';
+                    newObj.urgenceId = "RefUrgence:1";
+                    newObj.nombreDesordres = 0;
+                    break;
+            }
+
+            return newObj;
         }
 
         function getTargetObservation() {

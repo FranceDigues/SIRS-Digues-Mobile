@@ -1,0 +1,51 @@
+<div ng-switch="c.activeTab">
+    <!-- Content / Description -->
+    <div ng-switch-when="description">
+        <div class="sirs-panel">
+            <div class="sirs-field-inline">
+                <span class="sirs-field-title">Numéro de désignation :</span>
+                <span class="sirs-field-value" ng-bind="c.document.designation"></span>
+            </div>
+            <!--<div class="sirs-field-inline">-->
+            <!--<span class="sirs-field-title">Géométrie :</span>-->
+            <!--<span class="sirs-field-value">Désordre Linéaire</span>-->
+            <!--</div>-->
+            <!--<div class="sirs-field-inline">-->
+            <!--<span class="sirs-field-title">Position GPS :</span>-->
+            <!--<span class="sirs-field-value">Précision 5m</span>-->
+            <!--</div>-->
+        </div>
+        <div class="sirs-section">
+            <div class="sirs-field">
+                <span class="sirs-field-title">Libellé</span>
+                <span class="sirs-field-value" ng-bind="c.document.libelle"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Réseau hydraulique associé</span>
+                <span class="sirs-field-value" ng-bind=""></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Position</span>
+                <span class="sirs-field-value" ng-bind="c.abstract.position"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Côté</span>
+                <span class="sirs-field-value" ng-bind="c.abstract.cote"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Commentaire</span>
+                <span class="sirs-field-value" ng-bind="c.document.commentaire"></span>
+            </div>
+        </div>
+    </div>
+    <!-- Content / Observations -->
+    <div ng-switch-when="observations">
+        <ion-list>
+            <ion-item on-tap="c.openObservationDetails(obs)" ng-repeat="obs in c.document.observations track by obs.id">
+                <span ng-if="obs.date">{{ obs.date|date:'dd/MM/yyyy'}}</span>
+                <span ng-if="!obs.date && obs.designation">{{ obs.designation}}</span>
+                <span ng-if="!obs.date && !obs.designation && obs.id">{{ obs.id}}</span>
+            </ion-item>
+        </ion-list>
+    </div>
+</div>

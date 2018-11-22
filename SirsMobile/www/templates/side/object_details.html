@@ -40,7 +40,8 @@
     </div>
 
     <!-- FAB / Observations -->
-    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;" ng-if="c.activeTab === 'observations'"
+    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;"
+         ng-if="c.canAddObservation()"
          on-tap="c.flagLoading();">
         <a ng-href="#/observation/{{c.document._id}}" class="btn-floating btn-large waves-effect waves-light pink">
             <i class="large material-icons">add</i>
