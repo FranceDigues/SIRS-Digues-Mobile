@@ -23,6 +23,7 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
             if (from !== to) {
                 self.layers.splice(to, 0, self.layers.splice(from, 1)[0]);
                 MapManager.moveAppLayer(from, to);
+                self.clearAll();
             }
         };
 
@@ -153,8 +154,8 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
 
         self.isActive = function (layer) {
             return AppLayersService.getFavorites().map(function (item) {
-                    return item.title;
-                }).indexOf(layer.title) !== -1;
+                return item.title;
+            }).indexOf(layer.title) !== -1;
         };
 
         self.toggleLayer = function (layer) {
