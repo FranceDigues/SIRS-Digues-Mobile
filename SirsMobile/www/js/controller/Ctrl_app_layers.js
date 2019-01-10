@@ -15,16 +15,12 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
         };
 
         self.move = function (from, to) {
-            if (from < to) {
-                var aux = from;
-                from = to;
-                to = aux;
-            }
-            if (from !== to) {
-                self.layers.splice(to, 0, self.layers.splice(from, 1)[0]);
-                MapManager.moveAppLayer(from, to);
-                self.clearAll();
-            }
+            var aux = self.layers[to];
+            self.layers[to] = self.layers[from];
+            self.layers[from] = aux
+            ;
+            MapManager.moveAppLayer(from, to);
+            self.clearAll();
         };
 
         self.toggleVisibility = function (layer) {
