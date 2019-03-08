@@ -524,7 +524,7 @@ angular.module('app.services.map', ['app.services.context'])
                 ]);
             }
 
-            var dataProjection = angular.isUndefined(SirsDoc.get().epsgCode) ? "EPSG:2154" : SirsDoc.get().epsgCode;
+            var dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
 
             geometry.transform(dataProjection, 'EPSG:3857');
             // Create feature.

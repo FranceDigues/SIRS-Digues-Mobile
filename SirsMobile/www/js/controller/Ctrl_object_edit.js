@@ -108,6 +108,11 @@ angular.module('app.controllers.object_edit', [])
 
         self.refs = refTypes;
 
+        self.linearPosEditionHandler = {
+            startPoint: false,
+            endPoint: false
+        };
+
         //************************************************************************
         //Réfere au Tronçon Id
 
@@ -215,15 +220,13 @@ angular.module('app.controllers.object_edit', [])
             });
         };
 
-        $scope.$watch(function () {
-            return self.isLinear;
-        }, function (newValue) {
-            if (newValue === true) {
+        self.changeObjectType = function () {
+            if (self.isLinear) {
                 delete objectDoc.positionFin;
-            } else if (newValue === false) {
+            } else {
                 objectDoc.positionFin = objectDoc.positionDebut;
             }
-        });
+        };
 
         // Geolocation
         // ----------
@@ -240,23 +243,24 @@ angular.module('app.controllers.object_edit', [])
 
         self.handlePos = function (pos) {
             var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
-            if (self.isNew) {
+            // Point case
+            if (!self.isLinear) {
                 objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-                if (!self.isLinear) {
-                    objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-                }
+                objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
             } else {
-                if (self.isClosed) {
+                // Linear case
+                if (self.isNew) {
                     objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-                    if (!self.isLinear) {
-                        objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-                    } else {
-                        // In the case of linear we need to re-close the object
-                        delete objectDoc.positionFin;
-                    }
                 } else {
-                    // only in the case of no linear object we can close
-                    objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                    if (self.linearPosEditionHandler.startPoint) {
+                        objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                        self.linearPosEditionHandler.startPoint = false;
+                    }
+
+                    if (self.linearPosEditionHandler.endPoint) {
+                        objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                        self.linearPosEditionHandler.endPoint = false;
+                    }
                 }
             }
         };

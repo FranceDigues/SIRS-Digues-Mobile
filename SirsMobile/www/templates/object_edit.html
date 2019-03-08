@@ -17,9 +17,11 @@
                             <div class="sirs-nav-tabs"
                                  ng-if="c.type !== 'BorneDigue' && c.type !== 'TronconDigue' && c.type !== 'Desordre' && c.type !== 'Berge'">
                                 <!-- Tab / Fields -->
-                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'fields'}" on-tap="c.setTab('fields')">Attributs</span>
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'fields'}"
+                                      on-tap="c.setTab('fields')">Attributs</span>
                                 <!-- Tab / Medias -->
-                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'medias'}" on-tap="c.setTab('medias')">Medias</span>
+                                <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'medias'}"
+                                      on-tap="c.setTab('medias')">Medias</span>
                             </div>
 
                             <!-- Content / Fields -->
@@ -35,21 +37,53 @@
                                     <div ng-if="c.isNew || c.isClosed" class="switch">
                                         <label>
                                             Objet ponctuel
-                                            <input type="checkbox" ng-model="c.isLinear"/>
+                                            <input type="checkbox" ng-model="c.isLinear"
+                                                   ng-change="c.changeObjectType()"/>
                                             <span class="lever"></span>
                                             Objet linéaire
                                         </label>
                                     </div>
-                                    <div class="sirs-field-inline">
-                                        <span ng-show="!c.isLinear" class="sirs-field-title">Position : </span>
-                                        <span ng-show="c.isLinear" class="sirs-field-title">Position de début :</span>
+
+                                    <div class="sirs-field-inline" ng-if="!c.isLinear">
+                                        <span class="sirs-field-title">Position : </span>
                                         <span class="sirs-field-value">{{c.getStartPos() | lonlat:'à définir'}}</span>
                                     </div>
-                                    <div ng-hide="!c.isLinear || c.isNew" class="sirs-field-inline">
-                                        <span class="sirs-field-title">Position de fin :</span>
-                                        <span class="sirs-field-value">{{c.getEndPos() | lonlat:'à définir'}}</span>
+
+                                    <div class="sirs-field-inline" ng-if="c.isLinear" style="overflow: hidden;">
+                                        <span class="sirs-field-title"
+                                              style="line-height: 37px;">Position de début :</span>
+                                        <span class="sirs-field-value">{{c.getStartPos() | lonlat:'à définir'}}</span>
+                                        <div class="position-action" ng-if="c.isLinear && !c.isNew"
+                                             style="display: inline;float: right;">
+                                            <button class="btn waves-effect waves-light"
+                                                    on-tap="c.locateMe();c.linearPosEditionHandler.startPoint = true;">
+                                                <i class="material-icons center">gps_fixed</i>
+                                            </button>
+                                            <button class="btn waves-effect waves-light"
+                                                    on-tap="c.selectPos();c.linearPosEditionHandler.startPoint = true;">
+                                                <i class="material-icons center">edit</i>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="position-action">
+
+                                    <div class="sirs-field-inline" ng-if="c.isLinear && !c.isNew"
+                                         style="margin-top: 5px;overflow: hidden;">
+                                        <span class="sirs-field-title"
+                                              style="line-height: 37px;">Position de fin :</span>
+                                        <span class="sirs-field-value">{{c.getEndPos() | lonlat:'à définir'}}</span>
+                                        <div class="position-action" style="display: inline;float: right;">
+                                            <button class="btn waves-effect waves-light"
+                                                    on-tap="c.locateMe();c.linearPosEditionHandler.endPoint = true;">
+                                                <i class="material-icons center">gps_fixed</i>
+                                            </button>
+                                            <button class="btn waves-effect waves-light"
+                                                    on-tap="c.selectPos();c.linearPosEditionHandler.endPoint = true;">
+                                                <i class="material-icons center">edit</i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="position-action" ng-if="!c.isLinear || c.isNew">
                                         <button class="btn waves-effect waves-light" on-tap="c.locateMe()">
                                             <i class="material-icons center">gps_fixed</i>
                                         </button>
@@ -59,10 +93,11 @@
                                     </div>
                                 </div>
 
-                                <!--Test Hilmi Pour calculer le plus proche Trançon-->
-                                <div class="row" ng-if="c.type !== 'BorneDigue' && c.type !== 'TronconDigue' && c.type !== 'berge' && c.doc.positionDebut">
+                                <div class="row"
+                                     ng-if="c.type !== 'BorneDigue' && c.type !== 'TronconDigue' && c.type !== 'berge' && c.doc.positionDebut">
                                     <div class="sirs-field col col-100">
-                                        <label for="trancon" class="active">La liste des Tronçons les plus proche (environ  1000 mètres): </label>
+                                        <label for="trancon" class="active">La liste des Tronçons les plus proche
+                                            (environ 1000 mètres): </label>
                                         <select id="trancon"
                                                 class="browser-default"
                                                 ng-model="c.doc.linearId"
@@ -78,7 +113,8 @@
                                 <!-- Content / Fields / Description -->
                                 <div class="sirs-field">
                                     <label for="commentaire" class="active">Commentaire</label>
-                                    <textarea id="commentaire" class="materialize-textarea" ng-model="c.doc.commentaire"></textarea>
+                                    <textarea id="commentaire" class="materialize-textarea"
+                                              ng-model="c.doc.commentaire"></textarea>
                                 </div>
                             </div>
 
@@ -87,16 +123,19 @@
                             <!-- Content / Medias -->
                             <div class="medias" ng-switch-when="medias">
                                 <ion-scroll direction="x">
-                                <div class="pics row">
-                                    <div class="pic col col-25" ng-init="c.loadImage(photo);" ng-repeat="photo in c.doc.photos track by photo.id">
-                                        <div class="pic-quicklook">
-                                            <div class="progress" ng-if="!c.loaded[photo.id]">
-                                                <div class="indeterminate"></div>
+                                    <div class="pics row">
+                                        <div class="pic col col-25" ng-init="c.loadImage(photo);"
+                                             ng-repeat="photo in c.doc.photos track by photo.id">
+                                            <div class="pic-quicklook">
+                                                <div class="progress" ng-if="!c.loaded[photo.id]">
+                                                    <div class="indeterminate"></div>
+                                                </div>
+                                                <img ng-if="c.loaded[photo.id]" on-tap="c.open(photo)"
+                                                     alt="Photo non disponible sur le mobile"
+                                                     ng-src="{{c.getPhotoPath(photo)}}"/>
                                             </div>
-                                            <img ng-if="c.loaded[photo.id]" on-tap="c.open(photo)" alt="Photo non disponible sur le mobile" ng-src="{{c.getPhotoPath(photo)}}"/>
                                         </div>
                                     </div>
-                                </div>
                                 </ion-scroll>
                                 <div class="text-center">
                                     <!--<button type="button" class="btn waves-effect waves-teal" on-tap="c.recordAudio()">-->
@@ -104,7 +143,8 @@
                                     <!--</button>-->
 
                                     <!--@hb Ajouter une medias-->
-                                    <button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.goToMedia()">
+                                    <button type="button" class="btn btn-large waves-effect waves-teal"
+                                            on-tap="c.goToMedia()">
                                         <i class="material-icons left">perm_media</i>Ajouter un media
                                     </button>
 
@@ -118,7 +158,7 @@
                                 <i class="material-icons left">arrow_back</i>Annuler
                             </a>
                             <button type="button" class="btn pink waves-effect waves-teal right"
-                                     ng-disabled="objectForm.$invalid"
+                                    ng-disabled="objectForm.$invalid"
                                     ng-click="c.save()">
                                 <i class="material-icons left">check</i>Terminer
                             </button>
@@ -141,7 +181,7 @@
 
     <!-- Add Media View -->
     <div ng-include="'templates/media.html'" ng-if="c.view === 'media'"
-    ng-controller="MediaController as mdc" ></div>
+         ng-controller="MediaController as mdc"></div>
 
 
 </ion-view>
