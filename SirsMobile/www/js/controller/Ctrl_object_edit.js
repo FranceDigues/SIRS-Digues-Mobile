@@ -50,7 +50,7 @@ angular.module('app.controllers.object_edit', [])
                                                                       $routeParams, GeolocationService, LocalDocument,
                                                                       EditionService, objectDoc, refTypes,
                                                                       uuid4, SirsDoc, $ionicModal, orientationsList, $filter,
-                                                                      cotesList, $rootScope, listTroncons) {
+                                                                      cotesList, $rootScope, listTroncons, MapManager) {
 
         var self = this;
 
@@ -208,8 +208,11 @@ angular.module('app.controllers.object_edit', [])
             }
 
             objectDoc.valid = false;
+            // return to edit mode
+            objectDoc.linearId = null;
 
             EditionService.saveObject(objectDoc).then(function () {
+                MapManager.syncAllAppLayer();
                 $location.path('/main');
             });
         };

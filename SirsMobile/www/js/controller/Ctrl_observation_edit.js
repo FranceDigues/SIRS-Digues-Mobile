@@ -4,7 +4,7 @@ angular.module('app.controllers.observation_edit', [])
                                                                                 $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                                 $routeParams, GeolocationService, LocalDocument,
                                                                                 EditionService, objectDoc, uuid4, $rootScope, contactList,
-                                                                                urgenceList, orientationsList, cotesList, AuthService) {
+                                                                                urgenceList, orientationsList, cotesList, AuthService, MapManager) {
 
         var self = this;
 
@@ -90,8 +90,12 @@ angular.module('app.controllers.observation_edit', [])
 
             objectDoc.valid = false;
 
+            // return to edit mode
+            objectDoc.linearId = null;
+
             // Save document.
             EditionService.saveObject(objectDoc).then(function () {
+                MapManager.syncAllAppLayer();
                 $location.path('/main');
             });
         };
