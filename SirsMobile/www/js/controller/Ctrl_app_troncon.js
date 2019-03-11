@@ -43,7 +43,7 @@ function TronconsChoiceMenu(SidePanelService, $scope, AppTronconsService, localS
 
 }
 
-function SystemEndigumentController($rootScope, $timeout, PouchService, AppTronconsService) {
+function SystemEndigumentController($rootScope, $timeout, PouchService) {
 
     var self = this;
 
@@ -79,38 +79,28 @@ function DigueController($timeout, PouchService, AppTronconsService, $rootScope)
     var self = this;
     self.digues = [];
 
-
     self.getDigues = function (SEID) {
-        if (SEID === "withoutSystem") {
-            $rootScope.loadingflag = true;
-            PouchService.getLocalDB().query('bySEIdHB', {
-                key: null
-            }).then(function (results) {
-                $timeout(function () {
-                    self.digues = results.rows;
-                    $rootScope.loadingflag = false;
-                }, 100);
-            }).catch(function (err) {
-                console.log(err);
+        var key = SEID === "withoutSystem" ? null : SEID;
+        $rootScope.loadingflag = true;
+        PouchService.getLocalDB().query('bySEIdHB', {
+            key: key
+        }).then(function (results) {
+            $timeout(function () {
+                self.digues = results.rows;
+                if (SEID === "withoutSystem") {
+                    self.digues.push({
+                        id: 'SansDigue',
+                        value: {
+                            libelle: "Sans digue"
+                        }
+                    });
+                }
                 $rootScope.loadingflag = false;
-            });
-        }
-        else {
-            $rootScope.loadingflag = true;
-            PouchService.getLocalDB().query('bySEIdHB', {
-                key: SEID
-            }).then(function (results) {
-                $timeout(function () {
-                    self.digues = results.rows;
-                    $rootScope.loadingflag = false;
-                }, 100);
-            }).catch(function (err) {
-                console.log(err);
-                $rootScope.loadingflag = false;
-            });
-
-        }
-
+            }, 100);
+        }).catch(function (err) {
+            console.log(err);
+            $rootScope.loadingflag = false;
+        });
 
     };
 
@@ -123,10 +113,26 @@ function TronconController($timeout, PouchService, AppTronconsService, localStor
 
     self.getTroncons = function (DID) {
 
-        if (angular.isDefined(DID)) {
+        if (DID === "SansDigue") {
+            PouchService.getLocalDB().query('Element/byClassAndLinear', {
+                startkey: ['fr.sirs.core.model.TronconDigue'],
+                endkey: ['fr.sirs.core.model.TronconDigue', {}],
+                include_docs: true
+            }).then(function (results) {
+                $timeout(function () {
+                    self.troncons = results.rows.filter(function (item) {
+                        return !item.doc.digueId;
+                    });
+                    $rootScope.loadingflag = false;
+                }, 100);
+            }).catch(function (err) {
+                console.log(err);
+                $rootScope.loadingflag = false;
+            });
+        } else {
             $rootScope.loadingflag = true;
             PouchService.getLocalDB().query('byDigueIdHB', {
-                key: DID
+                key: key
             }).then(function (results) {
                 $timeout(function () {
                     self.troncons = results.rows;
@@ -137,14 +143,12 @@ function TronconController($timeout, PouchService, AppTronconsService, localStor
                 $rootScope.loadingflag = false;
             });
         }
-
-
     };
 
     self.isActive = function (id) {
         return AppTronconsService.favorites.map(function (item) {
-                return item;
-            }).indexOf(id) !== -1;
+            return item;
+        }).indexOf(id) !== -1;
     };
 
     self.toggleLayer = function (id) {
