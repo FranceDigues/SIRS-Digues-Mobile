@@ -10,14 +10,16 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
 
         self.layers = AppLayersService.getFavorites();
 
+        console.log(self.layers);
+
         self.layerColor = function (layer) {
             return 'rgb(' + layer.color[0] + ',' + layer.color[1] + ',' + layer.color[2] + ')';
         };
 
         self.move = function (from, to) {
-            var aux = self.layers[to];
-            self.layers[to] = self.layers[from];
-            self.layers[from] = aux
+            var aux = self.layers[from];
+            self.layers[from] = self.layers[to];
+            self.layers[to] = aux
             ;
             MapManager.moveAppLayer(from, to);
             self.clearAll();

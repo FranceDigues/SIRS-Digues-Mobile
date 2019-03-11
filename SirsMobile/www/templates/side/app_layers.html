@@ -9,7 +9,7 @@
 
         <ion-list can-swipe="!c.reorder" show-reorder="c.reorder">
 
-            <ion-item ng-repeat="layer in c.layers">
+            <ion-item ng-repeat="layer in c.layers | orderBy: reverse:true">
                 <div class="layer-color" ng-style="{'background-color': c.layerColor(layer)}"></div>
 
                 <div class="layer-state">

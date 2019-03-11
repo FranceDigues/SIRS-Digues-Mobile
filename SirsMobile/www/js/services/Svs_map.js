@@ -186,9 +186,9 @@ angular.module('app.services.map', ['app.services.context'])
         // TODO → find a way to do this through event
         self.moveAppLayer = function (from, to) {
             var collection = appLayers.getLayers().getArray();
-            var aux = collection[to];
-            collection[to] = collection[from];
-            collection[from] = aux;
+            var aux = collection[from];
+            collection[from] = collection[to];
+            collection[to] = aux;
         };
 
         // TODO → find a way to do this through event
