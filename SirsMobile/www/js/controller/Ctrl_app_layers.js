@@ -10,8 +10,6 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
 
         self.layers = AppLayersService.getFavorites();
 
-        console.log(self.layers);
-
         self.layerColor = function (layer) {
             return 'rgb(' + layer.color[0] + ',' + layer.color[1] + ',' + layer.color[2] + ')';
         };
@@ -124,22 +122,9 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
         };
 
         //@hb Refresh handler for the layer
-        self.forceRefresh = function (layer) {
-            var cache = featureCache.get(layer.title);
-            if (angular.isDefined(cache)) {
-                featureCache.remove(layer.title);
-                if (layer.visible) {
-                    MapManager.syncAppLayer(layer);
-                }
-            }
-        };
+        self.forceRefresh = MapManager.forceRefresh;
 
-        self.clearAll = function () {
-            angular.forEach(self.layers, function (layer) {
-                self.forceRefresh(layer);
-            });
-
-        };
+        self.clearAll = MapManager.clearAll;
 
 
     })

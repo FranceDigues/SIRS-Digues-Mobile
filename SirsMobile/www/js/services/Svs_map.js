@@ -210,6 +210,22 @@ angular.module('app.services.map', ['app.services.context'])
             setEditionLayerFeatures(editionLayer);
         };
 
+        self.forceRefresh = function (layer) {
+            var cache = featureCache.get(layer.title);
+            if (angular.isDefined(cache)) {
+                featureCache.remove(layer.title);
+                if (layer.visible) {
+                    self.syncAppLayer(layer);
+                }
+            }
+        };
+
+        self.clearAll = function () {
+            angular.forEach(AppLayersService.getFavorites(), function (layer) {
+                self.forceRefresh(layer);
+            });
+        };
+
         // Private methods
         // ----------
 

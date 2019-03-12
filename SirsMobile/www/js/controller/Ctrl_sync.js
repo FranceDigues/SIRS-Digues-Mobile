@@ -1,6 +1,6 @@
 angular.module('app.controllers.sync', ['app.services.context'])
 
-    .controller('SyncController', function SyncController($q, $timeout, DatabaseService, PouchService, MapManager,$location) {
+    .controller('SyncController', function SyncController($q, $timeout, DatabaseService, PouchService, MapManager, $location) {
 
         var self = this;
 
@@ -31,30 +31,30 @@ angular.module('app.controllers.sync', ['app.services.context'])
 
             var promise = $q.when(); // empty promise for chaining
             window.plugins.insomnia.keepAwake();
-            angular.forEach(syncViews, function(view, i) {
-                promise = promise.then(function() {
+            angular.forEach(syncViews, function (view, i) {
+                promise = promise.then(function () {
                     var deferred = $q.defer(),
-                        options = {live:false,retry:true,batch_size:1,batches_limit:1};
+                        options = {live: false, retry: true, batch_size: 1, batches_limit: 1};
                     self.view = view;
 
-                    self.sync = PouchDB.sync(localDB,remoteDB,options)
-                        .on('complete', function() {
+                    self.sync = PouchDB.sync(localDB, remoteDB, options)
+                        .on('complete', function () {
                             deferred.notify(i + 1);
                             deferred.resolve();
                             console.debug("complete");
                         })
-                        .on('error', function(error) {
+                        .on('error', function (error) {
                             deferred.notify(i + 1);
                             deferred.reject(error);
-                            console.debug("error",error);
+                            console.debug("error", error);
                         }).on('change', function (info) {
-                            console.debug("change",info);
+                            console.debug("change", info);
                         }).on('paused', function (err) {
-                            console.debug("paused",err);
+                            console.debug("paused", err);
                         }).on('active', function () {
                             console.debug("active");
                         }).on('denied', function (err) {
-                            console.debug("denied",err);
+                            console.debug("denied", err);
                         });
 
                     return deferred.promise;
@@ -71,16 +71,17 @@ angular.module('app.controllers.sync', ['app.services.context'])
 
         function syncComplete() {
             window.plugins.insomnia.allowSleepAgain();
-            $timeout(function() {
+            $timeout(function () {
                 self.db.lastSync = new Date().getTime(); // store sync timestamp
                 self.status = 2;
+                MapManager.clearAll();
                 MapManager.redrawEditionLayerAfterSynchronization();
 
             }, 1000);
         }
 
         function syncError() {
-            $timeout(function() {
+            $timeout(function () {
                 self.status = 3;
             }, 1000);
         }

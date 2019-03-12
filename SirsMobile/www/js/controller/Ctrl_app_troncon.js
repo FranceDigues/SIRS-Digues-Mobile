@@ -132,7 +132,7 @@ function TronconController($timeout, PouchService, AppTronconsService, localStor
         } else {
             $rootScope.loadingflag = true;
             PouchService.getLocalDB().query('byDigueIdHB', {
-                key: key
+                key: DID
             }).then(function (results) {
                 $timeout(function () {
                     self.troncons = results.rows;
