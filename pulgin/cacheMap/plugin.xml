@@ -5,7 +5,7 @@
         version="0.0.9">
     <name>CacheMapPlugin</name>
     <description> Autonomous Cache Map Slave</description>
-    <license>Roch Dardie</license>
+    <license>Apache 2.0 License</license>
     <keywords>cordova,cache,map</keywords>
     <repo></repo>
     <issue></issue>
@@ -28,16 +28,9 @@
         <source-file src="src/android/Tile.java" target-dir="src/" />
         <source-file src="src/android/BBox.java" target-dir="src/" />
         <source-file src="src/android/sourceType.java" target-dir="src/" />
-        
         <source-file src="src/android/Pyromaniac.java" target-dir="src/" />
         <source-file src="src/android/FileUtils.java" target-dir="src/" />
-
-
         <source-file src="src/android/DownloadReceiver.java" target-dir="src/" />
-
-
-
         <source-file src="libs/gson-2.2.4.jar" target-dir="libs/" />
-
     </platform>
 </plugin>

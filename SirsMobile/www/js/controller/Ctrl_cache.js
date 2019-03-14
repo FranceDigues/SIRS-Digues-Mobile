@@ -13,15 +13,15 @@ angular.module('app.controllers.cache', [])
             source: new ol.source.Vector(),
             style: [
                 new ol.style.Style({
-                    fill: new ol.style.Fill({ color: [255, 0, 0, 0.1] }),
-                    stroke: new ol.style.Stroke({ color: [255, 0, 0, 1], width: 2 })
+                    fill: new ol.style.Fill({color: [255, 0, 0, 0.1]}),
+                    stroke: new ol.style.Stroke({color: [255, 0, 0, 1], width: 2})
                 }),
                 new ol.style.Style({
                     image: new ol.style.Circle({
                         radius: 5,
-                        fill: new ol.style.Fill({ color: [255, 0, 0, 1] })
+                        fill: new ol.style.Fill({color: [255, 0, 0, 1]})
                     }),
-                    geometry: function(feature) {
+                    geometry: function (feature) {
                         // return the coordinates of the first ring of the polygon
                         var coordinates = feature.getGeometry().getCoordinates()[0];
                         return new ol.geom.MultiPoint(coordinates);
@@ -35,15 +35,15 @@ angular.module('app.controllers.cache', [])
             source: new ol.source.Vector(),
             style: [
                 new ol.style.Style({
-                    fill: new ol.style.Fill({ color: [0, 0, 255, 0.1] }),
-                    stroke: new ol.style.Stroke({ color: [0, 0, 255, 1], width: 2 })
+                    fill: new ol.style.Fill({color: [0, 0, 255, 0.1]}),
+                    stroke: new ol.style.Stroke({color: [0, 0, 255, 1], width: 2})
                 }),
                 new ol.style.Style({
                     image: new ol.style.Circle({
                         radius: 5,
-                        fill: new ol.style.Fill({ color: [0, 0, 255, 1] })
+                        fill: new ol.style.Fill({color: [0, 0, 255, 1]})
                     }),
-                    geometry: function(feature) {
+                    geometry: function (feature) {
                         // return the coordinates of the first ring of the polygon
                         var coordinates = feature.getGeometry().getCoordinates()[0];
                         return new ol.geom.MultiPoint(coordinates);
@@ -54,11 +54,11 @@ angular.module('app.controllers.cache', [])
 
 
         function createFeatureInstance(extent) {
-            return new ol.Feature({ geometry: ol.geom.Polygon.fromExtent(extent) });
+            return new ol.Feature({geometry: ol.geom.Polygon.fromExtent(extent)});
         }
 
 
-        self.buildConfig = function() {
+        self.buildConfig = function () {
             return {
                 view: currentView,
                 layers: [targetLayer, previousAreaLayer, currentAreaLayer],
@@ -74,7 +74,7 @@ angular.module('app.controllers.cache', [])
             };
         };
 
-        self.setTargetLayer = function(layerModel) {
+        self.setTargetLayer = function (layerModel) {
             targetLayer.setSource(new ol.source[layerModel.source.type](layerModel.source));
 
             if (angular.isObject(layerModel.cache)) {
@@ -82,20 +82,20 @@ angular.module('app.controllers.cache', [])
             }
         };
 
-        self.clearTargetLayer = function() {
+        self.clearTargetLayer = function () {
             targetLayer.setSource(null);
             previousAreaLayer.getSource().clear();
             currentAreaLayer.getSource().clear();
         };
 
-        self.setCurrentArea = function(extent) {
+        self.setCurrentArea = function (extent) {
             currentAreaLayer.getSource().clear();
             if (angular.isArray(extent)) {
                 currentAreaLayer.getSource().addFeature(createFeatureInstance(extent));
             }
         };
 
-        self.getCurrentArea = function() {
+        self.getCurrentArea = function () {
             var feature = currentAreaLayer.getSource().getFeatures()[0];
             if (feature instanceof ol.Feature) {
                 return feature.getGeometry().getExtent();
@@ -103,7 +103,7 @@ angular.module('app.controllers.cache', [])
             return null;
         };
 
-        self.countTiles = function(minZoom, maxZoom) {
+        self.countTiles = function (minZoom, maxZoom) {
 
             var tileGrid;
 
@@ -112,7 +112,7 @@ angular.module('app.controllers.cache', [])
             var extent = self.getCurrentArea(), tileCount = 0;
 
             // In the case the tileGrid not exist use the default tileGrid
-            if(!tileGrid){
+            if (!tileGrid) {
                 var projExtent = ol.proj.get('EPSG:3857').getExtent();
                 var startResolution = ol.extent.getWidth(projExtent) / 256;
                 var resolutions = new Array(22);
@@ -120,21 +120,22 @@ angular.module('app.controllers.cache', [])
                     resolutions[i] = startResolution / Math.pow(2, i);
                 }
                 tileGrid = new ol.tilegrid.TileGrid({
-                    origin : [0,0],
+                    origin: [0, 0],
                     resolutions: resolutions
                 });
             }
 
-                for (var z = minZoom; z <= maxZoom; z++) {
-                    var tileRange = tileGrid.getTileRangeForExtentAndZ(extent, z);
-                    tileCount += (tileRange.getWidth() * tileRange.getHeight())
-                }
+            for (var z = minZoom; z <= maxZoom; z++) {
+                var tileRange = tileGrid.getTileRangeForExtentAndZ(extent, z);
+                tileCount += (tileRange.getWidth() * tileRange.getHeight())
+            }
 
             return tileCount;
         };
     })
 
-    .controller('CacheController', function CacheController($scope, $timeout, $routeParams, CacheMapManager, MapManager, BackLayerService, olMap, currentView) {
+    .controller('CacheController', function CacheController($scope, $timeout, $routeParams, $location,
+                                                            CacheMapManager, MapManager, BackLayerService, olMap, currentView) {
 
         var self = this;
 
@@ -185,14 +186,14 @@ angular.module('app.controllers.cache', [])
 
         self.selectedCorner = null;
 
-        self.setDefaultArea = function(map) {
+        self.setDefaultArea = function (map) {
             if (angular.isObject(layerModel.cache)) {
                 // Use previous area.
                 CacheMapManager.setCurrentArea(layerModel.cache.extent);
                 currentView.fit(layerModel.cache.extent, map.getSize());
             } else {
                 // Create default area.
-                var extent =  map.getView().calculateExtent(map.getSize());
+                var extent = map.getView().calculateExtent(map.getSize());
                 var wDelta = ol.extent.getWidth(extent) / 10;
                 var hDelta = ol.extent.getHeight(extent) / 10;
                 extent[0] = extent[0] + wDelta;
@@ -206,7 +207,7 @@ angular.module('app.controllers.cache', [])
             self.updateTileCount();
         };
 
-        self.editCorner = function(corner) {
+        self.editCorner = function (corner) {
             if (corner === self.selectedCorner) {
                 self.selectedCorner = null;
             } else {
@@ -233,11 +234,11 @@ angular.module('app.controllers.cache', [])
             }
         };
 
-        self.updateTileCount = function() {
+        self.updateTileCount = function () {
             self.tileCount = CacheMapManager.countTiles(self.minZoom, self.maxZoom);
         };
 
-        self.getCurrentZoom = function() {
+        self.getCurrentZoom = function () {
             var zoom = currentView.getZoom();
             if (angular.isDefined(zoom)) {
                 lastZoom = zoom;
@@ -245,7 +246,7 @@ angular.module('app.controllers.cache', [])
             return lastZoom;
         };
 
-        self.validate = function() {
+        self.validate = function () {
             var extent = CacheMapManager.getCurrentArea();
 
             // Update layer model and force update.
@@ -259,6 +260,7 @@ angular.module('app.controllers.cache', [])
 
             // Run cache plugin task.
             extent = ol.proj.transformExtent(extent, 'EPSG:3857', 'EPSG:4326');
+
             CacheMapPlugin.updateCache([{
                 name: layerModel.name,
                 layerSource: null,
@@ -268,6 +270,8 @@ angular.module('app.controllers.cache', [])
                 urlSource: layerModel.source.url,
                 bbox: [[extent[1], extent[0]], [extent[3], extent[2]]]
             }]);
+
+            $location.path('/main');
         };
 
 
@@ -277,7 +281,7 @@ angular.module('app.controllers.cache', [])
 
         currentView.on('change:resolution', onResolutionChanged);
 
-        $scope.$on('$destroy', function() {
+        $scope.$on('$destroy', function () {
             CacheMapManager.clearTargetLayer();
             currentView.un('change:center', onCenterChanged);
             currentView.un('change:resolution', onResolutionChanged);

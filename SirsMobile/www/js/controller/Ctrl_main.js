@@ -4,7 +4,7 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
                                                           sirsDoc, AuthService, SidePanelService,
                                                           $scope, $rootScope, $ionicLoading, AppLayersService, $interval,
                                                           EditionService, MapManager, $cordovaToast,
-                                                          $ionicPlatform, GeolocationService, $window, PouchService) {
+                                                          $ionicPlatform, GeolocationService, $window) {
 
         var self = this;
 
