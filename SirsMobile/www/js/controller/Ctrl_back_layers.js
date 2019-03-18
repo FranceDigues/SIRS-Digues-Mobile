@@ -34,6 +34,15 @@ angular.module('app.controllers.back_layers', ['app.services.context'])
 
         self.toggleOnlineMode = function (layer) {
             if (layer.cache) {
+                CacheMapPlugin.clearOneCache({
+                    name: layer.name,
+                    layerSource: null,
+                    typeSource: layer.source.type,
+                    zMin: layer.cache.minZoom,
+                    zMax: layer.cache.maxZoom,
+                    urlSource: layer.source.url,
+                    bbox: layer.cache.extent
+                });
                 // Remove the cache object
                 delete layer.cache;
                 // Update the view
