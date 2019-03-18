@@ -53,7 +53,7 @@ Executer les 3 commandes suivantes :
 
 ```
 rm -rf platforms/ plugins/
-ionic platform add android
+ionic platform add android@6.3.0
 ./addPlg.sh
 ```
 
