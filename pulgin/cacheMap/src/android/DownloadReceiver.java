@@ -45,7 +45,9 @@ public class DownloadReceiver extends BroadcastReceiver {
                     //it to other location if you want
 
                     //RENAME
-                    String downloadedPackageUriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+//                    String downloadedPackageUriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+                    String downloadedPackageUriString = (c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))).replace("file://","");
+
                     File tmp = new File(downloadedPackageUriString);
                     File ok = new File(downloadedPackageUriString.substring(0, downloadedPackageUriString.length() - 2));
 
