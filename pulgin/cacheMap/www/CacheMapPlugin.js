@@ -4,7 +4,7 @@
 var exec = require('cordova/exec');
 
 function CacheMapPlugin() {
-    console.log("CacheMapPlugin.js: is created");
+    console.log("CacheMapPlugin.js 2 : is created ");
 }
 
 

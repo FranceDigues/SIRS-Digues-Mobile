@@ -112,7 +112,7 @@ public class CacheMapPlugin extends CordovaPlugin {
         {
             Log.d("PluginRDE_RUN","updateCacheWay");
             Log.d("PluginRDE","parametre 0 : "+args.getJSONObject(0).toString());
-            this.runToast("updateCache :");
+            this.runToast("Mise à jour de cache :");
 
             /**
              * TODO for each cache desciptor  run build Cache
@@ -134,7 +134,7 @@ public class CacheMapPlugin extends CordovaPlugin {
         {
             Log.d("PluginRDE", "clear CadeList");
             //TODO clear juste le cache en parametre
-            this.runToast("clearListCache :");
+            this.runToast("Suppression de cache :");
 
 
                 for(int i = 0 ; i<args.length();i++){
@@ -151,7 +151,7 @@ public class CacheMapPlugin extends CordovaPlugin {
         {
             Log.d("PluginRDE", "initUserData");
             //TODO clear juste le cache en parametre
-            this.runToast("clearAllCache :");
+            this.runToast("Suppression de tous les cache :");
 
                 AsyncClear threadClear = new AsyncClear(this.cordova.getActivity(),this.flamethrower,true);
 

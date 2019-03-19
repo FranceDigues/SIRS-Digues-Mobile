@@ -1,6 +1,6 @@
 angular.module('app.controllers.back_layers', ['app.services.context'])
 
-    .controller('BackLayersController', function BackLayersController($location, BackLayerService, SidePanelService) {
+    .controller('BackLayersController', function BackLayersController($location, $ionicPopup, BackLayerService, SidePanelService) {
 
         var self = this;
 
@@ -12,11 +12,19 @@ angular.module('app.controllers.back_layers', ['app.services.context'])
         };
 
         self.removeLayer = function (layer) {
-            var isCurrent = (layer === BackLayerService.getActive());
-            BackLayerService.remove(layer).then(function (removed) {
-                if (removed && isCurrent) {
-                    self.useLayer(BackLayerService.list()[0]);
+            $ionicPopup.confirm({
+                title: 'Suppression de couche',
+                template: 'Voulez vous vraiment supprimer cette couche ?'
+            }).then(function (confirmed) {
+                if (confirmed) {
+                    var isCurrent = (layer === BackLayerService.getActive());
+                    BackLayerService.remove(layer).then(function (removed) {
+                        if (removed && isCurrent) {
+                            self.useLayer(BackLayerService.list()[0]);
+                        }
+                    });
                 }
+                return confirmed;
             });
         };
 
@@ -32,17 +40,31 @@ angular.module('app.controllers.back_layers', ['app.services.context'])
             SidePanelService.setBabordView('back_layers_add');
         };
 
+        self.deleteCache = function (layer) {
+            $ionicPopup.confirm({
+                title: 'Suppression de cache',
+                template: 'Voulez vous vraiment supprimer ce cache ?'
+            }).then(function (confirmed) {
+                if (confirmed) {
+                    CacheMapPlugin.clearOneCache({
+                        name: layer.name,
+                        layerSource: null,
+                        typeSource: layer.source.type,
+                        zMin: layer.cache.minZoom,
+                        zMax: layer.cache.maxZoom,
+                        urlSource: layer.source.url,
+                        bbox: layer.cache.extent
+                    });
+
+                    delete layer.cache;
+                    BackLayerService.setActive(layer.name);
+                }
+                return confirmed;
+            });
+        };
+
         self.toggleOnlineMode = function (layer) {
             if (layer.cache) {
-                CacheMapPlugin.clearOneCache({
-                    name: layer.name,
-                    layerSource: null,
-                    typeSource: layer.source.type,
-                    zMin: layer.cache.minZoom,
-                    zMax: layer.cache.maxZoom,
-                    urlSource: layer.source.url,
-                    bbox: layer.cache.extent
-                });
                 // Remove the cache object
                 delete layer.cache;
                 // Update the view

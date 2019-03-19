@@ -10,6 +10,9 @@
                 <i class="material-icons" ng-if="layer === c.sLayer.getActive()">check</i>
                 <h2>{{layer.name}}<span ng-if="layer.cache"> (hors ligne)</span></h2>
                 <!-- Swipe actions -->
+                <ion-option-button class="button" ng-click="c.deleteCache(layer)" ion-stop-event ng-disabled="!layer.cache">
+                    <i class="material-icons">clear_all</i>
+                </ion-option-button>
                 <ion-option-button class="button"
                                    ng-class="{'icon-grey':layer === c.sLayer.getActive() && !layer.cache,'icon-grey-half':layer === c.sLayer.getActive() && layer.cache}"
                                    ng-click="c.toggleOnlineMode(layer)" ion-stop-event>
