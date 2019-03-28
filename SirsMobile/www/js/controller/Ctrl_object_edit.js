@@ -50,7 +50,7 @@ angular.module('app.controllers.object_edit', [])
                                                                       $routeParams, GeolocationService, LocalDocument,
                                                                       EditionService, objectDoc, refTypes,
                                                                       uuid4, SirsDoc, $ionicModal, orientationsList, $filter,
-                                                                      cotesList, $rootScope, listTroncons, MapManager) {
+                                                                      cotesList, $rootScope, listTroncons, MapManager, PouchService, $timeout) {
 
         var self = this;
 
@@ -60,11 +60,58 @@ angular.module('app.controllers.object_edit', [])
 
         self.gpsAccuracy = '-';
 
-        //@hb Watch the gps location
+        startGeoloactionWatch = function () {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                $timeout(function () {
+                    self.gpsAccuracy = Math.round(position.coords.accuracy);
+                    self.lastGPSUpdateDate = moment().format();
+                    self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
 
-        GeolocationService.trackLocation().then(angular.noop, angular.noop, function (position) {
-            self.gpsAccuracy = Math.round(position.coords.accuracy);
-        });
+                    clearInterval(self.intervalLastGPSUpdate);
+
+                    self.intervalLastGPSUpdate = setInterval(function () {
+                        self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
+                    }, 60000);
+
+                    self.watchID = navigator.geolocation.watchPosition(function (position) {
+                        $timeout(function () {
+                            self.gpsAccuracy = Math.round(position.coords.accuracy);
+                            self.lastGPSUpdateDate = moment().format();
+                            self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
+
+                            clearInterval(self.intervalLastGPSUpdate);
+
+                            self.intervalLastGPSUpdate = setInterval(function () {
+                                self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
+                            }, 60000);
+                        });
+                    }, function (error) {
+                        alert('code: ' + error.code + '\n' +
+                            'message: ' + error.message + '\n');
+                    }, {
+                        maximumAge: 20000,
+                        enableHighAccuracy: true
+                    });
+                });
+            }, function (error) {
+                alert('code: ' + error.code + '\n' +
+                    'message: ' + error.message + '\n');
+            }, {
+                maximumAge: 20000,
+                enableHighAccuracy: true
+            });
+        };
+
+        clearGeoloactionWatch = function () {
+            navigator.geolocation.clearWatch(self.watchID);
+            self.watchID = null;
+        };
+
+        startGeoloactionWatch();
+
+        // GeolocationService.trackLocation().then(angular.noop, angular.noop, function (position) {
+        //     self.gpsAccuracy = Math.round(position.coords.accuracy);
+        // });
 
         // Navigation
         // -----------
@@ -154,14 +201,13 @@ angular.module('app.controllers.object_edit', [])
             var positionCoord = geomatryPosition.getCoordinates();
             var geom, geomTronc;
             // Get of the LineStrings from the list of Troncons
-            angular.forEach(liste, function (elt, i) {
+            angular.forEach(liste, function (elt) {
                 try {
                     geom = new ol.format.WKT().readGeometry(elt.value.geometry, {
                         dataProjection: SirsDoc.get().epsgCode,
                         featureProjection: 'EPSG:3857'
                     });
-                }
-                catch (e) {
+                } catch (e) {
                     console.log(e);
                 }
                 geomTronc = geom.getClosestPoint(positionCoord);
@@ -237,7 +283,23 @@ angular.module('app.controllers.object_edit', [])
         self.geoloc = undefined;
 
         self.locateMe = function () {
-            waitForLocation(GeolocationService.start()).then(GeolocationService.stop);
+            $ionicLoading.show({template: 'En attente de localisation...'});
+            navigator.geolocation.getCurrentPosition(function (position) {
+                $timeout(function () {
+                    self.handlePos(position.coords);
+                    $ionicLoading.hide();
+                });
+            }, function (error) {
+                alert('code: ' + error.code + '\n' +
+                    'message: ' + error.message + '\n');
+                $ionicLoading.hide();
+            }, {
+                maximumAge: 20000,
+                enableHighAccuracy: true
+            });
+
+
+            // waitForLocation(GeolocationService.start()).then(GeolocationService.stop);
         };
 
         self.selectPos = function () {
@@ -277,7 +339,7 @@ angular.module('app.controllers.object_edit', [])
         };
 
         function parsePos(position) {
-            var strings = position.substring(7, position.length - 1).split(' '),
+            var strings = position.substring(6, position.length - 1).split(' '),
                 numbers = [parseFloat(strings[0]), parseFloat(strings[1])];
             return ol.proj.transform(numbers, dataProjection, 'EPSG:4326');
         }
@@ -488,6 +550,47 @@ angular.module('app.controllers.object_edit', [])
                 });
             });
         }
+
+        PouchService.getLocalDB().query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.SystemeReperage'],
+            endkey: ['fr.sirs.core.model.SystemeReperage', {}],
+            include_docs: true
+        }).then(function (results) {
+            $timeout(function () {
+                self.systemeReperageList = results.rows;
+                console.log(self.systemeReperageList);
+            }, 100);
+        }).catch(function (err) {
+            console.log(err);
+            // $rootScope.loadingflag = false;
+        });
+
+        $ionicModal.fromTemplateUrl('my-modal.html', {
+            scope: $scope
+        }).then(function (modal) {
+            self.modal = modal;
+        });
+
+        self.selectPosBySR = function () {
+            self.setView('mapByBorne');
+            // self.modal.show();
+        };
+
+        self.getBorneById = function () {
+            PouchService.getLocalDB().query('getBornesIdsHB', {
+                key: self.systemeReperageBorneId
+            }).then(function (results) {
+                $timeout(function () {
+                    self.systemeReperageBorne = results.rows[0];
+                }, 100);
+            }).catch(function (err) {
+                console.log(err);
+            });
+        };
+
+        self.addBornePosition = function () {
+
+        };
 
         $ionicPlatform.ready(function () {
             // Acquire the medias storage path when the device is ready.

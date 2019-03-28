@@ -11,9 +11,9 @@
                             <h2 class="sirs-card-title" ng-show="!c.isNew && !c.isClosed">Fermer un(e) {{c.type}}</h2>
                             <h2 class="sirs-card-title" ng-show="!c.isNew && c.isClosed">Détail d'un(e) {{c.type}}</h2>
                             <div style="z-index: 9999; right: 60px; top: 5px; position: fixed;">
-                                <span>Précision du signal GPS :  {{c.gpsAccuracy}} m </span>
+                                <span>Précision du signal GPS :  {{c.gpsAccuracy}} m</span>
+                                <span ng-if="c.lastGPSUpdate">(Dernières mises à jour {{c.lastGPSUpdate}})</span>
                             </div>
-
                             <div class="sirs-nav-tabs"
                                  ng-if="c.type !== 'BorneDigue' && c.type !== 'TronconDigue' && c.type !== 'Desordre' && c.type !== 'Berge'">
                                 <!-- Tab / Fields -->
@@ -23,7 +23,6 @@
                                 <span class="sirs-tab waves-effect waves-teal" ng-class="{active: c.tab === 'medias'}"
                                       on-tap="c.setTab('medias')">Medias</span>
                             </div>
-
                             <!-- Content / Fields -->
                             <div ng-switch-when="fields">
                                 <!-- Content / Fields / Common -->
@@ -90,9 +89,12 @@
                                         <button class="btn waves-effect waves-light" on-tap="c.selectPos()">
                                             <i class="material-icons center">edit</i>
                                         </button>
+                                        <button class="btn waves-effect waves-light"
+                                                on-tap="c.selectPosBySR()">
+                                            <i class="material-icons center">line_style</i>
+                                        </button>
                                     </div>
                                 </div>
-
                                 <div class="row"
                                      ng-if="c.type !== 'BorneDigue' && c.type !== 'TronconDigue' && c.type !== 'berge' && c.doc.positionDebut">
                                     <div class="sirs-field col col-100">
@@ -106,8 +108,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <!--Fin de Test Hilmi Pour calculer le plus proche Trançon-->
-
                                 <!-- Content / Fields / Specific -->
                                 <div class="specific" ng-include="'templates/forms/' +  c.type + '.html'"></div>
                                 <!-- Content / Fields / Description -->
@@ -117,9 +117,7 @@
                                               ng-model="c.doc.commentaire"></textarea>
                                 </div>
                             </div>
-
                             <!--************************* Fin field Form ***************************-->
-
                             <!-- Content / Medias -->
                             <div class="medias" ng-switch-when="medias">
                                 <ion-scroll direction="x">
@@ -151,7 +149,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Actions -->
                         <div class="sirs-card-action">
                             <a href="#/main" class="btn-flat waves-effect waves-teal">
@@ -169,19 +166,53 @@
             </div>
         </ion-content>
     </div>
-
-
     <!-- Position Map -->
     <div ng-include="'templates/position_edit.html'" ng-if="c.view === 'map'"
          ng-init="save = c.handlePos; exit = c.backToForm"></div>
-
+    <div ng-include="'templates/position_by_borne.html'" ng-if="c.view === 'mapByBorne'"
+         ng-init="save = c.handlePos; exit = c.backToForm"></div>
     <!-- Note -->
     <div ng-include="'templates/note_edit.html'" ng-if="c.view === 'note'"
          ng-init="save = c.saveNote; exit = c.backToForm"></div>
-
     <!-- Add Media View -->
     <div ng-include="'templates/media.html'" ng-if="c.view === 'media'"
          ng-controller="MediaController as mdc"></div>
-
-
 </ion-view>
+
+<script id="my-modal.html" type="text/ng-template">
+    <ion-modal-view style="display: block;">
+        <ion-header-bar>
+            <h1 class="title">Positionnement via bornes</h1>
+        </ion-header-bar>
+        <ion-content>
+            <div>
+                <label>Système de repérage : </label>
+                <select id="sr" class="browser-default"
+                        ng-model="c.systemeReperage"
+                        ng-options="systemeReperage.doc as systemeReperage.doc.libelle + ' : ' + systemeReperage.doc._id for systemeReperage in c.systemeReperageList">
+                    <option></option>
+                </select>
+            </div>
+            <div ng-if="c.systemeReperage">
+                <label>Borne du système de repérage : </label>
+                <select id="sr" class="browser-default"
+                        ng-model="c.systemeReperageBorneId"
+                        ng-change="c.getBorneById()"
+                        ng-options="systemeReperageBorne.borneId as systemeReperageBorne.id for systemeReperageBorne in c.systemeReperage.systemeReperageBornes">
+                    <option></option>
+                </select>
+            </div>
+            <div ng-if="c.distanceToBorne">
+                <p>Distance à la borne {{c.systemeReperageBorne.value.libelle }} est : {{c.distanceToBorne}} m</p>
+                <p>Position en Amont</p>
+            </div>
+            <div class="sirs-card-action">
+                <button type="button" class="btn pink waves-effect waves-teal right"
+                        ng-disabled="false"
+                        ng-click="c.addBornePosition()">
+                    <i class="material-icons left">check</i>Terminer
+                </button>
+            </div>
+        </ion-content>
+    </ion-modal-view>
+</script>
