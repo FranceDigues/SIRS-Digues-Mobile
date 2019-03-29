@@ -9,7 +9,7 @@ angular.module('app.controllers.object_edit', [])
         }
     })
 
-    .service('PositionMapManager', function CacheMapManager(BackLayerService, currentView) {
+    .service('PositionMapManager', function PositionMapManager(BackLayerService, currentView) {
 
         var self = this;
 
@@ -36,6 +36,287 @@ angular.module('app.controllers.object_edit', [])
             return {
                 view: currentView,
                 layers: [olLayer],
+                controls: [],
+                interactions: ol.interaction.defaults({
+                    altShiftDragRotate: false,
+                    shiftDragZoom: false
+                })
+            };
+        };
+    })
+    .service('PositionByBorneMapManager', function PositionByBorneMapManager($rootScope, BackLayerService, featureCache,
+                                                                             currentView, AppLayersService, LocalDocument, DefaultStyle) {
+        var self = this;
+
+        var wktFormat = new ol.format.WKT();
+
+        function createAppFeatureModel(featureDoc) {
+            // featureDoc = featureDoc.value || featureDoc;
+            featureDoc = featureDoc.doc || featureDoc.value; // depending on "include_docs" option when querying docs
+
+            var dataProjection = angular.isUndefined(SirsDoc.get().epsgCode) ? "EPSG:2154" : SirsDoc.get().epsgCode;
+
+            var projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
+
+            if (projGeometry instanceof ol.geom.LineString && projGeometry.getCoordinates().length === 2 &&
+                projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
+                projGeometry.getCoordinates()[0][1] === projGeometry.getCoordinates()[1][1]) {
+                projGeometry = new ol.geom.Point(projGeometry.getCoordinates()[0]);
+            }
+
+            var realGeometry = featureDoc.positionDebut ?
+                wktFormat.readGeometry(featureDoc.positionDebut).transform(dataProjection, 'EPSG:3857') : undefined;
+
+            if (realGeometry && featureDoc.positionFin && featureDoc.positionFin !== featureDoc.positionDebut) {
+                realGeometry = new ol.geom.LineString([
+                    realGeometry.getFirstCoordinate(),
+                    wktFormat.readGeometry(featureDoc.positionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
+                ]);
+            }
+
+            return {
+                id: featureDoc.id || featureDoc._id,
+                rev: featureDoc.rev || featureDoc._rev,
+                designation: featureDoc.designation,
+                title: featureDoc.libelle,
+                projGeometry: projGeometry,
+                realGeometry: realGeometry,
+                archive: featureDoc.date_fin ? true : false
+            };
+
+        }
+
+        function createAppFeatureInstances(featureModels, layerModel) {
+            var features = [];
+            // get each feature from the featureModel
+            angular.forEach(featureModels, function (featureModel) {
+                if ((layerModel.realPosition && featureModel.realGeometry) || (!layerModel.realPosition && featureModel.projGeometry)) {
+                    if ($rootScope.archiveObjectsFlag) {
+                        // Show all the objects
+                        var feature = new ol.Feature();
+                        if (layerModel.realPosition) {
+                            feature.setGeometry(featureModel.realGeometry);
+                            feature.setStyle(RealPositionStyle(layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
+                        } else {
+                            feature.setGeometry(featureModel.projGeometry);
+                            feature.setStyle(DefaultStyle(layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
+                        }
+                        feature.set('id', featureModel.id);
+                        feature.set('categories', layerModel.categories);
+                        feature.set('rev', featureModel.rev);
+                        feature.set('designation', featureModel.designation);
+                        feature.set('title', featureModel.libelle);
+                        features.push(feature);
+                    } else {
+                        //Show only not archived objects
+                        if (!featureModel.archive) {
+                            var feature = new ol.Feature();
+                            if (layerModel.realPosition) {
+                                feature.setGeometry(featureModel.realGeometry);
+                                feature.setStyle(RealPositionStyle(layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
+                            } else {
+                                feature.setGeometry(featureModel.projGeometry);
+                                feature.setStyle(DefaultStyle(layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
+                            }
+                            feature.set('id', featureModel.id);
+                            feature.set('categories', layerModel.categories);
+                            feature.set('rev', featureModel.rev);
+                            feature.set('designation', featureModel.designation);
+                            feature.set('title', featureModel.libelle);
+                            features.push(feature);
+                        }
+                    }
+                }
+            });
+            return features;
+        }
+
+        self.buildConfig = function () {
+            var layerModel = BackLayerService.getActive(),
+                source = angular.copy(layerModel.source),
+                extent;
+
+            // Override the source if the layer is available from cache.
+            if (angular.isObject(layerModel.cache)) {
+                extent = layerModel.cache.extent;
+                source.type = 'XYZ';
+                source.url = layerModel.cache.url;
+            }
+
+            // Create layer instance.
+            var olLayer = new ol.layer.Tile({
+                name: layerModel.title,
+                extent: extent,
+                model: layerModel,
+                source: new ol.source[source.type](source)
+            });
+
+            // Tronçon / Borne layers
+
+            var appLayers = new ol.layer.Group({
+                name: 'Objects',
+                layers: AppLayersService.getFavorites().filter(function (layerModel) {
+                    return layerModel.title === 'Bornes' || layerModel.title === 'Tronçons';
+                }).map(function (layerModel) {
+                    if (layerModel.filterValue === "fr.sirs.core.model.BorneDigue") {
+                        //@hb Change the layer Source to Cluster source
+                        var olLayer = new ol.layer.Image({
+                            name: layerModel.title,
+                            visible: layerModel.visible,
+                            model: layerModel,
+                            source: new ol.source.ImageVector({
+                                style: function (feature, resolution) {
+                                    var features = feature.get("features");
+                                    var styles = [];
+
+                                    if (angular.isArray(features) && features.length > 0) {
+                                        angular.forEach(features, function (_feature) {
+                                            var style = _feature.getStyle();
+                                            if (typeof style === "function") {
+                                                style = style.call(_feature, _feature, resolution);
+                                            } else if (style instanceof ol.style.Style) {
+                                                style = [].concat(style);
+                                            }
+
+                                            if (angular.isArray(style)) {
+                                                angular.forEach(style, function (_style) {
+                                                    _style.setGeometry(_feature.getGeometry());
+                                                    if (_style.getText() !== undefined && _style.getText() !== null) {
+                                                        _style.getText().setText(undefined);
+                                                    }
+                                                    styles.push(_style);
+                                                });
+                                            }
+                                        });
+
+                                        var style = features[0].getStyle();
+                                        if (typeof style === "function") {
+                                            style = style.call(feature, feature, resolution);
+                                        } else if (style instanceof ol.style.Style) {
+                                            style = [].concat(style);
+                                        }
+
+
+                                        if (angular.isArray(style)) {
+                                            angular.forEach(style, function (_style) {
+                                                styles.push(new ol.style.Style({
+                                                    zIndex: _style.getZIndex(),
+                                                    text: _style.getText()
+                                                }));
+                                            });
+                                        }
+                                    }
+                                    return styles;
+                                },
+                                source: new ol.source.Cluster({
+                                    distance: 24,
+                                    source: new ol.source.Vector({useSpatialIndex: true})
+                                })
+                            })
+                        });
+                    } else {
+                        var olLayer = new ol.layer.Image({
+                            name: layerModel.title,
+                            visible: layerModel.visible,
+                            model: layerModel,
+                            source: new ol.source.ImageVector({
+                                source: new ol.source.Vector({useSpatialIndex: false})
+                            })
+                        });
+                    }
+
+                    if (layerModel.visible === true) {
+                        var layerModel = olLayer.get('model');
+
+                        if (layerModel.filterValue === "fr.sirs.core.model.BorneDigue") {
+                            var olSource = olLayer.getSource().getSource().getSource();
+                        } else {
+                            var olSource = olLayer.getSource().getSource();
+                        }
+
+                        // Try to get the promise of a previous query.
+                        var promise = featureCache.get(layerModel.title);
+
+                        if (angular.isUndefined(promise)) {
+                            if (layerModel.filterValue !== "fr.sirs.core.model.BorneDigue"
+                                && layerModel.filterValue !== "fr.sirs.core.model.TronconDigue") {
+                                //Get all the favorites tronçons ids
+                                var favorites = localStorageService.get("AppTronconsFavorities");
+                                var keys = [];
+                                if (favorites !== null && favorites.length !== 0) {
+                                    angular.forEach(favorites, function (key) {
+                                        keys.push([layerModel.filterValue, key]);
+                                    });
+
+                                    promise = LocalDocument.query('ElementSpecial', {
+                                        keys: keys
+                                    }).then(
+                                        function (results) {
+                                            return results.map(createAppFeatureModel);
+                                        },
+                                        function (error) {
+                                            // TODO → handle error
+                                        });
+                                } else {
+                                    var deferred = $q.defer();
+                                    promise = deferred.promise.then(
+                                        function () {
+                                            return [].map(createAppFeatureModel);
+                                        });
+                                    deferred.resolve();
+                                }
+                            } else if (layerModel.filterValue === "fr.sirs.core.model.TronconDigue") {
+                                promise = LocalDocument.query('TronconDigue/streamLight', {
+                                    keys: localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService.get("AppTronconsFavorities")
+                                }).then(
+                                    function (results) {
+                                        return results.map(createAppFeatureModel);
+                                    },
+                                    function (error) {
+                                        console.log(error);
+                                    });
+                            } else {
+                                promise = LocalDocument.query('getBornesFromTronconID', {
+                                    keys: localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService.get("AppTronconsFavorities")
+                                }).then(
+                                    function (results) {
+                                        return LocalDocument.query('getBornesIdsHB', {
+                                            keys: results.map(function (obj) {
+                                                return obj.value;
+                                            })
+                                        }).then(
+                                            function (results2) {
+                                                return results2.map(createAppFeatureModel);
+                                            });
+                                    },
+                                    function (error) {
+                                        console.log(error);
+                                    });
+                            }
+
+
+                            // Set and store the promise.
+                            featureCache.put(layerModel.title, promise);
+                        }
+
+                        // Wait for promise resolution or rejection.
+                        promise.then(
+                            function onSuccess(featureModels) {
+                                // @hb get the featureModels from the promise
+                                olSource.addFeatures(createAppFeatureInstances(featureModels, layerModel));
+                                $rootScope.loadingflag = false;
+                            },
+                            function onError(error) {
+                                // TODO → handle error
+                            });
+                    }
+                    return olLayer;
+                })
+            });
+
+            return {
+                view: currentView,
+                layers: [olLayer, appLayers],
                 controls: [],
                 interactions: ol.interaction.defaults({
                     altShiftDragRotate: false,
@@ -330,6 +611,42 @@ angular.module('app.controllers.object_edit', [])
             }
         };
 
+        self.handlePosByBorne = function (data) {
+            // Point case
+            if (!self.isLinear) {
+                objectDoc.systemeRepId = data.systemeRepId;
+                objectDoc.borne_debut_aval = data.borne_aval === 'true';
+                objectDoc.borne_debut_distance = data.borne_distance;
+                objectDoc.borneDebutId = data.borneId;
+                objectDoc.borne_fin_aval = data.borne_aval === 'true';
+                objectDoc.borne_fin_distance = data.borne_distance;
+                objectDoc.borneFinId = data.borneId;
+            } else {
+                // Linear case
+                if (self.isNew) {
+                    objectDoc.systemeRepId = data.systemeRepId;
+                    objectDoc.borne_debut_aval = data.borne_aval === 'true';
+                    objectDoc.borne_debut_distance = data.borne_distance;
+                    objectDoc.borneDebutId = data.borneId;
+                } else {
+                    if (self.linearPosEditionHandler.startPoint) {
+                        objectDoc.systemeRepId = data.systemeRepId;
+                        objectDoc.borne_debut_aval = data.borne_aval === 'true';
+                        objectDoc.borne_debut_distance = data.borne_distance;
+                        objectDoc.borneDebutId = data.borneId;
+                        self.linearPosEditionHandler.startPoint = false;
+                    }
+
+                    if (self.linearPosEditionHandler.endPoint) {
+                        objectDoc.borne_fin_aval = data.borne_aval === 'true';
+                        objectDoc.borne_fin_distance = data.borne_distance;
+                        objectDoc.borneFinId = data.borneId;
+                        self.linearPosEditionHandler.endPoint = false;
+                    }
+                }
+            }
+        };
+
         self.getStartPos = function () {
             return objectDoc.positionDebut ? parsePos(objectDoc.positionDebut) : undefined;
         };
@@ -344,13 +661,9 @@ angular.module('app.controllers.object_edit', [])
             return ol.proj.transform(numbers, dataProjection, 'EPSG:4326');
         }
 
-        function waitForLocation(locationPromise) {
-            $ionicLoading.show({template: 'En attente de localisation...'});
-            return locationPromise.then(function handleLocation(location) {
-                self.handlePos(location.coords);
-                $ionicLoading.hide();
-            });
-        }
+        self.selectPosBySR = function () {
+            self.setView('mapByBorne');
+        };
 
         // Medias
         // ----------
@@ -551,53 +864,11 @@ angular.module('app.controllers.object_edit', [])
             });
         }
 
-        PouchService.getLocalDB().query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.SystemeReperage'],
-            endkey: ['fr.sirs.core.model.SystemeReperage', {}],
-            include_docs: true
-        }).then(function (results) {
-            $timeout(function () {
-                self.systemeReperageList = results.rows;
-                console.log(self.systemeReperageList);
-            }, 100);
-        }).catch(function (err) {
-            console.log(err);
-            // $rootScope.loadingflag = false;
-        });
-
-        $ionicModal.fromTemplateUrl('my-modal.html', {
-            scope: $scope
-        }).then(function (modal) {
-            self.modal = modal;
-        });
-
-        self.selectPosBySR = function () {
-            self.setView('mapByBorne');
-            // self.modal.show();
-        };
-
-        self.getBorneById = function () {
-            PouchService.getLocalDB().query('getBornesIdsHB', {
-                key: self.systemeReperageBorneId
-            }).then(function (results) {
-                $timeout(function () {
-                    self.systemeReperageBorne = results.rows[0];
-                }, 100);
-            }).catch(function (err) {
-                console.log(err);
-            });
-        };
-
-        self.addBornePosition = function () {
-
-        };
-
         $ionicPlatform.ready(function () {
             // Acquire the medias storage path when the device is ready.
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });
     })
-
     .controller('ObjectEditPosController', function (currentView) {
 
         var self = this;
@@ -621,6 +892,65 @@ angular.module('app.controllers.object_edit', [])
                 accuracy: -1
             });
             self.exit();
+        }
+    })
+    .controller('ObjectEditPosByBorneController', function ($rootScope, currentView, PouchService, $timeout, $ionicPopup) {
+
+        var self = this;
+
+        self.data = {
+            systemeRepId: '',
+            borneId: '',
+            borne_aval: '',
+            borne_distance: ''
+        };
+
+        self.success = angular.noop;
+
+        self.exit = angular.noop;
+
+        self.selectSR = function () {
+            self.data.systemeRepId = self.systemeReperage._id;
+        };
+
+        self.canValidate = function () {
+            return self.data.systemeRepId
+                && self.data.borneId
+                && self.data.borne_aval
+                && self.data.borne_distance;
+        };
+
+        $rootScope.loadingflag = true;
+
+        PouchService.getLocalDB().query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.SystemeReperage'],
+            endkey: ['fr.sirs.core.model.SystemeReperage', {}],
+            include_docs: true
+        }).then(function (results) {
+            $timeout(function () {
+                $rootScope.loadingflag = false;
+                self.systemeReperageList = results.rows;
+            });
+        }).catch(function (err) {
+            console.log(err);
+            $rootScope.loadingflag = false;
+        });
+
+        self.setup = function (success, exit) {
+            self.success = success;
+            self.exit = exit;
+        };
+
+        self.validate = function () {
+            if (self.canValidate()) {
+                self.success(self.data);
+                self.exit();
+            } else {
+                $ionicPopup.alert({
+                    title: 'Validation',
+                    template: 'Veuillez renseigner tous les champs obligatoires avant de valider'
+                });
+            }
         }
     })
     .controller('MediaController', function ($window, SirsDoc, $ionicLoading, $filter,

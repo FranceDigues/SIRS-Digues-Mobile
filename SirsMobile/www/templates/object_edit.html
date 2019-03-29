@@ -42,12 +42,10 @@
                                             Objet linéaire
                                         </label>
                                     </div>
-
                                     <div class="sirs-field-inline" ng-if="!c.isLinear">
                                         <span class="sirs-field-title">Position : </span>
                                         <span class="sirs-field-value">{{c.getStartPos() | lonlat:'à définir'}}</span>
                                     </div>
-
                                     <div class="sirs-field-inline" ng-if="c.isLinear" style="overflow: hidden;">
                                         <span class="sirs-field-title"
                                               style="line-height: 37px;">Position de début :</span>
@@ -61,6 +59,10 @@
                                             <button class="btn waves-effect waves-light"
                                                     on-tap="c.selectPos();c.linearPosEditionHandler.startPoint = true;">
                                                 <i class="material-icons center">edit</i>
+                                            </button>
+                                            <button class="btn waves-effect waves-light"
+                                                    on-tap="c.selectPosBySR();c.linearPosEditionHandler.startPoint = true;">
+                                                <i class="material-icons center">line_style</i>
                                             </button>
                                         </div>
                                     </div>
@@ -78,6 +80,10 @@
                                             <button class="btn waves-effect waves-light"
                                                     on-tap="c.selectPos();c.linearPosEditionHandler.endPoint = true;">
                                                 <i class="material-icons center">edit</i>
+                                            </button>
+                                            <button class="btn waves-effect waves-light"
+                                                    on-tap="c.selectPosBySR();c.linearPosEditionHandler.endPoint = true;">
+                                                <i class="material-icons center">line_style</i>
                                             </button>
                                         </div>
                                     </div>
@@ -139,13 +145,10 @@
                                     <!--<button type="button" class="btn waves-effect waves-teal" on-tap="c.recordAudio()">-->
                                     <!--<i class="material-icons center">mic</i>-->
                                     <!--</button>-->
-
-                                    <!--@hb Ajouter une medias-->
                                     <button type="button" class="btn btn-large waves-effect waves-teal"
                                             on-tap="c.goToMedia()">
                                         <i class="material-icons left">perm_media</i>Ajouter un media
                                     </button>
-
                                 </div>
                             </div>
                         </div>
@@ -169,8 +172,9 @@
     <!-- Position Map -->
     <div ng-include="'templates/position_edit.html'" ng-if="c.view === 'map'"
          ng-init="save = c.handlePos; exit = c.backToForm"></div>
+
     <div ng-include="'templates/position_by_borne.html'" ng-if="c.view === 'mapByBorne'"
-         ng-init="save = c.handlePos; exit = c.backToForm"></div>
+         ng-init="save = c.handlePosByBorne; exit = c.backToForm"></div>
     <!-- Note -->
     <div ng-include="'templates/note_edit.html'" ng-if="c.view === 'note'"
          ng-init="save = c.saveNote; exit = c.backToForm"></div>
@@ -178,41 +182,3 @@
     <div ng-include="'templates/media.html'" ng-if="c.view === 'media'"
          ng-controller="MediaController as mdc"></div>
 </ion-view>
-
-<script id="my-modal.html" type="text/ng-template">
-    <ion-modal-view style="display: block;">
-        <ion-header-bar>
-            <h1 class="title">Positionnement via bornes</h1>
-        </ion-header-bar>
-        <ion-content>
-            <div>
-                <label>Système de repérage : </label>
-                <select id="sr" class="browser-default"
-                        ng-model="c.systemeReperage"
-                        ng-options="systemeReperage.doc as systemeReperage.doc.libelle + ' : ' + systemeReperage.doc._id for systemeReperage in c.systemeReperageList">
-                    <option></option>
-                </select>
-            </div>
-            <div ng-if="c.systemeReperage">
-                <label>Borne du système de repérage : </label>
-                <select id="sr" class="browser-default"
-                        ng-model="c.systemeReperageBorneId"
-                        ng-change="c.getBorneById()"
-                        ng-options="systemeReperageBorne.borneId as systemeReperageBorne.id for systemeReperageBorne in c.systemeReperage.systemeReperageBornes">
-                    <option></option>
-                </select>
-            </div>
-            <div ng-if="c.distanceToBorne">
-                <p>Distance à la borne {{c.systemeReperageBorne.value.libelle }} est : {{c.distanceToBorne}} m</p>
-                <p>Position en Amont</p>
-            </div>
-            <div class="sirs-card-action">
-                <button type="button" class="btn pink waves-effect waves-teal right"
-                        ng-disabled="false"
-                        ng-click="c.addBornePosition()">
-                    <i class="material-icons left">check</i>Terminer
-                </button>
-            </div>
-        </ion-content>
-    </ion-modal-view>
-</script>

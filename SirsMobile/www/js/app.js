@@ -20,14 +20,20 @@ angular.module('SirsMobile', [
         $ionicConfigProvider.tabs.position('bottom'); // other values: top
 
         // Configure OpenLayers maps.
-        olMapProvider.provideOptions('main', function(element, MapManager) {
+        olMapProvider.provideOptions('main', function (element, MapManager) {
             return MapManager.buildConfig(element);
         });
-        olMapProvider.provideOptions('cache', function(CacheMapManager) {
+
+        olMapProvider.provideOptions('cache', function (CacheMapManager) {
             return CacheMapManager.buildConfig();
         });
-        olMapProvider.provideOptions('position', function(PositionMapManager) {
+
+        olMapProvider.provideOptions('position', function (PositionMapManager) {
             return PositionMapManager.buildConfig();
+        });
+
+        olMapProvider.provideOptions('position_by_borne', function (PositionByBorneMapManager) {
+            return PositionByBorneMapManager.buildConfig();
         });
 
         // Configure routes.
@@ -112,58 +118,58 @@ angular.module('SirsMobile', [
 
             // Medias directory.
             sContext.mediaDir = cordova.file.externalDataDirectory + "medias/";
-            $cordovaFile.checkDir(cordova.file.externalDataDirectory , "medias").then(
+            $cordovaFile.checkDir(cordova.file.externalDataDirectory, "medias").then(
                 angular.noop,
                 function createDirectory() {
-                    $cordovaFile.createDir(cordova.file.externalDataDirectory , "medias");
+                    $cordovaFile.createDir(cordova.file.externalDataDirectory, "medias");
                     $cordovaFile.createFile(cordova.file.externalDataDirectory + "medias/", "_keepMtpOpen");
                 });
 
             // Documents directory.
             sContext.docDir = cordova.file.externalDataDirectory + "documents/";
-            $cordovaFile.checkDir(cordova.file.externalDataDirectory , "documents").then(
+            $cordovaFile.checkDir(cordova.file.externalDataDirectory, "documents").then(
                 angular.noop,
                 function createDirectory() {
-                    $cordovaFile.createDir(cordova.file.externalDataDirectory , "documents");
+                    $cordovaFile.createDir(cordova.file.externalDataDirectory, "documents");
                     $cordovaFile.createFile(cordova.file.externalDataDirectory + "documents/", "_keepMtpOpen");
                 });
         });
         // Listen some $rootScope events.
-        $rootScope.$on('logoutSuccess', function() {
+        $rootScope.$on('logoutSuccess', function () {
             $location.path('/login');
         });
     })
 
     .constant('routeResolve', {
         main: {
-            sirsDoc: function(SirsDoc) {
+            sirsDoc: function (SirsDoc) {
                 return SirsDoc.getOrLoad();
             }
         },
         objectEdit: {
-            objectDoc: function($route, LocalDocument, EditionService) {
+            objectDoc: function ($route, LocalDocument, EditionService) {
                 var params = $route.current.params;
-                if (params.id && params.id !== '') {
+                if (params.id && params.id !== '') {
                     return LocalDocument.get(params.id);
                 } else {
                     return LocalDocument.create(EditionService.newObject(params.type));
                 }
             },
-            refTypes: function(EditionService) {
+            refTypes: function (EditionService) {
                 return EditionService.getReferenceTypes();
             },
-            orientationsList : function (LocalDocument) {
+            orientationsList: function (LocalDocument) {
                 //@hb
                 return LocalDocument.query('Element/byClassAndLinear', {
                     startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
-                    endkey: ['fr.sirs.core.model.RefOrientationPhoto',{}]
+                    endkey: ['fr.sirs.core.model.RefOrientationPhoto', {}]
                 });
             },
             cotesList: function (LocalDocument) {
                 //@hb
                 return LocalDocument.query('Element/byClassAndLinear', {
                     startkey: ['fr.sirs.core.model.RefCote'],
-                    endkey: ['fr.sirs.core.model.RefCote',{}]
+                    endkey: ['fr.sirs.core.model.RefCote', {}]
                 });
             },
             listTroncons: function (LocalDocument) {
@@ -172,37 +178,37 @@ angular.module('SirsMobile', [
             }
         },
         observationEdit: {
-            objectDoc: function($route, sContext/*, LocalDocument*/) {
+            objectDoc: function ($route, sContext/*, LocalDocument*/) {
                 return sContext.selectedObject;
                 //return LocalDocument.get($route.current.params.objectId);
             },
-            contactList : function (LocalDocument) {
+            contactList: function (LocalDocument) {
                 //@hb
                 return LocalDocument.query('Element/byClassAndLinear', {
                     startkey: ['fr.sirs.core.model.Contact'],
-                    endkey: ['fr.sirs.core.model.Contact',{}],
-                    include_docs : true
+                    endkey: ['fr.sirs.core.model.Contact', {}],
+                    include_docs: true
                 });
             },
-            urgenceList : function (LocalDocument) {
+            urgenceList: function (LocalDocument) {
                 //@hb
                 return LocalDocument.query('Element/byClassAndLinear', {
                     startkey: ['fr.sirs.core.model.RefUrgence'],
-                    endkey: ['fr.sirs.core.model.RefUrgence',{}]
+                    endkey: ['fr.sirs.core.model.RefUrgence', {}]
                 });
             },
-            orientationsList : function (LocalDocument) {
+            orientationsList: function (LocalDocument) {
                 //@hb
                 return LocalDocument.query('Element/byClassAndLinear', {
                     startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
-                    endkey: ['fr.sirs.core.model.RefOrientationPhoto',{}]
+                    endkey: ['fr.sirs.core.model.RefOrientationPhoto', {}]
                 });
             },
             cotesList: function (LocalDocument) {
                 //@hb
                 return LocalDocument.query('Element/byClassAndLinear', {
                     startkey: ['fr.sirs.core.model.RefCote'],
-                    endkey: ['fr.sirs.core.model.RefCote',{}]
+                    endkey: ['fr.sirs.core.model.RefCote', {}]
                 });
             }
         }

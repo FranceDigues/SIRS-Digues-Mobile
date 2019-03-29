@@ -376,7 +376,6 @@ angular.module('app.services.map', ['app.services.context'])
 
         // @hb the method to create the features of the layer
         function createAppFeatureInstances(featureModels, layerModel) {
-
             var features = [];
             // get each feature from the featureModel
             angular.forEach(featureModels, function (featureModel) {
