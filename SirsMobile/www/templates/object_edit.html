@@ -174,7 +174,7 @@
          ng-init="save = c.handlePos; exit = c.backToForm"></div>
 
     <div ng-include="'templates/position_by_borne.html'" ng-if="c.view === 'mapByBorne'"
-         ng-init="save = c.handlePosByBorne; exit = c.backToForm"></div>
+         ng-init="save = c.handlePosByBorne; exit = c.backToForm; endSR = c.getEndPointSR()"></div>
     <!-- Note -->
     <div ng-include="'templates/note_edit.html'" ng-if="c.view === 'note'"
          ng-init="save = c.saveNote; exit = c.backToForm"></div>

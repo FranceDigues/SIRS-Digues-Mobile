@@ -611,6 +611,10 @@ angular.module('app.controllers.object_edit', [])
             }
         };
 
+        self.getEndPointSR = function () {
+            return objectDoc.systemeRepId || null;
+        };
+
         self.handlePosByBorne = function (data) {
             // Point case
             if (!self.isLinear) {
@@ -936,9 +940,30 @@ angular.module('app.controllers.object_edit', [])
             $rootScope.loadingflag = false;
         });
 
-        self.setup = function (success, exit) {
+        self.setup = function (success, exit, endSR) {
             self.success = success;
             self.exit = exit;
+            self.endSR = endSR;
+
+            if (self.endSR) {
+                self.data.systemeRepId = self.endSR;
+
+                PouchService.getLocalDB().query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.SystemeReperage'],
+                    endkey: ['fr.sirs.core.model.SystemeReperage', {}],
+                    include_docs: true
+                }).then(function (results) {
+                    $timeout(function () {
+                        self.systemeReperage = self.systemeReperage = results.rows.filter(function (item) {
+                            return item.id === self.endSR;
+                        })[0].doc;
+                        $rootScope.loadingflag = false;
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                    $rootScope.loadingflag = false;
+                });
+            }
         };
 
         self.validate = function () {

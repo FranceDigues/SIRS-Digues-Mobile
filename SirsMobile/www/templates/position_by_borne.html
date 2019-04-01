@@ -1,4 +1,4 @@
-<div id="positionEdit" ng-controller="ObjectEditPosByBorneController as cp" ng-init="cp.setup(save, exit)">
+<div id="positionEdit" ng-controller="ObjectEditPosByBorneController as cp" ng-init="cp.setup(save, exit, endSR)">
     <ion-header-bar>
         <header class="bar bar-header bar-stable noteHeader">
             <button class="button button-icon button-clear ion-arrow-left-a" on-tap="cp.exit()"></button>
@@ -16,11 +16,13 @@
         <div>
             <label>Système de repérage : </label>
             <select id="sr" class="browser-default"
+                    ng-if="!cp.endSR"
                     ng-model="cp.systemeReperage"
                     ng-change="cp.selectSR()"
                     ng-options="systemeReperage.doc as systemeReperage.doc.libelle + ' : ' + systemeReperage.doc._id for systemeReperage in cp.systemeReperageList">
                 <option></option>
             </select>
+            <p ng-if="cp.endSR">{{cp.endSR}}</p>
         </div>
         <div ng-if="cp.systemeReperage">
             <label>Borne du système de repérage : </label>
