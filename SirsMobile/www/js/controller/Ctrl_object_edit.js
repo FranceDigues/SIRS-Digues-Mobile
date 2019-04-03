@@ -991,6 +991,8 @@ angular.module('app.controllers.object_edit', [])
 
         var dataProjection = SirsDoc.get().epsgCode;
 
+        self.showText = $scope.c.showText;
+
         self.orientations = $scope.c.orientations;
 
         self.cotes = $scope.c.cotes;

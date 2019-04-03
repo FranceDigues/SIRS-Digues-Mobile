@@ -263,6 +263,8 @@ angular.module('app.controllers.observation_edit', [])
 
         var dataProjection = SirsDoc.get().epsgCode;
 
+        self.showText = $scope.c.showText;
+
         self.orientations = $scope.c.orientations;
 
         self.cotes = $scope.c.cotes;
