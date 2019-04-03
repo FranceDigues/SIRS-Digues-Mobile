@@ -331,7 +331,8 @@ angular.module('app.controllers.object_edit', [])
                                                                       $routeParams, GeolocationService, LocalDocument,
                                                                       EditionService, objectDoc, refTypes,
                                                                       uuid4, SirsDoc, $ionicModal, orientationsList, $filter,
-                                                                      cotesList, $rootScope, listTroncons, MapManager, PouchService, $timeout) {
+                                                                      cotesList, $rootScope, listTroncons, MapManager, PouchService,
+                                                                      $timeout, GlobalConfig) {
 
         var self = this;
 
@@ -439,6 +440,12 @@ angular.module('app.controllers.object_edit', [])
         self.linearPosEditionHandler = {
             startPoint: false,
             endPoint: false
+        };
+
+        self.config = GlobalConfig.config;
+
+        self.showText = function (type) {
+            return self.config.showText === type;
         };
 
         //************************************************************************

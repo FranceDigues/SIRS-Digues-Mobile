@@ -1,0 +1,62 @@
+#app-config > ion-header-bar {
+    background-color: #0097A7;
+}
+
+#app-config > ion-header-bar > h1,
+#app-config > ion-header-bar > button {
+    color: #FFFFFF;
+}
+
+#app-config ion-list ion-item ion-option-button {
+    min-width: inherit;
+}
+
+#app-config ion-list ion-item .item-content {
+    padding: 6px 50px 30px 16px;
+}
+
+#app-config ion-list ion-item .item-content .layer-color {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 20px;
+}
+
+#app-config ion-list ion-item .item-content .layer-state {
+    position: absolute;
+    bottom: 2px;
+    left: 16px;
+}
+
+#app-config ion-list ion-item .item-content .layer-state > i {
+    display: inline-block;
+    font-size: 16px;
+    height: 20px;
+    width: 20px;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+#app-config > .btn-floating {
+    z-index: 10;
+    position: absolute;
+}
+
+
+#appLayersSelect > ion-header-bar {
+    background-color: #0097A7;
+}
+
+#appLayersSelect > ion-header-bar > h1,
+#appLayersSelect > ion-header-bar > button {
+    color: #FFFFFF;
+}
+
+#appLayersSelect ion-content .item-checkbox .layer-categories {
+    font-size: 14px;
+    color: #AAAAAA;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

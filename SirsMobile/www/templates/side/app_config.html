@@ -1,0 +1,27 @@
+<div id="app-config" ng-controller="configMenu as c">
+    <ion-header-bar align-title="center">
+        <button type="button" class="col-20 button button-icon button-clear ion-arrow-left-a"
+                on-tap="c.backToMenu()"></button>
+        <h1 class="title">Configuration</h1>
+    </ion-header-bar>
+    <ion-content class="has-header" style="padding: 5px;">
+        <label>Affichage de texte : </label>
+        <ion-list>
+            <ion-radio ng-model="c.config.showText"
+                       ng-value="'abstract'"
+                       ng-click="c.updateGlobalConfig()">
+                Abrégé
+            </ion-radio>
+            <ion-radio ng-model="c.config.showText"
+                       ng-value="'fullName'"
+                       ng-click="c.updateGlobalConfig()">
+                Nom complet
+            </ion-radio>
+            <ion-radio ng-model="c.config.showText"
+                       ng-value="'both'"
+                       ng-click="c.updateGlobalConfig()">
+                Abrégé / Nom complet
+            </ion-radio>
+        </ion-list>
+    </ion-content>
+</div>

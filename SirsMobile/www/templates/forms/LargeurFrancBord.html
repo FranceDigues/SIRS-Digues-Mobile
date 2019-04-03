@@ -1,7 +1,22 @@
 <div class="row">
     <div class="sirs-field" ng-init="c.setupRef('typeLargeurFrancBord', c.refs.RefLargeurFrancBord[0])">
         <label for="width" class="active">Largeur</label>
-        <select id="width" class="browser-default" ng-model="c.doc.typeLargeurFrancBord"
-                ng-options="r.id as r.libelle for r in c.refs.RefLargeurFrancBord"></select>
+        <select id="width" class="browser-default" ng-model="c.doc.typeLargeurFrancBord">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefLargeurFrancBord track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefLargeurFrancBord track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefLargeurFrancBord track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
 </div>

@@ -15,36 +15,126 @@
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('ecoulementId', c.refs.RefEcoulement[0])">
         <label for="flow" class="active">Ecoulement</label>
-        <select id="flow" class="browser-default" ng-model="c.doc.ecoulementId"
-                ng-options="r.id as r.libelle for r in c.refs.RefEcoulement"></select>
+        <select id="flow" class="browser-default" ng-model="c.doc.ecoulementId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefEcoulement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefEcoulement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefEcoulement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
     <div class="sirs-field col col-50" ng-init="c.setupRef('implantationId', c.refs.RefImplantation[0])">
         <label for="implantation" class="active">Implantation</label>
-        <select id="implantation" class="browser-default" ng-model="c.doc.implantationId"
-                ng-options="r.id as r.libelle for r in c.refs.RefImplantation"></select>
+        <select id="implantation" class="browser-default" ng-model="c.doc.implantationId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefImplantation track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefImplantation track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefImplantation track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
 </div>
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('typeConduiteFermeeId', c.refs.RefConduiteFermee[0])">
         <label for="resType" class="active">Type de réseau</label>
-        <select id="resType" class="browser-default" ng-model="c.doc.typeConduiteFermeeId"
-                ng-options="r.id as r.libelle for r in c.refs.RefConduiteFermee"></select>
+        <select id="resType" class="browser-default" ng-model="c.doc.typeConduiteFermeeId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefConduiteFermee track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefConduiteFermee track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefConduiteFermee track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
     <div class="sirs-field col col-50" ng-init="c.setupRef('utilisationConduiteId', c.refs.RefUtilisationConduite[0])">
         <label for="use" class="active">Utilisation</label>
-        <select id="use" class="browser-default" ng-model="c.doc.utilisationConduiteId"
-                ng-options="r.id as r.libelle for r in c.refs.RefUtilisationConduite"></select>
+        <select id="use" class="browser-default" ng-model="c.doc.utilisationConduiteId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefUtilisationConduite track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefUtilisationConduite track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefUtilisationConduite track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
 </div>
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('positionId', c.refs.RefPosition[0])">
         <label for="damPosition" class="active">Position sur la digue</label>
-        <select id="damPosition" class="browser-default" ng-model="c.doc.positionId"
-                ng-options="r.id as r.libelle for r in c.refs.RefPosition"></select>
+        <select id="damPosition" class="browser-default" ng-model="c.doc.positionId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefPosition track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefPosition track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefPosition track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
     <div class="sirs-field col col-50" ng-init="c.setupRef('coteId', c.refs.RefCote[0])">
         <label for="damSide" class="active">Côté de la digue</label>
-        <select id="damSide" class="browser-default" ng-model="c.doc.coteId"
-                ng-options="r.id as r.libelle for r in c.refs.RefCote"></select>
+        <select id="damSide" class="browser-default" ng-model="c.doc.coteId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefCote track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefCote track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefCote track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
 </div>

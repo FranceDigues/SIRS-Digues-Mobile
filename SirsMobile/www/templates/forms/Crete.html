@@ -1,20 +1,65 @@
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('materiauId', c.refs.RefMateriau[0])">
         <label for="material" class="active">Matériau</label>
-        <select id="material" class="browser-default" ng-model="c.doc.materiauId"
-                ng-options="r.id as r.libelle for r in c.refs.RefMateriau"></select>
+        <select id="material" class="browser-default" ng-model="c.doc.materiauId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefMateriau track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefMateriau track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefMateriau track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
     <div class="sirs-field col col-50" ng-init="c.setupRef('natureId', c.refs.RefNature[0])">
         <label for="nature" class="active">Nature</label>
-        <select id="nature" class="browser-default" ng-model="c.doc.natureId"
-                ng-options="r.id as r.libelle for r in c.refs.RefNature"></select>
+        <select id="nature" class="browser-default" ng-model="c.doc.natureId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefNature track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefNature track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefNature track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
 </div>
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('fonctionId', c.refs.RefFonction[0])">
         <label for="function" class="active">Fonction</label>
-        <select id="function" class="browser-default" ng-model="c.doc.fonctionId"
-                ng-options="r.id as r.libelle for r in c.refs.RefFonction"></select>
+        <select id="function" class="browser-default" ng-model="c.doc.fonctionId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefFonction track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefFonction track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefFonction track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
     <div class="sirs-field col col-50" ng-init="c.doc.epaisseur = c.doc.epaisseur || 0">
         <label for="width" class="active">Epaisseur</label>

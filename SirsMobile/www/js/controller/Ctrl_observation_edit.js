@@ -4,9 +4,16 @@ angular.module('app.controllers.observation_edit', [])
                                                                                 $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                                 $routeParams, GeolocationService, LocalDocument,
                                                                                 EditionService, objectDoc, uuid4, $rootScope, contactList,
-                                                                                urgenceList, orientationsList, cotesList, AuthService, MapManager) {
+                                                                                urgenceList, orientationsList, cotesList, AuthService,
+                                                                                MapManager, GlobalConfig) {
 
         var self = this;
+
+        self.config = GlobalConfig.config;
+
+        self.showText = function (type) {
+            return self.config.showText === type;
+        };
 
         $rootScope.loadingflag = false;
 
