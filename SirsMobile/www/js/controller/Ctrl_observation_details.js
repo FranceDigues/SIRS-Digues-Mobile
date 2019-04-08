@@ -31,9 +31,6 @@ angular.module('app.controllers.observation_details', [])
         }
 
         self.addPhotoFromAlbum = function () {
-            console.log(self.objectDoc);
-            console.log(self.doc);
-
             navigator.camera.getPicture(function (imageData) {
                 var photoId = uuid4.generate(),
                     fileName = photoId + '.jpg';
