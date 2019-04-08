@@ -10,6 +10,8 @@ angular.module('app.controllers.observation_details', [])
 
         self.objectDoc = sContext.selectedObject;
 
+        self.showContent = true;
+
         self.photos = self.doc.photos;
 
         self.urgencyLabel = null;
@@ -56,7 +58,6 @@ angular.module('app.controllers.observation_details', [])
                 EditionService.saveObject(self.objectDoc)
                     .then(function () {
                         MapManager.syncAllAppLayer();
-                        $scope.$digest();
                     });
             }, function (error) {
                 console.log(error);
@@ -153,13 +154,15 @@ angular.module('app.controllers.observation_details', [])
                                         fileName = keyAttachment + ext;
                                     }
 
+                                    self.showContent = false;
                                     window.resolveLocalFileSystemURL(self.mediaPath, function (targetDir) {
                                         targetDir.getFile(fileName, {create: true}, function (file) {
                                             file.createWriter(function (fileWriter) {
                                                 fileWriter.write(blobImage);
                                                 window.setTimeout(function () {
-                                                    $scope.$digest();
                                                     self.loaded[photo.id] = true;
+                                                    self.showContent = true;
+                                                    $scope.$apply();
                                                 }, 100);
                                             }, function () {
                                                 console.log('cannot write the data to the file');

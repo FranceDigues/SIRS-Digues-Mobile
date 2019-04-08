@@ -419,6 +419,8 @@ angular.module('app.controllers.object_edit', [])
             self.setView('form');
         };
 
+        self.showContent = true;
+
         self.orientations = orientationsList;
 
         self.cotes = cotesList;
@@ -781,13 +783,15 @@ angular.module('app.controllers.object_edit', [])
                                         }
                                         fileName = keyAttachment + ext;
                                     }
+                                    self.showContent = false;
                                     window.resolveLocalFileSystemURL(self.mediaPath, function (targetDir) {
                                         targetDir.getFile(fileName, {create: true}, function (file) {
                                             file.createWriter(function (fileWriter) {
                                                 fileWriter.write(blobImage);
                                                 window.setTimeout(function () {
-                                                    $scope.$digest();
                                                     self.loaded[photo.id] = true;
+                                                    self.showContent = true;
+                                                    $scope.$apply();
                                                 }, 10);
                                             }, function () {
                                                 console.log('cannot write the data to the file');

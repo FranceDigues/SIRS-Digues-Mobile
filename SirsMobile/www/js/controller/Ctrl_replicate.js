@@ -9,7 +9,6 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
         var remoteDB = PouchService.getRemoteDB();
 
-        // Les vues de couchdb indexé afin de rendre l'application rapide
         var indexedViews = [
             'Utilisateur/byLogin',
             'Element/byClassAndLinear',

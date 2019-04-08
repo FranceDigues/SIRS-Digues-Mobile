@@ -4,7 +4,6 @@
                 on-tap="c.backToDisorderDetails()"></button>
         <h1 class="title">Observation</h1>
     </ion-header-bar>
-
     <ion-content class="has-header has-fab-bottom" delegate-handle="observationScroll">
         <div class="sirs-section">
             <div class="sirs-field">
@@ -20,16 +19,17 @@
                 <span class="sirs-field-value" ng-bind="c.doc.suite || 'Non définie'"></span>
             </div>
         </div>
-        <div ng-if="c.mediaPath" ng-init="c.loadImage(photo);" ng-repeat="photo in c.doc.photos track by photo.id">
-            <div class="progress" ng-if="!c.loaded[photo.id]">
-                <div class="indeterminate"></div>
+        <div ng-if="c.showContent">
+            <div ng-if="c.mediaPath" ng-init="c.loadImage(photo);" ng-repeat="photo in c.doc.photos track by photo.id">
+                <div class="progress" ng-if="!c.loaded[photo.id]">
+                    <div class="indeterminate"></div>
+                </div>
+                <img ng-if="c.loaded[photo.id]" on-tap="c.open(photo)" alt="Photo non disponible sur le mobile"
+                     ng-src="{{c.getPhotoPath(photo)}}"/>
+                <span style="padding-left: 5px;">{{photo.id}}</span>
             </div>
-            <img ng-if="c.loaded[photo.id]" on-tap="c.open(photo)" alt="Photo non disponible sur le mobile"
-                 ng-src="{{c.getPhotoPath(photo)}}"/>
-            <span style="padding-left: 5px;">{{photo.id}}</span>
         </div>
     </ion-content>
-
     <div ng-if="c.canShowEditionButtons()">
         <div class="fixed-action-btn" style="bottom: 15px; right: 15px;" on-tap="c.flagLoading();">
             <a ng-href="#/observation/{{c.objectId}}/{{c.doc.id}}"
@@ -43,7 +43,8 @@
             </button>
         </div>
         <div class="fixed-action-btn" style="bottom: 15px; right: 155px;">
-            <button type="button" class="btn-floating btn-large waves-effect waves-light pink" on-tap="c.addPhotoFromAlbum()">
+            <button type="button" class="btn-floating btn-large waves-effect waves-light pink"
+                    on-tap="c.addPhotoFromAlbum()">
                 <i class="large material-icons">add_a_photo</i>
             </button>
         </div>
