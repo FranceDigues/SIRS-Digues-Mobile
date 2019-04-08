@@ -1,6 +1,7 @@
 angular.module('app.controllers.observation_details', [])
 
-    .controller('ObservationDetailsController', function ObservationDetailsController($ionicPlatform, sContext, $scope, $ionicPopup,
+    .controller('ObservationDetailsController', function ObservationDetailsController($ionicPlatform, sContext, $scope, MapManager,
+                                                                                      $ionicPopup, uuid4, $filter, EditionService,
                                                                                       SidePanelService, LocalDocument, $rootScope, AuthService) {
 
         var self = this;
@@ -9,6 +10,8 @@ angular.module('app.controllers.observation_details', [])
 
         self.objectDoc = sContext.selectedObject;
 
+        self.photos = self.doc.photos;
+
         self.urgencyLabel = null;
 
         self.mediaPath = null;
@@ -16,6 +19,58 @@ angular.module('app.controllers.observation_details', [])
         self.objectId = sContext.selectedObject._id;
 
         self.loaded = {};
+
+        function getTargetObservation() {
+            var i = self.objectDoc.observations.length;
+            while (i--) {
+                if (self.objectDoc.observations[i].id === self.doc.id) {
+                    return self.objectDoc.observations[i];
+                }
+            }
+            throw new Error('No observation "' + self.doc.id + '" found in disorder document.')
+        }
+
+        self.addPhotoFromAlbum = function () {
+            console.log(self.objectDoc);
+            console.log(self.doc);
+
+            navigator.camera.getPicture(function (imageData) {
+                var photoId = uuid4.generate(),
+                    fileName = photoId + '.jpg';
+
+                self.photos.push({
+                    'id': photoId,
+                    '@class': 'fr.sirs.core.model.Photo',
+                    'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
+                    'chemin': '/' + fileName,
+                    'valid': false
+                });
+
+                self.objectDoc._attachments[photoId] = {
+                    content_type: 'image/jpeg',
+                    data: imageData.replace('data:image/jpeg;base64,', '')
+                };
+
+                angular.extend(getTargetObservation(), self.doc);
+
+                self.objectDoc.valid = false;
+                self.objectDoc.linearId = null;
+
+                EditionService.saveObject(self.objectDoc)
+                    .then(function () {
+                        MapManager.syncAllAppLayer();
+                        $scope.$digest();
+                    });
+            }, function (error) {
+                console.log(error);
+            }, {
+                quality: 50,
+                sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
+                destinationType: navigator.camera.DestinationType.DATA_URL,
+                encodingType: navigator.camera.EncodingType.JPEG
+            });
+
+        };
 
         // @hb remove observation
         self.remove = function () {
@@ -120,8 +175,7 @@ angular.module('app.controllers.observation_details', [])
                             self.loaded[photo.id] = true;
                             console.log("no attachment exit to load image");
                         }
-                    }
-                    else {
+                    } else {
                         self.loaded[photo.id] = true;
                     }
                 },

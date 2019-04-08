@@ -189,7 +189,6 @@ angular.module('app.controllers.observation_edit', [])
             );
         };
 
-
         self.getPhotoPath = function (photo) {
             var path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
             var image_url = self.mediaPath + '/' + path;
