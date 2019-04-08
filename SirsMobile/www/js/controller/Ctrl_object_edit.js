@@ -331,7 +331,8 @@ angular.module('app.controllers.object_edit', [])
                                                                       $routeParams, GeolocationService, LocalDocument,
                                                                       EditionService, objectDoc, refTypes,
                                                                       uuid4, SirsDoc, $ionicModal, orientationsList, $filter,
-                                                                      cotesList, $rootScope, listTroncons, MapManager, PouchService, $timeout) {
+                                                                      cotesList, $rootScope, listTroncons, MapManager, PouchService,
+                                                                      $timeout, GlobalConfig) {
 
         var self = this;
 
@@ -418,14 +419,12 @@ angular.module('app.controllers.object_edit', [])
             self.setView('form');
         };
 
-        //@hb
         self.orientations = orientationsList;
-        //@hb
+
         self.cotes = cotesList;
 
         self.type = $routeParams.type;
 
-        // L'objet qui contient les information de l'objet à ajouter à la base de données
         self.doc = objectDoc;
 
         self.isNew = !$routeParams.id;
@@ -441,8 +440,11 @@ angular.module('app.controllers.object_edit', [])
             endPoint: false
         };
 
-        //************************************************************************
-        //Réfere au Tronçon Id
+        self.config = GlobalConfig.config;
+
+        self.showText = function (type) {
+            return self.config.showText === type;
+        };
 
         var listeCool = cleanTronconsListe(listTroncons);
 
@@ -457,7 +459,6 @@ angular.module('app.controllers.object_edit', [])
             }
         });
 
-        //@hb
         function cleanTronconsListe(liste) {
             var indexes = [];
             var listCool = [];
@@ -470,7 +471,6 @@ angular.module('app.controllers.object_edit', [])
             return listCool;
         }
 
-        //@hb
         function calculateDistanceObjectTroncon(point, liste) {
             var nearTronconList = [];
             // geomatryPosition is instance of ol.geom.Point
@@ -588,6 +588,14 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.handlePos = function (pos) {
+            delete objectDoc.systemeRepId;
+            delete objectDoc.borne_debut_aval;
+            delete objectDoc.borne_debut_distance;
+            delete objectDoc.borneDebutId;
+            delete objectDoc.borne_fin_aval;
+            delete objectDoc.borne_fin_distance;
+            delete objectDoc.borneFinId;
+
             var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
             // Point case
             if (!self.isLinear) {
@@ -616,6 +624,9 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.handlePosByBorne = function (data) {
+            delete objectDoc.positionDebut;
+            delete objectDoc.positionFin;
+
             // Point case
             if (!self.isLinear) {
                 objectDoc.systemeRepId = data.systemeRepId;
@@ -657,6 +668,14 @@ angular.module('app.controllers.object_edit', [])
 
         self.getEndPos = function () {
             return objectDoc.positionFin ? parsePos(objectDoc.positionFin) : undefined;
+        };
+
+        self.getStartPosBorne = function () {
+            return objectDoc.borneDebutId ? objectDoc.borneDebutId : 'à definir';
+        };
+
+        self.getEndPosBorne = function () {
+            return objectDoc.borneFinId ? objectDoc.borneFinId : 'à definir';
         };
 
         function parsePos(position) {
@@ -983,6 +1002,8 @@ angular.module('app.controllers.object_edit', [])
         var self = this;
 
         var dataProjection = SirsDoc.get().epsgCode;
+
+        self.showText = $scope.c.showText;
 
         self.orientations = $scope.c.orientations;
 

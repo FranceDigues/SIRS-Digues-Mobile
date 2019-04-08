@@ -79,12 +79,25 @@
                             <div class="urgence" ng-switch-when="urgence">
                                 <select id="urgenceList" class="browser-default" ng-model="c.urgence"
                                         ng-change="c.changeUrgence()">
-                                    <option ng-repeat="urgence in c.urgenceList track by urgence.id"
+                                    <option ng-if="c.showText('fullName')"
+                                            ng-repeat="urgence in c.urgenceList track by urgence.id"
                                             ng-selected="urgence.id === c.urgence"
-                                            value="{{urgence.id}}">{{urgence.libelle}}
+                                            ng-value="urgence.id">
+                                        <span>{{urgence.libelle || ''}}</span>
+                                    </option>
+                                    <option ng-if="c.showText('abstract')"
+                                            ng-repeat="urgence in c.urgenceList track by urgence.id"
+                                            ng-selected="urgence.id === c.urgence"
+                                            ng-value="urgence.id">
+                                        <span>{{urgence.abrege || urgence.designation || ''}}</span>
+                                    </option>
+                                    <option ng-if="c.showText('both')"
+                                            ng-repeat="urgence in c.urgenceList track by urgence.id"
+                                            ng-selected="urgence.id === c.urgence"
+                                            ng-value="urgence.id">
+                                        <span>{{urgence.libelle || ''}} : {{urgence.abrege || urgence.designation || ''}}</span>
                                     </option>
                                 </select>
-
                             </div>
 
                             <!-- Content / nombre -->

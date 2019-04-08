@@ -43,13 +43,20 @@
                                         </label>
                                     </div>
                                     <div class="sirs-field-inline" ng-if="!c.isLinear">
-                                        <span class="sirs-field-title">Position : </span>
-                                        <span class="sirs-field-value">{{c.getStartPos() | lonlat:'à définir'}}</span>
+                                        <span class="sirs-field-title" ng-if="!c.doc.systemeRepId">Position : </span>
+                                        <span class="sirs-field-value" ng-if="!c.doc.systemeRepId">{{c.getStartPos() | lonlat:'à définir'}}</span>
+                                        <span class="sirs-field-title" ng-if="c.doc.systemeRepId">Position via le borne : </span>
                                     </div>
                                     <div class="sirs-field-inline" ng-if="c.isLinear" style="overflow: hidden;">
                                         <span class="sirs-field-title"
+                                              ng-if="!c.doc.systemeRepId"
                                               style="line-height: 37px;">Position de début :</span>
-                                        <span class="sirs-field-value">{{c.getStartPos() | lonlat:'à définir'}}</span>
+                                        <span class="sirs-field-value"
+                                              ng-if="!c.doc.systemeRepId">{{c.getStartPos() | lonlat:'à définir'}}</span>
+
+                                        <span class="sirs-field-title"
+                                              ng-if="c.doc.systemeRepId" style="line-height: 37px;">Position de début via borne : {{c.getStartPosBorne()}}</span>
+
                                         <div class="position-action" ng-if="c.isLinear && !c.isNew"
                                              style="display: inline;float: right;">
                                             <button class="btn waves-effect waves-light"
@@ -70,8 +77,13 @@
                                     <div class="sirs-field-inline" ng-if="c.isLinear && !c.isNew"
                                          style="margin-top: 5px;overflow: hidden;">
                                         <span class="sirs-field-title"
+                                              ng-if="!c.doc.systemeRepId"
                                               style="line-height: 37px;">Position de fin :</span>
-                                        <span class="sirs-field-value">{{c.getEndPos() | lonlat:'à définir'}}</span>
+                                        <span class="sirs-field-value"
+                                              ng-if="!c.doc.systemeRepId">{{c.getEndPos() | lonlat:'à définir'}}</span>
+                                        <span class="sirs-field-title"
+                                              ng-if="c.doc.systemeRepId"
+                                              style="line-height: 37px;">Position de fin via borne : {{c.getEndPosBorne()}}</span>
                                         <div class="position-action" style="display: inline;float: right;">
                                             <button class="btn waves-effect waves-light"
                                                     on-tap="c.locateMe();c.linearPosEditionHandler.endPoint = true;">

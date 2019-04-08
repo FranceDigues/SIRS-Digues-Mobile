@@ -4,9 +4,16 @@ angular.module('app.controllers.observation_edit', [])
                                                                                 $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                                 $routeParams, GeolocationService, LocalDocument,
                                                                                 EditionService, objectDoc, uuid4, $rootScope, contactList,
-                                                                                urgenceList, orientationsList, cotesList, AuthService, MapManager) {
+                                                                                urgenceList, orientationsList, cotesList, AuthService,
+                                                                                MapManager, GlobalConfig) {
 
         var self = this;
+
+        self.config = GlobalConfig.config;
+
+        self.showText = function (type) {
+            return self.config.showText === type;
+        };
 
         $rootScope.loadingflag = false;
 
@@ -182,7 +189,6 @@ angular.module('app.controllers.observation_edit', [])
             );
         };
 
-
         self.getPhotoPath = function (photo) {
             var path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
             var image_url = self.mediaPath + '/' + path;
@@ -255,6 +261,8 @@ angular.module('app.controllers.observation_edit', [])
         var self = this;
 
         var dataProjection = SirsDoc.get().epsgCode;
+
+        self.showText = $scope.c.showText;
 
         self.orientations = $scope.c.orientations;
 

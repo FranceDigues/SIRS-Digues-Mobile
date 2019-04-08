@@ -385,4 +385,21 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         self.selectedObject = null;
 
         self.selectedObservation = null;
+    })
+
+    .factory('GlobalConfig', function globalConfig() {
+
+        var self = this;
+
+        if (localStorage.getItem('global_config')) {
+            self.config = JSON.parse(localStorage.getItem('global_config'));
+        } else {
+            self.config = {
+                'showText':'fullName'
+            };
+
+            localStorage.setItem('global_config', JSON.stringify(self.config));
+        }
+
+        return self;
     });

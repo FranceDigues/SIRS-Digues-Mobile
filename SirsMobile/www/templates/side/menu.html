@@ -23,14 +23,18 @@
         <ion-toggle ng-model="c.settings.geolocation" ng-change="c.updateGeolocation()" toggle-class="toggle-calm">
             Localisation GPS
         </ion-toggle>
-        <ion-toggle ng-init="edition = c.sEdition.isEnabled()" ng-model="edition" ng-change="c.sEdition.toggle()" toggle-class="toggle-calm">
+        <ion-toggle ng-init="edition = c.sEdition.isEnabled()" ng-model="edition" ng-change="c.sEdition.toggle()"
+                    toggle-class="toggle-calm">
             Mode édition
         </ion-toggle>
-        <ion-toggle  ng-model="archiveObjectsFlag" ng-change="c.toggleArchiveObjects()" toggle-class="toggle-calm">
+        <ion-toggle ng-model="archiveObjectsFlag" ng-change="c.toggleArchiveObjects()" toggle-class="toggle-calm">
             Afficher les objets archivés
         </ion-toggle>
         <ion-item on-tap="c.setBabordView('app_version')">
             Informations application
+        </ion-item>
+        <ion-item on-tap="c.setBabordView('app_config')">
+            Configuration de l'application
         </ion-item>
     </ion-content>
 </div>

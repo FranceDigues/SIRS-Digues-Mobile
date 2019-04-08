@@ -11,50 +11,171 @@
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('orientationOuvrageId', c.refs.RefOrientationOuvrage[0])">
         <label for="orientation" class="active">Orientation de l'ouvrage</label>
-        <select id="orientation" class="browser-default" ng-model="c.doc.orientationOuvrageId"
-                ng-options="r.id as r.libelle for r in c.refs.RefOrientationOuvrage"></select>
+        <select id="orientation" class="browser-default" ng-model="c.doc.orientationOuvrageId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefOrientationOuvrage track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefOrientationOuvrage track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefOrientationOuvrage track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
     <div class="sirs-field col col-50" ng-init="c.setupRef('usageId', c.refs.RefUsageVoie[0])">
         <label for="use" class="active">Usage</label>
-        <select id="use" class="browser-default" ng-model="c.doc.usageId"
-                ng-options="r.id as r.libelle for r in c.refs.RefOrientationOuvrage"></select>
+        <select id="use" class="browser-default" ng-model="c.doc.usageId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefOrientationOuvrage track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefOrientationOuvrage track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefOrientationOuvrage track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
 </div>
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('revetementHautId', c.refs.RefRevetement[0])">
         <label for="topCoating" class="active">Revêtement Haut</label>
-        <select id="topCoating" class="browser-default" ng-model="c.doc.revetementHautId"
-                ng-options="r.id as r.libelle for r in c.refs.RefRevetement"></select>
+        <select id="topCoating" class="browser-default" ng-model="c.doc.revetementHautId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefRevetement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefRevetement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefRevetement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
     <div class="sirs-field col col-50" ng-init="c.setupRef('revetementBasId', c.refs.RefRevetement[0])">
         <label for="lowCoating" class="active">Revêtement Bas</label>
-        <select id="lowCoating" class="browser-default" ng-model="c.doc.revetementBasId"
-                ng-options="r.id as r.libelle for r in c.refs.RefRevetement"></select>
+        <select id="lowCoating" class="browser-default" ng-model="c.doc.revetementBasId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefRevetement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefRevetement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefRevetement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
 </div>
 <div class="row">
-    <div class="sirs-field col col-50" ng-init="c.setupRef('typeOuvrageFranchissementId', c.refs.RefOuvrageFranchissement[0])">
+    <div class="sirs-field col col-50"
+         ng-init="c.setupRef('typeOuvrageFranchissementId', c.refs.RefOuvrageFranchissement[0])">
         <label for="workType" class="active">Type d'ouvrage</label>
-        <select id="workType" class="browser-default" ng-model="c.doc.typeOuvrageFranchissementId"
-                ng-options="r.id as r.libelle for r in c.refs.RefOuvrageFranchissement"></select>
+        <select id="workType" class="browser-default" ng-model="c.doc.typeOuvrageFranchissementId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefOuvrageFranchissement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefOuvrageFranchissement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefOuvrageFranchissement track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
 </div>
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('positionHautId', c.refs.RefPosition[0])">
         <label for="topPosition" class="active">Position haut</label>
-        <select id="topPosition" class="browser-default" ng-model="c.doc.positionHautId"
-                ng-options="r.id as r.libelle for r in c.refs.RefPosition"></select>
+        <select id="topPosition" class="browser-default" ng-model="c.doc.positionHautId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefPosition track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefPosition track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefPosition track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
     <div class="sirs-field col col-50" ng-init="c.setupRef('positionBasId', c.refs.RefPosition[0])">
         <label for="lowPosition" class="active">Position bas</label>
-        <select id="lowPosition" class="browser-default" ng-model="c.doc.positionBasId"
-                ng-options="r.id as r.libelle for r in c.refs.RefPosition"></select>
+        <select id="lowPosition" class="browser-default" ng-model="c.doc.positionBasId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefPosition track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefPosition track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefPosition track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
 </div>
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('coteId', c.refs.RefCote[0])">
         <label for="damSide" class="active">Côté de la digue</label>
-        <select id="damSide" class="browser-default" ng-model="c.doc.coteId"
-                ng-options="r.id as r.libelle for r in c.refs.RefCote"></select>
+        <select id="damSide" class="browser-default" ng-model="c.doc.coteId">
+            <option ng-if="c.showText('fullName')"
+                    ng-repeat="r in c.refs.RefCote track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}}</span>
+            </option>
+            <option ng-if="c.showText('abstract')"
+                    ng-repeat="r in c.refs.RefCote track by r.id"
+                    ng-value="r.id">
+                <span>{{r.abrege || r.designation || ''}}</span>
+            </option>
+            <option ng-if="c.showText('both')"
+                    ng-repeat="r in c.refs.RefCote track by r.id"
+                    ng-value="r.id">
+                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+            </option>
+        </select>
     </div>
 </div>

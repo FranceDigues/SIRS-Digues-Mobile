@@ -35,7 +35,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 views: {
                     byAuthor: {
                         map: function (doc) {
-                            if (doc.author && !doc.valid && doc.positionDebut && !doc.positionFin) {
+                            if (doc.author && !doc.valid && ((doc.positionDebut && !doc.positionFin) || (doc.borneDebutId && !doc.borneFinId))) {
                                 emit(doc.author);
                             }
                         }.toString()
@@ -47,7 +47,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 views: {
                     byAuthor: {
                         map: function (doc) {
-                            if (doc.author && !doc.valid && doc.positionDebut && doc.positionFin) {
+                            if (doc.author && !doc.valid && ((doc.positionDebut && doc.positionFin) || (doc.borneDebutId && doc.borneFinId))) {
                                 emit(doc.author, {
                                     '@class': doc['@class'],
                                     'id': doc._id,
