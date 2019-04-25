@@ -16,12 +16,12 @@
             <option ng-if="c.showText('abstract')"
                     ng-repeat="r in c.refs.RefOuvrageParticulier track by r.id"
                     ng-value="r.id">
-                <span>{{r.abrege || r.designation || ''}}</span>
+                <span>{{r.abrege || r.designation + ' : ' + r.libelle || ''}}</span>
             </option>
             <option ng-if="c.showText('both')"
                     ng-repeat="r in c.refs.RefOuvrageParticulier track by r.id"
                     ng-value="r.id">
-                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+                <span>{{r.abrege || r.designation || ''}} : {{r.libelle || ''}}</span>
             </option>
         </select>
     </div>
@@ -38,12 +38,12 @@
             <option ng-if="c.showText('abstract')"
                     ng-repeat="r in c.refs.RefPosition track by r.id"
                     ng-value="r.id">
-                <span>{{r.abrege || r.designation || ''}}</span>
+                <span>{{r.abrege || r.designation + ' : ' + r.libelle || ''}}</span>
             </option>
             <option ng-if="c.showText('both')"
                     ng-repeat="r in c.refs.RefPosition track by r.id"
                     ng-value="r.id">
-                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+                <span>{{r.abrege || r.designation || ''}} : {{r.libelle || ''}}</span>
             </option>
         </select>
     </div>
@@ -58,12 +58,12 @@
             <option ng-if="c.showText('abstract')"
                     ng-repeat="r in c.refs.RefCote track by r.id"
                     ng-value="r.id">
-                <span>{{r.abrege || r.designation || ''}}</span>
+                <span>{{r.abrege || r.designation + ' : ' + r.libelle || ''}}</span>
             </option>
             <option ng-if="c.showText('both')"
                     ng-repeat="r in c.refs.RefCote track by r.id"
                     ng-value="r.id">
-                <span>{{r.libelle || ''}} : {{r.abrege || r.designation || ''}}</span>
+                <span>{{r.abrege || r.designation || ''}} : {{r.libelle || ''}}</span>
             </option>
         </select>
     </div>

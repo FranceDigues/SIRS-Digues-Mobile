@@ -85,7 +85,7 @@ angular.module('app.services.edition', ['app.services.context'])
                         var deferred = $q.defer(),
                             classPath = 'fr.sirs.core.model.' + refType.name;
 
-                        LocalDocument.query('Element/byClassAndLinear', {
+                        LocalDocument.query('byClassAndLinearRef', {
                             startkey: [classPath],
                             endkey: [classPath, {}],
                             include_docs: refType.include_docs

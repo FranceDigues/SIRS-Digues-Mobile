@@ -19,7 +19,8 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             'bySEIdHB',
             'byDigueIdHB',
             'getBornesFromTronconID',
-            'getBornesIdsHB'
+            'getBornesIdsHB',
+            'byClassAndLinearRef'
 
         ]; // TODO → make it configurable ?
 
@@ -165,6 +166,24 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                         map: function (doc) {
                             if (doc._attachments) {
                                 emit(doc._id, {chemin: doc.chemin, attachments: doc._attachments});
+                            }
+                        }.toString()
+                    }
+                }
+            },
+            {
+                _id: '_design/byClassAndLinearRef',
+                views: {
+                    'byClassAndLinearRef': {
+                        map: function (doc) {
+                            if (doc['@class']) {
+                                emit([doc['@class'], doc.linearId], {
+                                    id: doc._id,
+                                    rev: doc._rev,
+                                    designation: doc.designation,
+                                    libelle: doc.libelle,
+                                    abrege: doc.abrege
+                                })
                             }
                         }.toString()
                     }
