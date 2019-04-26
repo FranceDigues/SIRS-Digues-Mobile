@@ -32,10 +32,6 @@ angular.module('SirsMobile', [
             return PositionMapManager.buildConfig();
         });
 
-        olMapProvider.provideOptions('position_by_borne', function (PositionByBorneMapManager) {
-            return PositionByBorneMapManager.buildConfig();
-        });
-
         // Configure routes.
         $routeProvider
             .when('/database', {

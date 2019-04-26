@@ -21,7 +21,6 @@ angular.module('app.controllers.menu', [])
 
         self.sEdition = EditionService;
 
-
         $rootScope.editionModeFlag = self.sEdition.isEnabled();
 
         self.setBabordView = SidePanelService.setBabordView;

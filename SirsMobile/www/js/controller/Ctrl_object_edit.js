@@ -9,43 +9,9 @@ angular.module('app.controllers.object_edit', [])
         }
     })
 
-    .service('PositionMapManager', function PositionMapManager(BackLayerService, currentView) {
+    .service('PositionMapManager', function PositionMapManager($rootScope, BackLayerService, featureCache,
+                                                               currentView, AppLayersService, LocalDocument, DefaultStyle) {
 
-        var self = this;
-
-        self.buildConfig = function () {
-            var layerModel = BackLayerService.getActive(),
-                source = angular.copy(layerModel.source),
-                extent;
-
-            // Override the source if the layer is available from cache.
-            if (angular.isObject(layerModel.cache)) {
-                extent = layerModel.cache.extent;
-                source.type = 'XYZ';
-                source.url = layerModel.cache.url;
-            }
-
-            // Create layer instance.
-            var olLayer = new ol.layer.Tile({
-                name: layerModel.title,
-                extent: extent,
-                model: layerModel,
-                source: new ol.source[source.type](source)
-            });
-
-            return {
-                view: currentView,
-                layers: [olLayer],
-                controls: [],
-                interactions: ol.interaction.defaults({
-                    altShiftDragRotate: false,
-                    shiftDragZoom: false
-                })
-            };
-        };
-    })
-    .service('PositionByBorneMapManager', function PositionByBorneMapManager($rootScope, BackLayerService, featureCache,
-                                                                             currentView, AppLayersService, LocalDocument, DefaultStyle) {
         var self = this;
 
         var wktFormat = new ol.format.WKT();
@@ -325,7 +291,6 @@ angular.module('app.controllers.object_edit', [])
             };
         };
     })
-
     .controller('ObjectEditController', function ObjectEditController($scope, $location, $ionicScrollDelegate,
                                                                       $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                       $routeParams, GeolocationService, LocalDocument,
@@ -339,64 +304,6 @@ angular.module('app.controllers.object_edit', [])
         $rootScope.loadingflag = false;
 
         var dataProjection = SirsDoc.get().epsgCode;
-
-        self.gpsAccuracy = '-';
-
-        startGeoloactionWatch = function () {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                $timeout(function () {
-                    self.gpsAccuracy = Math.round(position.coords.accuracy);
-                    self.lastGPSUpdateDate = moment().format();
-                    self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
-
-                    clearInterval(self.intervalLastGPSUpdate);
-
-                    self.intervalLastGPSUpdate = setInterval(function () {
-                        self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
-                    }, 60000);
-
-                    self.watchID = navigator.geolocation.watchPosition(function (position) {
-                        $timeout(function () {
-                            self.gpsAccuracy = Math.round(position.coords.accuracy);
-                            self.lastGPSUpdateDate = moment().format();
-                            self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
-
-                            clearInterval(self.intervalLastGPSUpdate);
-
-                            self.intervalLastGPSUpdate = setInterval(function () {
-                                self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
-                            }, 60000);
-                        });
-                    }, function (error) {
-                        alert('code: ' + error.code + '\n' +
-                            'message: ' + error.message + '\n');
-                    }, {
-                        maximumAge: 20000,
-                        enableHighAccuracy: true
-                    });
-                });
-            }, function (error) {
-                alert('code: ' + error.code + '\n' +
-                    'message: ' + error.message + '\n');
-            }, {
-                maximumAge: 20000,
-                enableHighAccuracy: true
-            });
-        };
-
-        clearGeoloactionWatch = function () {
-            navigator.geolocation.clearWatch(self.watchID);
-            self.watchID = null;
-        };
-
-        startGeoloactionWatch();
-
-        // GeolocationService.trackLocation().then(angular.noop, angular.noop, function (position) {
-        //     self.gpsAccuracy = Math.round(position.coords.accuracy);
-        // });
-
-        // Navigation
-        // -----------
 
         self.view = 'form';
 
@@ -462,7 +369,6 @@ angular.module('app.controllers.object_edit', [])
         });
 
         function cleanTronconsListe(liste) {
-            var indexes = [];
             var listCool = [];
             // Get the indexes list of not validated Tronçons
             angular.forEach(liste, function (elt, ind) {
@@ -686,8 +592,10 @@ angular.module('app.controllers.object_edit', [])
             return ol.proj.transform(numbers, dataProjection, 'EPSG:4326');
         }
 
+        self.showPositionByBorne = false;
+
         self.selectPosBySR = function () {
-            self.setView('mapByBorne');
+            self.showPositionByBorne = true;
         };
 
         // Medias

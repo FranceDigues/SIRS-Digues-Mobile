@@ -58,8 +58,6 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
             $rootScope.loadingflag = true;
         }
 
-        self.ionicLoading;
-        // @hb
         $rootScope.$watch(function () {
             return $rootScope.loadingflag;
         }, function () {
@@ -73,8 +71,8 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
             }
         });
 
-        // @hb
         self.editionModeFlag = $rootScope.editionModeFlag;
+
         $rootScope.$watch(function () {
             return $rootScope.editionModeFlag;
         }, function () {
@@ -85,57 +83,6 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
             return plugins.indexOf(plugin) !== -1;
         }
 
-        self.gpsAccuracy = '-';
-
-        startGeoloactionWatch = function () {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                $timeout(function () {
-                    self.gpsAccuracy = Math.round(position.coords.accuracy);
-                    self.lastGPSUpdateDate = moment().format();
-                    self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
-
-                    clearInterval(self.intervalLastGPSUpdate);
-
-                    self.intervalLastGPSUpdate = setInterval(function () {
-                        self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
-                    }, 60000);
-
-                    self.watchID = navigator.geolocation.watchPosition(function (position) {
-                        $timeout(function () {
-                            self.gpsAccuracy = Math.round(position.coords.accuracy);
-                            self.lastGPSUpdateDate = moment().format();
-                            self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
-
-                            clearInterval(self.intervalLastGPSUpdate);
-
-                            self.intervalLastGPSUpdate = setInterval(function () {
-                                self.lastGPSUpdate = moment(self.lastGPSUpdateDate).fromNow();
-                            }, 60000);
-                        });
-                    }, function (error) {
-                        alert('code: ' + error.code + '\n' +
-                            'message: ' + error.message + '\n');
-                    }, {
-                        maximumAge: 20000,
-                        enableHighAccuracy: true
-                    });
-                });
-            }, function (error) {
-                alert('code: ' + error.code + '\n' +
-                    'message: ' + error.message + '\n');
-            }, {
-                maximumAge: 20000,
-                enableHighAccuracy: true
-            });
-        };
-
-        clearGeoloactionWatch = function () {
-            navigator.geolocation.clearWatch(self.watchID);
-            self.watchID = null;
-        };
-
-        startGeoloactionWatch();
-
         // Add a handler for cordova event types
         // $ionicPlatform.on();
 
@@ -143,7 +90,6 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
          * The pause event fires when the native platform puts the application into the background,
          * typically when the user switches to a different application.
          */
-
 
             //@hb add an Event listener for the online/offline events
 
@@ -170,14 +116,12 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
         $window.addEventListener("online", onlineHandler, false);
 
         $ionicPlatform.on("pause", function (event) {
-            clearGeoloactionWatch();
             $rootScope.online = undefined;
             $window.removeEventListener("offline", offlineHandler, false);
             $window.removeEventListener("online", onlineHandler, false);
         });
 
         $ionicPlatform.on("resume", function (event) {
-            clearGeoloactionWatch();
             $rootScope.online = navigator.onLine;
             $window.addEventListener("offline", offlineHandler, false);
             $window.addEventListener("online", onlineHandler, false);
@@ -185,14 +129,32 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
 
         //Handle the Hardware BackButton
         $ionicPlatform.onHardwareBackButton(function (event) {
-            clearGeoloactionWatch();
             $rootScope.online = undefined;
             $window.removeEventListener("offline", offlineHandler, false);
             $window.removeEventListener("online", onlineHandler, false);
         });
 
-        //@hb
         self.EditionService = EditionService;
 
+        self.gpsAccuracy = '-';
+
+        self.locateMe = function () {
+            $ionicLoading.show({template: 'En attente de localisation...'});
+            navigator.geolocation.getCurrentPosition(function (position) {
+                $timeout(function () {
+                    self.gpsAccuracy = Math.round(position.coords.accuracy);
+                    self.lastGPSUpdateDate = moment().format('DD/MM/YYYY à h:mm:ss');
+                    $ionicLoading.hide();
+                });
+            }, function (error) {
+                alert('message: ' + error.message + '\n');
+                $ionicLoading.hide();
+            }, {
+                maximumAge: 20000,
+                enableHighAccuracy: true
+            });
+        };
+
+        self.locateMe();
 
     });

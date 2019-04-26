@@ -3,7 +3,7 @@
         <ion-nav-bar>
             <!-- Button / Logout -->
             <ion-nav-buttons side="right">
-                <button class=" col-75 button button-icon button-clear ion-power" on-tap="mc.logout()"></button>
+                <button class="col-75 button button-icon button-clear ion-power" on-tap="mc.logout()"></button>
             </ion-nav-buttons>
         </ion-nav-bar>
         <div id="cargo">
@@ -24,8 +24,13 @@
             </div>
 
             <div style="z-index: 9999; right: 60px; top: 5px; position: fixed;">
-                <span>Précision du signal GPS :  {{mc.gpsAccuracy}} m </span>
-                <span ng-if="mc.lastGPSUpdate">(Dernières mises à jour {{mc.lastGPSUpdate}})</span>
+                <span style="vertical-align:super">Précision du signal GPS :  {{mc.gpsAccuracy}} m</span>
+                <span style="vertical-align:super" ng-if="mc.lastGPSUpdateDate">,&nbsp;{{ mc.lastGPSUpdateDate }}</span>
+                <button class="button-icon button-clear"
+                        style="color: white;"
+                        on-tap="mc.locateMe();">
+                    <i class="material-icons center">gps_fixed</i>
+                </button>
             </div>
 
             <!-- Button / New object -->
