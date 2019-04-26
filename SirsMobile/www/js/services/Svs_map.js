@@ -129,8 +129,7 @@ angular.module('app.services.map', ['app.services.context'])
             // Load data if necessary.
             if (layerModel.filterValue === "fr.sirs.core.model.BorneDigue") {
                 olLayer.getSource().getSource().getSource().clear();
-            }
-            else {
+            } else {
                 olLayer.getSource().getSource().clear();
             }
 
@@ -235,7 +234,7 @@ angular.module('app.services.map', ['app.services.context'])
             // source = angular.copy(layerModel.source);
 
             // Override the source if the layer is available from cache.
-            if (angular.isObject(layerModel.cache)) {
+            if (angular.isObject(layerModel.cache) && layerModel.cache.active) {
                 extent = layerModel.cache.extent;
 
 
@@ -320,8 +319,7 @@ angular.module('app.services.map', ['app.services.context'])
                     })
                 });
 
-            }
-            else {
+            } else {
                 var olLayer = new ol.layer.Image({
                     name: layerModel.title,
                     visible: layerModel.visible,
@@ -425,8 +423,7 @@ angular.module('app.services.map', ['app.services.context'])
 
             if (layerModel.filterValue === "fr.sirs.core.model.BorneDigue") {
                 var olSource = olLayer.getSource().getSource().getSource();
-            }
-            else {
+            } else {
                 var olSource = olLayer.getSource().getSource();
             }
 
@@ -453,8 +450,7 @@ angular.module('app.services.map', ['app.services.context'])
                             function (error) {
                                 // TODO → handle error
                             });
-                    }
-                    else {
+                    } else {
                         var deferred = $q.defer();
                         promise = deferred.promise.then(
                             function () {
@@ -462,8 +458,7 @@ angular.module('app.services.map', ['app.services.context'])
                             });
                         deferred.resolve();
                     }
-                }
-                else if (layerModel.filterValue === "fr.sirs.core.model.TronconDigue") {
+                } else if (layerModel.filterValue === "fr.sirs.core.model.TronconDigue") {
                     promise = LocalDocument.query('TronconDigue/streamLight', {
                         keys: localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService.get("AppTronconsFavorities")
                     }).then(
@@ -473,8 +468,7 @@ angular.module('app.services.map', ['app.services.context'])
                         function (error) {
                             console.log(error);
                         });
-                }
-                else {
+                } else {
 
                     promise = LocalDocument.query('getBornesFromTronconID', {
                         keys: localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService.get("AppTronconsFavorities")
@@ -722,8 +716,7 @@ angular.module('app.services.map', ['app.services.context'])
                         strokeWidth = 2,
                         pointRadius = 6;
                     return [createPointStyle(fillColor, strokeColor, strokeWidth, pointRadius, computeZIndex(f), featureModel, layerModel)];
-                }
-                else {
+                } else {
                     var highlightAll = shouldHighlightAll(f, selectedIds),
                         fillColor = highlightAll ? [255, 0, 0, 1] : [255, 255, 255, color[3]],
                         strokeColor = highlightAll ? [0, 0, 255, 1] : color,
@@ -807,8 +800,7 @@ angular.module('app.services.map', ['app.services.context'])
             if (feature.get('features') === undefined) {
                 if (selectedIds.indexOf(feature.get('id')) !== -1) {
                     return true;
-                }
-                else {
+                } else {
                     return false;
                 }
             }

@@ -1,6 +1,7 @@
 <div id="backLayers" ng-controller="BackLayersController as c">
     <ion-header-bar align-title="center">
-        <button type="button" class="col-20 button button-icon button-clear ion-arrow-left-a" on-tap="c.backToMenu()"></button>
+        <button type="button" class="col-20 button button-icon button-clear ion-arrow-left-a"
+                on-tap="c.backToMenu()"></button>
         <h1 class="title">Fonds de carte</h1>
     </ion-header-bar>
 
@@ -8,18 +9,18 @@
         <ion-list can-swipe="true">
             <ion-item ng-repeat="layer in c.sLayer.list()" ng-click="c.useLayer(layer)">
                 <i class="material-icons" ng-if="layer === c.sLayer.getActive()">check</i>
-                <h2>{{layer.name}}<span ng-if="layer.cache"> (hors ligne)</span></h2>
+                <h2>{{layer.name}}<span ng-if="layer.cache && layer.cache.active"> (hors ligne)</span></h2>
                 <!-- Swipe actions -->
-                <ion-option-button class="button" ng-click="c.deleteCache(layer)" ion-stop-event ng-disabled="!layer.cache">
-                    <i class="material-icons">clear_all</i>
-                </ion-option-button>
                 <ion-option-button class="button"
-                                   ng-class="{'icon-grey':layer === c.sLayer.getActive() && !layer.cache,'icon-grey-half':layer === c.sLayer.getActive() && layer.cache}"
-                                   ng-click="c.toggleOnlineMode(layer)" ion-stop-event>
-                    <i class="material-icons">settings_remote</i>
+                                   ng-disabled="!layer.cache"
+                                   ng-click="c.toggleOnlineMode(layer)"
+                                   ion-stop-event>
+                    <i class="material-icons" ng-if="c.sLayer.getActive() && (!layer.cache || !layer.cache.active)">cloud_download</i>
+                    <i class="material-icons"
+                       ng-if="layer === c.sLayer.getActive() && layer.cache && layer.cache.active">cloud_off</i>
                 </ion-option-button>
                 <ion-option-button class="button" ng-click="c.goToCache(layer)" ion-stop-event>
-                    <i class="material-icons">storage</i>
+                    <i class="material-icons">edit</i>
                 </ion-option-button>
                 <ion-option-button class="button" ng-click="c.removeLayer(layer)" ion-stop-event>
                     <i class="material-icons">delete</i>
@@ -28,7 +29,8 @@
         </ion-list>
     </ion-content>
 
-    <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 200px;" on-tap="c.goToAddLayer()">
+    <button type="button" class="btn-floating btn-large waves-effect waves-light pink"
+            style="bottom: 15px; left: 200px;" on-tap="c.goToAddLayer()">
         <i class="large material-icons">add</i>
     </button>
 </div>

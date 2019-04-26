@@ -143,7 +143,7 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
             navigator.geolocation.getCurrentPosition(function (position) {
                 $timeout(function () {
                     self.gpsAccuracy = Math.round(position.coords.accuracy);
-                    self.lastGPSUpdateDate = moment().format('DD/MM/YYYY à h:mm:ss');
+                    self.lastGPSUpdateDate = moment().format('DD/MM/YYYY à HH:mm:ss');
                     $ionicLoading.hide();
                 });
             }, function (error) {

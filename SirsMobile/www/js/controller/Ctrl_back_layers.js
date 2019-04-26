@@ -40,36 +40,10 @@ angular.module('app.controllers.back_layers', ['app.services.context'])
             SidePanelService.setBabordView('back_layers_add');
         };
 
-        self.deleteCache = function (layer) {
-            $ionicPopup.confirm({
-                title: 'Suppression de cache',
-                template: 'Voulez vous vraiment supprimer ce cache ?'
-            }).then(function (confirmed) {
-                if (confirmed) {
-                    CacheMapPlugin.clearOneCache({
-                        name: layer.name,
-                        layerSource: null,
-                        typeSource: layer.source.type,
-                        zMin: layer.cache.minZoom,
-                        zMax: layer.cache.maxZoom,
-                        urlSource: layer.source.url,
-                        bbox: layer.cache.extent
-                    });
-
-                    delete layer.cache;
-                    BackLayerService.setActive(layer.name);
-                }
-                return confirmed;
-            });
-        };
-
         self.toggleOnlineMode = function (layer) {
-            if (layer.cache) {
-                // Remove the cache object
-                delete layer.cache;
-                // Update the view
-                BackLayerService.setActive(layer.name);
-            }
+            layer.cache.active = !layer.cache.active;
+            // Update the view
+            BackLayerService.setActive(layer.name);
         }
     })
 

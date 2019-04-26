@@ -125,20 +125,53 @@
 
 
                                 <!--By borne position-->
-                                <div class="row" ng-if="c.showPositionByBorne">
-                                    <div ng-controller="ObjectEditPosByBorneController as cp"
-                                         ng-init="cp.setup(save, exit, endSR)">
-                                        <div>
-                                            <label>Système de repérage : </label>
+                                <div class="row" ng-if="c.showPositionByBorne"
+                                     ng-controller="ObjectEditPosByBorneController as cp"
+                                     ng-init="cp.setup(save, exit, endSR)">
+                                    <!--Système de repérage début-->
+                                    <div class="sirs-field col col-50">
+                                        <label>Système de repérage début : </label>
+                                        <select id="sr" class="browser-default"
+                                                ng-model="cp.systemeReperage"
+                                                ng-change="cp.selectSR()"
+                                                ng-options="systemeReperage.doc as systemeReperage.doc.libelle for systemeReperage in cp.systemeReperageList">
+                                            <option></option>
+                                        </select>
+                                        <!--                                        <p ng-if="cp.endSR">{{cp.endSR}}</p>-->
+                                        <div ng-if="cp.systemeReperage">
+                                            <label>Borne du système de repérage : </label>
                                             <select id="sr" class="browser-default"
-                                                    ng-if="!cp.endSR"
-                                                    ng-model="cp.systemeReperage"
-                                                    ng-change="cp.selectSR()"
-                                                    ng-options="systemeReperage.doc as systemeReperage.doc.libelle for systemeReperage in cp.systemeReperageList">
+                                                    ng-model="cp.data.borneId"
+                                                    ng-options="systemeReperageBorne.borneId as systemeReperageBorne.designation for systemeReperageBorne in cp.systemeReperage.systemeReperageBornes">
                                                 <option></option>
                                             </select>
-                                            <p ng-if="cp.endSR">{{cp.endSR}}</p>
                                         </div>
+                                        <div ng-if="cp.systemeReperage">
+                                            <label for="distance" class="active">Distance à la borne (en mètre)
+                                                : </label>
+                                            <input id="distance" type="number" class="validate"
+                                                   ng-model="cp.data.borne_distance"
+                                                   placeholder=""/>
+                                        </div>
+                                        <div ng-if="cp.systemeReperage">
+                                            <label for="pos" class="active">Position : </label>
+                                            <select id="pos" class="browser-default"
+                                                    ng-model="cp.data.borne_aval">
+                                                <option ng-value="false">Amont</option>
+                                                <option ng-value="true">Aval</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--Système de repérage end-->
+                                    <div class="sirs-field col col-50">
+                                        <label>Système de repérage fin : </label>
+                                        <select id="sr" class="browser-default"
+                                                ng-model="cp.systemeReperage"
+                                                ng-change="cp.selectSR()"
+                                                ng-options="systemeReperage.doc as systemeReperage.doc.libelle for systemeReperage in cp.systemeReperageList">
+                                            <option></option>
+                                        </select>
+                                        <!--                                        <p ng-if="cp.endSR">{{cp.endSR}}</p>-->
                                         <div ng-if="cp.systemeReperage">
                                             <label>Borne du système de repérage : </label>
                                             <select id="sr" class="browser-default"

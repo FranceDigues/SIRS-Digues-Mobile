@@ -134,12 +134,12 @@ angular.module('app.controllers.cache', [])
         };
     })
 
-    .controller('CacheController', function CacheController($scope, $timeout, $routeParams, $location,
+    .controller('CacheController', function CacheController($scope, $timeout, $routeParams, $location, $ionicPopup,
                                                             CacheMapManager, MapManager, BackLayerService, olMap, currentView) {
 
         var self = this;
 
-        var layerModel = BackLayerService.getByName($routeParams.layer);
+        self.layerModel = BackLayerService.getByName($routeParams.layer);
 
         var lastZoom = currentView.getZoom();
 
@@ -176,21 +176,21 @@ angular.module('app.controllers.cache', [])
         }
 
 
-        self.minZoom = angular.isObject(layerModel.cache) ?
-            layerModel.cache.minZoom : 7;
+        self.minZoom = angular.isObject(self.layerModel.cache) ?
+            self.layerModel.cache.minZoom : 7;
 
-        self.maxZoom = angular.isObject(layerModel.cache) ?
-            layerModel.cache.maxZoom : 16;
+        self.maxZoom = angular.isObject(self.layerModel.cache) ?
+            self.layerModel.cache.maxZoom : 16;
 
         self.tileCount = 0;
 
         self.selectedCorner = null;
 
         self.setDefaultArea = function (map) {
-            if (angular.isObject(layerModel.cache)) {
+            if (angular.isObject(self.layerModel.cache)) {
                 // Use previous area.
-                CacheMapManager.setCurrentArea(layerModel.cache.extent);
-                currentView.fit(layerModel.cache.extent, map.getSize());
+                CacheMapManager.setCurrentArea(self.layerModel.cache.extent);
+                currentView.fit(self.layerModel.cache.extent, map.getSize());
             } else {
                 // Create default area.
                 var extent = map.getView().calculateExtent(map.getSize());
@@ -250,11 +250,12 @@ angular.module('app.controllers.cache', [])
             var extent = CacheMapManager.getCurrentArea();
 
             // Update layer model and force update.
-            layerModel.cache = {
+            self.layerModel.cache = {
+                active: true,
                 minZoom: self.minZoom,
                 maxZoom: self.maxZoom,
                 extent: extent,
-                url: cordova.file.externalDataDirectory + 'tiles/' + layerModel.name + '/{z}/{x}/{y}.png'
+                url: cordova.file.externalDataDirectory + 'tiles/' + self.layerModel.name + '/{z}/{x}/{y}.png'
             };
             MapManager.syncBackLayer();
 
@@ -262,20 +263,43 @@ angular.module('app.controllers.cache', [])
             extent = ol.proj.transformExtent(extent, 'EPSG:3857', 'EPSG:4326');
 
             CacheMapPlugin.updateCache([{
-                name: layerModel.name,
+                name: self.layerModel.name,
                 layerSource: null,
-                typeSource: layerModel.source.type,
+                typeSource: self.layerModel.source.type,
                 zMin: self.minZoom,
                 zMax: self.maxZoom,
-                urlSource: layerModel.source.url,
+                urlSource: self.layerModel.source.url,
                 bbox: [[extent[1], extent[0]], [extent[3], extent[2]]]
             }]);
 
             $location.path('/main');
         };
 
+        self.deleteCache = function () {
+            $ionicPopup.confirm({
+                title: 'Suppression de cache',
+                template: 'Voulez vous supprimer le cache de cette couche de données ?'
+            }).then(function (confirmed) {
+                if (confirmed) {
+                    CacheMapPlugin.clearOneCache({
+                        name: self.layerModel.name,
+                        layerSource: null,
+                        typeSource: self.layerModel.source.type,
+                        zMin: self.layerModel.cache.minZoom,
+                        zMax: self.layerModel.cache.maxZoom,
+                        urlSource: self.layerModel.source.url,
+                        bbox: self.layerModel.cache.extent
+                    });
 
-        CacheMapManager.setTargetLayer(layerModel);
+                    delete self.layerModel.cache;
+                    BackLayerService.setActive(self.layerModel.name);
+                }
+                return confirmed;
+            });
+        };
+
+
+        CacheMapManager.setTargetLayer(self.layerModel);
 
         currentView.on('change:center', onCenterChanged);
 

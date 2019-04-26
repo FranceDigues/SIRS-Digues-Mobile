@@ -486,9 +486,6 @@ angular.module('app.controllers.object_edit', [])
                 maximumAge: 20000,
                 enableHighAccuracy: true
             });
-
-
-            // waitForLocation(GeolocationService.start()).then(GeolocationService.stop);
         };
 
         self.selectPos = function () {

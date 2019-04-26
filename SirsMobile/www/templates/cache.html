@@ -11,7 +11,9 @@
             <div class="cache-left col col-25">
                 <div class="sirs-field">
                     <span class="sirs-field-title">Niveaux de zoom</span>
-                    <rzslider class="cacheSlider" rz-slider-model="c.minZoom" rz-slider-high="c.maxZoom" rz-slider-floor="0" rz-slider-ceil="18" rz-slider-on-change="c.updateTileCount()"></rzslider>
+                    <rzslider class="cacheSlider" rz-slider-model="c.minZoom" rz-slider-high="c.maxZoom"
+                              rz-slider-floor="0" rz-slider-ceil="18"
+                              rz-slider-on-change="c.updateTileCount()"></rzslider>
                 </div>
                 <div class="sirs-field">
                     <span class="sirs-field-title">Niveau de zoom actuel</span>
@@ -22,9 +24,21 @@
                     <p class="text-right">{{c.tileCount|number}}</p>
                 </div>
                 <p ng-show="c.tileCount > 20000">
-                    <i class="icon ion-alert-circled"></i>&nbsp;Nombre de tuiles élevé. Afin de limiter l'espace disque occupé par la mise en cache, il est conseillé de réduire l'étendu géographique ou encore le niveau de zoom maximum.
+                    <i class="icon ion-alert-circled"></i>&nbsp;Nombre de tuiles élevé. Afin de limiter l'espace disque
+                    occupé par la mise en cache, il est conseillé de réduire l'étendu géographique ou encore le niveau
+                    de zoom maximum.
                 </p>
-                <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; right: 15px;" on-tap="c.validate()">
+                <button type="button"
+                        class="btn-floating btn-large waves-effect waves-light pink"
+                        style="bottom: 15px; right: 75px;"
+                        ng-disabled="!c.layerModel.cache"
+                        on-tap="c.deleteCache()">
+                    <i class="material-icons">delete</i>
+                </button>
+                <button type="button"
+                        class="btn-floating btn-large waves-effect waves-light pink"
+                        style="bottom: 15px; right: 15px;"
+                        on-tap="c.validate()">
                     <i class="large material-icons">check</i>
                 </button>
             </div>
