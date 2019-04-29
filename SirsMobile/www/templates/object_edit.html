@@ -56,15 +56,15 @@
                                         <div class="position-action" ng-if="c.isLinear && !c.isNew"
                                              style="display: inline;float: right;">
                                             <button class="btn waves-effect waves-light"
-                                                    on-tap="c.locateMe();c.linearPosEditionHandler.startPoint = true;">
+                                                    on-tap="c.linearPosEditionHandler.startPoint = true;c.linearPosEditionHandler.endPoint = false;c.locateMe();">
                                                 <i class="material-icons center">gps_fixed</i>
                                             </button>
                                             <button class="btn waves-effect waves-light"
-                                                    on-tap="c.selectPos();c.linearPosEditionHandler.startPoint = true;">
+                                                    on-tap="c.linearPosEditionHandler.startPoint = true;c.linearPosEditionHandler.endPoint = false;c.selectPos();">
                                                 <i class="material-icons center">edit</i>
                                             </button>
                                             <button class="btn waves-effect waves-light"
-                                                    on-tap="c.selectPosBySR();c.linearPosEditionHandler.startPoint = true;">
+                                                    on-tap="c.linearPosEditionHandler.startPoint = true;c.linearPosEditionHandler.endPoint = false;c.selectPosBySR();">
                                                 <i class="material-icons center">line_style</i>
                                             </button>
                                         </div>
@@ -82,15 +82,15 @@
                                               style="line-height: 37px;">Position de fin via borne : {{c.getEndPosBorne()}}</span>
                                         <div class="position-action" style="display: inline;float: right;">
                                             <button class="btn waves-effect waves-light"
-                                                    on-tap="c.locateMe();c.linearPosEditionHandler.endPoint = true;">
+                                                    on-tap="c.linearPosEditionHandler.endPoint = true;c.linearPosEditionHandler.startPoint = false;c.locateMe();">
                                                 <i class="material-icons center">gps_fixed</i>
                                             </button>
                                             <button class="btn waves-effect waves-light"
-                                                    on-tap="c.selectPos();c.linearPosEditionHandler.endPoint = true;">
+                                                    on-tap="c.linearPosEditionHandler.endPoint = true;c.linearPosEditionHandler.startPoint = false;c.selectPos();">
                                                 <i class="material-icons center">edit</i>
                                             </button>
                                             <button class="btn waves-effect waves-light"
-                                                    on-tap="c.selectPosBySR();c.linearPosEditionHandler.endPoint = true;">
+                                                    on-tap="c.linearPosEditionHandler.endPoint = true;c.linearPosEditionHandler.startPoint = false;c.selectPosBySR();">
                                                 <i class="material-icons center">line_style</i>
                                             </button>
                                         </div>
@@ -202,9 +202,9 @@
                 <label>Système de repérage : </label>
                 <select id="sr" class="browser-default"
                         ng-if="!cp.endSR"
-                        ng-model="cp.systemeReperage"
+                        ng-model="cp.systemeReperageId"
                         ng-change="cp.selectSR()"
-                        ng-options="systemeReperage.doc as systemeReperage.doc.libelle + ' : ' + systemeReperage.doc._id for systemeReperage in cp.systemeReperageList">
+                        ng-options="systemeReperage.doc._id as systemeReperage.doc.libelle for systemeReperage in cp.systemeReperageList track by systemeReperage.doc._id">
                     <option></option>
                 </select>
                 <p ng-if="cp.endSR">{{cp.endSR}}</p>
@@ -213,7 +213,7 @@
                 <label>Borne du système de repérage : </label>
                 <select id="sr" class="browser-default"
                         ng-model="cp.data.borneId"
-                        ng-options="systemeReperageBorne.borneId as systemeReperageBorne.id for systemeReperageBorne in cp.systemeReperage.systemeReperageBornes">
+                        ng-options="systemeReperageBorne.borneId as systemeReperageBorne.designation for systemeReperageBorne in cp.systemeReperage.systemeReperageBornes">
                     <option></option>
                 </select>
             </div>

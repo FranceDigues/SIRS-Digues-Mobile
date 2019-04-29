@@ -599,6 +599,35 @@ angular.module('app.controllers.object_edit', [])
 
         self.selectPosBySR = function () {
             self.positionBySRModal.show();
+            // Create borne position
+            if (!objectDoc.systemeRepId) {
+                $rootScope.$broadcast("borneModalData", {
+                    systemeRepId: '',
+                    borne_aval: '',
+                    borne_distance: '',
+                    borneId: ''
+                });
+            }
+
+            // Edit Debut
+            if (objectDoc.systemeRepId && !self.linearPosEditionHandler.endPoint) {
+                $rootScope.$broadcast("borneModalData", {
+                    systemeRepId: objectDoc.systemeRepId,
+                    borne_aval: objectDoc.borne_debut_aval ? 'true' : 'false',
+                    borne_distance: objectDoc.borne_debut_distance,
+                    borneId: objectDoc.borneDebutId
+                });
+            }
+            // Edit fin
+            if (objectDoc.systemeRepId && self.linearPosEditionHandler.endPoint) {
+                $rootScope.$broadcast("borneModalData", {
+                    systemeRepId: objectDoc.systemeRepId,
+                    borne_aval: objectDoc.borne_fin_aval ? 'true' : 'false',
+                    borne_distance: objectDoc.borne_fin_distance,
+                    borneId: objectDoc.borneFinId
+                });
+            }
+
         };
 
         // Medias
@@ -844,7 +873,10 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.selectSR = function () {
-            self.data.systemeRepId = self.systemeReperage._id;
+            self.data.systemeRepId = self.systemeReperageId;
+            self.systemeReperage = self.systemeReperageList.filter(function (item) {
+                return item.id === self.data.systemeRepId;
+            })[0].doc;
         };
 
         self.canValidate = function () {
@@ -870,32 +902,9 @@ angular.module('app.controllers.object_edit', [])
             $rootScope.loadingflag = false;
         });
 
-        self.endSR = $scope.c.getEndPointSR();
-
-        if (self.endSR) {
-            self.data.systemeRepId = self.endSR;
-
-            PouchService.getLocalDB().query('Element/byClassAndLinear', {
-                startkey: ['fr.sirs.core.model.SystemeReperage'],
-                endkey: ['fr.sirs.core.model.SystemeReperage', {}],
-                include_docs: true
-            }).then(function (results) {
-                $timeout(function () {
-                    self.systemeReperage = self.systemeReperage = results.rows.filter(function (item) {
-                        return item.id === self.endSR;
-                    })[0].doc;
-                    $rootScope.loadingflag = false;
-                });
-            }).catch(function (err) {
-                console.log(err);
-                $rootScope.loadingflag = false;
-            });
-        }
-
         self.validate = function () {
             if (self.canValidate()) {
                 $scope.c.handlePosByBorne(self.data);
-                // self.clear();
                 self.closeModal();
             } else {
                 $ionicPopup.alert({
@@ -909,15 +918,27 @@ angular.module('app.controllers.object_edit', [])
             $scope.c.positionBySRModal.hide();
         };
 
-        self.clear = function () {
-            self.data = {
-                systemeRepId: '',
-                borneId: '',
-                borne_aval: '',
-                borne_distance: ''
-            };
-            self.systemeReperage = null;
-        };
+        $scope.$on("borneModalData", function (evt, data) {
+            self.data = data;
+
+            if (self.data.systemeRepId) {
+                self.systemeReperageId = self.data.systemeRepId;
+                if ($scope.c.linearPosEditionHandler.endPoint) {
+                    self.endSR = $scope.c.getEndPointSR();
+                } else {
+                    self.endSR = null;
+                }
+
+                self.systemeReperage = self.systemeReperageList.filter(function (item) {
+                    return item.id === self.data.systemeRepId;
+                })[0].doc;
+
+            }
+
+            if (!self.data.systemeRepId) {
+                self.systemeReperageId = null;
+            }
+        });
     })
     .controller('MediaController', function ($window, SirsDoc, $ionicLoading, $filter,
                                              uuid4, $ionicPlatform, $scope, GeolocationService, AuthService) {

@@ -553,7 +553,9 @@ angular.module('app.services.map', ['app.services.context'])
         function createEditionFeatureInstances(featureDocs) {
             var features = [];
             angular.forEach(featureDocs, function (featureDoc) {
-                features.push(createEditionFeatureInstance(featureDoc.doc));
+                if (featureDoc.doc && featureDoc.doc.positionDebut) {
+                    features.push(createEditionFeatureInstance(featureDoc.doc));
+                }
             });
             return features;
         }
