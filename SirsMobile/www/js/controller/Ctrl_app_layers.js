@@ -41,16 +41,8 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
             SidePanelService.setBabordView('app_layers_select');
         };
 
-        // @hb
         self.colors = colorsFactory.colors;
 
-        self.selectedLayer;
-
-        self.selectedColor;
-
-        self.selectedElement;
-
-        // @hb
         self.featureLabels = function (layer) {
             $rootScope.loadingflag = true;
             $timeout(function () {
@@ -58,7 +50,6 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
             }, 1000);
         };
 
-        // @hb
         $ionicModal.fromTemplateUrl('color-modal.html', {
             scope: $scope,
             animation: 'slide-in-up',
@@ -67,22 +58,20 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
             self.colorModal = modal;
         });
 
-        // @hb
         self.openColorModal = function (layer) {
             colorsFactory.selectedLayer = layer;
             self.colorModal.show();
         };
-        // @hb
+
         self.closeColorModal = function () {
             clearColorChoose();
             self.colorModal.hide();
         };
-        // @hb
+
         self.calculateBackGroundColor = function (color) {
             return color.hex;
         };
 
-        // @hb
         var changeColor = function (colArr) {
             colorsFactory.selectedLayer.color[0] = colArr[0];
             colorsFactory.selectedLayer.color[1] = colArr[1];
@@ -97,7 +86,6 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
             colorsFactory.selectedElement = undefined;
         };
 
-        //@hb
         self.chooseColor = function () {
             if (colorsFactory.selectedColor) {
                 // Change the color of the selected layer
@@ -121,11 +109,9 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
             colorsFactory.selectedElement.addClass('active');
         };
 
-        //@hb Refresh handler for the layer
         self.forceRefresh = MapManager.forceRefresh;
 
         self.clearAll = MapManager.clearAll;
-
 
     })
 

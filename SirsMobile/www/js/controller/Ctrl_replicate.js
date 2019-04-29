@@ -31,7 +31,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
 
         var designDocs = [
             {
-                _id: '_design/objetsNonClos',
+                _id: '_design/objetsNonClosByBorne',
                 views: {
                     byAuthor: {
                         map: function (doc) {
@@ -43,7 +43,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 }
             },
             {
-                _id: '_design/objetsClos',
+                _id: '_design/objetsClosByBorne',
                 views: {
                     byAuthor: {
                         map: function (doc) {

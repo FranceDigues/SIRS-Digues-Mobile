@@ -123,82 +123,6 @@
                                     </div>
                                 </div>
 
-
-                                <!--By borne position-->
-                                <div class="row" ng-if="c.showPositionByBorne"
-                                     ng-controller="ObjectEditPosByBorneController as cp"
-                                     ng-init="cp.setup(save, exit, endSR)">
-                                    <!--Système de repérage début-->
-                                    <div class="sirs-field col col-50">
-                                        <label>Système de repérage début : </label>
-                                        <select id="sr" class="browser-default"
-                                                ng-model="cp.systemeReperage"
-                                                ng-change="cp.selectSR()"
-                                                ng-options="systemeReperage.doc as systemeReperage.doc.libelle for systemeReperage in cp.systemeReperageList">
-                                            <option></option>
-                                        </select>
-                                        <!--                                        <p ng-if="cp.endSR">{{cp.endSR}}</p>-->
-                                        <div ng-if="cp.systemeReperage">
-                                            <label>Borne du système de repérage : </label>
-                                            <select id="sr" class="browser-default"
-                                                    ng-model="cp.data.borneId"
-                                                    ng-options="systemeReperageBorne.borneId as systemeReperageBorne.designation for systemeReperageBorne in cp.systemeReperage.systemeReperageBornes">
-                                                <option></option>
-                                            </select>
-                                        </div>
-                                        <div ng-if="cp.systemeReperage">
-                                            <label for="distance" class="active">Distance à la borne (en mètre)
-                                                : </label>
-                                            <input id="distance" type="number" class="validate"
-                                                   ng-model="cp.data.borne_distance"
-                                                   placeholder=""/>
-                                        </div>
-                                        <div ng-if="cp.systemeReperage">
-                                            <label for="pos" class="active">Position : </label>
-                                            <select id="pos" class="browser-default"
-                                                    ng-model="cp.data.borne_aval">
-                                                <option ng-value="false">Amont</option>
-                                                <option ng-value="true">Aval</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <!--Système de repérage end-->
-                                    <div class="sirs-field col col-50">
-                                        <label>Système de repérage fin : </label>
-                                        <select id="sr" class="browser-default"
-                                                ng-model="cp.systemeReperage"
-                                                ng-change="cp.selectSR()"
-                                                ng-options="systemeReperage.doc as systemeReperage.doc.libelle for systemeReperage in cp.systemeReperageList">
-                                            <option></option>
-                                        </select>
-                                        <!--                                        <p ng-if="cp.endSR">{{cp.endSR}}</p>-->
-                                        <div ng-if="cp.systemeReperage">
-                                            <label>Borne du système de repérage : </label>
-                                            <select id="sr" class="browser-default"
-                                                    ng-model="cp.data.borneId"
-                                                    ng-options="systemeReperageBorne.borneId as systemeReperageBorne.designation for systemeReperageBorne in cp.systemeReperage.systemeReperageBornes">
-                                                <option></option>
-                                            </select>
-                                        </div>
-                                        <div ng-if="cp.systemeReperage">
-                                            <label for="distance" class="active">Distance à la borne (en mètre)
-                                                : </label>
-                                            <input id="distance" type="number" class="validate"
-                                                   ng-model="cp.data.borne_distance"
-                                                   placeholder=""/>
-                                        </div>
-                                        <div ng-if="cp.systemeReperage">
-                                            <label for="pos" class="active">Position : </label>
-                                            <select id="pos" class="browser-default"
-                                                    ng-model="cp.data.borne_aval">
-                                                <option ng-value="false">Amont</option>
-                                                <option ng-value="true">Aval</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-
                                 <!-- Content / Fields / Specific -->
                                 <div class="specific" ng-include="'templates/forms/' +  c.type + '.html'"></div>
                                 <!-- Content / Fields / Description -->
@@ -257,7 +181,6 @@
     <!-- Position Map -->
     <div ng-include="'templates/position_edit.html'" ng-if="c.view === 'map'"
          ng-init="save = c.handlePos; exit = c.backToForm"></div>
-
     <!-- Note -->
     <div ng-include="'templates/note_edit.html'" ng-if="c.view === 'note'"
          ng-init="save = c.saveNote; exit = c.backToForm"></div>
@@ -265,3 +188,59 @@
     <div ng-include="'templates/media.html'" ng-if="c.view === 'media'"
          ng-controller="MediaController as mdc"></div>
 </ion-view>
+
+<script type="text/ng-template" charset="utf-8" id="borne-position.html">
+    <ion-modal-view style="display: block;" ng-controller="ObjectEditPosByBorneController as cp">
+        <ion-header-bar class="bar-secondary">
+            <h1 class="title">Définir une position via une borne</h1>
+            <button class="button button-clear button-positive" ng-click="cp.closeModal()">Annuler</button>
+        </ion-header-bar>
+
+        <!-- Modal content area -->
+        <ion-content style="padding: 0 10px;">
+            <div>
+                <label>Système de repérage : </label>
+                <select id="sr" class="browser-default"
+                        ng-if="!cp.endSR"
+                        ng-model="cp.systemeReperage"
+                        ng-change="cp.selectSR()"
+                        ng-options="systemeReperage.doc as systemeReperage.doc.libelle + ' : ' + systemeReperage.doc._id for systemeReperage in cp.systemeReperageList">
+                    <option></option>
+                </select>
+                <p ng-if="cp.endSR">{{cp.endSR}}</p>
+            </div>
+            <div ng-if="cp.systemeReperage">
+                <label>Borne du système de repérage : </label>
+                <select id="sr" class="browser-default"
+                        ng-model="cp.data.borneId"
+                        ng-options="systemeReperageBorne.borneId as systemeReperageBorne.id for systemeReperageBorne in cp.systemeReperage.systemeReperageBornes">
+                    <option></option>
+                </select>
+            </div>
+            <div ng-if="cp.systemeReperage">
+                <label for="distance" class="active">Distance à la borne (en mètre) : </label>
+                <input id="distance" type="number" class="validate"
+                       ng-model="cp.data.borne_distance"
+                       placeholder=""/>
+            </div>
+            <div ng-if="cp.systemeReperage">
+                <label for="pos" class="active">Position : </label>
+                <select id="pos" class="browser-default"
+                        ng-model="cp.data.borne_aval">
+                    <option ng-value="false">Amont</option>
+                    <option ng-value="true">Aval</option>
+                </select>
+            </div>
+
+
+        </ion-content>
+        <ion-footer-bar class="bar-light">
+            <div class="col col-33 col-offset-66" style="padding: 0;">
+                <a class="waves-effect waves-light btn" ng-click="cp.validate()">
+                    <i class="material-icons right">thumb_up</i>
+                    Valider</a>
+            </div>
+        </ion-footer-bar>
+    </ion-modal-view>
+
+</script>

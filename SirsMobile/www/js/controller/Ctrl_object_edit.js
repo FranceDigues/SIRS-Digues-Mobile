@@ -589,10 +589,16 @@ angular.module('app.controllers.object_edit', [])
             return ol.proj.transform(numbers, dataProjection, 'EPSG:4326');
         }
 
-        self.showPositionByBorne = false;
+        $ionicModal.fromTemplateUrl('borne-position.html', {
+            scope: $scope,
+            animation: 'slide-in-up',
+            backdropClickToClose: false
+        }).then(function (modal) {
+            self.positionBySRModal = modal;
+        });
 
         self.selectPosBySR = function () {
-            self.showPositionByBorne = true;
+            self.positionBySRModal.show();
         };
 
         // Medias
@@ -826,7 +832,7 @@ angular.module('app.controllers.object_edit', [])
             self.exit();
         }
     })
-    .controller('ObjectEditPosByBorneController', function ($rootScope, currentView, PouchService, $timeout, $ionicPopup) {
+    .controller('ObjectEditPosByBorneController', function ($rootScope, $scope, $ionicPopup, currentView, PouchService, $timeout) {
 
         var self = this;
 
@@ -836,10 +842,6 @@ angular.module('app.controllers.object_edit', [])
             borne_aval: '',
             borne_distance: ''
         };
-
-        self.success = angular.noop;
-
-        self.exit = angular.noop;
 
         self.selectSR = function () {
             self.data.systemeRepId = self.systemeReperage._id;
@@ -868,43 +870,54 @@ angular.module('app.controllers.object_edit', [])
             $rootScope.loadingflag = false;
         });
 
-        self.setup = function (success, exit, endSR) {
-            self.success = success;
-            self.exit = exit;
-            self.endSR = endSR;
+        self.endSR = $scope.c.getEndPointSR();
 
-            if (self.endSR) {
-                self.data.systemeRepId = self.endSR;
+        if (self.endSR) {
+            self.data.systemeRepId = self.endSR;
 
-                PouchService.getLocalDB().query('Element/byClassAndLinear', {
-                    startkey: ['fr.sirs.core.model.SystemeReperage'],
-                    endkey: ['fr.sirs.core.model.SystemeReperage', {}],
-                    include_docs: true
-                }).then(function (results) {
-                    $timeout(function () {
-                        self.systemeReperage = self.systemeReperage = results.rows.filter(function (item) {
-                            return item.id === self.endSR;
-                        })[0].doc;
-                        $rootScope.loadingflag = false;
-                    });
-                }).catch(function (err) {
-                    console.log(err);
+            PouchService.getLocalDB().query('Element/byClassAndLinear', {
+                startkey: ['fr.sirs.core.model.SystemeReperage'],
+                endkey: ['fr.sirs.core.model.SystemeReperage', {}],
+                include_docs: true
+            }).then(function (results) {
+                $timeout(function () {
+                    self.systemeReperage = self.systemeReperage = results.rows.filter(function (item) {
+                        return item.id === self.endSR;
+                    })[0].doc;
                     $rootScope.loadingflag = false;
                 });
-            }
-        };
+            }).catch(function (err) {
+                console.log(err);
+                $rootScope.loadingflag = false;
+            });
+        }
 
         self.validate = function () {
             if (self.canValidate()) {
-                self.success(self.data);
-                self.exit();
+                $scope.c.handlePosByBorne(self.data);
+                // self.clear();
+                self.closeModal();
             } else {
                 $ionicPopup.alert({
                     title: 'Validation',
                     template: 'Veuillez renseigner tous les champs obligatoires avant de valider'
                 });
             }
-        }
+        };
+
+        self.closeModal = function () {
+            $scope.c.positionBySRModal.hide();
+        };
+
+        self.clear = function () {
+            self.data = {
+                systemeRepId: '',
+                borneId: '',
+                borne_aval: '',
+                borne_distance: ''
+            };
+            self.systemeReperage = null;
+        };
     })
     .controller('MediaController', function ($window, SirsDoc, $ionicLoading, $filter,
                                              uuid4, $ionicPlatform, $scope, GeolocationService, AuthService) {
