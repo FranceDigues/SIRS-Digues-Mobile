@@ -484,6 +484,7 @@ angular.module('app.controllers.object_edit', [])
                 $ionicLoading.hide();
             }, {
                 maximumAge: 20000,
+                timeout: 50000,
                 enableHighAccuracy: true
             });
         };

@@ -151,6 +151,7 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
                 $ionicLoading.hide();
             }, {
                 maximumAge: 20000,
+                timeout: 50000,
                 enableHighAccuracy: true
             });
         };
