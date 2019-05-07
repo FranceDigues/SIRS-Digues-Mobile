@@ -122,7 +122,7 @@
                             <div class="observateur" ng-switch-when="observateur">
                                 <select id="contactList" class="browser-default" ng-model="c.contact"
                                         ng-change="c.changeContact()">
-                                    <option ng-repeat="contact in c.contactList track by contact.id | orderBy : doc.prenom"
+                                    <option ng-repeat="contact in c.contactList track by contact.id | orderBy : contact.doc.prenom"
                                             ng-selected="contact.id === c.contact"
                                             value="{{contact.id}}">{{contact.doc.prenom}} {{contact.doc.nom}}
                                     </option>

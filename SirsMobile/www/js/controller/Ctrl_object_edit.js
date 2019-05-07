@@ -878,6 +878,22 @@ angular.module('app.controllers.object_edit', [])
             self.systemeReperage = self.systemeReperageList.filter(function (item) {
                 return item.id === self.data.systemeRepId;
             })[0].doc;
+
+
+            PouchService.getLocalDB().query('getBornesIdsHB', {
+                keys: self.systemeReperage.systemeReperageBornes
+                    .map(function (item) {
+                        return item.borneId;
+                    })
+            }).then(function (res) {
+                angular.forEach(self.systemeReperage.systemeReperageBornes, function (item1) {
+                    angular.forEach(res.rows, function (item2) {
+                        if (item1.borneId === item2.id) {
+                            item1.libelle = item2.value.libelle;
+                        }
+                    });
+                });
+            });
         };
 
         self.canValidate = function () {
