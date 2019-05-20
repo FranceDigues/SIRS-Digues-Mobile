@@ -501,6 +501,8 @@ angular.module('app.controllers.object_edit', [])
             delete objectDoc.borne_fin_aval;
             delete objectDoc.borne_fin_distance;
             delete objectDoc.borneFinId;
+            delete self.borneDebutLibelle;
+            delete self.borneFinLibelle;
 
             var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
             // Point case
@@ -542,6 +544,7 @@ angular.module('app.controllers.object_edit', [])
                 objectDoc.borne_fin_aval = data.borne_aval === 'true';
                 objectDoc.borne_fin_distance = data.borne_distance;
                 objectDoc.borneFinId = data.borneId;
+                window.localStorage.setItem('borneDebutLibelle', data.borneLibelle);
             } else {
                 // Linear case
                 if (self.isNew) {
@@ -549,6 +552,7 @@ angular.module('app.controllers.object_edit', [])
                     objectDoc.borne_debut_aval = data.borne_aval === 'true';
                     objectDoc.borne_debut_distance = data.borne_distance;
                     objectDoc.borneDebutId = data.borneId;
+                    window.localStorage.setItem('borneDebutLibelle', data.borneLibelle);
                 } else {
                     if (self.linearPosEditionHandler.startPoint) {
                         objectDoc.systemeRepId = data.systemeRepId;
@@ -556,6 +560,7 @@ angular.module('app.controllers.object_edit', [])
                         objectDoc.borne_debut_distance = data.borne_distance;
                         objectDoc.borneDebutId = data.borneId;
                         self.linearPosEditionHandler.startPoint = false;
+                        window.localStorage.setItem('borneDebutLibelle', data.borneLibelle);
                     }
 
                     if (self.linearPosEditionHandler.endPoint) {
@@ -563,6 +568,7 @@ angular.module('app.controllers.object_edit', [])
                         objectDoc.borne_fin_distance = data.borne_distance;
                         objectDoc.borneFinId = data.borneId;
                         self.linearPosEditionHandler.endPoint = false;
+                        window.localStorage.setItem('borneFinLibelle', data.borneLibelle);
                     }
                 }
             }
@@ -577,11 +583,11 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.getStartPosBorne = function () {
-            return objectDoc.borneDebutId ? objectDoc.borneDebutId : 'à definir';
+            return window.localStorage.getItem('borneDebutLibelle') ? window.localStorage.getItem('borneDebutLibelle') : 'à definir';
         };
 
         self.getEndPosBorne = function () {
-            return objectDoc.borneFinId ? objectDoc.borneFinId : 'à definir';
+            return window.localStorage.getItem('borneFinLibelle') ? window.localStorage.getItem('borneFinLibelle') : 'à definir';
         };
 
         function parsePos(position) {
@@ -606,7 +612,8 @@ angular.module('app.controllers.object_edit', [])
                     systemeRepId: '',
                     borne_aval: '',
                     borne_distance: '',
-                    borneId: ''
+                    borneId: '',
+                    borneLibelle: ''
                 });
             }
 
@@ -616,7 +623,8 @@ angular.module('app.controllers.object_edit', [])
                     systemeRepId: objectDoc.systemeRepId,
                     borne_aval: objectDoc.borne_debut_aval ? 'true' : 'false',
                     borne_distance: objectDoc.borne_debut_distance,
-                    borneId: objectDoc.borneDebutId
+                    borneId: objectDoc.borneDebutId,
+                    borneLibelle: window.localStorage.getItem('borneDebutLibelle') || ''
                 });
             }
             // Edit fin
@@ -625,7 +633,8 @@ angular.module('app.controllers.object_edit', [])
                     systemeRepId: objectDoc.systemeRepId,
                     borne_aval: objectDoc.borne_fin_aval ? 'true' : 'false',
                     borne_distance: objectDoc.borne_fin_distance,
-                    borneId: objectDoc.borneFinId
+                    borneId: objectDoc.borneFinId,
+                    borneLibelle: window.localStorage.getItem('borneFinLibelle')
                 });
             }
 
@@ -869,6 +878,7 @@ angular.module('app.controllers.object_edit', [])
         self.data = {
             systemeRepId: '',
             borneId: '',
+            borneLibelle: '',
             borne_aval: '',
             borne_distance: ''
         };
@@ -894,6 +904,12 @@ angular.module('app.controllers.object_edit', [])
                     });
                 });
             });
+        };
+
+        self.updateBorneLibelle = function () {
+            self.data.borneLibelle = self.systemeReperage.systemeReperageBornes.filter(function (item) {
+                return item.borneId === self.data.borneId;
+            })[0].libelle;
         };
 
         self.canValidate = function () {

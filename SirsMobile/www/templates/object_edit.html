@@ -41,7 +41,7 @@
                                     <div class="sirs-field-inline" ng-if="!c.isLinear">
                                         <span class="sirs-field-title" ng-if="!c.doc.systemeRepId">Position : </span>
                                         <span class="sirs-field-value" ng-if="!c.doc.systemeRepId">{{c.getStartPos() | lonlat:'à définir'}}</span>
-                                        <span class="sirs-field-title" ng-if="c.doc.systemeRepId">Position via le borne : </span>
+                                        <span class="sirs-field-title" ng-if="c.doc.systemeRepId">Position via la borne : {{c.getStartPosBorne()}}</span>
                                     </div>
                                     <div class="sirs-field-inline" ng-if="c.isLinear" style="overflow: hidden;">
                                         <span class="sirs-field-title"
@@ -213,6 +213,7 @@
                 <label>Borne du système de repérage : </label>
                 <select id="sr" class="browser-default"
                         ng-model="cp.data.borneId"
+                        ng-change="cp.updateBorneLibelle()"
                         ng-options="systemeReperageBorne.borneId as systemeReperageBorne.libelle for systemeReperageBorne in cp.systemeReperage.systemeReperageBornes">
                     <option></option>
                 </select>
