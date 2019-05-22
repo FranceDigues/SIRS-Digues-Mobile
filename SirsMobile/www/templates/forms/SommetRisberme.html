@@ -1,65 +1,121 @@
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('materiauId', c.refs.RefMateriau[0])">
         <label for="material" class="active">Matériau</label>
-        <select id="material" class="browser-default" ng-model="c.doc.materiauId">
-            <option ng-if="c.showText('fullName')"
-                    ng-repeat="r in c.refs.RefMateriau track by r.id"
-                    ng-value="r.id">
-                <span>{{r.libelle || ''}}</span>
-            </option>
-            <option ng-if="c.showText('abstract')"
-                    ng-repeat="r in c.refs.RefMateriau track by r.id"
-                    ng-value="r.id">
-                <span>{{r.abrege || r.designation + ' : ' + r.libelle || ''}}</span>
-            </option>
-            <option ng-if="c.showText('both')"
-                    ng-repeat="r in c.refs.RefMateriau track by r.id"
-                    ng-value="r.id">
-                <span>{{r.abrege || r.designation || ''}} : {{r.libelle || ''}}</span>
-            </option>
-        </select>
+
+        <div ng-if="c.showText('fullName')">
+            <select id="material" class="browser-default"
+                    ng-model="c.doc.materiauId"
+                    ng-options="r.id as r.libelle for r in c.refs.RefMateriau">
+            </select>
+        </div>
+
+        <div ng-if="c.showText('abstract')">
+            <select id="material" class="browser-default"
+                    ng-model="c.doc.materiauId"
+                    ng-if="r.abrege"
+                    ng-options="r.id as r.abrege for r in c.refs.RefMateriau">
+            </select>
+
+            <select id="material" class="browser-default"
+                    ng-model="c.doc.materiauId"
+                    ng-if="!r.abrege"
+                    ng-options="r.id as r.designation + ' : ' + r.libelle for r in c.refs.RefMateriau">
+            </select>
+        </div>
+
+        <div ng-if="c.showText('both')">
+            <select id="material" class="browser-default"
+                    ng-model="c.doc.materiauId"
+                    ng-if="r.abrege"
+                    ng-options="r.id as r.abrege + ' : ' + r.libelle for r in c.refs.RefMateriau">
+            </select>
+
+            <select id="material" class="browser-default"
+                    ng-model="c.doc.materiauId"
+                    ng-if="!r.abrege"
+                    ng-options="r.id as r.designation + ' : ' + r.libelle for r in c.refs.RefMateriau">
+            </select>
+        </div>
+
     </div>
     <div class="sirs-field col col-50" ng-init="c.setupRef('natureId', c.refs.RefNature[0])">
         <label for="nature" class="active">Nature</label>
-        <select id="nature" class="browser-default" ng-model="c.doc.natureId">
-            <option ng-if="c.showText('fullName')"
-                    ng-repeat="r in c.refs.RefNature track by r.id"
-                    ng-value="r.id">
-                <span>{{r.libelle || ''}}</span>
-            </option>
-            <option ng-if="c.showText('abstract')"
-                    ng-repeat="r in c.refs.RefNature track by r.id"
-                    ng-value="r.id">
-                <span>{{r.abrege || r.designation + ' : ' + r.libelle || ''}}</span>
-            </option>
-            <option ng-if="c.showText('both')"
-                    ng-repeat="r in c.refs.RefNature track by r.id"
-                    ng-value="r.id">
-                <span>{{r.abrege || r.designation || ''}} : {{r.libelle || ''}}</span>
-            </option>
-        </select>
+
+        <div ng-if="c.showText('fullName')">
+            <select id="nature" class="browser-default"
+                    ng-model="c.doc.natureId"
+                    ng-options="r.id as r.libelle for r in c.refs.RefNature">
+            </select>
+        </div>
+
+        <div ng-if="c.showText('abstract')">
+            <select id="nature" class="browser-default"
+                    ng-model="c.doc.natureId"
+                    ng-if="r.abrege"
+                    ng-options="r.id as r.abrege for r in c.refs.RefNature">
+            </select>
+
+            <select id="nature" class="browser-default"
+                    ng-model="c.doc.natureId"
+                    ng-if="!r.abrege"
+                    ng-options="r.id as r.designation + ' : ' + r.libelle for r in c.refs.RefNature">
+            </select>
+        </div>
+
+        <div ng-if="c.showText('both')">
+            <select id="nature" class="browser-default"
+                    ng-model="c.doc.natureId"
+                    ng-if="r.abrege"
+                    ng-options="r.id as r.abrege + ' : ' + r.libelle for r in c.refs.RefNature">
+            </select>
+
+            <select id="nature" class="browser-default"
+                    ng-model="c.doc.natureId"
+                    ng-if="!r.abrege"
+                    ng-options="r.id as r.designation + ' : ' + r.libelle for r in c.refs.RefNature">
+            </select>
+        </div>
     </div>
 </div>
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('fonctionId', c.refs.RefFonction[0])">
         <label for="function" class="active">Fonction</label>
-        <select id="function" class="browser-default" ng-model="c.doc.fonctionId">
-            <option ng-if="c.showText('fullName')"
-                    ng-repeat="r in c.refs.RefFonction track by r.id"
-                    ng-value="r.id">
-                <span>{{r.libelle || ''}}</span>
-            </option>
-            <option ng-if="c.showText('abstract')"
-                    ng-repeat="r in c.refs.RefFonction track by r.id"
-                    ng-value="r.id">
-                <span>{{r.abrege || r.designation + ' : ' + r.libelle || ''}}</span>
-            </option>
-            <option ng-if="c.showText('both')"
-                    ng-repeat="r in c.refs.RefFonction track by r.id"
-                    ng-value="r.id">
-                <span>{{r.abrege || r.designation || ''}} : {{r.libelle || ''}}</span>
-            </option>
-        </select>
+
+        <div ng-if="c.showText('fullName')">
+            <select id="function" class="browser-default"
+                    ng-model="c.doc.fonctionId"
+                    ng-options="r.id as r.libelle for r in c.refs.RefFonction">
+            </select>
+        </div>
+
+        <div ng-if="c.showText('abstract')">
+            <select id="function" class="browser-default"
+                    ng-model="c.doc.fonctionId"
+                    ng-if="r.abrege"
+                    ng-options="r.id as r.abrege for r in c.refs.RefFonction">
+            </select>
+
+            <select id="function" class="browser-default"
+                    ng-model="c.doc.fonctionId"
+                    ng-if="!r.abrege"
+                    ng-options="r.id as r.designation + ' : ' + r.libelle for r in c.refs.RefFonction">
+            </select>
+        </div>
+
+        <div ng-if="c.showText('both')">
+            <select id="function" class="browser-default"
+                    ng-model="c.doc.fonctionId"
+                    ng-if="r.abrege"
+                    ng-options="r.id as r.abrege + ' : ' + r.libelle for r in c.refs.RefFonction">
+            </select>
+
+            <select id="function" class="browser-default"
+                    ng-model="c.doc.fonctionId"
+                    ng-if="!r.abrege"
+                    ng-options="r.id as r.designation + ' : ' + r.libelle for r in c.refs.RefFonction">
+            </select>
+        </div>
+
     </div>
     <div class="sirs-field col col-50" ng-init="c.doc.epaisseur = c.doc.epaisseur || 0">
         <label for="width" class="active">Epaisseur</label>
@@ -69,22 +125,41 @@
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('coteId', c.refs.RefCote[0])">
         <label for="damSide" class="active">Côté de la digue</label>
-        <select id="damSide" class="browser-default" ng-model="c.doc.coteId">
-            <option ng-if="c.showText('fullName')"
-                    ng-repeat="r in c.refs.RefCote track by r.id"
-                    ng-value="r.id">
-                <span>{{r.libelle || ''}}</span>
-            </option>
-            <option ng-if="c.showText('abstract')"
-                    ng-repeat="r in c.refs.RefCote track by r.id"
-                    ng-value="r.id">
-                <span>{{r.abrege || r.designation + ' : ' + r.libelle || ''}}</span>
-            </option>
-            <option ng-if="c.showText('both')"
-                    ng-repeat="r in c.refs.RefCote track by r.id"
-                    ng-value="r.id">
-                <span>{{r.abrege || r.designation || ''}} : {{r.libelle || ''}}</span>
-            </option>
-        </select>
+
+        <div ng-if="c.showText('fullName')">
+            <select id="damSide" class="browser-default"
+                    ng-model="c.doc.coteId"
+                    ng-options="r.id as r.libelle for r in c.refs.RefCote">
+            </select>
+        </div>
+
+        <div ng-if="c.showText('abstract')">
+            <select id="damSide" class="browser-default"
+                    ng-model="c.doc.coteId"
+                    ng-if="r.abrege"
+                    ng-options="r.id as r.abrege for r in c.refs.RefCote">
+            </select>
+
+            <select id="damSide" class="browser-default"
+                    ng-model="c.doc.coteId"
+                    ng-if="!r.abrege"
+                    ng-options="r.id as r.designation + ' : ' + r.libelle for r in c.refs.RefCote">
+            </select>
+        </div>
+
+        <div ng-if="c.showText('both')">
+            <select id="damSide" class="browser-default"
+                    ng-model="c.doc.coteId"
+                    ng-if="r.abrege"
+                    ng-options="r.id as r.abrege + ' : ' + r.libelle for r in c.refs.RefCote">
+            </select>
+
+            <select id="damSide" class="browser-default"
+                    ng-model="c.doc.coteId"
+                    ng-if="!r.abrege"
+                    ng-options="r.id as r.designation + ' : ' + r.libelle for r in c.refs.RefCote">
+            </select>
+        </div>
+
     </div>
 </div>
