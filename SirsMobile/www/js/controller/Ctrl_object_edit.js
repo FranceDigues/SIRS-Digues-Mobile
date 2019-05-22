@@ -297,7 +297,7 @@ angular.module('app.controllers.object_edit', [])
                                                                       EditionService, objectDoc, refTypes,
                                                                       uuid4, SirsDoc, $ionicModal, orientationsList, $filter,
                                                                       cotesList, $rootScope, listTroncons, MapManager, PouchService,
-                                                                      $timeout, GlobalConfig) {
+                                                                      $timeout, GlobalConfig, localStorageService) {
 
         var self = this;
 
@@ -355,64 +355,17 @@ angular.module('app.controllers.object_edit', [])
             return self.config.showText === type;
         };
 
-        var listeCool = cleanTronconsListe(listTroncons);
+        self.activatedPositionButton = function () {
+            return self.doc && self.doc.linearId;
+        };
 
-        $scope.$watch(function () {
-            return self.doc.positionDebut;
-        }, function (newValue) {
-            if (angular.isDefined(newValue)) {
-                var troncons = calculateDistanceObjectTroncon(
-                    newValue,
-                    listeCool);
-                self.troncons = troncons;
-            }
-        });
+        self.troncons = [];
 
-        function cleanTronconsListe(liste) {
-            var listCool = [];
-            // Get the indexes list of not validated Tronçons
-            angular.forEach(liste, function (elt, ind) {
-                if (elt.value.valid || angular.isDefined(elt.value.geometry)) {
-                    listCool.push(elt);
-                }
-            });
-            return listCool;
-        }
+        self.initTronconList = function () {
+            self.troncons = localStorageService.get("AppTronconsFavorities");
+        };
 
-        function calculateDistanceObjectTroncon(point, liste) {
-            var nearTronconList = [];
-            // geomatryPosition is instance of ol.geom.Point
-            var geomatryPosition = new ol.format.WKT().readGeometry(point, {
-                dataProjection: SirsDoc.get().epsgCode,
-                featureProjection: 'EPSG:3857'
-            });
-
-            var positionCoord = geomatryPosition.getCoordinates();
-            var geom, geomTronc;
-            // Get of the LineStrings from the list of Troncons
-            angular.forEach(liste, function (elt) {
-                try {
-                    geom = new ol.format.WKT().readGeometry(elt.value.geometry, {
-                        dataProjection: SirsDoc.get().epsgCode,
-                        featureProjection: 'EPSG:3857'
-                    });
-                } catch (e) {
-                    console.log(e);
-                }
-                geomTronc = geom.getClosestPoint(positionCoord);
-                // Calculate the distance between two point
-
-                var wgs84Sphere = new ol.Sphere(6378137);
-                // The distance
-                var dist = wgs84Sphere.haversineDistance(ol.proj.transform(positionCoord, 'EPSG:3857', 'EPSG:4326'),
-                    ol.proj.transform(geomTronc, 'EPSG:3857', 'EPSG:4326')) / 1000;
-                if (dist <= 1) {
-                    nearTronconList.push(elt.value);
-                }
-            });
-            // The list of the nearest Troncons
-            return nearTronconList;
-        }
+        self.initTronconList();
 
         self.setupRef = function (field, defaultRef, isMultiple) {
             if (angular.isDefined(objectDoc[field])) {
@@ -444,7 +397,7 @@ angular.module('app.controllers.object_edit', [])
 
             objectDoc.valid = false;
             // return to edit mode
-            objectDoc.linearId = null;
+            // objectDoc.linearId = null;
 
             EditionService.saveObject(objectDoc).then(function () {
                 MapManager.syncAllAppLayer();
@@ -887,16 +840,16 @@ angular.module('app.controllers.object_edit', [])
             self.data.systemeRepId = self.systemeReperageId;
             self.systemeReperage = self.systemeReperageList.filter(function (item) {
                 return item.id === self.data.systemeRepId;
-            })[0].doc;
+            })[0];
 
 
             PouchService.getLocalDB().query('getBornesIdsHB', {
-                keys: self.systemeReperage.systemeReperageBornes
+                keys: self.systemeReperage.value.systemeReperageBornes
                     .map(function (item) {
                         return item.borneId;
                     })
             }).then(function (res) {
-                angular.forEach(self.systemeReperage.systemeReperageBornes, function (item1) {
+                angular.forEach(self.systemeReperage.value.systemeReperageBornes, function (item1) {
                     angular.forEach(res.rows, function (item2) {
                         if (item1.borneId === item2.id) {
                             item1.libelle = item2.value.libelle;
@@ -907,7 +860,7 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.updateBorneLibelle = function () {
-            self.data.borneLibelle = self.systemeReperage.systemeReperageBornes.filter(function (item) {
+            self.data.borneLibelle = self.systemeReperage.value.systemeReperageBornes.filter(function (item) {
                 return item.borneId === self.data.borneId;
             })[0].libelle;
         };
@@ -918,22 +871,6 @@ angular.module('app.controllers.object_edit', [])
                 && self.data.borne_aval
                 && self.data.borne_distance;
         };
-
-        $rootScope.loadingflag = true;
-
-        PouchService.getLocalDB().query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.SystemeReperage'],
-            endkey: ['fr.sirs.core.model.SystemeReperage', {}],
-            include_docs: true
-        }).then(function (results) {
-            $timeout(function () {
-                $rootScope.loadingflag = false;
-                self.systemeReperageList = results.rows;
-            });
-        }).catch(function (err) {
-            console.log(err);
-            $rootScope.loadingflag = false;
-        });
 
         self.validate = function () {
             if (self.canValidate()) {
@@ -954,23 +891,57 @@ angular.module('app.controllers.object_edit', [])
         $scope.$on("borneModalData", function (evt, data) {
             self.data = data;
 
-            if (self.data.systemeRepId) {
-                self.systemeReperageId = self.data.systemeRepId;
-                if ($scope.c.linearPosEditionHandler.endPoint) {
-                    self.endSR = $scope.c.getEndPointSR();
-                } else {
-                    self.endSR = null;
+            var troncon = $scope.c.troncons.find(function (item) {
+                return item.id === $scope.c.doc.linearId;
+            });
+
+            $rootScope.loadingflag = true;
+
+            PouchService.getLocalDB().query('byId', {
+                key: troncon.systemeRepDefautId
+            }).then(function (results) {
+                self.systemeReperageList = results.rows;
+                $rootScope.loadingflag = false;
+
+                if (self.data.systemeRepId) {
+                    self.systemeReperageId = self.data.systemeRepId;
+                    if ($scope.c.linearPosEditionHandler.endPoint) {
+                        self.endSR = $scope.c.getEndPointSR();
+                    } else {
+                        self.endSR = null;
+                    }
+
+                    self.systemeReperage = self.systemeReperageList.filter(function (item) {
+                        return item.id === self.data.systemeRepId;
+                    })[0];
+
+                    PouchService.getLocalDB().query('getBornesIdsHB', {
+                        keys: self.systemeReperage.value.systemeReperageBornes
+                            .map(function (item) {
+                                return item.borneId;
+                            })
+                    }).then(function (res) {
+                        angular.forEach(self.systemeReperage.value.systemeReperageBornes, function (item1) {
+                            angular.forEach(res.rows, function (item2) {
+                                if (item1.borneId === item2.id) {
+                                    item1.libelle = item2.value.libelle;
+                                }
+                            });
+                        });
+                    });
+
                 }
 
-                self.systemeReperage = self.systemeReperageList.filter(function (item) {
-                    return item.id === self.data.systemeRepId;
-                })[0].doc;
+                if (!self.data.systemeRepId) {
+                    self.systemeReperageId = null;
+                }
 
-            }
 
-            if (!self.data.systemeRepId) {
-                self.systemeReperageId = null;
-            }
+            }, function (reason) {
+                console.log(reason);
+                $rootScope.loadingflag = false;
+            });
+
         });
     })
     .controller('MediaController', function ($window, SirsDoc, $ionicLoading, $filter,
@@ -1133,4 +1104,24 @@ angular.module('app.controllers.object_edit', [])
             // Acquire the medias storage path when the device is ready.
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });
-    });
+    })
+    .directive("refCategorie", RefCategorieDirective);
+
+function RefCategorieDirective($filter) {
+    return {
+        restrict: 'A',
+        priority: 100,
+        require: 'ngModel',
+        link: function (scope, element, attrs, ngModel) {
+            if (ngModel) {
+                ngModel.$parsers.push(function (value) {
+                    // return (value | filter:{ categorieId: c.doc.categorieDesordreId }:true)[0]._id
+                });
+
+                ngModel.$formatters.push(function (value) {
+                    return $filter('radToDeg')(value);
+                });
+            }
+        }
+    };
+}

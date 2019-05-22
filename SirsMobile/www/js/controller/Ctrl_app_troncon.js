@@ -131,7 +131,7 @@ function TronconController($timeout, PouchService, AppTronconsService, localStor
             });
         } else {
             $rootScope.loadingflag = true;
-            PouchService.getLocalDB().query('byDigueIdHB', {
+            PouchService.getLocalDB().query('byDigueId', {
                 key: DID
             }).then(function (results) {
                 $timeout(function () {
@@ -147,15 +147,23 @@ function TronconController($timeout, PouchService, AppTronconsService, localStor
 
     self.isActive = function (id) {
         return AppTronconsService.favorites.map(function (item) {
-            return item;
+            return item.id;
         }).indexOf(id) !== -1;
     };
 
-    self.toggleLayer = function (id) {
-        if (self.isActive(id)) {
-            AppTronconsService.favorites.splice(AppTronconsService.favorites.indexOf(id), 1);
+    self.toggleLayer = function (troncon) {
+        if (self.isActive(troncon.id)) {
+            AppTronconsService.favorites.splice(AppTronconsService.favorites
+                .map(function (item) {
+                    return item.id;
+                }).indexOf(troncon.id), 1);
         } else {
-            AppTronconsService.favorites.push(id);
+            AppTronconsService.favorites.push({
+                id: troncon.id,
+                libelle: troncon.value.libelle,
+                systemeRepDefautId: troncon.value.systemeRepDefautId,
+                borneIds: troncon.value.borneIds
+            });
         }
         localStorageService.add("AppTronconsFavorities", AppTronconsService.favorites);
     };

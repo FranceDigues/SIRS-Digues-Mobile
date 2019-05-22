@@ -17,7 +17,8 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             // Local views
             'ElementSpecial',
             'bySEIdHB',
-            'byDigueIdHB',
+            'byDigueId',
+            'byId',
             'getBornesFromTronconID',
             'getBornesIdsHB',
             'byClassAndLinearRef'
@@ -118,12 +119,23 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 }
             },
             {
-                _id: '_design/byDigueIdHB',
+                _id: '_design/byDigueId',
                 views: {
-                    'byDigueIdHB': {
+                    'byDigueId': {
                         map: function (doc) {
                             if (doc['@class'] && doc.digueId) {
-                                emit(doc.digueId, {id: doc._id, libelle: doc.libelle})
+                                emit(doc.digueId, doc)
+                            }
+                        }.toString()
+                    }
+                }
+            }, {
+                _id: '_design/byId',
+                views: {
+                    'byId': {
+                        map: function (doc) {
+                            if (doc._id) {
+                                emit(doc._id, doc)
                             }
                         }.toString()
                     }
