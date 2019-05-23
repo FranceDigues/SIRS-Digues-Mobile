@@ -158,4 +158,9 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
 
         self.locateMe();
 
+        if ($rootScope.reloadMain) {
+            location.reload();
+            delete $rootScope.reloadMain;
+        }
+
     });

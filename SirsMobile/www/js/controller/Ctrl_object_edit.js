@@ -356,7 +356,7 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.activatedPositionButton = function () {
-            return self.doc && self.doc.linearId;
+            return !self.doc || !self.doc.linearId2;
         };
 
         self.troncons = [];
@@ -397,7 +397,7 @@ angular.module('app.controllers.object_edit', [])
 
             objectDoc.valid = false;
             // return to edit mode
-            // objectDoc.linearId = null;
+            objectDoc.linearId = null;
 
             EditionService.saveObject(objectDoc).then(function () {
                 MapManager.syncAllAppLayer();
@@ -798,6 +798,11 @@ angular.module('app.controllers.object_edit', [])
             // Acquire the medias storage path when the device is ready.
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });
+
+        $scope.$on("$destroy", function () {
+            $rootScope.reloadMain = true;
+        });
+
     })
     .controller('ObjectEditPosController', function (currentView) {
 
@@ -892,7 +897,7 @@ angular.module('app.controllers.object_edit', [])
             self.data = data;
 
             var troncon = $scope.c.troncons.find(function (item) {
-                return item.id === $scope.c.doc.linearId;
+                return item.id === $scope.c.doc.linearId2;
             });
 
             $rootScope.loadingflag = true;
