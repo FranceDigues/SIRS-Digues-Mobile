@@ -61,48 +61,80 @@
                             <br>
                             <div class="spacer"></div>
                             <div class="row">
-                                <select ng-model="mdc.mediaOptions.orientationPhoto"
-                                        class="browser-default">
-                                    <option value="" disabled selected>Orientation</option>
-                                    <option ng-if="mdc.showText('fullName')"
-                                            ng-repeat="v in mdc.orientations"
-                                            ng-value="v.id">
-                                        <span>{{v.value.libelle || ''}}</span>
-                                    </option>
-                                    <option ng-if="mdc.showText('abstract')"
-                                            ng-repeat="v in mdc.orientations"
-                                            ng-value="v.id">
-                                        <span>{{v.value.abrege || v.value.designation || ''}}</span>
-                                    </option>
-                                    <option ng-if="mdc.showText('both')"
-                                            ng-repeat="v in mdc.orientations"
-                                            ng-value="v.id">
-                                        <span>{{v.value.libelle || ''}} : {{v.value.abrege || v.value.designation || ''}}</span>
-                                    </option>
-                                </select>
+
+                                <div ng-if="mdc.showText('fullName')">
+                                    <select class="browser-default"
+                                            ng-model="mdc.mediaOptions.orientationPhoto"
+                                            ng-options="v.id as v.value.libelle for v in mdc.orientations">
+                                    </select>
+                                </div>
+
+                                <div ng-if="mdc.showText('abstract')">
+                                    <select class="browser-default"
+                                            ng-model="mdc.mediaOptions.orientationPhoto"
+                                            ng-if="v.value.abrege"
+                                            ng-options="v.id as v.value.abrege for v in mdc.orientations">
+                                    </select>
+
+                                    <select class="browser-default"
+                                            ng-model="mdc.mediaOptions.orientationPhoto"
+                                            ng-if="!v.value.abrege"
+                                            ng-options="v.id as v.value.designation + ' : ' + v.value.libelle for v in mdc.orientations">
+                                    </select>
+                                </div>
+
+                                <div ng-if="mdc.showText('both')">
+                                    <select class="browser-default"
+                                            ng-model="mdc.mediaOptions.orientationPhoto"
+                                            ng-if="v.value.abrege"
+                                            ng-options="v.id as v.value.abrege + ' : ' + v.value.libelle for v in mdc.orientations">
+                                    </select>
+
+                                    <select class="browser-default"
+                                            ng-model="mdc.mediaOptions.orientationPhoto"
+                                            ng-if="!v.value.abrege"
+                                            ng-options="v.id as v.value.designation + ' : ' + v.value.libelle for v in mdc.orientations">
+                                    </select>
+                                </div>
+
                                 <br>
 
-                                <select ng-model="mdc.mediaOptions.coteId"
-                                        class="browser-default">
-                                    <option value="" disabled selected>Côté</option>
+                                <div ng-if="mdc.showText('fullName')">
+                                    <select class="browser-default"
+                                            ng-model="mdc.mediaOptions.coteId"
+                                            ng-options="v.id as v.value.libelle for v in mdc.cotes">
+                                    </select>
+                                </div>
 
+                                <div ng-if="mdc.showText('abstract')">
+                                    <select class="browser-default"
+                                            ng-model="mdc.mediaOptions.coteId"
+                                            ng-if="v.value.abrege"
+                                            ng-options="v.id as v.value.abrege for v in mdc.cotes">
+                                    </select>
 
-                                    <option ng-if="mdc.showText('fullName')"
-                                            ng-repeat="vv in mdc.cotes"
-                                            ng-value="vv.id">
-                                        <span>{{vv.value.libelle || ''}}</span>
-                                    </option>
-                                    <option ng-if="mdc.showText('abstract')"
-                                            ng-repeat="vv in mdc.cotes"
-                                            ng-value="vv.id">
-                                        <span>{{vv.value.abrege || vv.value.designation || ''}}</span>
-                                    </option>
-                                    <option ng-if="mdc.showText('both')"
-                                            ng-repeat="vv in mdc.cotes"
-                                            ng-value="vv.id">
-                                        <span>{{vv.value.libelle || ''}} : {{vv.value.abrege || vv.value.designation || ''}}</span>
-                                    </option>
-                                </select><br>
+                                    <select class="browser-default"
+                                            ng-model="mdc.mediaOptions.coteId"
+                                            ng-if="!v.value.abrege"
+                                            ng-options="v.id as v.value.designation + ' : ' + v.value.libelle for v in mdc.cotes">
+                                    </select>
+                                </div>
+
+                                <div ng-if="mdc.showText('both')">
+                                    <select class="browser-default"
+                                            ng-model="mdc.mediaOptions.coteId"
+                                            ng-if="v.value.abrege"
+                                            ng-options="v.id as v.value.abrege + ' : ' + v.value.libelle for v in mdc.cotes">
+                                    </select>
+
+                                    <select class="browser-default"
+                                            ng-model="mdc.mediaOptions.coteId"
+                                            ng-if="!v.value.abrege"
+                                            ng-options="v.id as v.value.designation + ' : ' + v.value.libelle for v in mdc.cotes">
+                                    </select>
+                                </div>
+
+                                <br>
                             </div>
 
                             <div class="row">
