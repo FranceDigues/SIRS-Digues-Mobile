@@ -438,7 +438,7 @@ angular.module('app.services.map', ['app.services.context'])
                     var keys = [];
                     if (favorites !== null && favorites.length !== 0) {
                         angular.forEach(favorites, function (key) {
-                            keys.push([layerModel.filterValue, key]);
+                            keys.push([layerModel.filterValue, key.id]);
                         });
 
                         promise = LocalDocument.query('ElementSpecial', {
@@ -460,7 +460,10 @@ angular.module('app.services.map', ['app.services.context'])
                     }
                 } else if (layerModel.filterValue === "fr.sirs.core.model.TronconDigue") {
                     promise = LocalDocument.query('TronconDigue/streamLight', {
-                        keys: localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService.get("AppTronconsFavorities")
+                        keys: localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService
+                            .get("AppTronconsFavorities").map(function (item) {
+                                return item.id;
+                            })
                     }).then(
                         function (results) {
                             return results.map(createAppFeatureModel);
@@ -471,7 +474,10 @@ angular.module('app.services.map', ['app.services.context'])
                 } else {
 
                     promise = LocalDocument.query('getBornesFromTronconID', {
-                        keys: localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService.get("AppTronconsFavorities")
+                        keys: localStorageService.get("AppTronconsFavorities") === null ? [] : localStorageService
+                            .get("AppTronconsFavorities").map(function (item) {
+                                return item.id;
+                            })
                     }).then(
                         function (results) {
                             return LocalDocument.query('getBornesIdsHB', {
