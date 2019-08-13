@@ -4,12 +4,12 @@
         <div ng-if="c.showText('fullName')">
             <select id="topMaterial" class="browser-default"
                     ng-model="c.doc.materiauHautId"
-                    ng-options="r.id as r.libelle for r in c.refs.RefMateriau">
+                    ng-options="r.id as r.libelle for r in c.refs.RefMateriau.sort(c.compareRef)">
             </select>
         </div>
         <div ng-if="c.showText('abstract')">
             <select id="topMaterial" class="browser-default">
-                <option ng-repeat="r in c.refs.RefMateriau track by r.id"
+                <option ng-repeat="r in c.refs.RefMateriau.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.materiauHautId"
                         ng-selected="c.doc.materiauHautId === r.id">
@@ -19,7 +19,7 @@
         </div>
         <div ng-if="c.showText('both')">
             <select id="topMaterial" class="browser-default">
-                <option ng-repeat="r in c.refs.RefMateriau track by r.id"
+                <option ng-repeat="r in c.refs.RefMateriau.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.materiauHautId"
                         ng-selected="c.doc.materiauHautId === r.id">
@@ -33,12 +33,12 @@
         <div ng-if="c.showText('fullName')">
             <select id="lowMaterial" class="browser-default"
                     ng-model="c.doc.materiauBasId"
-                    ng-options="r.id as r.libelle for r in c.refs.RefMateriau">
+                    ng-options="r.id as r.libelle for r in c.refs.RefMateriau.sort(c.compareRef)">
             </select>
         </div>
         <div ng-if="c.showText('abstract')">
             <select id="lowMaterial" class="browser-default">
-                <option ng-repeat="r in c.refs.RefMateriau track by r.id"
+                <option ng-repeat="r in c.refs.RefMateriau.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.materiauBasId"
                         ng-selected="c.doc.materiauBasId === r.id">
@@ -48,7 +48,7 @@
         </div>
         <div ng-if="c.showText('both')">
             <select id="lowMaterial" class="browser-default">
-                <option ng-repeat="r in c.refs.RefMateriau track by r.id"
+                <option ng-repeat="r in c.refs.RefMateriau.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.materiauBasId"
                         ng-selected="c.doc.materiauBasId === r.id">
@@ -64,12 +64,12 @@
         <div ng-if="c.showText('fullName')">
             <select id="topNature" class="browser-default"
                     ng-model="c.doc.natureHautId"
-                    ng-options="r.id as r.libelle for r in c.refs.RefNature">
+                    ng-options="r.id as r.libelle for r in c.refs.RefNature.sort(c.compareRef)">
             </select>
         </div>
         <div ng-if="c.showText('abstract')">
             <select id="topNature" class="browser-default">
-                <option ng-repeat="r in c.refs.RefNature track by r.id"
+                <option ng-repeat="r in c.refs.RefNature.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.natureHautId"
                         ng-selected="c.doc.natureHautId === r.id">
@@ -79,7 +79,7 @@
         </div>
         <div ng-if="c.showText('both')">
             <select id="topNature" class="browser-default">
-                <option ng-repeat="r in c.refs.RefNature track by r.id"
+                <option ng-repeat="r in c.refs.RefNature.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.natureHautId"
                         ng-selected="c.doc.natureHautId === r.id">
@@ -93,12 +93,12 @@
         <div ng-if="c.showText('fullName')">
             <select id="lowNature" class="browser-default"
                     ng-model="c.doc.natureBasId"
-                    ng-options="r.id as r.libelle for r in c.refs.RefNature">
+                    ng-options="r.id as r.libelle for r in c.refs.RefNature.sort(c.compareRef)">
             </select>
         </div>
         <div ng-if="c.showText('abstract')">
             <select id="lowNature" class="browser-default">
-                <option ng-repeat="r in c.refs.RefNature track by r.id"
+                <option ng-repeat="r in c.refs.RefNature.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.natureBasId"
                         ng-selected="c.doc.natureBasId === r.id">
@@ -108,7 +108,7 @@
         </div>
         <div ng-if="c.showText('both')">
             <select id="lowNature" class="browser-default">
-                <option ng-repeat="r in c.refs.RefNature track by r.id"
+                <option ng-repeat="r in c.refs.RefNature.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.natureBasId"
                         ng-selected="c.doc.natureBasId === r.id">
@@ -144,12 +144,12 @@
         <div ng-if="c.showText('fullName')">
             <select id="topFunction" class="browser-default"
                     ng-model="c.doc.fonctionHautId"
-                    ng-options="r.id as r.libelle for r in c.refs.RefFonction">
+                    ng-options="r.id as r.libelle for r in c.refs.RefFonction.sort(c.compareRef)">
             </select>
         </div>
         <div ng-if="c.showText('abstract')">
             <select id="topFunction" class="browser-default">
-                <option ng-repeat="r in c.refs.RefFonction track by r.id"
+                <option ng-repeat="r in c.refs.RefFonction.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.fonctionHautId"
                         ng-selected="c.doc.fonctionHautId === r.id">
@@ -159,7 +159,7 @@
         </div>
         <div ng-if="c.showText('both')">
             <select id="topFunction" class="browser-default">
-                <option ng-repeat="r in c.refs.RefFonction track by r.id"
+                <option ng-repeat="r in c.refs.RefFonction.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.fonctionHautId"
                         ng-selected="c.doc.fonctionHautId === r.id">
@@ -173,12 +173,12 @@
         <div ng-if="c.showText('fullName')">
             <select id="lowFunction" class="browser-default"
                     ng-model="c.doc.fonctionBasId"
-                    ng-options="r.id as r.libelle for r in c.refs.RefFonction">
+                    ng-options="r.id as r.libelle for r in c.refs.RefFonction.sort(c.compareRef)">
             </select>
         </div>
         <div ng-if="c.showText('abstract')">
             <select id="lowFunction" class="browser-default">
-                <option ng-repeat="r in c.refs.RefFonction track by r.id"
+                <option ng-repeat="r in c.refs.RefFonction.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.fonctionBasId"
                         ng-selected="c.doc.fonctionBasId === r.id">
@@ -188,7 +188,7 @@
         </div>
         <div ng-if="c.showText('both')">
             <select id="lowFunction" class="browser-default">
-                <option ng-repeat="r in c.refs.RefFonction track by r.id"
+                <option ng-repeat="r in c.refs.RefFonction.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.fonctionBasId"
                         ng-selected="c.doc.fonctionBasId === r.id">
@@ -204,12 +204,12 @@
         <div ng-if="c.showText('fullName')">
             <select id="damSide" class="browser-default"
                     ng-model="c.doc.coteId"
-                    ng-options="r.id as r.libelle for r in c.refs.RefCote">
+                    ng-options="r.id as r.libelle for r in c.refs.RefCote.sort(c.compareRef)">
             </select>
         </div>
         <div ng-if="c.showText('abstract')">
             <select id="damSide" class="browser-default">
-                <option ng-repeat="r in c.refs.RefCote track by r.id"
+                <option ng-repeat="r in c.refs.RefCote.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.coteId"
                         ng-selected="c.doc.coteId === r.id">
@@ -219,7 +219,7 @@
         </div>
         <div ng-if="c.showText('both')">
             <select id="damSide" class="browser-default">
-                <option ng-repeat="r in c.refs.RefCote track by r.id"
+                <option ng-repeat="r in c.refs.RefCote.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.coteId"
                         ng-selected="c.doc.coteId === r.id">

@@ -77,27 +77,37 @@
 
                             <!-- Content / urgence -->
                             <div class="urgence" ng-switch-when="urgence">
-                                <select id="urgenceList" class="browser-default" ng-model="c.urgence"
-                                        ng-change="c.changeUrgence()">
-                                    <option ng-if="c.showText('fullName')"
-                                            ng-repeat="urgence in c.urgenceList track by urgence.id"
-                                            ng-selected="urgence.id === c.urgence"
-                                            ng-value="urgence.id">
-                                        <span>{{urgence.libelle || ''}}</span>
-                                    </option>
-                                    <option ng-if="c.showText('abstract')"
-                                            ng-repeat="urgence in c.urgenceList track by urgence.id"
-                                            ng-selected="urgence.id === c.urgence"
-                                            ng-value="urgence.id">
-                                        <span>{{urgence.abrege || urgence.designation || ''}}</span>
-                                    </option>
-                                    <option ng-if="c.showText('both')"
-                                            ng-repeat="urgence in c.urgenceList track by urgence.id"
-                                            ng-selected="urgence.id === c.urgence"
-                                            ng-value="urgence.id">
-                                        <span>{{urgence.libelle || ''}} : {{urgence.abrege || urgence.designation || ''}}</span>
-                                    </option>
-                                </select>
+                                <div ng-if="c.showText('fullName')">
+                                    <select id="urgenceList" class="browser-default"
+                                            ng-model="c.urgence"
+                                            ng-options="urgence.id as urgence.libelle for urgence  in c.urgenceList.sort(c.compareRef)"
+                                            ng-change="c.changeUrgence()">
+                                    </select>
+                                </div>
+                                <div ng-if="c.showText('abstract')">
+                                    <select id="urgenceList" class="browser-default">
+                                        <option ng-repeat="urgence in c.urgenceList.sort(c.compareRef) track by urgence.id"
+                                                ng-value="urgence.id"
+                                                ng-model="c.urgence"
+                                                ng-change="c.changeUrgence()"
+                                                ng-selected="c.urgence === urgence.id">
+                                            {{urgence.abrege ? urgence.abrege : urgence.designation + ' : ' +
+                                            urgence.libelle}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="c.showText('both')">
+                                    <select id="urgenceList" class="browser-default">
+                                        <option ng-repeat="urgence in c.urgenceList.sort(c.compareRef) track by urgence.id"
+                                                ng-value="urgence.id"
+                                                ng-model="c.urgence"
+                                                ng-change="c.changeUrgence()"
+                                                ng-selected="c.urgence === urgence.id">
+                                            {{urgence.abrege ? (urgence.abrege + ' : ' + urgence.libelle) :
+                                            (urgence.designation + ' : ' + urgence.libelle)}}
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
 
                             <!-- Content / nombre -->
@@ -122,7 +132,7 @@
                             <div class="observateur" ng-switch-when="observateur">
                                 <select id="contactList" class="browser-default" ng-model="c.contact"
                                         ng-change="c.changeContact()">
-                                    <option ng-repeat="contact in c.contactList track by contact.id | orderBy : contact.doc.prenom"
+                                    <option ng-repeat="contact in c.contactList | orderBy : 'doc.prenom'"
                                             ng-selected="contact.id === c.contact"
                                             value="{{contact.id}}">{{contact.doc.prenom}} {{contact.doc.nom}}
                                     </option>

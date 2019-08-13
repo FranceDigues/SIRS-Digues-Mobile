@@ -4,12 +4,12 @@
         <div ng-if="c.showText('fullName')">
             <select id="width" class="browser-default"
                     ng-model="c.doc.typeLargeurFrancBord"
-                    ng-options="r.id as r.libelle for r in c.refs.RefLargeurFrancBord">
+                    ng-options="r.id as r.libelle for r in c.refs.RefLargeurFrancBord.sort(c.compareRef)">
             </select>
         </div>
         <div ng-if="c.showText('abstract')">
             <select id="width" class="browser-default">
-                <option ng-repeat="r in c.refs.RefLargeurFrancBord track by r.id"
+                <option ng-repeat="r in c.refs.RefLargeurFrancBord.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.typeLargeurFrancBord"
                         ng-selected="c.doc.typeLargeurFrancBord === r.id">
@@ -19,7 +19,7 @@
         </div>
         <div ng-if="c.showText('both')">
             <select id="width" class="browser-default">
-                <option ng-repeat="r in c.refs.RefLargeurFrancBord track by r.id"
+                <option ng-repeat="r in c.refs.RefLargeurFrancBord.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.typeLargeurFrancBord"
                         ng-selected="c.doc.typeLargeurFrancBord === r.id">

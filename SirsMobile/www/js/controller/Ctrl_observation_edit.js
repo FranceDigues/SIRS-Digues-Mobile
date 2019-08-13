@@ -75,6 +75,26 @@ angular.module('app.controllers.observation_edit', [])
             self.doc.observateurId = self.contact;
         };
 
+        self.compareRef = function (obj1, obj2) {
+            var a, b, comparison;
+            comparison = 0;
+            if (self.showText('fullName')) {
+                a = obj1.libelle;
+                b = obj2.libelle;
+            } else {
+                a = obj1.abrege ? obj1.abrege : obj1.designation;
+                b = obj2.abrege ? obj2.abrege : obj2.designation;
+            }
+
+            if (a > b) {
+                comparison = 1;
+            } else if (a < b) {
+                comparison = -1;
+            }
+
+            return comparison;
+        };
+
         self.contact = self.doc.observateurId;
 
         //@hb
