@@ -293,27 +293,28 @@ angular.module('app.controllers.observation_edit', [])
         };
 
         self.save = function () {
-            $scope.c.doc.photos.push(self.mediaOptions);
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function () {
-                var reader = new FileReader();
-                reader.onloadend = function () {
-                    if (angular.isUndefined($scope.c.objectDoc._attachments)) {
-                        $scope.c.objectDoc._attachments = {};
-                    }
-                    // Save the photo like attachment to the object
-                    $scope.c.objectDoc._attachments[self.mediaOptions.id] = {
-                        content_type: 'image/jpeg',
-                        data: reader.result.replace('data:image/jpeg;base64,', '')
+            if (self.mediaOptions.id) {
+                $scope.c.doc.photos.push(self.mediaOptions);
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function () {
+                    var reader = new FileReader();
+                    reader.onloadend = function () {
+                        if (angular.isUndefined($scope.c.objectDoc._attachments)) {
+                            $scope.c.objectDoc._attachments = {};
+                        }
+                        // Save the photo like attachment to the object
+                        $scope.c.objectDoc._attachments[self.mediaOptions.id] = {
+                            content_type: 'image/jpeg',
+                            data: reader.result.replace('data:image/jpeg;base64,', '')
+                        };
                     };
+
+                    reader.readAsDataURL(xhr.response);
                 };
-
-                reader.readAsDataURL(xhr.response);
-            };
-            xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length - 1]));
-            xhr.responseType = 'blob';
-            xhr.send();
-
+                xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length - 1]));
+                xhr.responseType = 'blob';
+                xhr.send();
+            }
             $scope.c.setView('form');
         };
 
@@ -387,7 +388,7 @@ angular.module('app.controllers.observation_edit', [])
             imageFile.file(function (fileObj) {
                 if (fileObj.size > 1048576) {
                     $cordovaToast
-                        .showLongTop("S'il vous plaît, il faut choisir une image inférieure à 1,2 Mo");
+                        .showLongTop("Veuillez sélectionner une photo de taille inférieure à 1,2 Mo");
                 } else {
                     if (!self.mediaPath) {
                         return;

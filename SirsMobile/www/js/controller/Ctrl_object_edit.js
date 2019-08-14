@@ -946,6 +946,11 @@ angular.module('app.controllers.object_edit', [])
                         return item.id === self.data.systemeRepId;
                     })[0];
 
+                    if (!self.systemeReperage) {
+                        $rootScope.loadingflag = false;
+                        return;
+                    }
+
                     PouchService.getLocalDB().query('getBornesIdsHB', {
                         keys: self.systemeReperage.value.systemeReperageBornes
                             .map(function (item) {
@@ -960,7 +965,6 @@ angular.module('app.controllers.object_edit', [])
                             });
                         });
                     });
-
                 }
 
                 if (!self.data.systemeRepId) {

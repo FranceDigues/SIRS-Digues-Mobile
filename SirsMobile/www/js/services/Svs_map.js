@@ -570,8 +570,18 @@ angular.module('app.services.map', ['app.services.context'])
         function setEditionLayerFeatures(olLayer) {
             var olSource = olLayer.getSource().getSource();
             // Display only the closed objects
-            EditionService.getClosedObjects().then(
+            // EditionService.getClosedObjects().then(
+            //     function onSuccess(results) {
+            //         olSource.clear();
+            //         olSource.addFeatures(createEditionFeatureInstances(results));
+            //     },
+            //     function onError(error) {
+            //         // TODO → handle error
+            //     });
+
+            EditionService.getEditionModeObjects().then(
                 function onSuccess(results) {
+                    console.debug('getEditionModeObjects : ', results);
                     olSource.clear();
                     olSource.addFeatures(createEditionFeatureInstances(results));
                 },

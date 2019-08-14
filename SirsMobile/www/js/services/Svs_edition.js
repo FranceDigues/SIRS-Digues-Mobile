@@ -78,6 +78,12 @@ angular.module('app.services.edition', ['app.services.context'])
                     });
                 },
 
+                getEditionModeObjects: function () {
+                    return LocalDocument.query('objetsModeEdition/objetsModeEdition', {
+                        include_docs: true
+                    });
+                },
+
                 getReferenceTypes: function () {
                     var promises = {};
 

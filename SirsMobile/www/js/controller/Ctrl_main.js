@@ -4,7 +4,7 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
                                                           sirsDoc, AuthService, SidePanelService,
                                                           $scope, $rootScope, $ionicLoading, AppLayersService, $interval,
                                                           EditionService, MapManager, $cordovaToast,
-                                                          $ionicPlatform, $window, $timeout) {
+                                                          $ionicPlatform, $window, $timeout, olMap) {
 
         var self = this;
 
@@ -162,5 +162,31 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
             location.reload();
             delete $rootScope.reloadMain;
         }
+
+
+        function onMoveEnd(evt) {
+            var map = evt.map;
+            var center = map.getView().getCenter();
+            var zoom = map.getView().getZoom();
+            localStorage.setItem('current_view', JSON.stringify({
+                center: center,
+                zoom: zoom
+            }));
+        }
+
+        self.addMapEvent = function () {
+            setTimeout(function () {
+                if (localStorage.getItem('current_view')) {
+                    console.log('Map view : ', JSON.parse(localStorage.getItem('current_view')));
+                    // olMap.get('main').setView({
+                    //     center: JSON.parse(localStorage.getItem('current_view')).center,
+                    //     zoom: JSON.parse(localStorage.getItem('current_view')).zoom
+                    // });
+                }
+
+                olMap.get('main').on('moveend', onMoveEnd);
+            }, 5000);
+        };
+
 
     });
