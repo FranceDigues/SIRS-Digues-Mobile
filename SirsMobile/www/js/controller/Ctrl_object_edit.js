@@ -566,6 +566,8 @@ angular.module('app.controllers.object_edit', [])
                     objectDoc.borne_debut_distance = data.borne_distance;
                     objectDoc.borneDebutId = data.borneId;
                     objectDoc.borneDebutLibelle = data.borneLibelle;
+                    // Calculate the approximate position
+                    objectDoc.approximatePositionDebut = data.approximatePosition;
                 } else {
                     if (self.linearPosEditionHandler.startPoint) {
                         objectDoc.systemeRepId = data.systemeRepId;
@@ -574,6 +576,8 @@ angular.module('app.controllers.object_edit', [])
                         objectDoc.borneDebutId = data.borneId;
                         self.linearPosEditionHandler.startPoint = false;
                         objectDoc.borneDebutLibelle = data.borneLibelle;
+                        // Calculate the approximate position
+                        objectDoc.approximatePositionDebut = data.approximatePosition;
                     }
 
                     if (self.linearPosEditionHandler.endPoint) {
@@ -582,6 +586,8 @@ angular.module('app.controllers.object_edit', [])
                         objectDoc.borneFinId = data.borneId;
                         self.linearPosEditionHandler.endPoint = false;
                         objectDoc.borneFinLibelle = data.borneLibelle;
+                        // Calculate the approximate position
+                        objectDoc.approximatePositionFin = data.approximatePosition;
                     }
                 }
             }
@@ -627,7 +633,7 @@ angular.module('app.controllers.object_edit', [])
                 $rootScope.$broadcast("borneModalData", {
                     systemeRepId: '',
                     borne_aval: '',
-                    borne_distance: '',
+                    borne_distance: 0,
                     borneId: '',
                     borneLibelle: ''
                 });
@@ -892,7 +898,7 @@ angular.module('app.controllers.object_edit', [])
             self.exit();
         }
     })
-    .controller('ObjectEditPosByBorneController', function ($rootScope, $scope, $ionicPopup, currentView, PouchService, $timeout) {
+    .controller('ObjectEditPosByBorneController', function ($rootScope, $scope, $ionicPopup, currentView, PouchService) {
 
         var self = this;
         var wktFormat = new ol.format.WKT();
@@ -902,7 +908,7 @@ angular.module('app.controllers.object_edit', [])
             borneId: '',
             borneLibelle: '',
             borne_aval: '',
-            borne_distance: '',
+            borne_distance: 0,
             approximatePosition: ''
         };
 
@@ -982,7 +988,7 @@ angular.module('app.controllers.object_edit', [])
             return self.data.systemeRepId
                 && self.data.borneId
                 && self.data.borne_aval
-                && self.data.borne_distance;
+                && self.data.borne_distance > -1;
         };
 
         self.validate = function () {

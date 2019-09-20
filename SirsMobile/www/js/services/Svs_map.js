@@ -533,10 +533,11 @@ angular.module('app.services.map', ['app.services.context'])
             var geometry;
             var dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
             geometry = wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut);
-            if (geometry && featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut)) {
+            if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
+                || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
                 geometry = new ol.geom.LineString([
                     geometry.getFirstCoordinate(),
-                    wktFormat.readGeometry(featureDoc.positionFin).getFirstCoordinate()
+                    wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin).getFirstCoordinate()
                 ]);
             }
 
@@ -568,19 +569,8 @@ angular.module('app.services.map', ['app.services.context'])
         // Set the layer that contains the new objects of the edition mode
         function setEditionLayerFeatures(olLayer) {
             var olSource = olLayer.getSource().getSource();
-            // Display only the closed objects
-            // EditionService.getClosedObjects().then(
-            //     function onSuccess(results) {
-            //         olSource.clear();
-            //         olSource.addFeatures(createEditionFeatureInstances(results));
-            //     },
-            //     function onError(error) {
-            //         // TODO → handle error
-            //     });
-
             EditionService.getEditionModeObjects().then(
                 function onSuccess(results) {
-                    console.debug('getEditionModeObjects : ', results);
                     olSource.clear();
                     olSource.addFeatures(createEditionFeatureInstances(results));
                 },

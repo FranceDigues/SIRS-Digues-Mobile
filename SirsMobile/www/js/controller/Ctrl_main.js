@@ -163,7 +163,6 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
             delete $rootScope.reloadMain;
         }
 
-
         function onMoveEnd(evt) {
             var map = evt.map;
             var center = map.getView().getCenter();
@@ -177,15 +176,12 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
         self.addMapEvent = function () {
             setTimeout(function () {
                 if (localStorage.getItem('current_view')) {
-                    console.log('Map view : ', JSON.parse(localStorage.getItem('current_view')));
-                    // olMap.get('main').setView({
-                    //     center: JSON.parse(localStorage.getItem('current_view')).center,
-                    //     zoom: JSON.parse(localStorage.getItem('current_view')).zoom
-                    // });
+                    olMap.get('main').getView().setZoom(JSON.parse(localStorage.getItem('current_view')).zoom);
+                    olMap.get('main').getView().setCenter(JSON.parse(localStorage.getItem('current_view')).center);
                 }
 
                 olMap.get('main').on('moveend', onMoveEnd);
-            }, 5000);
+            }, 1000);
         };
 
 
