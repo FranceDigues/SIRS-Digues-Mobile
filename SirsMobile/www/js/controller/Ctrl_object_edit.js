@@ -554,6 +554,10 @@ angular.module('app.controllers.object_edit', [])
                 objectDoc.borneFinId = data.borneId;
                 objectDoc.borneDebutLibelle = data.borneLibelle;
                 objectDoc.borneFinLibelle = data.borneLibelle;
+                // Calculate the approximate position
+                objectDoc.approximatePositionDebut = data.approximatePosition;
+                objectDoc.approximatePositionFin = data.approximatePosition;
+
             } else {
                 // Linear case
                 if (self.isNew) {
@@ -891,13 +895,15 @@ angular.module('app.controllers.object_edit', [])
     .controller('ObjectEditPosByBorneController', function ($rootScope, $scope, $ionicPopup, currentView, PouchService, $timeout) {
 
         var self = this;
+        var wktFormat = new ol.format.WKT();
 
         self.data = {
             systemeRepId: '',
             borneId: '',
             borneLibelle: '',
             borne_aval: '',
-            borne_distance: ''
+            borne_distance: '',
+            approximatePosition: ''
         };
 
         self.selectSR = function () {
@@ -917,6 +923,7 @@ angular.module('app.controllers.object_edit', [])
                     angular.forEach(res.rows, function (item2) {
                         if (item1.borneId === item2.id) {
                             item1.libelle = item2.value.libelle;
+                            item1.borneGeometry = item2.value.geometry;
                         }
                     });
                 });
@@ -926,9 +933,49 @@ angular.module('app.controllers.object_edit', [])
 
         self.updateBorneLibelle = function () {
             self.data.borneId = self.borneId;
-            self.data.borneLibelle = self.systemeReperage.value.systemeReperageBornes.filter(function (item) {
+
+            var index = self.systemeReperage.value.systemeReperageBornes.findIndex(function (item) {
                 return item.borneId === self.data.borneId;
-            })[0].libelle;
+            });
+
+            var srb = self.systemeReperage.value.systemeReperageBornes[index];
+
+            self.data.borneLibelle = srb.libelle;
+
+        };
+
+        self.calculateApproximatePosition = function () {
+            var index = self.systemeReperage.value.systemeReperageBornes.findIndex(function (item) {
+                return item.borneId === self.data.borneId;
+            });
+
+            var srb = self.systemeReperage.value.systemeReperageBornes[index];
+
+            // Calculate approximate position
+            var x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
+            var y;
+
+            if (self.data.borne_aval === "true") {
+                y = (index === self.systemeReperage.value.systemeReperageBornes.length - 1)
+                    ? wktFormat.readGeometry(self.systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                    : wktFormat.readGeometry(self.systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
+            } else {
+                y = (index === 0)
+                    ? wktFormat.readGeometry(self.systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                    : wktFormat.readGeometry(self.systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
+            }
+
+            var v = glMatrix.vec2.sub([], y, x);
+
+            var vn = glMatrix.vec2.normalize(v, v);
+
+            var vs = glMatrix.vec2.scale(vn, vn, self.data.borne_distance);
+
+            var o = glMatrix.vec2.add([], x, vs);
+
+            console.log(o);
+
+            return 'POINT(' + o[0] + ' ' + o[1] + ')';
         };
 
         self.canValidate = function () {
@@ -940,6 +987,7 @@ angular.module('app.controllers.object_edit', [])
 
         self.validate = function () {
             if (self.canValidate()) {
+                self.data.approximatePosition = self.calculateApproximatePosition();
                 $scope.c.handlePosByBorne(self.data);
                 self.closeModal();
             } else {
@@ -1000,6 +1048,7 @@ angular.module('app.controllers.object_edit', [])
                             angular.forEach(res.rows, function (item2) {
                                 if (item1.borneId === item2.id) {
                                     item1.libelle = item2.value.libelle;
+                                    item1.borneGeometry = item2.value.geometry;
                                 }
                             });
                         });

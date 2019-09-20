@@ -337,7 +337,6 @@ angular.module('app.services.map', ['app.services.context'])
         }
 
         function createAppFeatureModel(featureDoc) {
-            // featureDoc = featureDoc.value || featureDoc;
             featureDoc = featureDoc.doc || featureDoc.value; // depending on "include_docs" option when querying docs
 
             var dataProjection = angular.isUndefined(SirsDoc.get().epsgCode) ? "EPSG:2154" : SirsDoc.get().epsgCode;
@@ -531,15 +530,15 @@ angular.module('app.services.map', ['app.services.context'])
         // Create the feature of the edition layer
         function createEditionFeatureInstance(featureDoc) {
             // Compute geometry.
-            var geometry = wktFormat.readGeometry(featureDoc.positionDebut);
+            var geometry;
+            var dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
+            geometry = wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut);
             if (geometry && featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut)) {
                 geometry = new ol.geom.LineString([
                     geometry.getFirstCoordinate(),
                     wktFormat.readGeometry(featureDoc.positionFin).getFirstCoordinate()
                 ]);
             }
-
-            var dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
 
             geometry.transform(dataProjection, 'EPSG:3857');
             // Create feature.
@@ -559,7 +558,7 @@ angular.module('app.services.map', ['app.services.context'])
         function createEditionFeatureInstances(featureDocs) {
             var features = [];
             angular.forEach(featureDocs, function (featureDoc) {
-                if (featureDoc.doc && featureDoc.doc.positionDebut) {
+                if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut)) {
                     features.push(createEditionFeatureInstance(featureDoc.doc));
                 }
             });
@@ -663,7 +662,7 @@ angular.module('app.services.map', ['app.services.context'])
             $rootScope.$broadcast('objectSelected', event.selected);
 
             // Force digest.
-            $rootScope.$digest();
+            $rootScope.$apply();
         });
 
         $rootScope.$on('backLayerChanged', function (event, layerModel) {

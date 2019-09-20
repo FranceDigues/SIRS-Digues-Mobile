@@ -67,7 +67,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 views: {
                     objetsModeEdition: {
                         map: function (doc) {
-                            if (!doc.linearId && !doc.valid && ((doc.positionDebut && doc.positionFin) || (doc.borneDebutId && doc.borneFinId))) {
+                            if (!doc.linearId && !doc.valid && ((doc.positionDebut && doc.positionFin) || doc.borneDebutId)) {
                                 emit(doc._id, {
                                     '@class': doc['@class'],
                                     'id': doc._id,
