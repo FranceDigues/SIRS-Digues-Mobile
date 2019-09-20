@@ -41,7 +41,9 @@
                                     <div class="sirs-field-inline" ng-if="!c.isLinear">
                                         <span class="sirs-field-title" ng-if="!c.doc.systemeRepId">Position : </span>
                                         <span class="sirs-field-value" ng-if="!c.doc.systemeRepId">{{c.getStartPos() | lonlat:'à définir'}}</span>
-                                        <span class="sirs-field-title" ng-if="c.doc.systemeRepId">Position via la borne : {{c.getStartPosBorne()}}</span>
+                                        <span class="sirs-field-title" ng-if="c.doc.systemeRepId">
+                                            Position via la borne : {{c.getStartPosBorne()}}
+                                        </span>
                                     </div>
                                     <div class="sirs-field-inline" ng-if="c.isLinear" style="overflow: hidden;">
                                         <span class="sirs-field-title"
@@ -143,7 +145,6 @@
                                                 class="browser-default"
                                                 ng-model="c.doc.linearId2"
                                                 ng-options="troncon.id as troncon.libelle for troncon in c.troncons">
-                                            <option></option>
                                         </select>
                                     </div>
                                 </div>
@@ -228,19 +229,31 @@
                 <select id="sr" class="browser-default"
                         ng-if="!cp.endSR"
                         ng-model="cp.systemeReperageId"
-                        ng-change="cp.selectSR()"
-                        ng-options="systemeReperage.value._id as systemeReperage.value.libelle for systemeReperage in cp.systemeReperageList track by systemeReperage.value._id">
+                        ng-change="cp.selectSR()">
                     <option></option>
+                    <option ng-repeat="systemeReperage in cp.systemeReperageList track by systemeReperage.value._id"
+                            ng-value="systemeReperage.value._id"
+                            ng-model="cp.systemeReperageId"
+                            ng-change="cp.selectSR()"
+                            ng-selected="cp.systemeReperageId === systemeReperage.value._id">
+                        {{systemeReperage.value.libelle}}
+                    </option>
                 </select>
                 <p ng-if="cp.endSR">{{cp.endSR}}</p>
             </div>
             <div ng-if="cp.systemeReperage">
                 <label>Borne du système de repérage : </label>
                 <select id="sr" class="browser-default"
-                        ng-model="cp.data.borneId"
-                        ng-change="cp.updateBorneLibelle()"
-                        ng-options="systemeReperageBorne.borneId as systemeReperageBorne.libelle for systemeReperageBorne in cp.systemeReperage.value.systemeReperageBornes">
+                        ng-model="cp.borneId"
+                        ng-change="cp.updateBorneLibelle()">
                     <option></option>
+                    <option ng-repeat="systemeReperageBorne in cp.systemeReperage.value.systemeReperageBornes"
+                            value="{{systemeReperageBorne.borneId}}"
+                            ng-model="cp.borneId"
+                            ng-change="cp.updateBorneLibelle()"
+                            ng-selected="cp.data.borneId === systemeReperageBorne.borneId">
+                        {{systemeReperageBorne.libelle}}
+                    </option>
                 </select>
             </div>
             <div ng-if="cp.systemeReperage">
@@ -253,8 +266,16 @@
                 <label for="pos" class="active">Position : </label>
                 <select id="pos" class="browser-default"
                         ng-model="cp.data.borne_aval">
-                    <option ng-value="false">Amont</option>
-                    <option ng-value="true">Aval</option>
+                    <option value="false"
+                            ng-model="cp.data.borne_aval"
+                            ng-selected="cp.data.borne_aval === false">
+                        Amont
+                    </option>
+                    <option value="true"
+                            ng-model="cp.data.borne_aval"
+                            ng-selected="cp.data.borne_aval === true">
+                        Aval
+                    </option>
                 </select>
             </div>
 

@@ -340,6 +340,35 @@ angular.module('app.controllers.object_edit', [])
 
         self.type = $routeParams.type;
 
+
+        /**
+         * Hack to make the old data the same model of the new objects
+         * @type {boolean}
+         */
+
+        if (objectDoc && objectDoc.linearId && !objectDoc.linearId2) {
+            objectDoc.linearId2 = objectDoc.linearId;
+
+
+            if (objectDoc.borneDebutId && !objectDoc.borneDebutLibelle) {
+                PouchService.getLocalDB().query('byId', {
+                    key: objectDoc.borneDebutId
+                }).then(function (results) {
+                    objectDoc.borneDebutLibelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+                    $rootScope.$apply();
+                });
+            }
+
+            if (objectDoc.borneFinId && !objectDoc.borneFinLibelle) {
+                PouchService.getLocalDB().query('byId', {
+                    key: objectDoc.borneFinId
+                }).then(function (results) {
+                    objectDoc.borneFinLibelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+                    $rootScope.$apply();
+                });
+            }
+        }
+
         self.doc = objectDoc;
 
         self.isNew = !$routeParams.id;
@@ -523,7 +552,8 @@ angular.module('app.controllers.object_edit', [])
                 objectDoc.borne_fin_aval = data.borne_aval === 'true';
                 objectDoc.borne_fin_distance = data.borne_distance;
                 objectDoc.borneFinId = data.borneId;
-                window.localStorage.setItem('borneDebutLibelle', data.borneLibelle);
+                objectDoc.borneDebutLibelle = data.borneLibelle;
+                objectDoc.borneFinLibelle = data.borneLibelle;
             } else {
                 // Linear case
                 if (self.isNew) {
@@ -531,7 +561,7 @@ angular.module('app.controllers.object_edit', [])
                     objectDoc.borne_debut_aval = data.borne_aval === 'true';
                     objectDoc.borne_debut_distance = data.borne_distance;
                     objectDoc.borneDebutId = data.borneId;
-                    window.localStorage.setItem('borneDebutLibelle', data.borneLibelle);
+                    objectDoc.borneDebutLibelle = data.borneLibelle;
                 } else {
                     if (self.linearPosEditionHandler.startPoint) {
                         objectDoc.systemeRepId = data.systemeRepId;
@@ -539,7 +569,7 @@ angular.module('app.controllers.object_edit', [])
                         objectDoc.borne_debut_distance = data.borne_distance;
                         objectDoc.borneDebutId = data.borneId;
                         self.linearPosEditionHandler.startPoint = false;
-                        window.localStorage.setItem('borneDebutLibelle', data.borneLibelle);
+                        objectDoc.borneDebutLibelle = data.borneLibelle;
                     }
 
                     if (self.linearPosEditionHandler.endPoint) {
@@ -547,7 +577,7 @@ angular.module('app.controllers.object_edit', [])
                         objectDoc.borne_fin_distance = data.borne_distance;
                         objectDoc.borneFinId = data.borneId;
                         self.linearPosEditionHandler.endPoint = false;
-                        window.localStorage.setItem('borneFinLibelle', data.borneLibelle);
+                        objectDoc.borneFinLibelle = data.borneLibelle;
                     }
                 }
             }
@@ -562,11 +592,14 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.getStartPosBorne = function () {
-            return window.localStorage.getItem('borneDebutLibelle') ? window.localStorage.getItem('borneDebutLibelle') : 'à definir';
+            return objectDoc.borneDebutId ? 'à ' + objectDoc.borne_debut_distance + ' m de la borne : ' +
+                objectDoc.borneDebutLibelle + ' en ' + (objectDoc.borne_debut_aval ? 'aval' : 'amont') : 'à definir';
+
         };
 
         self.getEndPosBorne = function () {
-            return window.localStorage.getItem('borneFinLibelle') ? window.localStorage.getItem('borneFinLibelle') : 'à definir';
+            return objectDoc.borneFinId ? 'à ' + objectDoc.borne_fin_distance + ' m de la borne : ' +
+                objectDoc.borneFinLibelle + ' en ' + (objectDoc.borne_fin_aval ? 'aval' : 'amont') : 'à definir';
         };
 
         function parsePos(position) {
@@ -603,7 +636,7 @@ angular.module('app.controllers.object_edit', [])
                     borne_aval: objectDoc.borne_debut_aval ? 'true' : 'false',
                     borne_distance: objectDoc.borne_debut_distance,
                     borneId: objectDoc.borneDebutId,
-                    borneLibelle: window.localStorage.getItem('borneDebutLibelle') || ''
+                    borneLibelle: objectDoc.borneDebutLibelle || ''
                 });
             }
             // Edit fin
@@ -613,7 +646,7 @@ angular.module('app.controllers.object_edit', [])
                     borne_aval: objectDoc.borne_fin_aval ? 'true' : 'false',
                     borne_distance: objectDoc.borne_fin_distance,
                     borneId: objectDoc.borneFinId,
-                    borneLibelle: window.localStorage.getItem('borneFinLibelle')
+                    borneLibelle: objectDoc.borneFinLibelle || ''
                 });
             }
 
@@ -887,10 +920,12 @@ angular.module('app.controllers.object_edit', [])
                         }
                     });
                 });
+                $rootScope.$apply();
             });
         };
 
         self.updateBorneLibelle = function () {
+            self.data.borneId = self.borneId;
             self.data.borneLibelle = self.systemeReperage.value.systemeReperageBornes.filter(function (item) {
                 return item.borneId === self.data.borneId;
             })[0].libelle;
@@ -933,9 +968,12 @@ angular.module('app.controllers.object_edit', [])
             }).then(function (results) {
                 self.systemeReperageList = results.rows;
                 $rootScope.loadingflag = false;
+                $rootScope.$apply();
 
                 if (self.data.systemeRepId) {
                     self.systemeReperageId = self.data.systemeRepId;
+                    self.borneId = self.data.borneId;
+                    $rootScope.$apply();
                     if ($scope.c.linearPosEditionHandler.endPoint) {
                         self.endSR = $scope.c.getEndPointSR();
                     } else {
@@ -945,6 +983,7 @@ angular.module('app.controllers.object_edit', [])
                     self.systemeReperage = self.systemeReperageList.filter(function (item) {
                         return item.id === self.data.systemeRepId;
                     })[0];
+                    $rootScope.$apply();
 
                     if (!self.systemeReperage) {
                         $rootScope.loadingflag = false;
@@ -964,17 +1003,20 @@ angular.module('app.controllers.object_edit', [])
                                 }
                             });
                         });
+                        $rootScope.$apply();
                     });
                 }
 
                 if (!self.data.systemeRepId) {
                     self.systemeReperageId = null;
+                    self.borneId = null;
                 }
 
 
             }, function (reason) {
                 console.log(reason);
                 $rootScope.loadingflag = false;
+                $rootScope.$apply();
             });
 
         });
