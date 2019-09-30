@@ -375,7 +375,7 @@ angular.module('app.controllers.object_edit', [])
 
         self.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry);
 
-        self.isLinear = (self.isNew || !self.isClosed || (objectDoc.positionDebut !== objectDoc.positionFin));
+        self.isLinear = (!self.isNew && (!self.isClosed || (objectDoc.positionDebut !== objectDoc.positionFin)));
 
         self.refs = refTypes;
 
@@ -487,8 +487,8 @@ angular.module('app.controllers.object_edit', [])
                     $ionicLoading.hide();
                 });
             }, function (error) {
-                alert('code: ' + error.code + '\n' +
-                    'message: ' + error.message + '\n');
+                // alert('code: ' + error.code + '\n' +
+                //     'message: ' + error.message + '\n');
                 $ionicLoading.hide();
             }, {
                 maximumAge: 20000,
@@ -514,25 +514,22 @@ angular.module('app.controllers.object_edit', [])
 
             var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
             // Point case
-            if (!self.isLinear) {
+            if (!self.isLinear || self.isNew) {
                 objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
                 objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
             } else {
                 // Linear case
-                if (self.isNew) {
+                if (self.linearPosEditionHandler.startPoint) {
                     objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-                } else {
-                    if (self.linearPosEditionHandler.startPoint) {
-                        objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-                        self.linearPosEditionHandler.startPoint = false;
-                    }
+                    self.linearPosEditionHandler.startPoint = false;
+                }
 
-                    if (self.linearPosEditionHandler.endPoint) {
-                        objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-                        self.linearPosEditionHandler.endPoint = false;
-                    }
+                if (self.linearPosEditionHandler.endPoint) {
+                    objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                    self.linearPosEditionHandler.endPoint = false;
                 }
             }
+
         };
 
         self.getEndPointSR = function () {
@@ -544,7 +541,7 @@ angular.module('app.controllers.object_edit', [])
             delete objectDoc.positionFin;
 
             // Point case
-            if (!self.isLinear) {
+            if (!self.isLinear || self.isNew) {
                 objectDoc.systemeRepId = data.systemeRepId;
                 objectDoc.borne_debut_aval = data.borne_aval === 'true';
                 objectDoc.borne_debut_distance = data.borne_distance;
@@ -559,36 +556,24 @@ angular.module('app.controllers.object_edit', [])
                 objectDoc.approximatePositionFin = data.approximatePosition;
 
             } else {
-                // Linear case
-                if (self.isNew) {
+                if (self.linearPosEditionHandler.startPoint) {
                     objectDoc.systemeRepId = data.systemeRepId;
                     objectDoc.borne_debut_aval = data.borne_aval === 'true';
                     objectDoc.borne_debut_distance = data.borne_distance;
                     objectDoc.borneDebutId = data.borneId;
+                    self.linearPosEditionHandler.startPoint = false;
                     objectDoc.borneDebutLibelle = data.borneLibelle;
                     // Calculate the approximate position
                     objectDoc.approximatePositionDebut = data.approximatePosition;
-                } else {
-                    if (self.linearPosEditionHandler.startPoint) {
-                        objectDoc.systemeRepId = data.systemeRepId;
-                        objectDoc.borne_debut_aval = data.borne_aval === 'true';
-                        objectDoc.borne_debut_distance = data.borne_distance;
-                        objectDoc.borneDebutId = data.borneId;
-                        self.linearPosEditionHandler.startPoint = false;
-                        objectDoc.borneDebutLibelle = data.borneLibelle;
-                        // Calculate the approximate position
-                        objectDoc.approximatePositionDebut = data.approximatePosition;
-                    }
-
-                    if (self.linearPosEditionHandler.endPoint) {
-                        objectDoc.borne_fin_aval = data.borne_aval === 'true';
-                        objectDoc.borne_fin_distance = data.borne_distance;
-                        objectDoc.borneFinId = data.borneId;
-                        self.linearPosEditionHandler.endPoint = false;
-                        objectDoc.borneFinLibelle = data.borneLibelle;
-                        // Calculate the approximate position
-                        objectDoc.approximatePositionFin = data.approximatePosition;
-                    }
+                }
+                if (self.linearPosEditionHandler.endPoint) {
+                    objectDoc.borne_fin_aval = data.borne_aval === 'true';
+                    objectDoc.borne_fin_distance = data.borne_distance;
+                    objectDoc.borneFinId = data.borneId;
+                    self.linearPosEditionHandler.endPoint = false;
+                    objectDoc.borneFinLibelle = data.borneLibelle;
+                    // Calculate the approximate position
+                    objectDoc.approximatePositionFin = data.approximatePosition;
                 }
             }
         };

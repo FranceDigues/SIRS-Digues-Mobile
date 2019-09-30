@@ -8,7 +8,9 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
 
         var self = this;
 
-        self.layers = AppLayersService.getFavorites();
+        var layersTemp = Object.assign([], AppLayersService.getFavorites());
+
+        self.layers = layersTemp.reverse();
 
         self.layerColor = function (layer) {
             return 'rgb(' + layer.color[0] + ',' + layer.color[1] + ',' + layer.color[2] + ')';
@@ -17,9 +19,8 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
         self.move = function (from, to) {
             var aux = self.layers[from];
             self.layers[from] = self.layers[to];
-            self.layers[to] = aux
-            ;
-            MapManager.moveAppLayer(from, to);
+            self.layers[to] = aux;
+            MapManager.moveAppLayer((self.layers.length - (from + 1)), (self.layers.length - (to + 1)));
             self.clearAll();
         };
 

@@ -55,7 +55,9 @@ angular.module('app.controllers.observation_edit', [])
             self.setView('form');
         };
 
-        self.contactList = contactList;
+        self.contactList = contactList.filter(function (item) {
+            return item.doc.prenom;
+        });
 
         self.urgenceList = urgenceList.map(function (item) {
             item.value.id = parseInt(item.value.id.substring(item.value.id.lastIndexOf(":") + 1), 10);
@@ -65,7 +67,6 @@ angular.module('app.controllers.observation_edit', [])
         if (self.doc.urgenceId) {
             self.urgence = parseInt(self.doc.urgenceId.substring(self.doc.urgenceId.lastIndexOf(":") + 1), 10);
         }
-
 
         self.changeUrgence = function () {
             self.doc.urgenceId = "RefUrgence:" + self.urgence;
@@ -116,9 +117,9 @@ angular.module('app.controllers.observation_edit', [])
             }
 
             objectDoc.valid = false;
-
             // return to edit mode
             objectDoc.linearId = null;
+
 
             // Save document.
             EditionService.saveObject(objectDoc).then(function () {
@@ -275,6 +276,11 @@ angular.module('app.controllers.observation_edit', [])
             // Acquire the medias storage path when the device is ready.
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });
+
+        $scope.$on("$destroy", function () {
+            $rootScope.reloadMain = true;
+        });
+
     })
     .controller('MediaObservationController', function ($window, SirsDoc, $ionicLoading, GeolocationService,
                                                         uuid4, $ionicPlatform, $scope, AuthService, $filter, $cordovaToast) {

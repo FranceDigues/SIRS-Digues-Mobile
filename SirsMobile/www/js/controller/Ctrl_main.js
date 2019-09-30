@@ -147,7 +147,7 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
                     $ionicLoading.hide();
                 });
             }, function (error) {
-                alert('message: ' + error.message + '\n');
+                // alert('message: ' + error.message + '\n');
                 $ionicLoading.hide();
             }, {
                 maximumAge: 20000,

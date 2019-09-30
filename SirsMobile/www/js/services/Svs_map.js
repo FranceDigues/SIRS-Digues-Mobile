@@ -122,24 +122,20 @@ angular.module('app.services.map', ['app.services.context'])
         // TODO → find a way to do this through event
         self.syncAppLayer = function (layerModel) {
             var olLayer = getAppLayerInstance(layerModel);
-
             // Update OL layer.
             olLayer.setVisible(layerModel.visible);
-
             // Load data if necessary.
             if (layerModel.filterValue === "fr.sirs.core.model.BorneDigue") {
                 olLayer.getSource().getSource().getSource().clear();
             } else {
                 olLayer.getSource().getSource().clear();
             }
-
             if (layerModel.visible === true) {
                 $rootScope.loadingflag = true;
                 $window.setTimeout(function () {
                     setAppLayerFeatures(olLayer);
                 }, 1000);
             }
-
         };
 
         //@hb
@@ -182,7 +178,6 @@ angular.module('app.services.map', ['app.services.context'])
             setAppLayerFeatures(olLayer);
         };
 
-        // TODO → find a way to do this through event
         self.moveAppLayer = function (from, to) {
             var collection = appLayers.getLayers().getArray();
             var aux = collection[from];
@@ -190,7 +185,6 @@ angular.module('app.services.map', ['app.services.context'])
             collection[to] = aux;
         };
 
-        // TODO → find a way to do this through event
         self.syncBackLayer = function () {
             var olLayer = createBackLayerInstance(BackLayerService.getActive());
             backLayers.getLayers().setAt(0, olLayer);
