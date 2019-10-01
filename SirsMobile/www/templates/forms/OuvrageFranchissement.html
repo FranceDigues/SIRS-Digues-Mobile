@@ -43,12 +43,12 @@
         <div ng-if="c.showText('fullName')">
             <select id="use" class="browser-default"
                     ng-model="c.doc.usageId"
-                    ng-options="r.id as r.libelle for r in c.refs.RefOrientationOuvrage.sort(c.compareRef)">
+                    ng-options="r.id as r.libelle for r in c.refs.RefUsageVoie.sort(c.compareRef)">
             </select>
         </div>
         <div ng-if="c.showText('abstract')">
             <select id="use" class="browser-default">
-                <option ng-repeat="r in c.refs.RefOrientationOuvrage.sort(c.compareRef) track by r.id"
+                <option ng-repeat="r in c.refs.RefUsageVoie.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.usageId"
                         ng-selected="c.doc.usageId === r.id">
@@ -58,7 +58,7 @@
         </div>
         <div ng-if="c.showText('both')">
             <select id="use" class="browser-default">
-                <option ng-repeat="r in c.refs.RefOrientationOuvrage.sort(c.compareRef) track by r.id"
+                <option ng-repeat="r in c.refs.RefUsageVoie.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.usageId"
                         ng-selected="c.doc.usageId === r.id">

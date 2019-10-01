@@ -395,6 +395,7 @@ angular.module('app.controllers.observation_edit', [])
                 if (fileObj.size > 1048576) {
                     $cordovaToast
                         .showLongTop("Veuillez sélectionner une photo de taille inférieure à 1,2 Mo");
+                    imageFile.__proto__.remove();
                 } else {
                     if (!self.mediaPath) {
                         return;
@@ -402,17 +403,14 @@ angular.module('app.controllers.observation_edit', [])
                     window.resolveLocalFileSystemURL(self.mediaPath, function (targetDir) {
                         var photoId = uuid4.generate(),
                             fileName = photoId + '.jpg';
-
                         // Copy image file in its final directory.
                         imageFile.copyTo(targetDir, fileName, function () {
                             // Store the photo in the object document.
-
                             self.mediaOptions['id'] = photoId;
                             self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
                             self.mediaOptions['date'] = $filter('date')(new Date(), 'yyyy-MM-dd');
                             self.mediaOptions['chemin'] = '/' + fileName;
                             self.mediaOptions['valid'] = false;
-
                             // Force digest.
                             $scope.$digest();
                         });

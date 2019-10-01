@@ -183,7 +183,7 @@ angular.module('app.controllers.observation_details', [])
                     window.setTimeout(function () {
                         window.setTimeout(function () {
                             self.loaded[photo.id] = true;
-                            $scope.$digest();
+                            $scope.$apply();
                         }, 10);
                     }, 10);
                 }
