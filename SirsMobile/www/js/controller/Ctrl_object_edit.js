@@ -340,6 +340,7 @@ angular.module('app.controllers.object_edit', [])
 
         self.type = $routeParams.type;
 
+        self.dateWrapper = null;
 
         /**
          * Hack to make the old data the same model of the new objects
@@ -850,6 +851,10 @@ angular.module('app.controllers.object_edit', [])
                 });
             });
         }
+
+        self.formatDate = function () {
+            self.doc.date_fin = self.dateWrapper.toISOString().split('T')[0];
+        };
 
         $ionicPlatform.ready(function () {
             // Acquire the medias storage path when the device is ready.

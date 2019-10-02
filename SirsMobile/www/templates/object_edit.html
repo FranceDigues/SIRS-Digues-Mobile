@@ -148,6 +148,15 @@
                                         </select>
                                     </div>
                                 </div>
+                                <!-- End Date -->
+                                <div class="row">
+                                    <div class="sirs-field col col-100">
+                                        <label for="date_fin" class="active">
+                                            La date de fin
+                                        </label>
+                                        <input id="date_fin" type="date" ng-model="c.dateWrapper" ng-change="c.formatDate()"/>
+                                    </div>
+                                </div>
 
                                 <!-- Content / Fields / Specific -->
                                 <div class="specific" ng-include="'templates/forms/' +  c.type + '.html'"></div>
