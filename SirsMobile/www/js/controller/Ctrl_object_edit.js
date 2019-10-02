@@ -747,9 +747,12 @@ angular.module('app.controllers.object_edit', [])
                                                 fileWriter.write(blobImage);
                                                 window.setTimeout(function () {
                                                     self.loaded[photo.id] = true;
+                                                    $scope.$apply();
+                                                }, 100);
+                                                setTimeout(function () {
                                                     self.showContent = true;
                                                     $scope.$apply();
-                                                }, 10);
+                                                }, 500);
                                             }, function () {
                                                 console.log('cannot write the data to the file');
                                             });
@@ -767,7 +770,7 @@ angular.module('app.controllers.object_edit', [])
                             self.loaded[photo.id] = true;
                             $scope.$apply();
                         }, 100);
-                    }, 10);
+                    }, 100);
                 }
             });
         };

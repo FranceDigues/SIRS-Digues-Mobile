@@ -12,6 +12,10 @@ angular.module('app.controllers.observation_details', [])
 
         self.showContent = true;
 
+        if (!self.doc.photos) {
+            self.doc.photos = [];
+        }
+
         self.photos = self.doc.photos;
 
         self.urgencyLabel = null;
@@ -44,6 +48,10 @@ angular.module('app.controllers.observation_details', [])
                     'chemin': '/' + fileName,
                     'valid': false
                 });
+
+                if (!self.objectDoc._attachments) {
+                    self.objectDoc._attachments = {};
+                }
 
                 self.objectDoc._attachments[photoId] = {
                     content_type: 'image/jpeg',
@@ -161,9 +169,13 @@ angular.module('app.controllers.observation_details', [])
                                                 fileWriter.write(blobImage);
                                                 window.setTimeout(function () {
                                                     self.loaded[photo.id] = true;
-                                                    self.showContent = true;
                                                     $scope.$apply();
                                                 }, 100);
+
+                                                setTimeout(function () {
+                                                    self.showContent = true;
+                                                    $scope.$apply();
+                                                }, 500);
                                             }, function () {
                                                 console.log('cannot write the data to the file');
                                                 self.loaded[photo.id] = true;
