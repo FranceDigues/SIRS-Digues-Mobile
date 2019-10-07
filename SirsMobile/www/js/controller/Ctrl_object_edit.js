@@ -374,9 +374,12 @@ angular.module('app.controllers.object_edit', [])
 
         self.isNew = !$routeParams.id;
 
-        self.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry);
+        self.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry || !!objectDoc.borneFinId);
 
-        self.isLinear = (!self.isNew && (!self.isClosed || (objectDoc.positionDebut !== objectDoc.positionFin)));
+        self.isLinear = !self.isNew && (!self.isClosed || (objectDoc.positionDebut && objectDoc.positionFin
+            && objectDoc.positionDebut !== objectDoc.positionFin)
+            || (objectDoc.approximatePositionDebut !== objectDoc.approximatePositionFin)
+            || (objectDoc.geometry && objectDoc.geometry.includes('LINESTRING')));
 
         self.refs = refTypes;
 
@@ -452,8 +455,13 @@ angular.module('app.controllers.object_edit', [])
             }
 
             objectDoc.valid = false;
+
+            objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+
             // return to edit mode
-            objectDoc.linearId = null;
+            if (objectDoc.positionDebut) {
+                delete objectDoc.linearId;
+            }
 
             EditionService.saveObject(objectDoc).then(function () {
                 MapManager.syncAllAppLayer();
@@ -470,8 +478,10 @@ angular.module('app.controllers.object_edit', [])
         self.changeObjectType = function () {
             if (self.isLinear) {
                 delete objectDoc.positionFin;
+                delete objectDoc.approximatePositionFin;
             } else {
                 objectDoc.positionFin = objectDoc.positionDebut;
+                objectDoc.approximatePositionFin = objectDoc.approximatePositionDebut;
             }
         };
 
@@ -540,10 +550,12 @@ angular.module('app.controllers.object_edit', [])
         self.handlePosByBorne = function (data) {
             delete objectDoc.positionDebut;
             delete objectDoc.positionFin;
+            delete objectDoc.geometry;
 
             // Point case
-            if (!self.isLinear || self.isNew) {
+            if (!self.isLinear) {
                 objectDoc.systemeRepId = data.systemeRepId;
+                objectDoc.foreignParentId = self.doc.linearId2;
                 objectDoc.borne_debut_aval = data.borne_aval === 'true';
                 objectDoc.borne_debut_distance = data.borne_distance;
                 objectDoc.borneDebutId = data.borneId;
@@ -555,10 +567,10 @@ angular.module('app.controllers.object_edit', [])
                 // Calculate the approximate position
                 objectDoc.approximatePositionDebut = data.approximatePosition;
                 objectDoc.approximatePositionFin = data.approximatePosition;
-
             } else {
-                if (self.linearPosEditionHandler.startPoint) {
+                if (self.linearPosEditionHandler.startPoint || self.isNew) {
                     objectDoc.systemeRepId = data.systemeRepId;
+                    objectDoc.foreignParentId = self.doc.linearId2;
                     objectDoc.borne_debut_aval = data.borne_aval === 'true';
                     objectDoc.borne_debut_distance = data.borne_distance;
                     objectDoc.borneDebutId = data.borneId;
@@ -576,6 +588,7 @@ angular.module('app.controllers.object_edit', [])
                     // Calculate the approximate position
                     objectDoc.approximatePositionFin = data.approximatePosition;
                 }
+
             }
         };
 
@@ -971,8 +984,6 @@ angular.module('app.controllers.object_edit', [])
             var vs = glMatrix.vec2.scale(vn, vn, self.data.borne_distance);
 
             var o = glMatrix.vec2.add([], x, vs);
-
-            console.log(o);
 
             return 'POINT(' + o[0] + ' ' + o[1] + ')';
         };
