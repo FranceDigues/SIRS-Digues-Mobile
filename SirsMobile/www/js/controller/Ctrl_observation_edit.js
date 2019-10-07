@@ -31,6 +31,91 @@ angular.module('app.controllers.observation_edit', [])
 
         self.objectDoc = objectDoc;
 
+        self.showContent = true;
+
+        self.loaded = {};
+
+        self.loadImage = function (photo) {
+            var image_url = self.getPhotoPath(photo);
+            $.ajax({
+                url: image_url, type: 'HEAD',
+                error: function () {
+                    if (self.objectDoc._attachments) {
+                        var keyAttachment = null;
+                        var objAttachment;
+                        angular.forEach(Object.keys(self.objectDoc._attachments), function (key) {
+                            if (key.indexOf(photo.id) != -1) {
+                                keyAttachment = key;
+                            }
+                        });
+                        objAttachment = self.objectDoc._attachments[keyAttachment];
+                        if (objAttachment) {
+                            LocalDocument.getAttachment(self.objectDoc._id, keyAttachment)
+                                .then(function (blob) {
+                                    var blobImage = blob;
+                                    var fileName;
+                                    if (keyAttachment.indexOf('.') != -1) {
+                                        fileName = keyAttachment;
+                                    } else {
+                                        var ext;
+                                        switch (objAttachment.content_type) {
+                                            case "image/jpeg":
+                                                ext = ".jpg";
+                                                break;
+                                            case "image/png":
+                                                ext = ".png";
+                                                break;
+                                            case "image/gif":
+                                                ext = ".gif";
+                                                break;
+                                            case "image/tiff":
+                                                ext = ".tif";
+                                                break;
+                                        }
+                                        fileName = keyAttachment + ext;
+                                    }
+
+                                    self.showContent = false;
+                                    window.resolveLocalFileSystemURL(self.mediaPath, function (targetDir) {
+                                        targetDir.getFile(fileName, {create: true}, function (file) {
+                                            file.createWriter(function (fileWriter) {
+                                                fileWriter.write(blobImage);
+                                                window.setTimeout(function () {
+                                                    self.loaded[photo.id] = true;
+                                                    $scope.$apply();
+                                                }, 100);
+
+                                                setTimeout(function () {
+                                                    self.showContent = true;
+                                                    $scope.$apply();
+                                                }, 500);
+                                            }, function () {
+                                                console.log('cannot write the data to the file');
+                                                self.loaded[photo.id] = true;
+                                            });
+                                        });
+                                    });
+                                });
+                        } else {
+                            self.loaded[photo.id] = true;
+                            console.log("no attachment exit to load image");
+                        }
+                    } else {
+                        self.loaded[photo.id] = true;
+                    }
+                },
+                success: function () {
+                    window.setTimeout(function () {
+                        window.setTimeout(function () {
+                            self.loaded[photo.id] = true;
+                            $scope.$apply();
+                        }, 10);
+                    }, 10);
+                }
+            });
+
+        };
+
         // Navigation
         // -----------
 
@@ -268,9 +353,44 @@ angular.module('app.controllers.observation_edit', [])
             });
         }
 
-        //@hb get the value of Orientation & Côté from the Data Base
         self.goToMedia = function () {
             self.setView('media');
+        };
+
+        self.importMedia = function () {
+            navigator.camera.getPicture(function (imageData) {
+                var photoId = uuid4.generate(),
+                    fileName = photoId + '.jpg';
+
+                self.photos.push({
+                    'id': photoId,
+                    '@class': 'fr.sirs.core.model.Photo',
+                    'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
+                    'chemin': '/' + fileName,
+                    'valid': false
+                });
+
+                if (!self.objectDoc._attachments) {
+                    self.objectDoc._attachments = {};
+                }
+
+                self.objectDoc._attachments[photoId] = {
+                    content_type: 'image/jpeg',
+                    data: imageData.replace('data:image/jpeg;base64,', '')
+                };
+
+                EditionService.saveObject(self.objectDoc)
+                    .then(function () {
+                        MapManager.syncAllAppLayer();
+                    });
+            }, function (error) {
+                console.log(error);
+            }, {
+                quality: 50,
+                sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
+                destinationType: navigator.camera.DestinationType.DATA_URL,
+                encodingType: navigator.camera.EncodingType.JPEG
+            });
         };
 
         $ionicPlatform.ready(function () {

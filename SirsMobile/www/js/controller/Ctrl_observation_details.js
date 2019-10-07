@@ -61,7 +61,7 @@ angular.module('app.controllers.observation_details', [])
                 angular.extend(getTargetObservation(), self.doc);
 
                 self.objectDoc.valid = false;
-                self.objectDoc.linearId = null;
+                self.objectDoc.editMode = true;
 
                 EditionService.saveObject(self.objectDoc)
                     .then(function () {

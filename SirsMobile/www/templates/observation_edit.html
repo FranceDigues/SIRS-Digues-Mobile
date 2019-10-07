@@ -39,14 +39,20 @@
 
                             <!-- Content / Medias -->
                             <div class="medias" ng-switch-when="medias">
-                                <div class="pics row">
-                                    <div class="pic col col-25" ng-repeat="photo in c.photos track by photo.id">
-                                        <div class="pic-quicklook">
+                                <div ng-if="c.showContent" class="pics row">
+                                    <div class="pic col col-25" ng-if="c.mediaPath" ng-init="c.loadImage(photo);"
+                                         ng-repeat="photo in c.photos track by photo.id">
+                                        <div class="progress" ng-if="!c.loaded[photo.id]">
+                                            <div class="indeterminate"></div>
+                                        </div>
+                                        <div class="pic-quicklook" ng-if="c.loaded[photo.id]">
                                             <img alt="Photo non disponible sur le mobile" on-tap="c.open(photo)"
                                                  ng-src="{{c.getPhotoPath(photo)}}"/>
                                         </div>
                                     </div>
                                 </div>
+
+
                                 <div class="text-center">
                                     <!--<button type="button" class="btn waves-effect waves-teal" on-tap="c.recordAudio()">-->
                                     <!--<i class="material-icons center">mic</i>-->
@@ -54,7 +60,14 @@
 
                                     <button type="button" class="btn btn-large waves-effect waves-teal"
                                             on-tap="c.goToMedia()">
-                                        <i class="material-icons left">perm_media</i>Ajouter un media
+                                        <i class="material-icons left">perm_media</i>
+                                        Ajouter un media
+                                    </button>
+
+                                    <button type="button" class="btn btn-large waves-effect waves-teal"
+                                            on-tap="c.importMedia()">
+                                        <i class="material-icons left">perm_media</i>
+                                        Importer un media
                                     </button>
 
                                     <!--<button type="button" class="btn btn-large waves-effect waves-teal" on-tap="c.takePhoto()">-->
