@@ -81,6 +81,24 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                         }.toString()
                     }
                 }
+            }, {
+                _id: '_design/objetsModeEdition2',
+                views: {
+                    objetsModeEdition2: {
+                        map: function (doc) {
+                            if (doc.editMode && !doc.valid && ((doc.positionDebut && doc.positionFin)
+                                || (doc.borneDebutId && doc.approximatePositionDebut && doc.approximatePositionFin))) {
+                                emit(doc._id, {
+                                    '@class': doc['@class'],
+                                    'id': doc._id,
+                                    'rev': doc._rev,
+                                    'designation': doc.designation,
+                                    'libelle': doc.libelle
+                                });
+                            }
+                        }.toString()
+                    }
+                }
             },
             {
                 _id: '_design/Document',

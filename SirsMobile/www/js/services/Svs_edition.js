@@ -49,7 +49,8 @@ angular.module('app.services.edition', ['app.services.context'])
                         '@class': 'fr.sirs.core.model.' + type,
                         'author': AuthService.getValue()._id,
                         'valid': false,
-                        'linearId': null
+                        'linearId': null,
+                        'editMode': true
                     };
                     if (type !== 'Desordre') {
                         objectDoc.photos = [];
@@ -80,6 +81,11 @@ angular.module('app.services.edition', ['app.services.context'])
 
                 getEditionModeObjects: function () {
                     return LocalDocument.query('objetsModeEdition/objetsModeEdition', {
+                        include_docs: true
+                    });
+                },
+                getEditionModeObjects2: function () {
+                    return LocalDocument.query('objetsModeEdition2/objetsModeEdition2', {
                         include_docs: true
                     });
                 },

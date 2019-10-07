@@ -563,7 +563,17 @@ angular.module('app.services.map', ['app.services.context'])
         // Set the layer that contains the new objects of the edition mode
         function setEditionLayerFeatures(olLayer) {
             var olSource = olLayer.getSource().getSource();
-            EditionService.getEditionModeObjects().then(
+
+            // EditionService.getEditionModeObjects().then(
+            //     function onSuccess(results) {
+            //         olSource.clear();
+            //         olSource.addFeatures(createEditionFeatureInstances(results));
+            //     },
+            //     function onError(error) {
+            //         // TODO → handle error
+            //     });
+
+            EditionService.getEditionModeObjects2().then(
                 function onSuccess(results) {
                     olSource.clear();
                     olSource.addFeatures(createEditionFeatureInstances(results));

@@ -118,8 +118,9 @@ angular.module('app.controllers.observation_edit', [])
 
             objectDoc.valid = false;
             // return to edit mode
-            objectDoc.linearId = null;
+            // objectDoc.linearId = null;
 
+            objectDoc.editMode = true;
 
             // Save document.
             EditionService.saveObject(objectDoc).then(function () {

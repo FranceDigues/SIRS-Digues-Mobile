@@ -458,10 +458,12 @@ angular.module('app.controllers.object_edit', [])
 
             objectDoc.dateMaj = new Date().toISOString().split('T')[0];
 
+            objectDoc.editMode = true;
+
             // return to edit mode
-            if (objectDoc.positionDebut) {
-                delete objectDoc.linearId;
-            }
+            // if (objectDoc.positionDebut) {
+            //     delete objectDoc.linearId;
+            // }
 
             EditionService.saveObject(objectDoc).then(function () {
                 MapManager.syncAllAppLayer();
