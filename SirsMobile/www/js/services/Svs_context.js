@@ -247,6 +247,11 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return favorites;
         };
 
+        self.setFavorites = function (newFavorites) {
+            favorites = newFavorites;
+            DatabaseService.getActive().favorites = newFavorites;
+        };
+
         self.addFavorite = function (layer) {
             layer.editable = false;
             layer.featLabels = false;

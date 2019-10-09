@@ -22,6 +22,8 @@ angular.module('app.controllers.app_layers', ['app.services.context', 'app.servi
             self.layers[to] = aux;
             MapManager.moveAppLayer((self.layers.length - (from + 1)), (self.layers.length - (to + 1)));
             self.clearAll();
+            var tempLayersAfterSort = Object.assign([], self.layers);
+            AppLayersService.setFavorites(tempLayersAfterSort.reverse());
         };
 
         self.toggleVisibility = function (layer) {
