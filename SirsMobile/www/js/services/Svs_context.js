@@ -395,7 +395,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             self.config = JSON.parse(localStorage.getItem('global_config'));
         } else {
             self.config = {
-                'showText':'fullName'
+                'showText': 'fullName'
             };
 
             localStorage.setItem('global_config', JSON.stringify(self.config));

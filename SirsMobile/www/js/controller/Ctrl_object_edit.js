@@ -297,12 +297,12 @@ angular.module('app.controllers.object_edit', [])
             };
         };
     })
-    .controller('ObjectEditController', function ObjectEditController($scope, $location, $ionicScrollDelegate,
+    .controller('ObjectEditController', function ObjectEditController($scope, $rootScope, $location, $ionicScrollDelegate,
                                                                       $ionicLoading, $ionicPlatform, $cordovaFile,
                                                                       $routeParams, GeolocationService, LocalDocument,
                                                                       EditionService, objectDoc, refTypes,
                                                                       uuid4, SirsDoc, $ionicModal, orientationsList, $filter,
-                                                                      cotesList, $rootScope, listTroncons, MapManager, PouchService,
+                                                                      cotesList, listTroncons, MapManager, PouchService,
                                                                       $timeout, GlobalConfig, localStorageService) {
 
         var self = this;
@@ -347,27 +347,22 @@ angular.module('app.controllers.object_edit', [])
          * @type {boolean}
          */
 
-        if (objectDoc && objectDoc.linearId && !objectDoc.linearId2) {
-            objectDoc.linearId2 = objectDoc.linearId;
+        if (objectDoc.borneDebutId && !objectDoc.borneDebutLibelle) {
+            PouchService.getLocalDB().query('byId', {
+                key: objectDoc.borneDebutId
+            }).then(function (results) {
+                objectDoc.borneDebutLibelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+                $rootScope.$apply();
+            });
+        }
 
-
-            if (objectDoc.borneDebutId && !objectDoc.borneDebutLibelle) {
-                PouchService.getLocalDB().query('byId', {
-                    key: objectDoc.borneDebutId
-                }).then(function (results) {
-                    objectDoc.borneDebutLibelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
-                    $rootScope.$apply();
-                });
-            }
-
-            if (objectDoc.borneFinId && !objectDoc.borneFinLibelle) {
-                PouchService.getLocalDB().query('byId', {
-                    key: objectDoc.borneFinId
-                }).then(function (results) {
-                    objectDoc.borneFinLibelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
-                    $rootScope.$apply();
-                });
-            }
+        if (objectDoc.borneFinId && !objectDoc.borneFinLibelle) {
+            PouchService.getLocalDB().query('byId', {
+                key: objectDoc.borneFinId
+            }).then(function (results) {
+                objectDoc.borneFinLibelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+                $rootScope.$apply();
+            });
         }
 
         self.doc = objectDoc;
@@ -376,12 +371,34 @@ angular.module('app.controllers.object_edit', [])
 
         self.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry || !!objectDoc.borneFinId);
 
-        self.isLinear = !self.isNew && (!self.isClosed || (objectDoc.positionDebut && objectDoc.positionFin
-            && objectDoc.positionDebut !== objectDoc.positionFin)
+        self.isLinear = !self.isNew && (!self.isClosed
+            || (objectDoc.positionDebut && objectDoc.positionFin && objectDoc.positionDebut !== objectDoc.positionFin)
             || (objectDoc.approximatePositionDebut !== objectDoc.approximatePositionFin)
-            || (objectDoc.geometry && objectDoc.geometry.includes('LINESTRING')));
+            || (objectDoc.borneDebutId !== objectDoc.borneFinId
+                || objectDoc.borne_debut_aval !== objectDoc.borne_fin_aval
+                || objectDoc.borne_debut_distance !== objectDoc.borne_fin_distance)
+        );
 
         self.refs = refTypes;
+
+
+        /**
+         * Hack to calculate the approximate position when the object is aligned with bornes
+         */
+        if (!objectDoc.positionDebut && objectDoc.borneDebutId
+            && !objectDoc.approximatePositionDebut) {
+            self.getApproximatePosition(objectDoc.borneDebutId,
+                objectDoc.borne_debut_aval,
+                objectDoc.borne_debut_distance, 'approximatePositionDebut');
+        }
+
+        if (!objectDoc.positionFin && objectDoc.borneFinId
+            && !objectDoc.approximatePositionFin) {
+            self.getApproximatePosition(objectDoc.borneFinId,
+                objectDoc.borne_fin_aval,
+                objectDoc.borne_fin_distance, 'approximatePositionFin');
+        }
+
 
         self.compareRef = function (obj1, obj2) {
             var a, b, comparison;
@@ -415,7 +432,7 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.activatedPositionButton = function () {
-            return !self.doc || !self.doc.linearId2;
+            return !self.doc || !self.doc.linearId;
         };
 
         self.troncons = [];
@@ -549,6 +566,58 @@ angular.module('app.controllers.object_edit', [])
             return objectDoc.systemeRepId || null;
         };
 
+        self.getApproximatePosition = function (borneId, borneAval, borneDistance, flag) {
+            var troncon = self.troncons.find(function (item) {
+                return item.id === self.doc.linearId;
+            });
+
+            $rootScope.loadingflag = true;
+
+            PouchService.getLocalDB().query('byId', {
+                key: troncon.systemeRepDefautId
+            }).then(function (results) {
+
+                var systemeReperage = results.rows.filter(function (item) {
+                    return item.id === objectDoc.systemeRepId;
+                })[0];
+
+                var index = systemeReperage.value.systemeReperageBornes.findIndex(function (item) {
+                    return item.borneId === borneId;
+                });
+
+                var srb = systemeReperage.value.systemeReperageBornes[index];
+
+                // Calculate approximate position
+                var x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
+                var y;
+
+                if (borneAval) {
+                    y = (index === systemeReperage.value.systemeReperageBornes.length - 1)
+                        ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                        : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
+                } else {
+                    y = (index === 0)
+                        ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                        : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
+                }
+
+                var v = glMatrix.vec2.sub([], y, x);
+
+                var vn = glMatrix.vec2.normalize(v, v);
+
+                var vs = glMatrix.vec2.scale(vn, vn, borneDistance);
+
+                var o = glMatrix.vec2.add([], x, vs);
+
+                objectDoc[flag] = 'POINT(' + o[0] + ' ' + o[1] + ')';
+
+                $rootScope.loadingflag = false;
+
+                $rootScope.$apply();
+            });
+
+        };
+
         self.handlePosByBorne = function (data) {
             delete objectDoc.positionDebut;
             delete objectDoc.positionFin;
@@ -557,7 +626,7 @@ angular.module('app.controllers.object_edit', [])
             // Point case
             if (!self.isLinear) {
                 objectDoc.systemeRepId = data.systemeRepId;
-                objectDoc.foreignParentId = self.doc.linearId2;
+                objectDoc.foreignParentId = self.doc.linearId;
                 objectDoc.borne_debut_aval = data.borne_aval === 'true';
                 objectDoc.borne_debut_distance = data.borne_distance;
                 objectDoc.borneDebutId = data.borneId;
@@ -572,7 +641,7 @@ angular.module('app.controllers.object_edit', [])
             } else {
                 if (self.linearPosEditionHandler.startPoint || self.isNew) {
                     objectDoc.systemeRepId = data.systemeRepId;
-                    objectDoc.foreignParentId = self.doc.linearId2;
+                    objectDoc.foreignParentId = self.doc.linearId;
                     objectDoc.borne_debut_aval = data.borne_aval === 'true';
                     objectDoc.borne_debut_distance = data.borne_distance;
                     objectDoc.borneDebutId = data.borneId;
@@ -1018,7 +1087,7 @@ angular.module('app.controllers.object_edit', [])
             self.data = data;
 
             var troncon = $scope.c.troncons.find(function (item) {
-                return item.id === $scope.c.doc.linearId2;
+                return item.id === $scope.c.doc.linearId;
             });
 
             $rootScope.loadingflag = true;
