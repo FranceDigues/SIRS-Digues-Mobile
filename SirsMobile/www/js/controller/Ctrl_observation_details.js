@@ -2,7 +2,7 @@ angular.module('app.controllers.observation_details', [])
 
     .controller('ObservationDetailsController', function ObservationDetailsController($ionicPlatform, sContext, $scope, MapManager,
                                                                                       $ionicPopup, uuid4, $filter, EditionService,
-                                                                                      SidePanelService, LocalDocument, $rootScope, AuthService) {
+                                                                                      SidePanelService, LocalDocument, $rootScope, AuthService, $cordovaToast) {
 
         var self = this;
 
@@ -26,6 +26,17 @@ angular.module('app.controllers.observation_details', [])
 
         self.loaded = {};
 
+        function calculateImageSize(base64String) {
+            var padding, inBytes, base64StringLength;
+            if (base64String.endsWith("==")) padding = 2;
+            else if (base64String.endsWith("=")) padding = 1;
+            else padding = 0;
+
+            base64StringLength = base64String.length;
+            inBytes = (base64StringLength / 4) * 3 - padding;
+            return inBytes;
+        }
+
         function getTargetObservation() {
             var i = self.objectDoc.observations.length;
             while (i--) {
@@ -38,6 +49,12 @@ angular.module('app.controllers.observation_details', [])
 
         self.addPhotoFromAlbum = function () {
             navigator.camera.getPicture(function (imageData) {
+                if (calculateImageSize(imageData) > 1048576) {
+                    $cordovaToast
+                        .showLongTop("Veuillez choisir une photo de taille inférieure à 1,2 Mo");
+                    return;
+                }
+
                 var photoId = uuid4.generate(),
                     fileName = photoId + '.jpg';
 

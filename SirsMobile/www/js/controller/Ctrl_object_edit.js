@@ -1199,7 +1199,7 @@ angular.module('app.controllers.object_edit', [])
             imageFile.file(function (fileObj) {
                 if (fileObj.size > 1048576) {
                     $cordovaToast
-                        .showLongTop("S'il vous plaît, il faut choisir une image inférieure à 1,2 Mo");
+                        .showLongTop("Veuillez choisir une photo de taille inférieure à 1,2 Mo");
                     imageFile.__proto__.remove();
                 } else {
                     if (!self.mediaPath) {

@@ -5,7 +5,7 @@ angular.module('app.controllers.observation_edit', [])
                                                                                 $routeParams, GeolocationService, LocalDocument,
                                                                                 EditionService, objectDoc, uuid4, $rootScope, contactList,
                                                                                 urgenceList, orientationsList, cotesList, AuthService,
-                                                                                MapManager, GlobalConfig) {
+                                                                                MapManager, GlobalConfig, $cordovaToast) {
 
         var self = this;
 
@@ -353,12 +353,29 @@ angular.module('app.controllers.observation_edit', [])
             });
         }
 
+        function calculateImageSize(base64String) {
+            var padding, inBytes, base64StringLength;
+            if (base64String.endsWith("==")) padding = 2;
+            else if (base64String.endsWith("=")) padding = 1;
+            else padding = 0;
+
+            base64StringLength = base64String.length;
+            inBytes = (base64StringLength / 4) * 3 - padding;
+            return inBytes;
+        }
+
         self.goToMedia = function () {
             self.setView('media');
         };
 
         self.importMedia = function () {
             navigator.camera.getPicture(function (imageData) {
+                if (calculateImageSize(imageData) > 1048576) {
+                    $cordovaToast
+                        .showLongTop("Veuillez choisir une photo de taille inférieure à 1,2 Mo");
+                    return;
+                }
+
                 var photoId = uuid4.generate(),
                     fileName = photoId + '.jpg';
 
@@ -515,7 +532,7 @@ angular.module('app.controllers.observation_edit', [])
             imageFile.file(function (fileObj) {
                 if (fileObj.size > 1048576) {
                     $cordovaToast
-                        .showLongTop("Veuillez sélectionner une photo de taille inférieure à 1,2 Mo");
+                        .showLongTop("Veuillez choisir une photo de taille inférieure à 1,2 Mo");
                     imageFile.__proto__.remove();
                 } else {
                     if (!self.mediaPath) {
