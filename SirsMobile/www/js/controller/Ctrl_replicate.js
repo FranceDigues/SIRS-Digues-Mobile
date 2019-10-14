@@ -15,7 +15,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             'Document/byPath',
             'TronconDigue/streamLight',
             // Local views
-            'ElementSpecial',
+            'ElementSpecial2',
             'bySEIdHB',
             'byDigueId',
             'byId',
@@ -62,26 +62,8 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                         }.toString()
                     }
                 }
-            }, {
-                _id: '_design/objetsModeEdition',
-                views: {
-                    objetsModeEdition: {
-                        map: function (doc) {
-                            if (!doc.linearId && !doc.valid && ((doc.positionDebut && doc.positionFin) || doc.borneDebutId)) {
-                                emit(doc._id, {
-                                    '@class': doc['@class'],
-                                    'id': doc._id,
-                                    'rev': doc._rev,
-                                    'designation': doc.designation,
-                                    'libelle': doc.libelle,
-                                    'positionDebut': doc.positionDebut,
-                                    'positionFin': doc.positionFin
-                                });
-                            }
-                        }.toString()
-                    }
-                }
-            }, {
+            },
+            {
                 _id: '_design/objetsModeEdition3',
                 views: {
                     objetsModeEdition3: {
@@ -139,7 +121,8 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                         }.toString()
                     }
                 }
-            }, {
+            },
+            {
                 _id: '_design/ElementSpecial2',
                 views: {
                     'ElementSpecial2': {
@@ -183,7 +166,8 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                         }.toString()
                     }
                 }
-            }, {
+            },
+            {
                 _id: '_design/byId',
                 views: {
                     'byId': {
