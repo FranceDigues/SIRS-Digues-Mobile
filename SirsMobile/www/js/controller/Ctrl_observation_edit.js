@@ -5,11 +5,14 @@ angular.module('app.controllers.observation_edit', [])
                                                                                 $routeParams, GeolocationService, LocalDocument,
                                                                                 EditionService, objectDoc, uuid4, $rootScope, contactList,
                                                                                 urgenceList, orientationsList, cotesList, AuthService,
-                                                                                MapManager, GlobalConfig, $cordovaToast) {
+                                                                                MapManager, GlobalConfig, $cordovaToast, $q, PouchService,
+                                                                                localStorageService) {
 
         var self = this;
 
         self.config = GlobalConfig.config;
+
+        var wktFormat = new ol.format.WKT();
 
         self.showText = function (type) {
             return self.config.showText === type;
@@ -20,6 +23,11 @@ angular.module('app.controllers.observation_edit', [])
         self.isNewObject = !$routeParams.obsId;
 
         self.doc = self.isNewObject ? createNewObservation() : angular.copy(getTargetObservation());
+
+        // Hack for borne fin data without borneFinId
+        if (angular.isDefined(objectDoc.borne_fin_aval) && angular.isDefined(objectDoc.borne_fin_distance) && !objectDoc.borneFinId) {
+            objectDoc.borneFinId = objectDoc.borneDebutId;
+        }
 
         var author = AuthService.getValue();
 
@@ -34,6 +42,10 @@ angular.module('app.controllers.observation_edit', [])
         self.showContent = true;
 
         self.loaded = {};
+
+        self.troncons = [];
+
+        self.troncons = localStorageService.get("AppTronconsFavorities");
 
         self.loadImage = function (photo) {
             var image_url = self.getPhotoPath(photo);
@@ -188,6 +200,75 @@ angular.module('app.controllers.observation_edit', [])
         //@hb
         self.cotes = cotesList;
 
+        self.getApproximatePosition = function (borneId, borneAval, borneDistance, flag) {
+            var deferred = $q.defer();
+            var troncon = self.troncons.find(function (item) {
+                return item.id === objectDoc.linearId;
+            });
+
+            PouchService.getLocalDB().query('byId', {
+                key: troncon.systemeRepDefautId
+            }).then(function (results) {
+                var systemeReperage = results.rows.filter(function (item) {
+                    return item.id === objectDoc.systemeRepId;
+                })[0];
+
+                PouchService.getLocalDB().query('getBornesIdsHB', {
+                    keys: systemeReperage.value.systemeReperageBornes
+                        .map(function (item) {
+                            return item.borneId;
+                        })
+                }).then(function (res) {
+
+                    angular.forEach(systemeReperage.value.systemeReperageBornes, function (item1) {
+                        angular.forEach(res.rows, function (item2) {
+                            if (item1.borneId === item2.id) {
+                                item1.libelle = item2.value.libelle;
+                                item1.borneGeometry = item2.value.geometry;
+                            }
+                        });
+                    });
+
+                    var index = systemeReperage.value.systemeReperageBornes.findIndex(function (item) {
+                        return item.borneId === borneId;
+                    });
+
+                    var srb = systemeReperage.value.systemeReperageBornes[index];
+
+                    // Calculate approximate position
+                    var x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
+                    var y;
+
+                    if (borneAval) {
+                        y = (index === systemeReperage.value.systemeReperageBornes.length - 1)
+                            ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                            : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
+                    } else {
+                        y = (index === 0)
+                            ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                            : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
+                    }
+
+                    var v = glMatrix.vec2.sub([], y, x);
+
+                    var vn = glMatrix.vec2.normalize(v, v);
+
+                    var vs = glMatrix.vec2.scale(vn, vn, borneDistance);
+
+                    var o = glMatrix.vec2.add([], x, vs);
+
+                    objectDoc[flag] = 'POINT(' + o[0] + ' ' + o[1] + ')';
+
+                    deferred.resolve();
+
+                });
+
+            });
+
+            return deferred.promise;
+
+        };
+
         self.save = function () {
             if (self.isNewObject) {
                 if (angular.isUndefined(objectDoc.observations)) {
@@ -202,16 +283,51 @@ angular.module('app.controllers.observation_edit', [])
             }
 
             objectDoc.valid = false;
-            // return to edit mode
-            // objectDoc.linearId = null;
 
             objectDoc.editMode = true;
 
-            // Save document.
-            EditionService.saveObject(objectDoc).then(function () {
-                MapManager.syncAllAppLayer();
-                $location.path('/main');
-            });
+            objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+
+            delete objectDoc.prDebut;
+
+            delete objectDoc.prFin;
+
+            if (objectDoc.borneDebutId) {
+                delete objectDoc.positionDebut;
+                delete objectDoc.positionFin;
+                delete objectDoc.geometry;
+
+                /**
+                 * Hack to calculate the approximate position when the object is aligned with bornes
+                 */
+                if (!objectDoc.approximatePositionDebut) {
+                    $rootScope.loadingflag = true;
+                    self.getApproximatePosition(objectDoc.borneDebutId,
+                        objectDoc.borne_debut_aval,
+                        objectDoc.borne_debut_distance, 'approximatePositionDebut')
+                        .then(function () {
+                            if (objectDoc.borneFinId && !objectDoc.approximatePositionFin) {
+                                self.getApproximatePosition(objectDoc.borneFinId,
+                                    objectDoc.borne_fin_aval,
+                                    objectDoc.borne_fin_distance, 'approximatePositionFin')
+                                    .then(function () {
+                                        $rootScope.loadingflag = false;
+                                        // Save document.
+                                        EditionService.saveObject(objectDoc).then(function () {
+                                            MapManager.syncAllAppLayer();
+                                            $location.path('/main');
+                                        });
+                                    });
+                            }
+                        });
+                }
+            } else {
+                // Save document.
+                EditionService.saveObject(objectDoc).then(function () {
+                    MapManager.syncAllAppLayer();
+                    $location.path('/main');
+                });
+            }
         };
 
         function createNewObservation() {

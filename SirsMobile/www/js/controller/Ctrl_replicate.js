@@ -82,12 +82,12 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                     }
                 }
             }, {
-                _id: '_design/objetsModeEdition2',
+                _id: '_design/objetsModeEdition3',
                 views: {
-                    objetsModeEdition2: {
+                    objetsModeEdition3: {
                         map: function (doc) {
                             if (doc.editMode && !doc.valid && ((doc.positionDebut && doc.positionFin)
-                                || (doc.borneDebutId && doc.approximatePositionDebut && doc.approximatePositionFin))) {
+                                || (doc.borneDebutId && doc.borneFinId))) {
                                 emit(doc._id, {
                                     '@class': doc['@class'],
                                     'id': doc._id,
@@ -128,6 +128,23 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                     'ElementSpecial': {
                         map: function (doc) {
                             if (doc['@class']) {
+                                emit([doc['@class'], doc.linearId], {
+                                    id: doc._id, rev: doc._rev,
+                                    designation: doc.designation, libelle: doc.libelle,
+                                    date_fin: doc.date_fin, positionDebut: doc.positionDebut,
+                                    positionFin: doc.positionFin,
+                                    geometry: doc.geometry
+                                })
+                            }
+                        }.toString()
+                    }
+                }
+            }, {
+                _id: '_design/ElementSpecial2',
+                views: {
+                    'ElementSpecial2': {
+                        map: function (doc) {
+                            if (doc['@class'] && !doc.editMode) {
                                 emit([doc['@class'], doc.linearId], {
                                     id: doc._id, rev: doc._rev,
                                     designation: doc.designation, libelle: doc.libelle,

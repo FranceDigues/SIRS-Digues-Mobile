@@ -84,8 +84,8 @@ angular.module('app.services.edition', ['app.services.context'])
                         include_docs: true
                     });
                 },
-                getEditionModeObjects2: function () {
-                    return LocalDocument.query('objetsModeEdition2/objetsModeEdition2', {
+                getEditionModeObjects3: function () {
+                    return LocalDocument.query('objetsModeEdition3/objetsModeEdition3', {
                         include_docs: true
                     });
                 },

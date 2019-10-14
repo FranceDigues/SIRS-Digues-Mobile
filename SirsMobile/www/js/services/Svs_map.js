@@ -573,7 +573,7 @@ angular.module('app.services.map', ['app.services.context'])
             //         // TODO → handle error
             //     });
 
-            EditionService.getEditionModeObjects2().then(
+            EditionService.getEditionModeObjects3().then(
                 function onSuccess(results) {
                     olSource.clear();
                     olSource.addFeatures(createEditionFeatureInstances(results));

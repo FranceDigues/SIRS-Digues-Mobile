@@ -303,13 +303,15 @@ angular.module('app.controllers.object_edit', [])
                                                                       EditionService, objectDoc, refTypes,
                                                                       uuid4, SirsDoc, $ionicModal, orientationsList, $filter,
                                                                       cotesList, listTroncons, MapManager, PouchService,
-                                                                      $timeout, GlobalConfig, localStorageService) {
+                                                                      $timeout, GlobalConfig, localStorageService, $q) {
 
         var self = this;
 
         $rootScope.loadingflag = false;
 
         var dataProjection = SirsDoc.get().epsgCode;
+
+        var wktFormat = new ol.format.WKT();
 
         self.view = 'form';
 
@@ -342,28 +344,11 @@ angular.module('app.controllers.object_edit', [])
 
         self.dateWrapper = null;
 
-        /**
-         * Hack to make the old data the same model of the new objects
-         * @type {boolean}
-         */
-
-        if (objectDoc.borneDebutId && !objectDoc.borneDebutLibelle) {
-            PouchService.getLocalDB().query('byId', {
-                key: objectDoc.borneDebutId
-            }).then(function (results) {
-                objectDoc.borneDebutLibelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
-                $rootScope.$apply();
-            });
+        // Hack for borne fin data without borneFinId
+        if (angular.isDefined(objectDoc.borne_fin_aval) && angular.isDefined(objectDoc.borne_fin_distance) && !objectDoc.borneFinId) {
+            objectDoc.borneFinId = objectDoc.borneDebutId;
         }
 
-        if (objectDoc.borneFinId && !objectDoc.borneFinLibelle) {
-            PouchService.getLocalDB().query('byId', {
-                key: objectDoc.borneFinId
-            }).then(function (results) {
-                objectDoc.borneFinLibelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
-                $rootScope.$apply();
-            });
-        }
 
         self.doc = objectDoc;
 
@@ -373,32 +358,11 @@ angular.module('app.controllers.object_edit', [])
 
         self.isLinear = !self.isNew && (!self.isClosed
             || (objectDoc.positionDebut && objectDoc.positionFin && objectDoc.positionDebut !== objectDoc.positionFin)
-            || (objectDoc.approximatePositionDebut !== objectDoc.approximatePositionFin)
-            || (objectDoc.borneDebutId !== objectDoc.borneFinId
-                || objectDoc.borne_debut_aval !== objectDoc.borne_fin_aval
+            || (objectDoc.borneDebutId !== objectDoc.borneFinId || objectDoc.borne_debut_aval !== objectDoc.borne_fin_aval
                 || objectDoc.borne_debut_distance !== objectDoc.borne_fin_distance)
         );
 
         self.refs = refTypes;
-
-
-        /**
-         * Hack to calculate the approximate position when the object is aligned with bornes
-         */
-        if (!objectDoc.positionDebut && objectDoc.borneDebutId
-            && !objectDoc.approximatePositionDebut) {
-            self.getApproximatePosition(objectDoc.borneDebutId,
-                objectDoc.borne_debut_aval,
-                objectDoc.borne_debut_distance, 'approximatePositionDebut');
-        }
-
-        if (!objectDoc.positionFin && objectDoc.borneFinId
-            && !objectDoc.approximatePositionFin) {
-            self.getApproximatePosition(objectDoc.borneFinId,
-                objectDoc.borne_fin_aval,
-                objectDoc.borne_fin_distance, 'approximatePositionFin');
-        }
-
 
         self.compareRef = function (obj1, obj2) {
             var a, b, comparison;
@@ -477,10 +441,19 @@ angular.module('app.controllers.object_edit', [])
 
             objectDoc.editMode = true;
 
-            // return to edit mode
-            // if (objectDoc.positionDebut) {
-            //     delete objectDoc.linearId;
-            // }
+            delete objectDoc.prDebut;
+
+            delete objectDoc.prFin;
+
+            if (objectDoc.borneDebutId) {
+                delete objectDoc.positionDebut;
+                delete objectDoc.positionFin;
+                delete objectDoc.geometry;
+            }
+
+            if (!objectDoc.positionDebut && objectDoc.positionFin) {
+                objectDoc.positionDebut = objectDoc.positionFin;
+            }
 
             EditionService.saveObject(objectDoc).then(function () {
                 MapManager.syncAllAppLayer();
@@ -564,58 +537,6 @@ angular.module('app.controllers.object_edit', [])
 
         self.getEndPointSR = function () {
             return objectDoc.systemeRepId || null;
-        };
-
-        self.getApproximatePosition = function (borneId, borneAval, borneDistance, flag) {
-            var troncon = self.troncons.find(function (item) {
-                return item.id === self.doc.linearId;
-            });
-
-            $rootScope.loadingflag = true;
-
-            PouchService.getLocalDB().query('byId', {
-                key: troncon.systemeRepDefautId
-            }).then(function (results) {
-
-                var systemeReperage = results.rows.filter(function (item) {
-                    return item.id === objectDoc.systemeRepId;
-                })[0];
-
-                var index = systemeReperage.value.systemeReperageBornes.findIndex(function (item) {
-                    return item.borneId === borneId;
-                });
-
-                var srb = systemeReperage.value.systemeReperageBornes[index];
-
-                // Calculate approximate position
-                var x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
-                var y;
-
-                if (borneAval) {
-                    y = (index === systemeReperage.value.systemeReperageBornes.length - 1)
-                        ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
-                        : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
-                } else {
-                    y = (index === 0)
-                        ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
-                        : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
-                }
-
-                var v = glMatrix.vec2.sub([], y, x);
-
-                var vn = glMatrix.vec2.normalize(v, v);
-
-                var vs = glMatrix.vec2.scale(vn, vn, borneDistance);
-
-                var o = glMatrix.vec2.add([], x, vs);
-
-                objectDoc[flag] = 'POINT(' + o[0] + ' ' + o[1] + ')';
-
-                $rootScope.loadingflag = false;
-
-                $rootScope.$apply();
-            });
-
         };
 
         self.handlePosByBorne = function (data) {
@@ -940,9 +861,117 @@ angular.module('app.controllers.object_edit', [])
             self.doc.date_fin = self.dateWrapper.toISOString().split('T')[0];
         };
 
+        self.getApproximatePosition = function (borneId, borneAval, borneDistance, flag) {
+            var deferred = $q.defer();
+            var troncon = self.troncons.find(function (item) {
+                return item.id === self.doc.linearId;
+            });
+
+            PouchService.getLocalDB().query('byId', {
+                key: troncon.systemeRepDefautId
+            }).then(function (results) {
+                var systemeReperage = results.rows.filter(function (item) {
+                    return item.id === objectDoc.systemeRepId;
+                })[0];
+
+                PouchService.getLocalDB().query('getBornesIdsHB', {
+                    keys: systemeReperage.value.systemeReperageBornes
+                        .map(function (item) {
+                            return item.borneId;
+                        })
+                }).then(function (res) {
+
+                    angular.forEach(systemeReperage.value.systemeReperageBornes, function (item1) {
+                        angular.forEach(res.rows, function (item2) {
+                            if (item1.borneId === item2.id) {
+                                item1.libelle = item2.value.libelle;
+                                item1.borneGeometry = item2.value.geometry;
+                            }
+                        });
+                    });
+
+                    var index = systemeReperage.value.systemeReperageBornes.findIndex(function (item) {
+                        return item.borneId === borneId;
+                    });
+
+                    var srb = systemeReperage.value.systemeReperageBornes[index];
+
+                    // Calculate approximate position
+                    var x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
+                    var y;
+
+                    if (borneAval) {
+                        y = (index === systemeReperage.value.systemeReperageBornes.length - 1)
+                            ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                            : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
+                    } else {
+                        y = (index === 0)
+                            ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                            : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
+                    }
+
+                    var v = glMatrix.vec2.sub([], y, x);
+
+                    var vn = glMatrix.vec2.normalize(v, v);
+
+                    var vs = glMatrix.vec2.scale(vn, vn, borneDistance);
+
+                    var o = glMatrix.vec2.add([], x, vs);
+
+                    objectDoc[flag] = 'POINT(' + o[0] + ' ' + o[1] + ')';
+
+                    deferred.resolve();
+
+                });
+
+            });
+
+            return deferred.promise;
+
+        };
+
         $ionicPlatform.ready(function () {
             // Acquire the medias storage path when the device is ready.
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
+
+            /**
+             * Hack to make the old data the same model of the new objects
+             * @type {boolean}
+             */
+
+            if (objectDoc.borneDebutId && !objectDoc.borneDebutLibelle) {
+                $rootScope.loadingflag = true;
+                PouchService.getLocalDB().query('byId', {
+                    key: objectDoc.borneDebutId
+                }).then(function (results) {
+                    objectDoc.borneDebutLibelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+                    if (objectDoc.borneFinId && !objectDoc.borneFinLibelle) {
+                        PouchService.getLocalDB().query('byId', {
+                            key: objectDoc.borneFinId
+                        }).then(function (results) {
+                            objectDoc.borneFinLibelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+                            /**
+                             * Hack to calculate the approximate position when the object is aligned with bornes
+                             */
+                            if (objectDoc.borneDebutId && !objectDoc.approximatePositionDebut) {
+                                self.getApproximatePosition(objectDoc.borneDebutId,
+                                    objectDoc.borne_debut_aval,
+                                    objectDoc.borne_debut_distance, 'approximatePositionDebut')
+                                    .then(function () {
+                                        if (objectDoc.borneFinId && !objectDoc.approximatePositionFin) {
+                                            self.getApproximatePosition(objectDoc.borneFinId,
+                                                objectDoc.borne_fin_aval,
+                                                objectDoc.borne_fin_distance, 'approximatePositionFin')
+                                                .then(function () {
+                                                    $rootScope.loadingflag = false;
+                                                });
+                                        }
+                                    });
+                            }
+                        });
+                    }
+                });
+            }
         });
 
         $scope.$on("$destroy", function () {
@@ -1112,6 +1141,7 @@ angular.module('app.controllers.object_edit', [])
                     self.systemeReperage = self.systemeReperageList.filter(function (item) {
                         return item.id === self.data.systemeRepId;
                     })[0];
+
                     $rootScope.$apply();
 
                     if (!self.systemeReperage) {
@@ -1133,6 +1163,7 @@ angular.module('app.controllers.object_edit', [])
                                 }
                             });
                         });
+                        $rootScope.loadingflag = false;
                         $rootScope.$apply();
                     });
                 }
@@ -1140,6 +1171,7 @@ angular.module('app.controllers.object_edit', [])
                 if (!self.data.systemeRepId) {
                     self.systemeReperageId = null;
                     self.borneId = null;
+                    $rootScope.loadingflag = false;
                 }
 
 
