@@ -434,15 +434,12 @@ angular.module('app.services.map', ['app.services.context'])
                             keys.push([layerModel.filterValue, key.id]);
                         });
 
-                        promise = LocalDocument.query('ElementSpecial2', {
+                        promise = LocalDocument.query('ElementSpecial3', {
                             keys: keys,
                             include_docs: true
                         }).then(
                             function (results) {
-                                // return results.map(createAppFeatureModel);
-                                return results.filter(function (item) {
-                                    return !item.doc.editMode;
-                                }).map(createAppFeatureModel);
+                                return results.map(createAppFeatureModel);
                             },
                             function (error) {
                                 // TODO → handle error

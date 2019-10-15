@@ -214,7 +214,7 @@ angular.module('app.controllers.object_edit', [])
                                         keys.push([layerModel.filterValue, key.id]);
                                     });
 
-                                    promise = LocalDocument.query('ElementSpecial2', {
+                                    promise = LocalDocument.query('ElementSpecial3', {
                                         keys: keys
                                     }).then(
                                         function (results) {

@@ -15,7 +15,7 @@ angular.module('app.controllers.replicate', ['app.services.context'])
             'Document/byPath',
             'TronconDigue/streamLight',
             // Local views
-            'ElementSpecial2',
+            'ElementSpecial3',
             'bySEIdHB',
             'byDigueId',
             'byId',
@@ -123,9 +123,9 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 }
             },
             {
-                _id: '_design/ElementSpecial2',
+                _id: '_design/ElementSpecial3',
                 views: {
-                    'ElementSpecial2': {
+                    'ElementSpecial3': {
                         map: function (doc) {
                             if (doc['@class'] && !doc.editMode) {
                                 emit([doc['@class'], doc.linearId], {
