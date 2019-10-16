@@ -435,14 +435,13 @@ angular.module('app.services.map', ['app.services.context'])
                         });
 
                         promise = LocalDocument.query('ElementSpecial3', {
-                            keys: keys,
-                            include_docs: true
+                            keys: keys
                         }).then(
                             function (results) {
                                 return results.map(createAppFeatureModel);
                             },
                             function (error) {
-                                // TODO → handle error
+                                console.error(error);
                             });
                     } else {
                         var deferred = $q.defer();
