@@ -65,7 +65,50 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 || self.objectType === 'StationPompage'
                 || self.objectType === 'ReseauHydrauliqueFerme'
                 || self.objectType === 'OuvrageHydrauliqueAssocie'
-                || self.objectType === 'ReseauHydrauliqueCielOuvert';
+                || self.objectType === 'ReseauHydrauliqueCielOuvert'
+                || self.objectType === 'VoieAcces'
+                || self.objectType === 'OuvrageFranchissement'
+                || self.objectType === 'OuvertureBatardable'
+                || self.objectType === 'VoieDigue'
+                || self.objectType === 'OuvrageVoirie'
+                || self.objectType === 'ReseauTelecomEnergie'
+                || self.objectType === 'OuvrageTelecomEnergie'
+                || self.objectType === 'OuvrageParticulier'
+                || self.objectType === 'Prestation'
+                || self.objectType === 'EchelleLimnimetrique';
+        };
+
+        self.canShowPrestationTab = function () {
+            return self.objectType === 'StationPompage'
+                || self.objectType === 'ReseauHydrauliqueFerme'
+                || self.objectType === 'OuvrageHydrauliqueAssocie'
+                || self.objectType === 'ReseauHydrauliqueCielOuvert'
+                || self.objectType === 'VoieAcces'
+                || self.objectType === 'OuvrageFranchissement'
+                || self.objectType === 'OuvertureBatardable'
+                || self.objectType === 'VoieDigue'
+                || self.objectType === 'OuvrageVoirie'
+                || self.objectType === 'ReseauTelecomEnergie'
+                || self.objectType === 'OuvrageTelecomEnergie'
+                || self.objectType === 'OuvrageParticulier'
+                || self.objectType === 'EchelleLimnimetrique';
+        };
+
+        self.canShowDesordreTab = function () {
+            return self.objectType === 'StationPompage'
+                || self.objectType === 'ReseauHydrauliqueFerme'
+                || self.objectType === 'OuvrageHydrauliqueAssocie'
+                || self.objectType === 'ReseauHydrauliqueCielOuvert'
+                || self.objectType === 'VoieAcces'
+                || self.objectType === 'OuvrageFranchissement'
+                || self.objectType === 'OuvertureBatardable'
+                || self.objectType === 'VoieDigue'
+                || self.objectType === 'OuvrageVoirie'
+                || self.objectType === 'ReseauTelecomEnergie'
+                || self.objectType === 'OuvrageTelecomEnergie'
+                || self.objectType === 'OuvrageParticulier'
+                || self.objectType === 'Prestation'
+                || self.objectType === 'EchelleLimnimetrique';
         };
 
         self.canAddObservation = function () {
@@ -88,13 +131,72 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             }
         };
 
-        (function loadAbstracts() {
-            angular.forEach(self.document, function (value, key) {
-                if (/.*Id$/.test(key)) {
-                    LocalDocument.get(value).then(function (doc) {
-                        self.abstract[key.substr(0, key.length - 2)] = doc.libelle;
-                    });
-                }
+        self.addDesordre = function (did) {
+            if (!self.document.desordreIds) {
+                self.document.desordreIds = [];
+            }
+            self.document.desordreIds.push(did);
+            self.desordreList = self.desordreList.filter(function (item) {
+                return !self.document.desordreIds || self.document.desordreIds.indexOf(item.id) === -1;
             });
-        })(); // run it
+        };
+
+        self.addPrestation = function (pid) {
+            if (!self.document.prestationIds) {
+                self.document.prestationIds = [];
+            }
+            self.document.prestationIds.push(pid);
+            self.prestationList = self.prestationList.filter(function (item) {
+                return !self.document.prestationIds || self.document.prestationIds.indexOf(item.id) === -1;
+            });
+        };
+
+        self.init = function () {
+            (function loadAbstracts() {
+                angular.forEach(self.document, function (value, key) {
+                    if (/.*Id$/.test(key)) {
+                        LocalDocument.get(value).then(function (doc) {
+                            self.abstract[key.substr(0, key.length - 2)] = doc.libelle;
+                        });
+                    }
+                });
+            })(); // run it
+
+            LocalDocument.query('Element/byClassAndLinear', {
+                startkey: ['fr.sirs.core.model.Prestation'],
+                endkey: ['fr.sirs.core.model.Prestation', {}]
+            }).then(function (response) {
+                self.prestationMap = {};
+                self.prestationList = response.map(function (elt) {
+                    self.prestationMap[elt.value.id] = elt.value.designation + ' : ' + elt.value.libelle;
+                    return elt.value;
+                }).filter(function (item) {
+                    return !self.document.prestationIds || self.document.prestationIds.indexOf(item.id) === -1;
+                });
+                self.tempPrestation = {v: null};
+            }, function (error) {
+                console.error(error);
+            });
+
+            LocalDocument.query('Element/byClassAndLinear', {
+                startkey: ['fr.sirs.core.model.Desordre'],
+                endkey: ['fr.sirs.core.model.Desordre', {}]
+            }).then(function (response) {
+                self.desordreMap = {};
+                self.desordreList = response.map(function (elt) {
+                    self.desordreMap[elt.value.id] = elt.value.designation && elt.value.libelle ? elt.value.designation + ' : ' + elt.value.libelle : elt.value.id;
+                    return elt.value;
+                }).filter(function (item) {
+                    return !self.document.desordreIds || self.document.desordreIds.indexOf(item.id) === -1;
+                });
+                self.tempDesordre = {v: null};
+            }, function (error) {
+                console.error(error);
+            });
+
+
+        };
+
+        self.init();
+
     });

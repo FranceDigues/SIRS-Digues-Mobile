@@ -1,48 +1,106 @@
-<div class="sirs-panel">
-    <div class="sirs-field-inline">
-        <span class="sirs-field-title">Numéro de désignation :</span>
-        <span class="sirs-field-value" ng-bind="c.document.designation"></span>
+<div ng-switch="c.activeTab">
+    <div ng-switch-when="description">
+        <div class="sirs-panel">
+            <div class="sirs-field-inline">
+                <span class="sirs-field-title">Numéro de désignation :</span>
+                <span class="sirs-field-value" ng-bind="c.document.designation"></span>
+            </div>
+        </div>
+        <div class="sirs-section">
+            <div class="sirs-field">
+                <span class="sirs-field-title">Libellé</span>
+                <span class="sirs-field-value" ng-bind="c.document.libelle"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Largeur</span>
+                <span class="sirs-field-value" ng-bind="c.document.largeur"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Numéro de secteur</span>
+                <span class="sirs-field-value" ng-bind="c.document.numeroSecteur"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Usage</span>
+                <span class="sirs-field-value" ng-bind="c.abstract.usage"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Nature</span>
+                <span class="sirs-field-value" ng-bind="c.abstract.nature"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Position</span>
+                <span class="sirs-field-value" ng-bind="c.abstract.position"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Côté</span>
+                <span class="sirs-field-value" ng-bind="c.abstract.cote"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Commentaire</span>
+                <span class="sirs-field-value" ng-bind="c.document.commentaire"></span>
+            </div>
+        </div>
     </div>
-    <!--<div class="sirs-field-inline">-->
-        <!--<span class="sirs-field-title">Géométrie :</span>-->
-        <!--<span class="sirs-field-value">Désordre Linéaire</span>-->
-    <!--</div>-->
-    <!--<div class="sirs-field-inline">-->
-        <!--<span class="sirs-field-title">Position GPS :</span>-->
-        <!--<span class="sirs-field-value">Précision 5m</span>-->
-    <!--</div>-->
-</div>
-<div class="sirs-section">
-    <div class="sirs-field">
-        <span class="sirs-field-title">Libellé</span>
-        <span class="sirs-field-value" ng-bind="c.document.libelle"></span>
+    <!-- Content / Observations -->
+    <div ng-switch-when="observations">
+        <ion-list>
+            <ion-item on-tap="c.openObservationDetails(obs)" ng-repeat="obs in c.document.observations track by obs.id">
+                <span ng-if="obs.date">{{ obs.date|date:'dd/MM/yyyy'}}</span>
+                <span ng-if="!obs.date && obs.designation">{{ obs.designation}}</span>
+                <span ng-if="!obs.date && !obs.designation && obs.id">{{ obs.id}}</span>
+            </ion-item>
+        </ion-list>
     </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Largeur</span>
-        <span class="sirs-field-value" ng-bind="c.document.largeur"></span>
+    <div ng-switch-when="prestations" style="padding: 5px 10px;">
+        <label for="prestationList" class="active">Ajouter une prestation</label>
+        <div style="display: flex;flex-direction: row;padding:5px;justify-content: center;align-items: center;">
+            <select id="prestationList" class="browser-default" ng-model="c.tempPrestation.v">
+                <option ng-repeat="p in c.prestationList"
+                        ng-value="p.id"
+                        ng-selected="c.tempPrestation.v === p.id">
+                    {{p.designation + ' : ' + p.libelle}}
+                </option>
+            </select>
+            <div>
+                <button type="button"
+                        style="margin-left: 10px;"
+                        class="btn-floating btn-large waves-effect waves-light pink"
+                        on-tap="c.addPrestation(c.tempPrestation.v)">
+                    <i class="large material-icons">add</i>
+                </button>
+            </div>
+        </div>
+        <label>La liste des prestations associées</label>
+        <ion-list>
+            <ion-item ng-repeat="prestationId in c.document.prestationIds">
+                <span>{{!c.prestationList ? prestationId : c.prestationMap[prestationId]}}</span>
+            </ion-item>
+        </ion-list>
     </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Numéro de secteur</span>
-        <span class="sirs-field-value" ng-bind="c.document.numeroSecteur"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Usage</span>
-        <span class="sirs-field-value" ng-bind="c.abstract.usage"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Nature</span>
-        <span class="sirs-field-value" ng-bind="c.abstract.nature"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Position</span>
-        <span class="sirs-field-value" ng-bind="c.abstract.position"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Côté</span>
-        <span class="sirs-field-value" ng-bind="c.abstract.cote"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Commentaire</span>
-        <span class="sirs-field-value" ng-bind="c.document.commentaire"></span>
+    <div ng-switch-when="desordres" style="padding: 5px 10px;">
+        <label for="desordreList" class="active">Ajouter un desordre</label>
+        <div style="display: flex;flex-direction: row;padding:5px;justify-content: center;align-items: center;">
+            <select id="desordreList" class="browser-default" ng-model="c.tempDesordre.v">
+                <option ng-repeat="d in c.desordreList"
+                        ng-value="d.id"
+                        ng-selected="c.tempDesordre.v === d.id">
+                    {{d.designation && d.libelle ? d.designation + ' : ' + d.libelle : d.id}}
+                </option>
+            </select>
+            <div>
+                <button type="button"
+                        style="margin-left: 10px;"
+                        class="btn-floating btn-large waves-effect waves-light pink"
+                        on-tap="c.addDesordre(c.tempDesordre.v)">
+                    <i class="large material-icons">add</i>
+                </button>
+            </div>
+        </div>
+        <label>La liste des desordres associés</label>
+        <ion-list>
+            <ion-item ng-repeat="desordreId in c.document.desordreIds">
+                <span>{{!c.desordreList ? desordreId : c.desordreMap[desordreId]}}</span>
+            </ion-item>
+        </ion-list>
     </div>
 </div>

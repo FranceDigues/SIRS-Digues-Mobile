@@ -5,14 +5,18 @@
         <h1 class="title">Détail de l'objet</h1>
     </ion-header-bar>
 
-    <div class="tabs-striped tabs-top" ng-if="c.canShowObservationsTab()">
+    <div class="tabs-striped tabs-top">
         <div class="tabs tabs-sirs">
             <!-- Tab / Description -->
             <a class="tab-item" ng-class="{active: c.activeTab === 'description'}"
                on-tap="c.setActiveTab('description')">Description</a>
             <!-- Tab / Observations -->
-            <a class="tab-item" ng-class="{active: c.activeTab === 'observations'}"
+            <a class="tab-item" ng-if="c.canShowObservationsTab()" ng-class="{active: c.activeTab === 'observations'}"
                on-tap="c.setActiveTab('observations')">Observations</a>
+            <a class="tab-item" ng-if="c.canShowPrestationTab()" ng-class="{active: c.activeTab === 'prestations'}"
+               on-tap="c.setActiveTab('prestations')">Prestations</a>
+            <a class="tab-item" ng-if="c.canShowDesordreTab()" ng-class="{active: c.activeTab === 'desordres'}"
+               on-tap="c.setActiveTab('desordres')">Desordres</a>
         </div>
     </div>
 

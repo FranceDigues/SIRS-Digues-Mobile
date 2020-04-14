@@ -1,56 +1,95 @@
-<div class="sirs-panel">
-    <div class="sirs-field-inline">
-        <span class="sirs-field-title">Numéro de désignation :</span>
-        <span class="sirs-field-value" ng-bind="c.document.designation || 'Non définie'"></span>
+<div ng-switch="c.activeTab">
+    <div ng-switch-when="description">
+        <div class="sirs-panel">
+            <div class="sirs-field-inline">
+                <span class="sirs-field-title">Numéro de désignation :</span>
+                <span class="sirs-field-value" ng-bind="c.document.designation || 'Non définie'"></span>
+            </div>
+        </div>
+        <div class="sirs-section">
+            <div class="sirs-field">
+                <span class="sirs-field-title">Libelle</span>
+                <span class="sirs-field-value" ng-bind="c.document.libelle || 'Non définie'"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Date de début</span>
+                <span class="sirs-field-value" ng-bind="c.document.date_debut || 'Non définie'"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Date de fin</span>
+                <span class="sirs-field-value" ng-bind="c.document.date_fin || 'Non définie'"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Position Id</span>
+                <span class="sirs-field-value" ng-bind="c.document.positionId || 'Non définie'"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Source Id</span>
+                <span class="sirs-field-value" ng-bind="c.document.sourceId || 'Non définie'"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Tronçon Id</span>
+                <span class="sirs-field-value" ng-bind="c.document.linearId || 'Non définie'"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Type de Prestation Id</span>
+                <span class="sirs-field-value" ng-bind="c.document.typePrestationId || 'Non définie'"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Commentaire</span>
+                <span class="sirs-field-value" ng-bind="c.document.commentaire || 'Non définie'"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Coût Globale</span>
+                <span class="sirs-field-value" ng-bind="c.document.coutGlobal || 'Non définie'"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Coût Metre</span>
+                <span class="sirs-field-value" ng-bind="c.document.coutMetre || 'Non définie'"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Réalisation Interne</span>
+                <span class="sirs-field-value" ng-bind="c.document.realisationInterne || 'Non définie'"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Réalisation Interne</span>
+                <span class="sirs-field-value" ng-bind="c.document.realisationInterne || 'Non définie'"></span>
+            </div>
+        </div>
     </div>
-</div>
-<div class="sirs-section">
-    <div class="sirs-field">
-        <span class="sirs-field-title">Libelle</span>
-        <span class="sirs-field-value" ng-bind="c.document.libelle || 'Non définie'"></span>
+    <div ng-switch-when="observations">
+        <ion-list>
+            <ion-item on-tap="c.openObservationDetails(obs)" ng-repeat="obs in c.document.observations track by obs.id">
+                <span ng-if="obs.date">{{ obs.date|date:'dd/MM/yyyy'}}</span>
+                <span ng-if="!obs.date && obs.designation">{{ obs.designation}}</span>
+                <span ng-if="!obs.date && !obs.designation && obs.id">{{ obs.id}}</span>
+            </ion-item>
+        </ion-list>
     </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Date de début</span>
-        <span class="sirs-field-value" ng-bind="c.document.date_debut || 'Non définie'"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Date de fin</span>
-        <span class="sirs-field-value" ng-bind="c.document.date_fin || 'Non définie'"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Position Id</span>
-        <span class="sirs-field-value" ng-bind="c.document.positionId || 'Non définie'"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Source Id</span>
-        <span class="sirs-field-value" ng-bind="c.document.sourceId || 'Non définie'"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Tronçon Id</span>
-        <span class="sirs-field-value" ng-bind="c.document.linearId || 'Non définie'"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Type de Prestation Id</span>
-        <span class="sirs-field-value" ng-bind="c.document.typePrestationId || 'Non définie'"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Commentaire</span>
-        <span class="sirs-field-value" ng-bind="c.document.commentaire || 'Non définie'"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Coût Globale</span>
-        <span class="sirs-field-value" ng-bind="c.document.coutGlobal || 'Non définie'"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Coût Metre</span>
-        <span class="sirs-field-value" ng-bind="c.document.coutMetre || 'Non définie'"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Réalisation Interne</span>
-        <span class="sirs-field-value" ng-bind="c.document.realisationInterne || 'Non définie'"></span>
-    </div>
-    <div class="sirs-field">
-        <span class="sirs-field-title">Réalisation Interne</span>
-        <span class="sirs-field-value" ng-bind="c.document.realisationInterne || 'Non définie'"></span>
+    <div ng-switch-when="desordres" style="padding: 5px 10px;">
+        <label for="desordreList" class="active">Ajouter un desordre</label>
+        <div style="display: flex;flex-direction: row;padding:5px;justify-content: center;align-items: center;">
+            <select id="desordreList" class="browser-default" ng-model="c.tempDesordre.v">
+                <option ng-repeat="d in c.desordreList"
+                        ng-value="d.id"
+                        ng-selected="c.tempDesordre.v === d.id">
+                    {{d.designation && d.libelle ? d.designation + ' : ' + d.libelle : d.id}}
+                </option>
+            </select>
+            <div>
+                <button type="button"
+                        style="margin-left: 10px;"
+                        class="btn-floating btn-large waves-effect waves-light pink"
+                        on-tap="c.addDesordre(c.tempDesordre.v)">
+                    <i class="large material-icons">add</i>
+                </button>
+            </div>
+        </div>
+        <label>La liste des desordres associés</label>
+        <ion-list>
+            <ion-item ng-repeat="desordreId in c.document.desordreIds">
+                <span>{{!c.desordreList ? desordreId : c.desordreMap[desordreId]}}</span>
+            </ion-item>
+        </ion-list>
     </div>
 </div>

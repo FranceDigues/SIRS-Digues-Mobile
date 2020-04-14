@@ -22,6 +22,9 @@ angular.module('app.controllers.observation_edit', [])
 
         self.isNewObject = !$routeParams.obsId;
 
+        self.objectType = objectDoc['@class']
+            .substring(objectDoc['@class'].lastIndexOf('.') + 1);
+
         self.doc = self.isNewObject ? createNewObservation() : angular.copy(getTargetObservation());
 
         // Hack for borne fin data without borneFinId
@@ -320,6 +323,11 @@ angular.module('app.controllers.observation_edit', [])
                                     });
                             }
                         });
+                } else {
+                    EditionService.saveObject(objectDoc).then(function () {
+                        MapManager.syncAllAppLayer();
+                        $location.path('/main');
+                    });
                 }
             } else {
                 // Save document.
@@ -338,27 +346,29 @@ angular.module('app.controllers.observation_edit', [])
                 'valid': false
             };
 
-            switch (objectDoc['@class']) {
-                case 'fr.sirs.core.model.StationPompage':
-                    newObj['@class'] = 'fr.sirs.core.model.ObservationStationPompage';
-                    break;
-                case 'fr.sirs.core.model.ReseauHydrauliqueFerme':
-                    newObj['@class'] = 'fr.sirs.core.model.ObservationReseauHydrauliqueFerme';
-                    break;
-                case 'fr.sirs.core.model.OuvrageHydrauliqueAssocie':
-                    newObj['@class'] = 'fr.sirs.core.model.ObservationOuvrageHydrauliqueAssocie';
-                    break;
-                case 'fr.sirs.core.model.ReseauHydrauliqueCielOuvert':
-                    newObj['@class'] = 'fr.sirs.core.model.ObservationReseauHydrauliqueCielOuvert';
-                    break;
+            switch (self.objectType) {
+                case 'StationPompage':
+                case 'ReseauHydrauliqueFerme':
+                case  'OuvrageHydrauliqueAssocie':
+                case  'ReseauHydrauliqueCielOuvert':
+                case 'VoieAcces':
+                case 'OuvrageFranchissement':
+                case 'OuvertureBatardable':
+                case 'VoieDigue':
+                case 'OuvrageVoirie':
+                case 'ReseauTelecomEnergie':
+                case 'OuvrageTelecomEnergie':
+                case 'OuvrageParticulier':
+                case 'EchelleLimnimetrique':
+                case 'Prestation':
+                    newObj['@class'] = 'fr.sirs.core.model.Observation' + self.objectType;
+                    return newObj;
                 default :
                     newObj['@class'] = 'fr.sirs.core.model.Observation';
                     newObj.urgenceId = "RefUrgence:1";
                     newObj.nombreDesordres = 0;
-                    break;
+                    return newObj;
             }
-
-            return newObj;
         }
 
         function getTargetObservation() {
@@ -368,7 +378,7 @@ angular.module('app.controllers.observation_edit', [])
                     return objectDoc.observations[i];
                 }
             }
-            throw new Error('No observation "' + $routeParams.obsId + '" found in disorder document.')
+            throw new Error('No observation "' + $routeParams.obsId + '" found in disorder document.');
         }
 
         // Medias
