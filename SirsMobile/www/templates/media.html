@@ -20,6 +20,13 @@
                                         on-tap="mdc.drawNote()">
                                     <i class="material-icons left">border_color</i>Déssiner une note
                                 </button>
+
+                                <button type="button" class="btn btn-large waves-effect waves-teal"
+                                        on-tap="mdc.importMedia()">
+                                    <i class="material-icons left">perm_media</i>
+                                    Importer un media
+                                </button>
+
                             </div>
 
                             <div class="pics row" ng-if="mdc.mediaOptions.id !=='' ">
@@ -27,7 +34,7 @@
                                     <div class="pic-quicklook">
                                         <img alt="Photo non disponible sur le mobile"
                                              style="height: 50px;"
-                                             ng-src="{{mdc.getPhotoPath(mdc.mediaOptions)}}"/>
+                                             ng-src="{{mdc.importPhototData ? mdc.importPhototData : mdc.getPhotoPath(mdc.mediaOptions)}}"/>
                                     </div>
                                 </div>
                             </div>
