@@ -7,7 +7,8 @@
                         <h2 class="sirs-card-title">Choix de la base de données</h2>
                         <p>Sélectionnez une base de données puis appuyez sur "connexion".</p>
                         <ul class="collection">
-                            <li class="collection-item avatar" ng-repeat="db in c.available" ng-class="{selected: (c.selected === db)}" on-tap="c.selected = db">
+                            <li class="collection-item avatar" ng-repeat="db in c.available"
+                                ng-class="{selected: (c.selected === db)}" on-tap="c.selectDB(db)">
                                 <i class="circle pink">{{db.name[0].toUpperCase()}}</i>
                                 <span class="title">{{db.name}}</span>
                                 <p>{{db.url}}</p>

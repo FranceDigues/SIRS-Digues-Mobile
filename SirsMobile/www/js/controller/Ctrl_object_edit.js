@@ -303,7 +303,7 @@ angular.module('app.controllers.object_edit', [])
                                                                       EditionService, objectDoc, refTypes,
                                                                       uuid4, SirsDoc, $ionicModal, orientationsList, $filter,
                                                                       cotesList, listTroncons, MapManager, PouchService,
-                                                                      $timeout, GlobalConfig, localStorageService, $q, $ionicPopup) {
+                                                                      $timeout, GlobalConfig, localStorageService, $q, $ionicPopup, $cordovaToast) {
 
             var self = this;
 
@@ -432,6 +432,12 @@ angular.module('app.controllers.object_edit', [])
             };
 
             self.save = function () {
+                if (!objectDoc.positionDebut && !objectDoc.borneDebutId) {
+                    $cordovaToast
+                        .showLongTop("Veuillez choisir une position pour cet objet, avant de continuer");
+                    return;
+                }
+
                 //@hb Add the source of the Desordre
                 if (objectDoc['@class'] === "fr.sirs.core.model.Desordre") {
                     objectDoc["sourceId"] = "RefSource:4";

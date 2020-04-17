@@ -1,36 +1,37 @@
 angular.module('app.controllers.database', ['app.services.context'])
-    .factory('dataBaseEditionFactory',function dataBaseEditionFactory() {
-      return {
-          oldDb: {}
-      }
+    .factory('dataBaseEditionFactory', function dataBaseEditionFactory() {
+        return {
+            oldDb: null,
+            updated: false
+        };
     })
-    .controller('DatabaseController', function DatabaseController($location, DatabaseService, AuthService,dataBaseEditionFactory) {
+    .controller('DatabaseController', function DatabaseController($location, DatabaseService, AuthService, dataBaseEditionFactory) {
 
         var self = this;
 
-
         self.available = DatabaseService.list();
 
-        self.selected = DatabaseService.getActive() || self.available[0];
+        self.selected = DatabaseService.getActive() || self.available[0];
 
-        self.remove = function() {
+        self.remove = function () {
             if (!self.selected) {
                 return;
             }
 
-            DatabaseService.remove(self.selected).then(function(removed) {
+            DatabaseService.remove(self.selected).then(function (removed) {
                 if (removed) {
                     self.selected = self.available[0];
+                    dataBaseEditionFactory.updated = false;
                 }
             });
         };
 
-        self.replicate = function() {
+        self.replicate = function () {
             if (!self.selected) {
                 return;
             }
 
-            DatabaseService.setActive(self.selected.name);
+            DatabaseService.setActive(self.selected.name, dataBaseEditionFactory.updated);
 
             if (!self.selected.replicated) {
                 $location.path('/replicate');
@@ -41,16 +42,21 @@ angular.module('app.controllers.database', ['app.services.context'])
             }
         };
 
-        //@hb
-        self.edition = function(){
+        self.edition = function () {
             if (self.selected) {
                 dataBaseEditionFactory.oldDb = self.selected;
+                dataBaseEditionFactory.updated = false;
                 $location.path('/database_edition');
             }
         };
+
+        self.selectDB = function (db) {
+            dataBaseEditionFactory.updated = false;
+            self.selected = db;
+        };
     })
 
-    .controller('DatabaseAddController', function DatabaseAddController($location, DatabaseService) {
+    .controller('DatabaseAddController', function DatabaseAddController($location, DatabaseService, dataBaseEditionFactory) {
 
         var self = this;
 
@@ -63,8 +69,9 @@ angular.module('app.controllers.database', ['app.services.context'])
             favorites: []
         };
 
-        self.add = function() {
+        self.add = function () {
             DatabaseService.add(self.db);
+            dataBaseEditionFactory.updated = false;
             $location.path('/setup');
         };
     })
@@ -74,9 +81,8 @@ angular.module('app.controllers.database', ['app.services.context'])
 
         self.db = dataBaseEditionFactory.oldDb;
 
-        self.update = function() {
-            DatabaseService.oldEditionRemove(dataBaseEditionFactory.oldDb);
-            DatabaseService.add(self.db);
+        self.update = function () {
+            dataBaseEditionFactory.updated = true;
             $location.path('/setup');
         };
     });

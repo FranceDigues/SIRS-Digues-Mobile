@@ -70,7 +70,7 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
         $rootScope.$watch(self.getValue, contextStorage.write, true);
     })
 
-    .service('DatabaseService', function DatabaseService($rootScope, $ionicPopup, ContextService) {
+    .service('DatabaseService', function DatabaseService($rootScope, $ionicPopup, ContextService, $q) {
 
         var self = this;
 
@@ -86,30 +86,33 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             $rootScope.$broadcast('databaseAdded', db);
         };
 
-        self.remove = function (db) {
-            return $ionicPopup.confirm({
-                title: 'Suppression d\'une base de données',
-                template: 'Voulez vous vraiment supprimer cette base de données ?'
-            }).then(function (confirmed) {
-                if (confirmed) {
-                    // Destroy the local database (if exists).
-                    new PouchDB(db.name).destroy();
-                    // Unregister the remove database.
-                    dbContext.list.splice(dbContext.list.indexOf(db), 1);
-                    // Broadcast application event.
-                    $rootScope.$broadcast('databaseRemoved', db);
-                }
-                return confirmed;
-            });
-        };
-
-        self.oldEditionRemove = function (db) {
-            // Destroy the local database (if exists).
-            new PouchDB(db.name).destroy();
-            // Unregister the remove database.
-            dbContext.list.splice(dbContext.list.indexOf(db), 1);
-            // Broadcast application event.
-            $rootScope.$broadcast('databaseRemoved', db);
+        self.remove = function (db, force) {
+            if (force) {
+                var deferred = $q.defer();
+                // Destroy the local database (if exists).
+                new PouchDB(db.name).destroy();
+                // Unregister the remove database.
+                dbContext.list.splice(dbContext.list.indexOf(db), 1);
+                // Broadcast application event.
+                $rootScope.$broadcast('databaseRemoved', db);
+                deferred.resolve(true);
+                return deferred.promise;
+            } else {
+                return $ionicPopup.confirm({
+                    title: 'Suppression d\'une base de données',
+                    template: 'Voulez vous vraiment supprimer cette base de données ?'
+                }).then(function (confirmed) {
+                    if (confirmed) {
+                        // Destroy the local database (if exists).
+                        new PouchDB(db.name).destroy();
+                        // Unregister the remove database.
+                        dbContext.list.splice(dbContext.list.indexOf(db), 1);
+                        // Broadcast application event.
+                        $rootScope.$broadcast('databaseRemoved', db);
+                    }
+                    return confirmed;
+                });
+            }
         };
 
         self.getActive = function () {
@@ -123,10 +126,10 @@ angular.module('app.services.context', ['app.services.utils', 'app.services.dao'
             return null;
         };
 
-        self.setActive = function (name) {
+        self.setActive = function (name, force) {
             var oldValue = dbContext.active;
             dbContext.active = name;
-            if (oldValue !== name) {
+            if (oldValue !== name || force) {
                 $rootScope.$broadcast('databaseChanged', self.getActive(), oldValue);
             }
         };
