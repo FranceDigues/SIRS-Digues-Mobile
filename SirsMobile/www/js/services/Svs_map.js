@@ -255,10 +255,10 @@ angular.module('app.services.map', ['app.services.context'])
 
         //@hb create the layer of "couches métiers"
         function createAppLayerInstance(layerModel) {
-
+            var olLayer;
             if (layerModel.filterValue === "fr.sirs.core.model.BorneDigue") {
                 //@hb Change the layer Source to Cluster source
-                var olLayer = new ol.layer.Image({
+                olLayer = new ol.layer.Image({
                     name: layerModel.title,
                     visible: layerModel.visible,
                     model: layerModel,
@@ -314,7 +314,7 @@ angular.module('app.services.map', ['app.services.context'])
                 });
 
             } else {
-                var olLayer = new ol.layer.Image({
+                olLayer = new ol.layer.Image({
                     name: layerModel.title,
                     visible: layerModel.visible,
                     model: layerModel,
@@ -385,6 +385,7 @@ angular.module('app.services.map', ['app.services.context'])
                         feature.set('categories', layerModel.categories);
                         feature.set('rev', featureModel.rev);
                         feature.set('designation', featureModel.designation);
+                        feature.set('@class', layerModel.filterValue);
                         feature.set('title', featureModel.libelle);
                         features.push(feature);
                     } else {
@@ -402,6 +403,7 @@ angular.module('app.services.map', ['app.services.context'])
                             feature.set('categories', layerModel.categories);
                             feature.set('rev', featureModel.rev);
                             feature.set('designation', featureModel.designation);
+                            feature.set('@class', layerModel.filterValue);
                             feature.set('title', featureModel.libelle);
                             features.push(feature);
                         }

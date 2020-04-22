@@ -1206,8 +1206,9 @@ angular.module('app.controllers.object_edit', [])
 
         });
     })
-    .controller('MediaController', function ($window, SirsDoc, $ionicLoading, $filter,
-                                             uuid4, $ionicPlatform, $scope, GeolocationService, AuthService) {
+    .controller('MediaController', function ($window, SirsDoc, $ionicLoading, GeolocationService,
+                                             uuid4, $ionicPlatform, $scope, AuthService, $filter,
+                                             $cordovaToast, EditionService, MapManager) {
         var self = this;
 
         var dataProjection = SirsDoc.get().epsgCode;
@@ -1222,33 +1223,77 @@ angular.module('app.controllers.object_edit', [])
             $scope.c.setView('form');
         };
 
+        // self.save = function () {
+        //     if (angular.isUndefined($scope.c.doc.photos)) {
+        //         $scope.c.doc.photos = [];
+        //     }
+        //
+        //     $scope.c.doc.photos.push(self.mediaOptions);
+        //
+        //     $scope.c.doc._attachments = $scope.c.doc._attachments || {};
+        //
+        //     var xhr = new XMLHttpRequest();
+        //     xhr.onload = function () {
+        //         var reader = new FileReader();
+        //         reader.onloadend = function () {
+        //             // Save the photo like attachment to the object
+        //             $scope.c.doc._attachments[self.mediaOptions.id] = {
+        //                 content_type: 'image/jpeg',
+        //                 data: reader.result.replace('data:image/jpeg;base64,', '')
+        //             };
+        //         };
+        //
+        //         reader.readAsDataURL(xhr.response);
+        //     };
+        //     xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length - 1]));
+        //     xhr.responseType = 'blob';
+        //     xhr.send();
+        //
+        //     $scope.c.setView('form');
+        // };
+
         self.save = function () {
-            if (angular.isUndefined($scope.c.doc.photos)) {
-                $scope.c.doc.photos = [];
-            }
-
-            $scope.c.doc.photos.push(self.mediaOptions);
-
-            $scope.c.doc._attachments = $scope.c.doc._attachments || {};
-
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function () {
-                var reader = new FileReader();
-                reader.onloadend = function () {
+            if (self.mediaOptions.id) {
+                $scope.c.doc.photos.push(self.mediaOptions);
+                if (self.importPhototData) {
+                    if (angular.isUndefined($scope.c.doc._attachments)) {
+                        $scope.c.doc._attachments = {};
+                    }
                     // Save the photo like attachment to the object
                     $scope.c.doc._attachments[self.mediaOptions.id] = {
                         content_type: 'image/jpeg',
-                        data: reader.result.replace('data:image/jpeg;base64,', '')
+                        data: self.importPhototData.replace('data:image/jpeg;base64,', '')
                     };
-                };
 
-                reader.readAsDataURL(xhr.response);
-            };
-            xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length - 1]));
-            xhr.responseType = 'blob';
-            xhr.send();
+                    EditionService.saveObject($scope.c.doc)
+                        .then(function () {
+                            $scope.c.setView('form');
+                            MapManager.syncAllAppLayer();
+                        });
 
-            $scope.c.setView('form');
+                } else {
+                    var xhr = new XMLHttpRequest();
+                    xhr.onload = function () {
+                        var reader = new FileReader();
+                        reader.onloadend = function () {
+                            if (angular.isUndefined($scope.c.doc._attachments)) {
+                                $scope.c.doc._attachments = {};
+                            }
+                            // Save the photo like attachment to the object
+                            $scope.c.doc._attachments[self.mediaOptions.id] = {
+                                content_type: 'image/jpeg',
+                                data: reader.result.replace('data:image/jpeg;base64,', '')
+                            };
+                        };
+
+                        reader.readAsDataURL(xhr.response);
+                    };
+                    xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length - 1]));
+                    xhr.responseType = 'blob';
+                    xhr.send();
+                    $scope.c.setView('form');
+                }
+            }
         };
 
         self.selectPos = function () {
@@ -1296,6 +1341,49 @@ angular.module('app.controllers.object_edit', [])
             });
         };
 
+        function calculateImageSize(base64String) {
+            var padding, inBytes, base64StringLength;
+            if (base64String.endsWith("==")) padding = 2;
+            else if (base64String.endsWith("=")) padding = 1;
+            else padding = 0;
+
+            base64StringLength = base64String.length;
+            inBytes = (base64StringLength / 4) * 3 - padding;
+            return inBytes;
+        }
+
+        self.importMedia = function () {
+            navigator.camera.getPicture(function (imageData) {
+                if (calculateImageSize(imageData) > 1048576) {
+                    $cordovaToast
+                        .showLongTop("Veuillez choisir une photo de taille inférieure à 1,2 Mo");
+                    return;
+                }
+
+                var photoId = uuid4.generate(),
+                    fileName = photoId + '.jpg';
+
+                // Store the photo in the object document.
+                self.mediaOptions['id'] = photoId;
+                self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
+                self.mediaOptions['date'] = $filter('date')(new Date(), 'yyyy-MM-dd');
+                self.mediaOptions['chemin'] = '/' + fileName;
+                self.mediaOptions['valid'] = false;
+
+                self.importPhototData = 'data:image/jpeg;base64,' + imageData;
+                // Force digest.
+                $scope.$digest();
+
+            }, function (error) {
+                console.log(error);
+            }, {
+                quality: 50,
+                sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
+                destinationType: navigator.camera.DestinationType.DATA_URL,
+                encodingType: navigator.camera.EncodingType.JPEG
+            });
+        };
+
         self.drawNote = function () {
             self.setView('note');
         };
@@ -1307,11 +1395,9 @@ angular.module('app.controllers.object_edit', [])
         }
 
         self.getPhotoPath = function (photo) {
-            var path = photo.chemin.replace(/\\/g, '/');
-            if (path.charAt(0) !== '/') {
-                path = '/' + path;
-            }
-            return self.mediaPath + path;
+            var path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
+            var image_url = self.mediaPath + '/' + path;
+            return image_url;
         };
 
         function photoCaptureError() {
@@ -1330,6 +1416,7 @@ angular.module('app.controllers.object_edit', [])
                         return;
                     }
                     window.resolveLocalFileSystemURL(self.mediaPath, function (targetDir) {
+                        self.importPhototData = null;
                         var photoId = uuid4.generate(),
                             fileName = photoId + '.jpg';
                         // Copy image file in its final directory.

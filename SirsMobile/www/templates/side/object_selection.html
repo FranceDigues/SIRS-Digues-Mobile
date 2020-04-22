@@ -19,7 +19,7 @@
                 {{ft.get('designation')}}
                 <div ng-if="!ft.get('designation')">Temp {{ft.get('id')}}</div>
                 <div ng-if="ft.get('@class')" class="layer-categories">{{ft.get('@class').split(".")[4] || 'Sans catégorie' }}</div>
-                <div ng-if="ft.get('categories')" class="layer-categories">{{ft.get('categories')[ft.get('categories').length-1]}}</div>
+<!--                <div ng-if="ft.get('categories')" class="layer-categories">{{ft.get('categories')[ft.get('categories').length-1]}}</div>-->
             </ion-item>
         </ion-list>
 
