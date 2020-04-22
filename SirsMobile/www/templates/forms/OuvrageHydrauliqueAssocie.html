@@ -33,6 +33,8 @@
             </select>
         </div>
     </div>
+
+    <!-- Probléme    -->
     <div class="sirs-field col col-50"
          ng-init="c.setupRef('reseauHydrauliqueFermeIds', c.refs.ReseauHydrauliqueFerme[0], true)">
         <label class="active">Réseau hydraulique associé</label>
@@ -40,9 +42,10 @@
             <div class="col col-75">
                 <div ng-if="c.showText('fullName')">
                     <select class="browser-default">
-                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme.sort(c.compareRef) track by r.id"
+                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme track by r.id"
                                 ng-value="r.id"
                                 ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                                ng-change="c.doc.reseauHydrauliqueFermeIds[$index] = r.id"
                                 ng-selected="c.doc.reseauHydrauliqueFermeIds[$index] === r.id">
                             {{r.libelle ? r.libelle : (r.designation ? r.designation : r.id) }}
                         </option>
@@ -50,7 +53,7 @@
                 </div>
                 <div ng-if="c.showText('abstract')">
                     <select class="browser-default">
-                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme.sort(c.compareRef) track by r.id"
+                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme track by r.id"
                                 ng-value="r.id"
                                 ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
                                 ng-selected="c.doc.reseauHydrauliqueFermeIds[$index] === r.id">
@@ -61,7 +64,7 @@
                 </div>
                 <div ng-if="c.showText('both')">
                     <select class="browser-default">
-                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme.sort(c.compareRef) track by r.id"
+                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme track by r.id"
                                 ng-value="r.id"
                                 ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
                                 ng-selected="c.doc.reseauHydrauliqueFermeIds[$index] === r.id">
@@ -91,6 +94,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="sirs-field col col-50" ng-init="c.setupRef('positionId', c.refs.RefPosition[0])">
         <label for="damPosition" class="active">Position sur la digue</label>

@@ -38,6 +38,7 @@
                                             Objet linéaire
                                         </label>
                                     </div>
+
                                     <div class="sirs-field-inline" ng-if="!c.isLinear">
                                         <span class="sirs-field-title" ng-if="!c.doc.systemeRepId">Position : </span>
                                         <span class="sirs-field-value" ng-if="!c.doc.systemeRepId">{{c.getStartPos() | lonlat:'à définir'}}</span>
@@ -45,17 +46,33 @@
                                             Position via la borne : {{c.getStartPosBorne()}}
                                         </span>
                                     </div>
+                                    <div class="position-action" ng-if="!c.isLinear">
+                                        <button class="btn waves-effect waves-light"
+                                                on-tap="c.locateMe()"
+                                                ng-if="!c.activatedPositionButton()">
+                                            <i class="material-icons center">gps_fixed</i>
+                                        </button>
+                                        <button class="btn waves-effect waves-light"
+                                                on-tap="c.selectPos()"
+                                                ng-if="!c.activatedPositionButton()">
+                                            <i class="material-icons center">edit</i>
+                                        </button>
+                                        <button class="btn waves-effect waves-light"
+                                                on-tap="c.selectPosBySR()"
+                                                ng-if="!c.activatedPositionButton()">
+                                            <i class="material-icons center">line_style</i>
+                                        </button>
+                                    </div>
+
                                     <div class="sirs-field-inline" ng-if="c.isLinear" style="overflow: hidden;">
                                         <span class="sirs-field-title"
                                               ng-if="!c.doc.systemeRepId"
                                               style="line-height: 37px;">Position de début :</span>
                                         <span class="sirs-field-value"
                                               ng-if="!c.doc.systemeRepId">{{c.getStartPos() | lonlat:'à définir'}}</span>
-
                                         <span class="sirs-field-title"
                                               ng-if="c.doc.systemeRepId" style="line-height: 37px;">Position de début via borne : {{c.getStartPosBorne()}}</span>
-
-                                        <div class="position-action" ng-if="c.isLinear && !c.isNew"
+                                        <div class="position-action"
                                              style="display: inline;float: right;">
                                             <button class="btn waves-effect waves-light"
                                                     ng-if="!c.activatedPositionButton()"
@@ -74,6 +91,7 @@
                                             </button>
                                         </div>
                                     </div>
+
 
                                     <div class="sirs-field-inline" ng-if="c.isLinear && !c.isNew"
                                          style="margin-top: 5px;overflow: hidden;">
@@ -104,23 +122,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="position-action" ng-if="!c.isLinear || c.isNew">
-                                        <button class="btn waves-effect waves-light"
-                                                on-tap="c.locateMe()"
-                                                ng-if="!c.activatedPositionButton()">
-                                            <i class="material-icons center">gps_fixed</i>
-                                        </button>
-                                        <button class="btn waves-effect waves-light"
-                                                on-tap="c.selectPos()"
-                                                ng-if="!c.activatedPositionButton()">
-                                            <i class="material-icons center">edit</i>
-                                        </button>
-                                        <button class="btn waves-effect waves-light"
-                                                on-tap="c.selectPosBySR()"
-                                                ng-if="!c.activatedPositionButton()">
-                                            <i class="material-icons center">line_style</i>
-                                        </button>
-                                    </div>
+
                                 </div>
                                 <div class="row">
                                     <div class="sirs-field col col-100">
@@ -262,14 +264,14 @@
                 <label for="pos" class="active">Position : </label>
                 <select id="pos" class="browser-default"
                         ng-model="cp.data.borne_aval">
-                    <option value="false"
+                    <option ng-value="'false'"
                             ng-model="cp.data.borne_aval"
-                            ng-selected="cp.data.borne_aval === false">
+                            ng-selected="cp.data.borne_aval === 'false'">
                         Amont
                     </option>
-                    <option value="true"
+                    <option ng-value="'true'"
                             ng-model="cp.data.borne_aval"
-                            ng-selected="cp.data.borne_aval === true">
+                            ng-selected="cp.data.borne_aval === 'true'">
                         Aval
                     </option>
                 </select>

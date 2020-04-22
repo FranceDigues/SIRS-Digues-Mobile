@@ -358,11 +358,26 @@ angular.module('app.controllers.object_edit', [])
 
             self.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry || !!objectDoc.borneFinId);
 
-            self.isLinear = !self.isNew && (!self.isClosed
-                || (objectDoc.positionDebut && objectDoc.positionFin && objectDoc.positionDebut !== objectDoc.positionFin)
-                || (objectDoc.borneDebutId !== objectDoc.borneFinId || objectDoc.borne_debut_aval !== objectDoc.borne_fin_aval
-                    || objectDoc.borne_debut_distance !== objectDoc.borne_fin_distance)
-            );
+            if (self.isNew) {
+                self.isLinear = false;
+            } else {
+                if (objectDoc.positionDebut && objectDoc.positionFin && objectDoc.positionDebut === objectDoc.positionFin) {
+                    self.isLinear = false;
+                } else if (objectDoc.borneDebutId && objectDoc.borneFinId
+                    && (objectDoc.borneDebutId === objectDoc.borneFinId
+                        || objectDoc.borne_debut_aval === objectDoc.borne_fin_aval
+                        || objectDoc.borne_debut_distance === objectDoc.borne_fin_distance)) {
+                    self.isLinear = false;
+                } else {
+                    self.isLinear = true;
+                }
+            }
+
+// self.isLinear = !self.isNew && (!self.isClosed
+//     || (objectDoc.positionDebut && objectDoc.positionFin && objectDoc.positionDebut !== objectDoc.positionFin)
+//     || (objectDoc.borneDebutId !== objectDoc.borneFinId || objectDoc.borne_debut_aval !== objectDoc.borne_fin_aval
+//         || objectDoc.borne_debut_distance !== objectDoc.borne_fin_distance)
+// );
 
             self.refs = refTypes;
 
@@ -481,8 +496,8 @@ angular.module('app.controllers.object_edit', [])
                 }
             };
 
-            // Geolocation
-            // ----------
+// Geolocation
+// ----------
 
             self.geoloc = undefined;
 
@@ -530,7 +545,7 @@ angular.module('app.controllers.object_edit', [])
 
                 var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
                 // Point case
-                if (!self.isLinear || self.isNew) {
+                if (!self.isLinear) {
                     objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
                     objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
                 } else {
@@ -669,12 +684,12 @@ angular.module('app.controllers.object_edit', [])
 
             };
 
-            // Medias
-            // ----------
+// Medias
+// ----------
 
             self.mediaPath = null;
 
-            //@hb get the value of Orientation & Côté from the Data Base
+//@hb get the value of Orientation & Côté from the Data Base
             self.goToMedia = function () {
                 self.setView('media');
             };
