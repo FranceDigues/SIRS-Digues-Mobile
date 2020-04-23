@@ -496,9 +496,191 @@ angular.module('app.controllers.observation_edit', [])
         });
 
     })
+    .controller('ObjectEditPosByBorneController', function ($rootScope, $scope, $ionicPopup, currentView, PouchService, BorneService) {
+
+        var self = this;
+        var wktFormat = new ol.format.WKT();
+
+        self.data = {
+            systemeRepId: '',
+            borneId: '',
+            borneLibelle: '',
+            borne_aval: '',
+            borne_distance: 0,
+            approximatePosition: ''
+        };
+
+        self.selectSR = function () {
+            self.data.systemeRepId = self.systemeReperageId;
+            self.systemeReperage = self.systemeReperageList.filter(function (item) {
+                return item.id === self.data.systemeRepId;
+            })[0];
+
+
+            PouchService.getLocalDB().query('getBornesIdsHB', {
+                keys: self.systemeReperage.value.systemeReperageBornes
+                    .map(function (item) {
+                        return item.borneId;
+                    })
+            }).then(function (res) {
+                angular.forEach(self.systemeReperage.value.systemeReperageBornes, function (item1) {
+                    angular.forEach(res.rows, function (item2) {
+                        if (item1.borneId === item2.id) {
+                            item1.libelle = item2.value.libelle;
+                            item1.borneGeometry = item2.value.geometry;
+                        }
+                    });
+                });
+                $rootScope.$apply();
+            });
+        };
+
+        self.updateBorneLibelle = function () {
+            self.data.borneId = self.borneId;
+
+            var index = self.systemeReperage.value.systemeReperageBornes.findIndex(function (item) {
+                return item.borneId === self.data.borneId;
+            });
+
+            var srb = self.systemeReperage.value.systemeReperageBornes[index];
+
+            self.data.borneLibelle = srb.libelle;
+
+        };
+
+        self.calculateApproximatePosition = function () {
+            var index = self.systemeReperage.value.systemeReperageBornes.findIndex(function (item) {
+                return item.borneId === self.data.borneId;
+            });
+
+            var srb = self.systemeReperage.value.systemeReperageBornes[index];
+
+            // Calculate approximate position
+            var x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
+            var y;
+
+            if (self.data.borne_aval === "true") {
+                y = (index === self.systemeReperage.value.systemeReperageBornes.length - 1)
+                    ? wktFormat.readGeometry(self.systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                    : wktFormat.readGeometry(self.systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
+            } else {
+                y = (index === 0)
+                    ? wktFormat.readGeometry(self.systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                    : wktFormat.readGeometry(self.systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
+            }
+
+            var v = glMatrix.vec2.sub([], y, x);
+
+            var vn = glMatrix.vec2.normalize(v, v);
+
+            var vs = glMatrix.vec2.scale(vn, vn, self.data.borne_distance);
+
+            var o = glMatrix.vec2.add([], x, vs);
+
+            return 'POINT(' + o[0] + ' ' + o[1] + ')';
+        };
+
+        self.canValidate = function () {
+            return self.data.systemeRepId
+                && self.data.borneId
+                && self.data.borne_aval
+                && self.data.borne_distance > -1;
+        };
+
+        self.validate = function () {
+            if (self.canValidate()) {
+                self.data.approximatePosition = self.calculateApproximatePosition();
+                BorneService.context.handlePosByBorne(self.data);
+                self.closeModal();
+            } else {
+                $ionicPopup.alert({
+                    title: 'Validation',
+                    template: 'Veuillez renseigner tous les champs obligatoires avant de valider'
+                });
+            }
+        };
+
+        self.closeModal = function () {
+            if (BorneService.context) {
+                BorneService.context.positionBySRModal.hide();
+                BorneService.context = null;
+            }
+        };
+
+        $scope.$on("borneModalData", function (evt, data) {
+            self.data = data;
+
+            var troncon = $scope.c.troncons.find(function (item) {
+                return item.id === $scope.c.objectDoc.linearId;
+            });
+
+            $rootScope.loadingflag = true;
+
+            PouchService.getLocalDB().query('byId', {
+                key: troncon.systemeRepDefautId
+            }).then(function (results) {
+                self.systemeReperageList = results.rows;
+                $rootScope.loadingflag = false;
+                $rootScope.$apply();
+
+                if (self.data.systemeRepId) {
+                    self.systemeReperageId = self.data.systemeRepId;
+                    self.borneId = self.data.borneId;
+                    $rootScope.$apply();
+                    if ($scope.c.linearPosEditionHandler.endPoint) {
+                        self.endSR = $scope.c.getEndPointSR();
+                    } else {
+                        self.endSR = null;
+                    }
+
+                    self.systemeReperage = self.systemeReperageList.filter(function (item) {
+                        return item.id === self.data.systemeRepId;
+                    })[0];
+
+                    $rootScope.$apply();
+
+                    if (!self.systemeReperage) {
+                        $rootScope.loadingflag = false;
+                        return;
+                    }
+
+                    PouchService.getLocalDB().query('getBornesIdsHB', {
+                        keys: self.systemeReperage.value.systemeReperageBornes
+                            .map(function (item) {
+                                return item.borneId;
+                            })
+                    }).then(function (res) {
+                        angular.forEach(self.systemeReperage.value.systemeReperageBornes, function (item1) {
+                            angular.forEach(res.rows, function (item2) {
+                                if (item1.borneId === item2.id) {
+                                    item1.libelle = item2.value.libelle;
+                                    item1.borneGeometry = item2.value.geometry;
+                                }
+                            });
+                        });
+                        $rootScope.loadingflag = false;
+                        $rootScope.$apply();
+                    });
+                }
+
+                if (!self.data.systemeRepId) {
+                    self.systemeReperageId = null;
+                    self.borneId = null;
+                    $rootScope.loadingflag = false;
+                }
+
+
+            }, function (reason) {
+                console.log(reason);
+                $rootScope.loadingflag = false;
+                $rootScope.$apply();
+            });
+
+        });
+    })
     .controller('MediaObservationController', function ($window, SirsDoc, $ionicLoading, GeolocationService,
                                                         uuid4, $ionicPlatform, $scope, AuthService, $filter,
-                                                        $cordovaToast, EditionService, MapManager) {
+                                                        $cordovaToast, EditionService, MapManager, $ionicModal, $rootScope, BorneService) {
         var self = this;
 
         var dataProjection = SirsDoc.get().epsgCode;
@@ -563,6 +745,52 @@ angular.module('app.controllers.observation_edit', [])
 
         self.selectPos = function () {
             self.setView('map');
+        };
+
+        $ionicModal.fromTemplateUrl('borne-position.html', {
+            scope: $scope,
+            animation: 'slide-in-up',
+            backdropClickToClose: false
+        }).then(function (modal) {
+            self.positionBySRModal = modal;
+        });
+
+        self.selectPosBySR = function () {
+            BorneService.context = self;
+            self.positionBySRModal.show();
+            // Create borne position
+            if (!self.mediaOptions.systemeRepId) {
+                $rootScope.$broadcast("borneModalData", {
+                    systemeRepId: '',
+                    borne_aval: '',
+                    borne_distance: 0,
+                    borneId: '',
+                    borneLibelle: '',
+                    media: true
+                });
+            }
+
+            // Edit Debut
+            if (self.mediaOptions.systemeRepId) {
+                $rootScope.$broadcast("borneModalData", {
+                    systemeRepId: self.mediaOptions.systemeRepId,
+                    borne_aval: self.mediaOptions.borne_debut_aval ? 'true' : 'false',
+                    borne_distance: self.mediaOptions.borne_debut_distance,
+                    borneId: self.mediaOptions.borneDebutId,
+                    borneLibelle: self.mediaOptions.borneDebutLibelle || '',
+                    media: true
+                });
+            }
+
+        };
+
+        self.handlePosByBorne = function (data) {
+            delete self.mediaOptions.positionDebut;
+            self.mediaOptions.systemeRepId = data.systemeRepId;
+            self.mediaOptions.borne_debut_aval = data.borne_aval === 'true';
+            self.mediaOptions.borne_debut_distance = data.borne_distance;
+            self.mediaOptions.borneDebutId = data.borneId;
+            self.mediaOptions.borneDebutLibelle = data.borneLibelle;
         };
 
         //@hb

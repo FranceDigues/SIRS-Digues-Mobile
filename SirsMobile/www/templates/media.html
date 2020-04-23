@@ -4,7 +4,6 @@
             <div class="row responsive-md" style="background-color:skyblue">
                 <div class="col col-80 col-offset-10">
                     <div class="sirs-card">
-
                         <div class="sirs-card-content">
 
                             <span class="blue-text text-darken-2 ">Prendre une photo ou une note</span><br>
@@ -53,16 +52,24 @@
                             <!--on-tap="mdc.selectPos()">-->
                             <!--Enregistrer une position GPS-->
                             <!--</button>-->
-                            <button class="btn waves-effect waves-light" on-tap="mdc.selectPos()">
-                                <i class="material-icons center">edit</i>
-                            </button>
                             <button class="btn waves-effect waves-light" on-tap="mdc.locateMe()">
                                 <i class="material-icons center">gps_fixed</i>
                             </button>
+                            <button class="btn waves-effect waves-light" on-tap="mdc.selectPos()">
+                                <i class="material-icons center">edit</i>
+                            </button>
+                            <button class="btn waves-effect waves-light" on-tap="mdc.selectPosBySR()">
+                                <i class="material-icons center">line_style</i>
+                            </button>
 
-                            <div ng-if="mdc.mediaOptions.positionDebut !== ''" class="sirs-field-inline">
+                            <div ng-if="mdc.mediaOptions.positionDebut" class="sirs-field-inline">
                                 <span class="sirs-field-title">&nbsp;&nbsp;Position&nbsp; : &nbsp;</span>
                                 <span class="sirs-field-value">{{mdc.mediaOptions.positionDebut}}</span>
+                            </div>
+                            <div ng-if="mdc.mediaOptions.borneDebutId" class="sirs-field-inline">
+                                <span class="sirs-field-value">&nbsp;&nbsp;Position via borne</span>
+                                <span class="sirs-field-value">{{mdc.mediaOptions.borneDebutId ? 'à ' + mdc.mediaOptions.borne_debut_distance + ' m de la borne ' +
+                    mdc.mediaOptions.borneDebutLibelle + ' en ' + (mdc.mediaOptions.borne_debut_aval ? 'aval' : 'amont') : 'à definir';}}</span>
                             </div>
 
                             <br>
@@ -150,7 +157,6 @@
 
 
                         </div>
-
                         <div class="sirs-card-action">
                             <a href="" class="btn-flat waves-effect waves-teal"
                                on-tap="mdc.back()">
@@ -162,22 +168,18 @@
                                 <i class="material-icons left">check</i>Terminer
                             </button>
                         </div>
-
                     </div>
                 </div>
             </div>
         </ion-content>
-    </div> <!--End of the media Form -->
-
+    </div>
     <!-- Position Map -->
     <div ng-include="'templates/position_edit.html'"
          ng-if="mdc.view === 'map'"
          ng-init="save = mdc.handlePos; exit = mdc.backToForm">
     </div>
-
     <!-- Note -->
     <div ng-include="'templates/note_edit.html'" ng-if="mdc.view === 'note'"
          ng-init="save = mdc.saveNote; exit = mdc.backToForm">
     </div>
-
 </ion-view>

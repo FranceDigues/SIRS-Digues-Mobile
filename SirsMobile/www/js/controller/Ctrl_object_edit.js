@@ -303,7 +303,8 @@ angular.module('app.controllers.object_edit', [])
                                                                       EditionService, objectDoc, refTypes,
                                                                       uuid4, SirsDoc, $ionicModal, orientationsList, $filter,
                                                                       cotesList, listTroncons, MapManager, PouchService,
-                                                                      $timeout, GlobalConfig, localStorageService, $q, $ionicPopup, $cordovaToast) {
+                                                                      $timeout, GlobalConfig, localStorageService, $q,
+                                                                      $ionicPopup, $cordovaToast, BorneService) {
 
             var self = this;
 
@@ -372,12 +373,6 @@ angular.module('app.controllers.object_edit', [])
                     self.isLinear = true;
                 }
             }
-
-// self.isLinear = !self.isNew && (!self.isClosed
-//     || (objectDoc.positionDebut && objectDoc.positionFin && objectDoc.positionDebut !== objectDoc.positionFin)
-//     || (objectDoc.borneDebutId !== objectDoc.borneFinId || objectDoc.borne_debut_aval !== objectDoc.borne_fin_aval
-//         || objectDoc.borne_debut_distance !== objectDoc.borne_fin_distance)
-// );
 
             self.refs = refTypes;
 
@@ -649,6 +644,7 @@ angular.module('app.controllers.object_edit', [])
             });
 
             self.selectPosBySR = function () {
+                BorneService.context = self;
                 self.positionBySRModal.show();
                 // Create borne position
                 if (!objectDoc.systemeRepId) {
@@ -1042,7 +1038,7 @@ angular.module('app.controllers.object_edit', [])
             self.exit();
         }
     })
-    .controller('ObjectEditPosByBorneController', function ($rootScope, $scope, $ionicPopup, currentView, PouchService) {
+    .controller('ObjectEditPosByBorneController', function ($rootScope, $scope, $ionicPopup, currentView, PouchService, BorneService) {
 
         var self = this;
         var wktFormat = new ol.format.WKT();
@@ -1136,7 +1132,7 @@ angular.module('app.controllers.object_edit', [])
         self.validate = function () {
             if (self.canValidate()) {
                 self.data.approximatePosition = self.calculateApproximatePosition();
-                $scope.c.handlePosByBorne(self.data);
+                BorneService.context.handlePosByBorne(self.data);
                 self.closeModal();
             } else {
                 $ionicPopup.alert({
@@ -1147,7 +1143,10 @@ angular.module('app.controllers.object_edit', [])
         };
 
         self.closeModal = function () {
-            $scope.c.positionBySRModal.hide();
+            if (BorneService.context) {
+                BorneService.context.positionBySRModal.hide();
+                BorneService.context = null;
+            }
         };
 
         $scope.$on("borneModalData", function (evt, data) {
@@ -1223,7 +1222,7 @@ angular.module('app.controllers.object_edit', [])
     })
     .controller('MediaController', function ($window, SirsDoc, $ionicLoading, GeolocationService,
                                              uuid4, $ionicPlatform, $scope, AuthService, $filter,
-                                             $cordovaToast, EditionService, MapManager) {
+                                             $cordovaToast, EditionService, MapManager, $ionicModal, $rootScope, BorneService) {
         var self = this;
 
         var dataProjection = SirsDoc.get().epsgCode;
@@ -1237,35 +1236,6 @@ angular.module('app.controllers.object_edit', [])
         self.back = function () {
             $scope.c.setView('form');
         };
-
-        // self.save = function () {
-        //     if (angular.isUndefined($scope.c.doc.photos)) {
-        //         $scope.c.doc.photos = [];
-        //     }
-        //
-        //     $scope.c.doc.photos.push(self.mediaOptions);
-        //
-        //     $scope.c.doc._attachments = $scope.c.doc._attachments || {};
-        //
-        //     var xhr = new XMLHttpRequest();
-        //     xhr.onload = function () {
-        //         var reader = new FileReader();
-        //         reader.onloadend = function () {
-        //             // Save the photo like attachment to the object
-        //             $scope.c.doc._attachments[self.mediaOptions.id] = {
-        //                 content_type: 'image/jpeg',
-        //                 data: reader.result.replace('data:image/jpeg;base64,', '')
-        //             };
-        //         };
-        //
-        //         reader.readAsDataURL(xhr.response);
-        //     };
-        //     xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length - 1]));
-        //     xhr.responseType = 'blob';
-        //     xhr.send();
-        //
-        //     $scope.c.setView('form');
-        // };
 
         self.save = function () {
             if (self.mediaOptions.id) {
@@ -1315,12 +1285,57 @@ angular.module('app.controllers.object_edit', [])
             self.setView('map');
         };
 
+        $ionicModal.fromTemplateUrl('borne-position.html', {
+            scope: $scope,
+            animation: 'slide-in-up',
+            backdropClickToClose: false
+        }).then(function (modal) {
+            self.positionBySRModal = modal;
+        });
+
+        self.selectPosBySR = function () {
+            BorneService.context = self;
+            self.positionBySRModal.show();
+            // Create borne position
+            if (!self.mediaOptions.systemeRepId) {
+                $rootScope.$broadcast("borneModalData", {
+                    systemeRepId: '',
+                    borne_aval: '',
+                    borne_distance: 0,
+                    borneId: '',
+                    borneLibelle: '',
+                    media: true
+                });
+            }
+
+            // Edit Debut
+            if (self.mediaOptions.systemeRepId) {
+                $rootScope.$broadcast("borneModalData", {
+                    systemeRepId: self.mediaOptions.systemeRepId,
+                    borne_aval: self.mediaOptions.borne_debut_aval ? 'true' : 'false',
+                    borne_distance: self.mediaOptions.borne_debut_distance,
+                    borneId: self.mediaOptions.borneDebutId,
+                    borneLibelle: self.mediaOptions.borneDebutLibelle || '',
+                    media: true
+                });
+            }
+
+        };
+
+        self.handlePosByBorne = function (data) {
+            delete self.mediaOptions.positionDebut;
+            self.mediaOptions.systemeRepId = data.systemeRepId;
+            self.mediaOptions.borne_debut_aval = data.borne_aval === 'true';
+            self.mediaOptions.borne_debut_distance = data.borne_distance;
+            self.mediaOptions.borneDebutId = data.borneId;
+            self.mediaOptions.borneDebutLibelle = data.borneLibelle;
+        };
+
         //@hb
         self.mediaOptions = {
             id: '',
             chemin: '',
             designation: "",
-            positionDebut: "",
             orientationPhoto: "",
             coteId: "",
             commentaire: "",
@@ -1336,10 +1351,8 @@ angular.module('app.controllers.object_edit', [])
         self.view = 'form';
 
         self.handlePos = function (pos) {
-
             var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
             self.mediaOptions.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-
         };
 
         self.backToForm = function () {
@@ -1467,7 +1480,12 @@ angular.module('app.controllers.object_edit', [])
             self.mediaPath = window.cordova.file.externalDataDirectory + 'medias';
         });
     })
-    .directive("refCategorie", RefCategorieDirective);
+    .directive("refCategorie", RefCategorieDirective)
+    .factory("BorneService", function () {
+        return {
+            context: null
+        };
+    });
 
 function RefCategorieDirective($filter) {
     return {

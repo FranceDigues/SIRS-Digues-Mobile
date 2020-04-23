@@ -166,3 +166,79 @@
     <div ng-include="'templates/media.html'" ng-if="c.view === 'media'"
          ng-controller="MediaObservationController as mdc"></div>
 </ion-view>
+<script type="text/ng-template" charset="utf-8" id="borne-position.html">
+    <ion-modal-view style="display: block;" ng-controller="ObjectEditPosByBorneController as cp">
+        <ion-header-bar class="bar-secondary">
+            <h1 class="title">Définir une position via une borne</h1>
+            <button class="button button-clear button-positive" ng-click="cp.closeModal()">Annuler</button>
+        </ion-header-bar>
+
+        <!-- Modal content area -->
+        <ion-content style="padding: 0 10px;">
+            <div>
+                <label>Système de repérage : </label>
+                <select id="sr" class="browser-default"
+                        ng-if="!cp.endSR"
+                        ng-model="cp.systemeReperageId"
+                        ng-change="cp.selectSR()">
+                    <option></option>
+                    <option ng-repeat="systemeReperage in cp.systemeReperageList track by systemeReperage.value._id"
+                            ng-value="systemeReperage.value._id"
+                            ng-model="cp.systemeReperageId"
+                            ng-change="cp.selectSR()"
+                            ng-selected="cp.systemeReperageId === systemeReperage.value._id">
+                        {{systemeReperage.value.libelle}}
+                    </option>
+                </select>
+                <p ng-if="cp.endSR">{{cp.endSR}}</p>
+            </div>
+            <div ng-if="cp.systemeReperage">
+                <label>Borne du système de repérage : </label>
+                <select id="sr" class="browser-default"
+                        ng-model="cp.borneId"
+                        ng-change="cp.updateBorneLibelle()">
+                    <option></option>
+                    <option ng-repeat="systemeReperageBorne in cp.systemeReperage.value.systemeReperageBornes"
+                            value="{{systemeReperageBorne.borneId}}"
+                            ng-model="cp.borneId"
+                            ng-change="cp.updateBorneLibelle()"
+                            ng-selected="cp.data.borneId === systemeReperageBorne.borneId">
+                        {{systemeReperageBorne.libelle}}
+                    </option>
+                </select>
+            </div>
+            <div ng-if="cp.systemeReperage">
+                <label for="distance" class="active">Distance à la borne (en mètre) : </label>
+                <input id="distance" type="number" class="validate"
+                       ng-model="cp.data.borne_distance"
+                       placeholder=""/>
+            </div>
+            <div ng-if="cp.systemeReperage">
+                <label for="pos" class="active">Position : </label>
+                <select id="pos" class="browser-default"
+                        ng-model="cp.data.borne_aval">
+                    <option ng-value="'false'"
+                            ng-model="cp.data.borne_aval"
+                            ng-selected="cp.data.borne_aval === 'false'">
+                        Amont
+                    </option>
+                    <option ng-value="'true'"
+                            ng-model="cp.data.borne_aval"
+                            ng-selected="cp.data.borne_aval === 'true'">
+                        Aval
+                    </option>
+                </select>
+            </div>
+
+
+        </ion-content>
+        <ion-footer-bar class="bar-light">
+            <div class="col col-33 col-offset-66" style="padding: 0;">
+                <a class="waves-effect waves-light btn" ng-click="cp.validate()">
+                    <i class="material-icons right">thumb_up</i>
+                    Valider</a>
+            </div>
+        </ion-footer-bar>
+    </ion-modal-view>
+
+</script>
