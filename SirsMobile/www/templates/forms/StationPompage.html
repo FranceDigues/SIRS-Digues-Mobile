@@ -11,29 +11,44 @@
         <div class="row sirs-field-multi" ng-repeat="v in c.doc.reseauHydrauliqueFermeIds track by $index">
             <div class="col col-75">
                 <div ng-if="c.showText('fullName')">
-                    <select class="browser-default"
-                            ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
-                            ng-options="r.id as r.libelle for r in c.refs.ReseauHydrauliqueFerme.sort(c.compareRef)">
+                    <select class="browser-default">
+                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme track by r.id"
+                                ng-value="r.id"
+                                ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                                ng-change="c.doc.reseauHydrauliqueFermeIds[$index] = r.id"
+                                ng-selected="c.doc.reseauHydrauliqueFermeIds[$index] === r.id">
+                            {{r.libelle ? r.libelle : (r.designation ? r.designation : r.id) }}
+                        </option>
                     </select>
                 </div>
                 <div ng-if="c.showText('abstract')">
                     <select class="browser-default">
-                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme.sort(c.compareRef) track by r.id"
+                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme track by r.id"
                                 ng-value="r.id"
                                 ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                                ng-change="c.doc.reseauHydrauliqueFermeIds[$index] = r.id"
                                 ng-selected="c.doc.reseauHydrauliqueFermeIds[$index] === r.id">
-                            {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+                            {{r.abrege ? r.abrege :(r.designation && r.libelle ? (r.designation + ' : ' + r.libelle) :
+                            r.id)}}
                         </option>
                     </select>
                 </div>
                 <div ng-if="c.showText('both')">
                     <select class="browser-default">
-                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme.sort(c.compareRef) track by r.id"
+                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme track by r.id"
                                 ng-value="r.id"
                                 ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                                ng-change="c.doc.reseauHydrauliqueFermeIds[$index] = r.id"
                                 ng-selected="c.doc.reseauHydrauliqueFermeIds[$index] === r.id">
-                            {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+                            {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation && r.libelle ? (r.designation +
+                            ' : ' + r.libelle) : r.id)}}
                         </option>
+                    </select>
+
+                    <select class="browser-default"
+                            ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                            ng-if="!r.abrege"
+                            ng-options="r.id as r.designation + ' : ' + r.libelle for r in c.refs.ReseauHydrauliqueFerme">
                     </select>
                 </div>
             </div>

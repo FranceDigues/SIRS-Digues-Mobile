@@ -496,7 +496,7 @@ angular.module('app.controllers.observation_edit', [])
         });
 
     })
-    .controller('ObjectEditPosByBorneController', function ($rootScope, $scope, $ionicPopup, currentView, PouchService, BorneService) {
+    .controller('ObjectEditPosByBorneController2', function ($rootScope, $scope, $ionicPopup, currentView, PouchService, BorneService) {
 
         var self = this;
         var wktFormat = new ol.format.WKT();
@@ -747,7 +747,7 @@ angular.module('app.controllers.observation_edit', [])
             self.setView('map');
         };
 
-        $ionicModal.fromTemplateUrl('borne-position.html', {
+        $ionicModal.fromTemplateUrl('borne-position2.html', {
             scope: $scope,
             animation: 'slide-in-up',
             backdropClickToClose: false

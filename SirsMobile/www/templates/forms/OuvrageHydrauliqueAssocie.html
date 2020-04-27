@@ -33,8 +33,6 @@
             </select>
         </div>
     </div>
-
-    <!-- Probléme    -->
     <div class="sirs-field col col-50"
          ng-init="c.setupRef('reseauHydrauliqueFermeIds', c.refs.ReseauHydrauliqueFerme[0], true)">
         <label class="active">Réseau hydraulique associé</label>
@@ -56,6 +54,7 @@
                         <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme track by r.id"
                                 ng-value="r.id"
                                 ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                                ng-change="c.doc.reseauHydrauliqueFermeIds[$index] = r.id"
                                 ng-selected="c.doc.reseauHydrauliqueFermeIds[$index] === r.id">
                             {{r.abrege ? r.abrege :(r.designation && r.libelle ? (r.designation + ' : ' + r.libelle) :
                             r.id)}}
@@ -67,6 +66,7 @@
                         <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme track by r.id"
                                 ng-value="r.id"
                                 ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                                ng-change="c.doc.reseauHydrauliqueFermeIds[$index] = r.id"
                                 ng-selected="c.doc.reseauHydrauliqueFermeIds[$index] === r.id">
                             {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation && r.libelle ? (r.designation +
                             ' : ' + r.libelle) : r.id)}}

@@ -7,28 +7,37 @@
          ng-init="c.setupRef('typeReseauHydroCielOuvertId', c.refs.RefReseauHydroCielOuvert[0])">
         <label for="resType" class="active">Type de réseau</label>
         <div ng-if="c.showText('fullName')">
-            <select id="resType" class="browser-default"
-                    ng-model="c.doc.typeReseauHydroCielOuvertId"
-                    ng-options="r.id as r.libelle for r in c.refs.RefReseauHydroCielOuvert.sort(c.compareRef)">
+            <select id="resType" class="browser-default">
+                <option ng-repeat="r in c.refs.RefReseauHydroCielOuvert track by r.id"
+                        ng-value="r.id"
+                        ng-model="c.doc.typeReseauHydroCielOuvertId"
+                        ng-change="c.doc.typeReseauHydroCielOuvertId = r.id"
+                        ng-selected="c.doc.typeReseauHydroCielOuvertId === r.id">
+                    {{r.libelle ? r.libelle : (r.designation ? r.designation : r.id) }}
+                </option>
             </select>
         </div>
         <div ng-if="c.showText('abstract')">
             <select id="resType" class="browser-default">
-                <option ng-repeat="r in c.refs.RefReseauHydroCielOuvert.sort(c.compareRef) track by r.id"
+                <option ng-repeat="r in c.refs.RefReseauHydroCielOuvert track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.typeReseauHydroCielOuvertId"
+                        ng-change="c.doc.typeReseauHydroCielOuvertId = r.id"
                         ng-selected="c.doc.typeReseauHydroCielOuvertId === r.id">
-                    {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+                    {{r.abrege ? r.abrege :(r.designation && r.libelle ? (r.designation + ' : ' + r.libelle) :
+                    r.id)}}
                 </option>
             </select>
         </div>
         <div ng-if="c.showText('both')">
             <select id="resType" class="browser-default">
-                <option ng-repeat="r in c.refs.RefReseauHydroCielOuvert.sort(c.compareRef) track by r.id"
+                <option ng-repeat="r in c.refs.RefReseauHydroCielOuvert track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.typeReseauHydroCielOuvertId"
+                        ng-change="c.doc.typeReseauHydroCielOuvertId = r.id"
                         ng-selected="c.doc.typeReseauHydroCielOuvertId === r.id">
-                    {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+                    {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation && r.libelle ? (r.designation +
+                    ' : ' + r.libelle) : r.id)}}
                 </option>
             </select>
         </div>
@@ -41,28 +50,37 @@
         <div class="row sirs-field-multi" ng-repeat="v in c.doc.reseauHydrauliqueFermeIds track by $index">
             <div class="col col-75">
                 <div ng-if="c.showText('fullName')">
-                    <select class="browser-default"
-                            ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
-                            ng-options="r.id as r.libelle for r in c.refs.ReseauHydrauliqueFerme.sort(c.compareRef)">
+                    <select class="browser-default">
+                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme track by r.id"
+                                ng-value="r.id"
+                                ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                                ng-change="c.doc.reseauHydrauliqueFermeIds[$index] = r.id"
+                                ng-selected="c.doc.reseauHydrauliqueFermeIds[$index] === r.id">
+                            {{r.libelle ? r.libelle : (r.designation ? r.designation : r.id) }}
+                        </option>
                     </select>
                 </div>
                 <div ng-if="c.showText('abstract')">
                     <select class="browser-default">
-                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme.sort(c.compareRef) track by r.id"
+                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme track by r.id"
                                 ng-value="r.id"
                                 ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                                ng-change="c.doc.reseauHydrauliqueFermeIds[$index] = r.id"
                                 ng-selected="c.doc.reseauHydrauliqueFermeIds[$index] === r.id">
-                            {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+                            {{r.abrege ? r.abrege :(r.designation && r.libelle ? (r.designation + ' : ' + r.libelle) :
+                            r.id)}}
                         </option>
                     </select>
                 </div>
                 <div ng-if="c.showText('both')">
                     <select class="browser-default">
-                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme.sort(c.compareRef) track by r.id"
+                        <option ng-repeat="r in c.refs.ReseauHydrauliqueFerme track by r.id"
                                 ng-value="r.id"
                                 ng-model="c.doc.reseauHydrauliqueFermeIds[$index]"
+                                ng-change="c.doc.reseauHydrauliqueFermeIds[$index] = r.id"
                                 ng-selected="c.doc.reseauHydrauliqueFermeIds[$index] === r.id">
-                            {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+                            {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation && r.libelle ? (r.designation +
+                            ' : ' + r.libelle) : r.id)}}
                         </option>
                     </select>
 

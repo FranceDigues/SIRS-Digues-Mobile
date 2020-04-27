@@ -159,7 +159,7 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
         self.locateMe();
 
         if ($rootScope.reloadMain) {
-            location.reload();
+            window.location.reload();
             delete $rootScope.reloadMain;
         }
 
@@ -182,6 +182,10 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
 
                 olMap.get('main').on('moveend', onMoveEnd);
             }, 1000);
+        };
+
+        self.refreshMap = function () {
+            window.location.reload();
         };
 
 

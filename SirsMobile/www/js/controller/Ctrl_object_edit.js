@@ -1239,6 +1239,11 @@ angular.module('app.controllers.object_edit', [])
 
         self.save = function () {
             if (self.mediaOptions.id) {
+
+                if (angular.isUndefined($scope.c.doc.photos)) {
+                    $scope.c.doc.photos = [];
+                }
+
                 $scope.c.doc.photos.push(self.mediaOptions);
                 if (self.importPhototData) {
                     if (angular.isUndefined($scope.c.doc._attachments)) {
