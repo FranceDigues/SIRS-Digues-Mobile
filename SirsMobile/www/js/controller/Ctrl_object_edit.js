@@ -357,6 +357,9 @@ angular.module('app.controllers.object_edit', [])
 
             self.isNew = !$routeParams.id;
 
+            self.objectType = objectDoc['@class']
+                .substring(objectDoc['@class'].lastIndexOf('.') + 1);
+
             self.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry || !!objectDoc.borneFinId);
 
             if (self.isNew) {
@@ -375,6 +378,56 @@ angular.module('app.controllers.object_edit', [])
             }
 
             self.refs = refTypes;
+
+            self.isDependance = function () {
+                return self.doc['@class'].toLowerCase().indexOf('dependance') > -1;
+            };
+
+            // Check if the object is dependences
+            if (self.isDependance()) {
+                delete self.doc.linearId;
+                if (self.doc['@class'] === 'fr.sirs.core.model.DesordreDependance') {
+                    self.doc.dependanceId = null;
+                    var promises = [];
+                    promises.push(PouchService.getLocalDB().query('Element/byClassAndLinear', {
+                            startkey: ['fr.sirs.core.model.CheminAccesDependance'],
+                            endkey: ['fr.sirs.core.model.CheminAccesDependance', {}],
+                            include_docs: true
+                        }),
+                        PouchService.getLocalDB().query('Element/byClassAndLinear', {
+                            startkey: ['fr.sirs.core.model.OuvrageVoirieDependance'],
+                            endkey: ['fr.sirs.core.model.OuvrageVoirieDependance', {}],
+                            include_docs: true
+                        }),
+                        PouchService.getLocalDB().query('Element/byClassAndLinear', {
+                            startkey: ['fr.sirs.core.model.AutreDependance'],
+                            endkey: ['fr.sirs.core.model.AutreDependance', {}],
+                            include_docs: true
+                        }),
+                        PouchService.getLocalDB().query('Element/byClassAndLinear', {
+                            startkey: ['fr.sirs.core.model.AireStockageDependance'],
+                            endkey: ['fr.sirs.core.model.AireStockageDependance', {}],
+                            include_docs: true
+                        })
+                    );
+
+                    $q.all(promises)
+                        .then(function (results) {
+                            $timeout(function () {
+                                self.dependances = [];
+                                results.map(function (item) {
+                                    item.rows.map(function (elt) {
+                                        self.dependances.push(elt);
+                                    })
+                                });
+                                $rootScope.loadingflag = false;
+                            }, 100);
+                        }).catch(function (err) {
+                        console.log(err);
+                        $rootScope.loadingflag = false;
+                    });
+                }
+            }
 
             self.compareRef = function (obj1, obj2) {
                 var a, b, comparison;
@@ -408,7 +461,7 @@ angular.module('app.controllers.object_edit', [])
             };
 
             self.activatedPositionButton = function () {
-                return !self.doc || !self.doc.linearId;
+                return self.doc && (self.doc.linearId || self.isDependance());
             };
 
             self.troncons = [];
@@ -853,7 +906,7 @@ angular.module('app.controllers.object_edit', [])
                         // Store the photo in the object document.
                         objectDoc.photos.push({
                             'id': photoId,
-                            '@class': 'fr.sirs.core.model.Photo',
+                            '@class': 'fr.sirs.core.model' + (self.objectType === 'DesordreDependance' ? '.PhotoDependance' : '.Photo'),
                             'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
                             'chemin': '/' + fileName,
                             'valid': false
@@ -1233,6 +1286,8 @@ angular.module('app.controllers.object_edit', [])
 
         self.cotes = $scope.c.cotes;
 
+        self.objectType = $scope.c.objectType;
+
         self.back = function () {
             $scope.c.setView('form');
         };
@@ -1398,7 +1453,7 @@ angular.module('app.controllers.object_edit', [])
 
                 // Store the photo in the object document.
                 self.mediaOptions['id'] = photoId;
-                self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
+                self.mediaOptions['@class'] = 'fr.sirs.core.model' + (self.objectType === 'DesordreDependance' ? '.PhotoDependance' : '.Photo');
                 self.mediaOptions['date'] = $filter('date')(new Date(), 'yyyy-MM-dd');
                 self.mediaOptions['chemin'] = '/' + fileName;
                 self.mediaOptions['valid'] = false;
@@ -1456,7 +1511,7 @@ angular.module('app.controllers.object_edit', [])
                         imageFile.copyTo(targetDir, fileName, function () {
                             // Store the photo in the object document.
                             self.mediaOptions['id'] = photoId;
-                            self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
+                            self.mediaOptions['@class'] = 'fr.sirs.core.model' + (self.objectType === 'DesordreDependance' ? '.PhotoDependance' : '.Photo');
                             self.mediaOptions['date'] = $filter('date')(new Date(), 'yyyy-MM-dd');
                             self.mediaOptions['chemin'] = '/' + fileName;
                             self.mediaOptions['valid'] = false;

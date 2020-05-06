@@ -366,6 +366,9 @@ angular.module('app.controllers.observation_edit', [])
                 case 'Prestation':
                     newObj['@class'] = 'fr.sirs.core.model.Observation' + self.objectType;
                     return newObj;
+                case 'DesordreDependance':
+                    newObj['@class'] = 'fr.sirs.core.model.ObservationDependance';
+                    return newObj;
                 default :
                     newObj['@class'] = 'fr.sirs.core.model.Observation';
                     newObj.urgenceId = "RefUrgence:1";
@@ -453,7 +456,7 @@ angular.module('app.controllers.observation_edit', [])
                     // Store the photo in the object document.
                     self.photos.push({
                         'id': photoId,
-                        '@class': 'fr.sirs.core.model.Photo',
+                        '@class': 'fr.sirs.core.model' + (self.objectType === 'DesordreDependance' ? '.PhotoDependance' : '.Photo'),
                         'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
                         'chemin': '/' + fileName,
                         'valid': false
@@ -691,6 +694,8 @@ angular.module('app.controllers.observation_edit', [])
 
         self.cotes = $scope.c.cotes;
 
+        self.objectType = $scope.c.objectType;
+
         self.back = function () {
             $scope.c.setView('form');
         };
@@ -858,7 +863,7 @@ angular.module('app.controllers.observation_edit', [])
 
                 // Store the photo in the object document.
                 self.mediaOptions['id'] = photoId;
-                self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
+                self.mediaOptions['@class'] = 'fr.sirs.core.model' + (self.objectType === 'DesordreDependance' ? '.PhotoDependance' : '.Photo');
                 self.mediaOptions['date'] = $filter('date')(new Date(), 'yyyy-MM-dd');
                 self.mediaOptions['chemin'] = '/' + fileName;
                 self.mediaOptions['valid'] = false;
@@ -916,7 +921,7 @@ angular.module('app.controllers.observation_edit', [])
                         imageFile.copyTo(targetDir, fileName, function () {
                             // Store the photo in the object document.
                             self.mediaOptions['id'] = photoId;
-                            self.mediaOptions['@class'] = 'fr.sirs.core.model.Photo';
+                            self.mediaOptions['@class'] = 'fr.sirs.core.model' + (self.objectType === 'DesordreDependance' ? '.PhotoDependance' : '.Photo');
                             self.mediaOptions['date'] = $filter('date')(new Date(), 'yyyy-MM-dd');
                             self.mediaOptions['chemin'] = '/' + fileName;
                             self.mediaOptions['valid'] = false;

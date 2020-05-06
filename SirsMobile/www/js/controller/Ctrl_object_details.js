@@ -75,7 +75,8 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 || self.objectType === 'OuvrageTelecomEnergie'
                 || self.objectType === 'OuvrageParticulier'
                 || self.objectType === 'Prestation'
-                || self.objectType === 'EchelleLimnimetrique';
+                || self.objectType === 'EchelleLimnimetrique'
+                || self.objectType === 'DesordreDependance';
         };
 
         self.canShowPrestationTab = function () {

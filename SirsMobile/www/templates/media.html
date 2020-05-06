@@ -58,7 +58,8 @@
                             <button class="btn waves-effect waves-light" on-tap="mdc.selectPos()">
                                 <i class="material-icons center">edit</i>
                             </button>
-                            <button class="btn waves-effect waves-light" on-tap="mdc.selectPosBySR()">
+                            <button ng-if="mdc.objectType !== 'DesordreDependance'"
+                                    class="btn waves-effect waves-light" on-tap="mdc.selectPosBySR()">
                                 <i class="material-icons center">line_style</i>
                             </button>
 
