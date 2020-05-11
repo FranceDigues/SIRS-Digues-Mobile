@@ -335,22 +335,31 @@ angular.module('app.services.map', ['app.services.context'])
 
             var dataProjection = angular.isUndefined(SirsDoc.get().epsgCode) ? "EPSG:2154" : SirsDoc.get().epsgCode;
 
-            var projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
+            var projGeometry;
+            var realGeometry;
 
-            if (projGeometry instanceof ol.geom.LineString && projGeometry.getCoordinates().length === 2 &&
-                projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
-                projGeometry.getCoordinates()[0][1] === projGeometry.getCoordinates()[1][1]) {
-                projGeometry = new ol.geom.Point(projGeometry.getCoordinates()[0]);
-            }
+            if (featureDoc.geometry && featureDoc.geometry.toUpperCase().indexOf('POLYGON') > -1) {
+                projGeometry = wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857');
+                realGeometry = wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857');
+            } else {
+                projGeometry = featureDoc.geometry ? wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857') : undefined;
 
-            var realGeometry = featureDoc.positionDebut ?
-                wktFormat.readGeometry(featureDoc.positionDebut).transform(dataProjection, 'EPSG:3857') : undefined;
+                if (projGeometry instanceof ol.geom.LineString && projGeometry.getCoordinates().length === 2 &&
+                    projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
+                    projGeometry.getCoordinates()[0][1] === projGeometry.getCoordinates()[1][1]) {
+                    projGeometry = new ol.geom.Point(projGeometry.getCoordinates()[0]);
+                }
 
-            if (realGeometry && featureDoc.positionFin && featureDoc.positionFin !== featureDoc.positionDebut) {
-                realGeometry = new ol.geom.LineString([
-                    realGeometry.getFirstCoordinate(),
-                    wktFormat.readGeometry(featureDoc.positionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
-                ]);
+                realGeometry = featureDoc.positionDebut ?
+                    wktFormat.readGeometry(featureDoc.positionDebut).transform(dataProjection, 'EPSG:3857') : undefined;
+
+                if (realGeometry && featureDoc.positionFin && featureDoc.positionFin !== featureDoc.positionDebut) {
+                    realGeometry = new ol.geom.LineString([
+                        realGeometry.getFirstCoordinate(),
+                        wktFormat.readGeometry(featureDoc.positionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
+                    ]);
+                }
+
             }
 
             return {
@@ -446,12 +455,25 @@ angular.module('app.services.map', ['app.services.context'])
                                 console.error(error);
                             });
                     } else {
-                        var deferred = $q.defer();
-                        promise = deferred.promise.then(
-                            function () {
-                                return [].map(createAppFeatureModel);
-                            });
-                        deferred.resolve();
+                        if (layerModel.filterValue.toLowerCase().indexOf('dependance') > -1) {
+                            promise = LocalDocument.query('Element/byClassAndLinear', {
+                                startkey: [layerModel.filterValue],
+                                endkey: [layerModel.filterValue, {}],
+                                include_docs: true
+                            }).then(function (results) {
+                                    return results.map(createAppFeatureModel);
+                                },
+                                function (error) {
+                                    console.error(error);
+                                });
+                        } else {
+                            var deferred = $q.defer();
+                            promise = deferred.promise
+                                .then(function () {
+                                    return [];
+                                });
+                            deferred.resolve();
+                        }
                     }
                 } else if (layerModel.filterValue === "fr.sirs.core.model.TronconDigue") {
                     promise = LocalDocument.query('TronconDigue/streamLight', {
@@ -720,7 +742,6 @@ angular.module('app.services.map', ['app.services.context'])
 
     .factory('DefaultStyle', function (selection) {
 
-
         function createPointStyleFunc(color, featureModel, layerModel) {
             return function () {
                 var f = this;
@@ -806,6 +827,41 @@ angular.module('app.services.map', ['app.services.context'])
             return new ol.style.Style({stroke: stroke, zIndex: zIndex});
         }
 
+        function createPolygonStyle(strokeColor, strokeWidth, zIndex, featureModel, layerModel) {
+            var stroke = new ol.style.Stroke({color: strokeColor, width: strokeWidth});
+            if (layerModel) {
+                if (layerModel.featLabels) {
+                    //@hb
+                    var text = new ol.style.Text({
+                        font: '12px Verdana',
+                        text: featureModel.title ? featureModel.title : featureModel.designation,
+                        fill: new ol.style.Fill({color: 'black'}),
+                        stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+                    });
+                    return new ol.style.Style({stroke: stroke, zIndex: zIndex, text: text});
+                }
+            }
+
+            return new ol.style.Style({stroke: stroke, zIndex: zIndex});
+        }
+
+        function createPolygonStyleFunc(color, featureModel, layerModel) {
+            return function () {
+                color[3] = computeOpacity(this);
+
+                var styles = [],
+                    highlight = shouldHighlight2(this),
+                    zIndex = computeZIndex(this),
+                    strokeColor = color,
+                    strokeWidth = 5;
+                if (highlight) {
+                    styles.push(createPolygonStyle([255, 255, 255, color[3]], strokeWidth + 4, zIndex, featureModel, layerModel));
+                }
+                styles.push(createPolygonStyle(strokeColor, strokeWidth, zIndex, featureModel, layerModel));
+                return styles;
+            };
+        }
+
         function shouldHighlight(feature) {
             return selection.list.length && (selection.active && selection.active === feature);
         }
@@ -846,7 +902,6 @@ angular.module('app.services.map', ['app.services.context'])
             return ids;
         };
 
-
         function computeOpacity(feature) {
             if (selection.active && feature !== selection.active) {
                 return 0.5;
@@ -875,6 +930,9 @@ angular.module('app.services.map', ['app.services.context'])
                 case 'Point':
                 case 'MultiPoint':
                     return createPointStyleFunc(color, featureModel, layerModel);
+                case 'Polygon':
+                case 'MultiPolygon':
+                    return createPolygonStyleFunc(color, featureModel, layerModel);
             }
             return null;
         };
@@ -907,6 +965,27 @@ angular.module('app.services.map', ['app.services.context'])
         }
 
         function createLineStyle(strokeColor, strokeWidth, lineDash, zIndex, featureModel, layerModel) {
+            var stroke = new ol.style.Stroke({color: strokeColor, width: strokeWidth, lineDash: lineDash});
+
+            if (layerModel) {
+                if (layerModel.featLabels) {
+                    //@hb
+                    var text = new ol.style.Text({
+                        font: 'bold 12px sans-serif',
+                        text: featureModel.title ? featureModel.title : featureModel.designation,
+                        offsetY: -12,
+                        fill: new ol.style.Fill({color: 'black'}),
+                        stroke: new ol.style.Stroke({color: 'white', width: 0.5})
+                    });
+
+                    return new ol.style.Style({stroke: stroke, zIndex: zIndex, text: text});
+                }
+            }
+
+            return new ol.style.Style({stroke: stroke, zIndex: zIndex});
+        }
+
+        function createPolygonStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex, featureModel, layerModel) {
             var stroke = new ol.style.Stroke({color: strokeColor, width: strokeWidth, lineDash: lineDash});
 
             if (layerModel) {
@@ -971,6 +1050,19 @@ angular.module('app.services.map', ['app.services.context'])
             };
         }
 
+        function createPolygonStyleFunc(color, featureModel, layerModel) {
+            return function () {
+                color[3] = computeOpacity(this);
+
+                var highlight = shouldHighlight(this),
+                    fillColor = highlight ? color : [255, 255, 255, color[3]],
+                    strokeColor = highlight ? [255, 255, 255, color[3]] : color,
+                    strokeWidth = 2,
+                    circleRadius = 6;
+                return [createPolygonStyle(fillColor, strokeColor, strokeWidth, circleRadius, computeZIndex(this), featureModel, layerModel)];
+            };
+        }
+
         function shouldHighlight(feature) {
             return selection.list.length && ((!selection.active && feature.get('selected')) || (selection.active && selection.active === feature));
         }
@@ -995,13 +1087,14 @@ angular.module('app.services.map', ['app.services.context'])
             }
         }
 
-
         return function (color, type, featureModel, layerModel) {
             switch (type) {
                 case 'LineString':
                     return createLineStyleFunc(color, featureModel, layerModel);
                 case 'Point':
                     return createPointStyleFunc(color, featureModel, layerModel);
+                case 'Polygon':
+                    return createPolygonStyleFunc(color, featureModel, layerModel);
             }
             return null;
         };
