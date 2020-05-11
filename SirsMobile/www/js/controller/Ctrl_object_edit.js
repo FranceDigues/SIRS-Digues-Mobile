@@ -869,6 +869,8 @@ angular.module('app.controllers.object_edit', [])
 
             self.handleDrawPolygon = function (geometry) {
                 objectDoc.geometry = geometry;
+                objectDoc.positionDebut = null;
+                objectDoc.positionFin = null;
             };
 
 

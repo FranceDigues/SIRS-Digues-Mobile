@@ -985,7 +985,7 @@ angular.module('app.services.map', ['app.services.context'])
             return new ol.style.Style({stroke: stroke, zIndex: zIndex});
         }
 
-        function createPolygonStyle(fillColor, strokeColor, strokeWidth, circleRadius, zIndex, featureModel, layerModel) {
+        function createPolygonStyle(strokeColor, strokeWidth, lineDash, zIndex, featureModel, layerModel) {
             var stroke = new ol.style.Stroke({color: strokeColor, width: strokeWidth, lineDash: lineDash});
 
             if (layerModel) {
@@ -1054,12 +1054,19 @@ angular.module('app.services.map', ['app.services.context'])
             return function () {
                 color[3] = computeOpacity(this);
 
-                var highlight = shouldHighlight(this),
-                    fillColor = highlight ? color : [255, 255, 255, color[3]],
-                    strokeColor = highlight ? [255, 255, 255, color[3]] : color,
-                    strokeWidth = 2,
-                    circleRadius = 6;
-                return [createPolygonStyle(fillColor, strokeColor, strokeWidth, circleRadius, computeZIndex(this), featureModel, layerModel)];
+                var styles = [],
+                    highlight = shouldHighlight(this),
+                    zIndex = computeZIndex(this),
+                    lineStrokeColor = color,
+                    lineStrokeWidth = 3;
+
+                // Line style(s).
+                if (highlight) {
+                    styles.push(createPolygonStyle([255, 255, 255, color[3]], lineStrokeWidth + 4, [20, 30], zIndex, featureModel, layerModel));
+                }
+                styles.push(createPolygonStyle(lineStrokeColor, lineStrokeWidth, [30, 20], zIndex, featureModel, layerModel));
+
+                return styles;
             };
         }
 
