@@ -1,7 +1,6 @@
 # File extentions
 *.apk
 *.iml
-*.keystore
 
 # Folders
 .idea/

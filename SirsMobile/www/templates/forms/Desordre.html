@@ -20,7 +20,7 @@
             </select>
         </div>
         <div ng-if="c.showText('both')">
-            <select id="categorie" class="browser-default">
+            <select id="categorie" class="browser-default" ng-model="c.doc.categorieDesordreId">
                 <option ng-repeat="r in c.refs.RefCategorieDesordre.sort(c.compareRef) track by r.id"
                         ng-value="r.id"
                         ng-model="c.doc.categorieDesordreId"
@@ -41,7 +41,7 @@
             </select>
         </div>
         <div ng-if="c.showText('abstract')">
-            <select id="type" class="browser-default">
+            <select id="type" class="browser-default" ng-model="c.doc.typeDesordreId">
                 <option ng-repeat="r in (c.refs.RefTypeDesordre | filter:{ categorieId: c.doc.categorieDesordreId }:true).sort(c.compareRef) track by r._id"
                         ng-value="r._id"
                         ng-model="c.doc.typeDesordreId"

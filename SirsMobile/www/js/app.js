@@ -32,6 +32,10 @@ angular.module('SirsMobile', [
             return PositionMapManager.buildConfig();
         });
 
+        olMapProvider.provideOptions('draw', function (DrawPolygonMapManager) {
+            return DrawPolygonMapManager.buildConfig();
+        });
+
         // Configure routes.
         $routeProvider
             .when('/database', {

@@ -65,12 +65,12 @@ angular.module('app.controllers.replicate', ['app.services.context'])
                 }
             },
             {
-                _id: '_design/objetsModeEdition3',
+                _id: '_design/objetsModeEdition4',
                 views: {
-                    objetsModeEdition3: {
+                    objetsModeEdition4: {
                         map: function (doc) {
                             if (doc.editMode && !doc.valid && ((doc.positionDebut && doc.positionFin)
-                                || (doc.borneDebutId && doc.borneFinId))) {
+                                || (doc.borneDebutId && doc.borneFinId) || (doc.geometry && doc.geometry.toUpperCase().indexOf('POLYGON') > -1))) {
                                 emit(doc._id, {
                                     '@class': doc['@class'],
                                     'id': doc._id,

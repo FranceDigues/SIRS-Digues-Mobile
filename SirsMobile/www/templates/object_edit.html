@@ -29,7 +29,7 @@
                                                ng-model="c.doc.designation"
                                                placeholder="Ne pas remplir la désignation si vous souhaitez appliquer l'auto-incrémentation."/>
                                     </div>
-                                    <div ng-if="c.isNew || c.isClosed" class="switch">
+                                    <div ng-if="!c.isDependance() && (c.isNew || c.isClosed)" class="switch">
                                         <label>
                                             Objet ponctuel
                                             <input type="checkbox" ng-model="c.isLinear"
@@ -39,14 +39,39 @@
                                         </label>
                                     </div>
 
-                                    <div class="sirs-field-inline" ng-if="!c.isLinear">
+                                    <div ng-if="c.isDependance() && (c.isNew || c.isClosed)" class="switch">
+                                        <select id="objectType" class="browser-default"
+                                                ng-model="c.objDependanceType"
+                                                ng-change="c.changeObjectTypeDependance()">
+                                            <option ng-value="'point'"
+                                                    ng-model="c.objDependanceType"
+                                                    ng-change="c.changeObjectTypeDependance()"
+                                                    ng-selected="c.objDependanceType === 'point'">
+                                                Objet ponctuel
+                                            </option>
+                                            <option ng-value="'line'"
+                                                    ng-model="c.objDependanceType"
+                                                    ng-change="c.changeObjectTypeDependance()"
+                                                    ng-selected="c.objDependanceType === 'line'">
+                                                Objet linéaire
+                                            </option>
+                                            <option ng-value="'polygon'"
+                                                    ng-model="c.objDependanceType"
+                                                    ng-change="c.changeObjectTypeDependance()"
+                                                    ng-selected="c.objDependanceType === 'polygon'">
+                                                Objet polygonale
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="sirs-field-inline" ng-if="!c.isLinear && !c.isDependance()">
                                         <span class="sirs-field-title" ng-if="!c.doc.systemeRepId">Position : </span>
                                         <span class="sirs-field-value" ng-if="!c.doc.systemeRepId">{{c.getStartPos() | lonlat:'à définir'}}</span>
                                         <span class="sirs-field-title" ng-if="c.doc.systemeRepId">
                                             Position via la borne : {{c.getStartPosBorne()}}
                                         </span>
                                     </div>
-                                    <div class="position-action" ng-if="!c.isLinear">
+                                    <div class="position-action" ng-if="!c.isLinear && !c.isDependance()">
                                         <button class="btn waves-effect waves-light"
                                                 on-tap="c.locateMe()"
                                                 ng-if="c.activatedPositionButton()">
@@ -63,8 +88,8 @@
                                             <i class="material-icons center">line_style</i>
                                         </button>
                                     </div>
-
-                                    <div class="sirs-field-inline" ng-if="c.isLinear" style="overflow: hidden;">
+                                    <div class="sirs-field-inline" ng-if="c.isLinear && !c.isDependance()"
+                                         style="overflow: hidden;">
                                         <span class="sirs-field-title"
                                               ng-if="!c.doc.systemeRepId"
                                               style="line-height: 37px;">Position de début :</span>
@@ -91,9 +116,7 @@
                                             </button>
                                         </div>
                                     </div>
-
-
-                                    <div class="sirs-field-inline" ng-if="c.isLinear && !c.isNew"
+                                    <div class="sirs-field-inline" ng-if="c.isLinear && !c.isNew && !c.isDependance()"
                                          style="margin-top: 5px;overflow: hidden;">
                                         <span class="sirs-field-title"
                                               ng-if="!c.doc.systemeRepId"
@@ -123,6 +146,32 @@
                                     </div>
 
 
+                                    <div class="sirs-field-inline" ng-if="c.isDependance()">
+                                        <span class="sirs-field-title" ng-if="!c.doc.systemeRepId">Position : </span>
+                                        <span class="sirs-field-value" ng-if="!c.doc.systemeRepId">{{c.getStartPos() | lonlat:'à définir'}}</span>
+                                        <span class="sirs-field-title" ng-if="c.doc.systemeRepId">
+                                            Position via la borne : {{c.getStartPosBorne()}}
+                                        </span>
+                                    </div>
+                                    <div class="position-action" ng-if="c.isDependance()">
+                                        <button class="btn waves-effect waves-light"
+                                                on-tap="c.locateMe()"
+                                                ng-if="c.objDependanceType !== 'polygon'">
+                                            <i class="material-icons center">gps_fixed</i>
+                                        </button>
+                                        <button class="btn waves-effect waves-light"
+                                                on-tap="c.selectPos()"
+                                                ng-if="c.objDependanceType !== 'polygon'">
+                                            <i class="material-icons center">edit</i>
+                                        </button>
+                                        <button class="btn waves-effect waves-light"
+                                                on-tap="c.drawPolygon()"
+                                                ng-if="c.objDependanceType === 'polygon'">
+                                            <i class="material-icons center">format_shapes</i>
+                                        </button>
+                                    </div>
+
+
                                 </div>
                                 <div class="row" ng-if="!c.isDependance()">
                                     <div class="sirs-field col col-100">
@@ -136,10 +185,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row" ng-if="c.isDependance()">
+                                <div class="row" ng-if="c.objectType === 'DesordreDependance'">
                                     <div class="sirs-field col col-100">
                                         <label for="dependance" class="active">
-                                            La liste des Dependance
+                                            La liste des Dependances
                                         </label>
                                         <select id="dependance"
                                                 class="browser-default"
@@ -226,6 +275,8 @@
     <!-- Position Map -->
     <div ng-include="'templates/position_edit.html'" ng-if="c.view === 'map'"
          ng-init="save = c.handlePos; exit = c.backToForm"></div>
+    <div ng-include="'templates/draw_polygon.html'" ng-if="c.view === 'drawMap'"
+         ng-init="save = c.handleDrawPolygon; exit = c.backToForm"></div>
     <!-- Note -->
     <div ng-include="'templates/note_edit.html'" ng-if="c.view === 'note'"
          ng-init="save = c.saveNote; exit = c.backToForm"></div>

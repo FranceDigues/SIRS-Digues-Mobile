@@ -528,16 +528,22 @@ angular.module('app.services.map', ['app.services.context'])
             // Compute geometry.
             var geometry;
             var dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
-            geometry = wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut);
-            if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
-                || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
-                geometry = new ol.geom.LineString([
-                    geometry.getFirstCoordinate(),
-                    wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin).getFirstCoordinate()
-                ]);
+
+            if (featureDoc.geometry && featureDoc.geometry.toUpperCase().indexOf('POLYGON') > -1) {
+                geometry = wktFormat.readGeometry(featureDoc.geometry);
+            } else {
+                geometry = wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut);
+                if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
+                    || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
+                    geometry = new ol.geom.LineString([
+                        geometry.getFirstCoordinate(),
+                        wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin).getFirstCoordinate()
+                    ]);
+                }
+
+                geometry.transform(dataProjection, 'EPSG:3857');
             }
 
-            geometry.transform(dataProjection, 'EPSG:3857');
             // Create feature.
             var feature = new ol.Feature({geometry: geometry});
             feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
@@ -555,7 +561,8 @@ angular.module('app.services.map', ['app.services.context'])
         function createEditionFeatureInstances(featureDocs) {
             var features = [];
             angular.forEach(featureDocs, function (featureDoc) {
-                if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut)) {
+                if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut
+                    || (featureDoc.doc.geometry && featureDoc.doc.geometry.toUpperCase().indexOf('POLYGON') > -1))) {
                     features.push(createEditionFeatureInstance(featureDoc.doc));
                 }
             });
@@ -575,7 +582,7 @@ angular.module('app.services.map', ['app.services.context'])
             //         // TODO → handle error
             //     });
 
-            EditionService.getEditionModeObjects3().then(
+            EditionService.getEditionModeObjects4().then(
                 function onSuccess(results) {
                     olSource.clear();
                     olSource.addFeatures(createEditionFeatureInstances(results));
