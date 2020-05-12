@@ -586,7 +586,7 @@ angular.module('app.controllers.object_edit', [])
                 view: currentView,
                 layers: [olLayer, appLayers, vectorLayer],
                 controls: [],
-                interactions: [new ol.interaction.Draw({
+                interactions: [new ol.interaction.DragPan(), new ol.interaction.Draw({
                     source: vectorSource,
                     type: 'Polygon'
                 })]
