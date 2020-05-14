@@ -73,7 +73,7 @@
                 <option ng-repeat="p in c.prestationList"
                         ng-value="p.id"
                         ng-selected="c.tempPrestation.v === p.id">
-                    {{p.designation + ' : ' + p.libelle}}
+                    {{c.prestationMap[p.id]}}
                 </option>
             </select>
             <div>
@@ -99,7 +99,7 @@
                 <option ng-repeat="d in c.desordreList"
                         ng-value="d.id"
                         ng-selected="c.tempDesordre.v === d.id">
-                    {{d.designation && d.libelle ? d.designation + ' : ' + d.libelle : d.id}}
+                    {{c.desordreMap[d.id]}}
                 </option>
             </select>
             <div>

@@ -338,7 +338,7 @@ angular.module('app.services.map', ['app.services.context'])
             var projGeometry;
             var realGeometry;
 
-            if (featureDoc.geometry && featureDoc.geometry.toUpperCase().indexOf('POLYGON') > -1) {
+            if (featureDoc.geometry && featureDoc['@class'] && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
                 projGeometry = wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857');
                 realGeometry = wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857');
             } else {
@@ -461,7 +461,9 @@ angular.module('app.services.map', ['app.services.context'])
                                 endkey: [layerModel.filterValue, {}],
                                 include_docs: true
                             }).then(function (results) {
-                                    return results.map(createAppFeatureModel);
+                                    return results.filter(function (item) {
+                                        return !item.doc.editMode;
+                                    }).map(createAppFeatureModel);
                                 },
                                 function (error) {
                                     console.error(error);
@@ -551,19 +553,17 @@ angular.module('app.services.map', ['app.services.context'])
             var geometry;
             var dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
 
-            if (featureDoc.geometry && featureDoc.geometry.toUpperCase().indexOf('POLYGON') > -1) {
-                geometry = wktFormat.readGeometry(featureDoc.geometry);
+            if (featureDoc.geometry && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
+                geometry = wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857');
             } else {
-                geometry = wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut);
+                geometry = wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut).transform(dataProjection, 'EPSG:3857');
                 if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
                     || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
                     geometry = new ol.geom.LineString([
                         geometry.getFirstCoordinate(),
-                        wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin).getFirstCoordinate()
+                        wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
                     ]);
                 }
-
-                geometry.transform(dataProjection, 'EPSG:3857');
             }
 
             // Create feature.
@@ -584,7 +584,7 @@ angular.module('app.services.map', ['app.services.context'])
             var features = [];
             angular.forEach(featureDocs, function (featureDoc) {
                 if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut
-                    || (featureDoc.doc.geometry && featureDoc.doc.geometry.toUpperCase().indexOf('POLYGON') > -1))) {
+                    || (featureDoc.doc['@class'].toLowerCase().indexOf('dependance') > -1))) {
                     features.push(createEditionFeatureInstance(featureDoc.doc));
                 }
             });
@@ -595,16 +595,7 @@ angular.module('app.services.map', ['app.services.context'])
         function setEditionLayerFeatures(olLayer) {
             var olSource = olLayer.getSource().getSource();
 
-            // EditionService.getEditionModeObjects().then(
-            //     function onSuccess(results) {
-            //         olSource.clear();
-            //         olSource.addFeatures(createEditionFeatureInstances(results));
-            //     },
-            //     function onError(error) {
-            //         // TODO → handle error
-            //     });
-
-            EditionService.getEditionModeObjects4().then(
+            EditionService.getEditionModeObjects5().then(
                 function onSuccess(results) {
                     olSource.clear();
                     olSource.addFeatures(createEditionFeatureInstances(results));

@@ -73,7 +73,7 @@
                 <option ng-repeat="d in c.desordreList"
                         ng-value="d.id"
                         ng-selected="c.tempDesordre.v === d.id">
-                    {{d.designation && d.libelle ? d.designation + ' : ' + d.libelle : d.id}}
+                    {{c.desordreMap[d.id]}}
                 </option>
             </select>
             <div>

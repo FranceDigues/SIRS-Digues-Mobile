@@ -1,7 +1,7 @@
 angular.module('app.controllers.object_details', ['app.services.map'])
 
     .controller('ObjectDetailsController', function ObjectDetailsController($ionicPopup, $ionicScrollDelegate, sContext, SidePanelService,
-                                                                            LocalDocument, selection, $rootScope, MapManager, AuthService) {
+                                                                            LocalDocument, selection, $rootScope, MapManager, AuthService, EditionService) {
 
         var self = this;
 
@@ -140,6 +140,11 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             self.desordreList = self.desordreList.filter(function (item) {
                 return !self.document.desordreIds || self.document.desordreIds.indexOf(item.id) === -1;
             });
+
+            EditionService.saveObject(self.document)
+                .then(function () {
+                });
+
         };
 
         self.addPrestation = function (pid) {
@@ -150,6 +155,10 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             self.prestationList = self.prestationList.filter(function (item) {
                 return !self.document.prestationIds || self.document.prestationIds.indexOf(item.id) === -1;
             });
+
+            EditionService.saveObject(self.document)
+                .then(function () {
+                });
         };
 
         self.init = function () {
@@ -169,7 +178,7 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             }).then(function (response) {
                 self.prestationMap = {};
                 self.prestationList = response.map(function (elt) {
-                    self.prestationMap[elt.value.id] = elt.value.designation + ' : ' + elt.value.libelle;
+                    self.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation : (elt.value.libelle ? elt.value.libelle : 'sans designation');
                     return elt.value;
                 }).filter(function (item) {
                     return !self.document.prestationIds || self.document.prestationIds.indexOf(item.id) === -1;
@@ -185,7 +194,7 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             }).then(function (response) {
                 self.desordreMap = {};
                 self.desordreList = response.map(function (elt) {
-                    self.desordreMap[elt.value.id] = elt.value.designation && elt.value.libelle ? elt.value.designation + ' : ' + elt.value.libelle : elt.value.id;
+                    self.desordreMap[elt.value.id] = elt.value.designation ? elt.value.designation : (elt.value.libelle ? elt.value.libelle : 'sans designation');
                     return elt.value;
                 }).filter(function (item) {
                     return !self.document.desordreIds || self.document.desordreIds.indexOf(item.id) === -1;
@@ -194,8 +203,6 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             }, function (error) {
                 console.error(error);
             });
-
-
         };
 
         self.init();

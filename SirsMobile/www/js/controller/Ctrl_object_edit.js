@@ -682,7 +682,20 @@ angular.module('app.controllers.object_edit', [])
             // Check if the object is dependences
             if (self.isDependance()) {
                 delete self.doc.linearId;
-                self.objDependanceType = 'point';
+
+                if (!self.doc.geometry) {
+                    self.objDependanceType = 'point';
+                } else {
+                    if (self.doc.geometry.toUpperCase().indexOf('POLYGON') > -1 || self.doc.geometry.toUpperCase().indexOf('MULTIPOLYGON') > -1) {
+                        self.objDependanceType = 'polygon';
+                    } else if (self.doc.geometry.toUpperCase().indexOf('POINT') > -1 || self.doc.geometry.toUpperCase().indexOf('MULTIPOINT') > -1) {
+                        self.objDependanceType = 'point';
+                    } else {
+                        self.objDependanceType = 'line';
+                    }
+                }
+
+
                 if (self.doc['@class'] === 'fr.sirs.core.model.DesordreDependance') {
                     self.doc.dependanceId = null;
                     var promises = [];
@@ -792,7 +805,7 @@ angular.module('app.controllers.object_edit', [])
             };
 
             self.save = function () {
-                if (!objectDoc.positionDebut && !objectDoc.borneDebutId && self.isDependance() && objectDoc.geometry.toUpperCase().indexOf('POLYGON') === -1) {
+                if (!objectDoc.positionDebut && !objectDoc.borneDebutId && self.isDependance() && !objectDoc.geometry) {
                     $cordovaToast
                         .showLongTop("Veuillez choisir une position pour cet objet, avant de continuer");
                     return;
@@ -869,8 +882,6 @@ angular.module('app.controllers.object_edit', [])
 
             self.handleDrawPolygon = function (geometry) {
                 objectDoc.geometry = geometry;
-                objectDoc.positionDebut = null;
-                objectDoc.positionFin = null;
             };
 
 
@@ -883,7 +894,11 @@ angular.module('app.controllers.object_edit', [])
                 $ionicLoading.show({template: 'En attente de localisation...'});
                 navigator.geolocation.getCurrentPosition(function (position) {
                     $timeout(function () {
-                        self.handlePos(position.coords);
+                        if (self.isDependance()) {
+                            self.handlePosDependance(position.coords);
+                        } else {
+                            self.handlePos(position.coords);
+                        }
                         $ionicLoading.hide();
                     });
                 }, function (error) {
@@ -944,6 +959,32 @@ angular.module('app.controllers.object_edit', [])
 
             };
 
+            self.handlePosDependance = function (pos) {
+                delete objectDoc.systemeRepId;
+                delete objectDoc.borne_debut_aval;
+                delete objectDoc.borne_debut_distance;
+                delete objectDoc.borneDebutId;
+                delete objectDoc.borne_fin_aval;
+                delete objectDoc.borne_fin_distance;
+                delete objectDoc.borneFinId;
+                delete objectDoc.borneDebutLibelle;
+                delete objectDoc.borneFinLibelle;
+                delete objectDoc.approximatePositionDebut;
+                delete objectDoc.approximatePositionFin;
+                delete objectDoc.positionDebut;
+                delete objectDoc.positionFin;
+
+                var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
+                // Point case
+                if (!self.isLinear) {
+                    objectDoc.geometry = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                } else {
+                    // Linear case
+                    objectDoc.geometry = 'LINESTRING(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                }
+
+            };
+
             self.getEndPointSR = function () {
                 return objectDoc.systemeRepId || null;
             };
@@ -995,6 +1036,10 @@ angular.module('app.controllers.object_edit', [])
 
             self.getStartPos = function () {
                 return objectDoc.positionDebut ? parsePos(objectDoc.positionDebut) : undefined;
+            };
+
+            self.getStartPosDependance = function () {
+                return objectDoc.geometry ? parsePos(objectDoc.geometry) : undefined;
             };
 
             self.getEndPos = function () {
