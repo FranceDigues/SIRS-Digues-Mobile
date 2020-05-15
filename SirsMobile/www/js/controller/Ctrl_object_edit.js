@@ -912,6 +912,24 @@ angular.module('app.controllers.object_edit', [])
                 });
             };
 
+            self.locateMeEnd = function () {
+                $ionicLoading.show({template: 'En attente de localisation...'});
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    $timeout(function () {
+                        self.handlePosDependanceEnd(position.coords);
+                        $ionicLoading.hide();
+                    });
+                }, function (error) {
+                    // alert('code: ' + error.code + '\n' +
+                    //     'message: ' + error.message + '\n');
+                    $ionicLoading.hide();
+                }, {
+                    maximumAge: 20000,
+                    timeout: 50000,
+                    enableHighAccuracy: true
+                });
+            };
+
             self.selectPos = function () {
                 $ionicPopup.confirm({
                     title: 'Localisation manuelle',
@@ -919,6 +937,17 @@ angular.module('app.controllers.object_edit', [])
                 }).then(function (confirmed) {
                     if (confirmed) {
                         self.setView('map');
+                    }
+                });
+            };
+
+            self.selectPosEnd = function () {
+                $ionicPopup.confirm({
+                    title: 'Localisation manuelle',
+                    template: "Voulez vous localiser l'\objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation"
+                }).then(function (confirmed) {
+                    if (confirmed) {
+                        self.setView('mapEnd');
                     }
                 });
             };
@@ -976,12 +1005,45 @@ angular.module('app.controllers.object_edit', [])
 
                 var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
                 // Point case
-                if (!self.isLinear) {
+                if (!self.objDependanceType === 'point') {
                     objectDoc.geometry = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
                 } else {
                     // Linear case
-                    objectDoc.geometry = 'LINESTRING(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                    if (objectDoc.geometry && objectDoc.geometry.toUpperCase().indexOf('LINESTRING') > -1) {
+                        var geometry = wktFormat.readGeometry(objectDoc.geometry);
+
+                        geometry.setCoordinates([coordinate, geometry.getLastCoordinate()]);
+
+                        objectDoc.geometry = wktFormat.writeGeometry(geometry);
+                    } else {
+                        objectDoc.geometry = 'LINESTRING(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                    }
                 }
+
+            };
+
+            self.handlePosDependanceEnd = function (pos) {
+                delete objectDoc.systemeRepId;
+                delete objectDoc.borne_debut_aval;
+                delete objectDoc.borne_debut_distance;
+                delete objectDoc.borneDebutId;
+                delete objectDoc.borne_fin_aval;
+                delete objectDoc.borne_fin_distance;
+                delete objectDoc.borneFinId;
+                delete objectDoc.borneDebutLibelle;
+                delete objectDoc.borneFinLibelle;
+                delete objectDoc.approximatePositionDebut;
+                delete objectDoc.approximatePositionFin;
+                delete objectDoc.positionDebut;
+                delete objectDoc.positionFin;
+
+                var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
+
+                var geometry = wktFormat.readGeometry(objectDoc.geometry);
+
+                geometry.setCoordinates([geometry.getFirstCoordinate(), coordinate]);
+
+                objectDoc.geometry = wktFormat.writeGeometry(geometry);
 
             };
 
@@ -1042,6 +1104,10 @@ angular.module('app.controllers.object_edit', [])
                 return objectDoc.geometry ? parsePos(objectDoc.geometry) : undefined;
             };
 
+            self.getEndPosDependance = function () {
+                return objectDoc.geometry ? parsePosEnd(objectDoc.geometry) : undefined;
+            };
+
             self.getEndPos = function () {
                 return objectDoc.positionFin ? parsePos(objectDoc.positionFin) : undefined;
             };
@@ -1061,6 +1127,11 @@ angular.module('app.controllers.object_edit', [])
                 var strings = position.substring(position.indexOf('(') + 1, position.length - 1).split(' '),
                     numbers = [parseFloat(strings[0]), parseFloat(strings[1])];
                 return ol.proj.transform(numbers, dataProjection, 'EPSG:4326');
+            }
+
+            function parsePosEnd(position) {
+                var geometry = wktFormat.readGeometry(position);
+                return ol.proj.transform(geometry.getLastCoordinate(), dataProjection, 'EPSG:4326');
             }
 
             $ionicModal.fromTemplateUrl('borne-position.html', {
@@ -1486,10 +1557,6 @@ angular.module('app.controllers.object_edit', [])
             if (features.length === 0) {
                 return;
             }
-
-            // features.forEach(function (feature) {
-            //     console.log(wktFormat.writeGeometry(feature.getGeometry()));
-            // });
 
             self.success(wktFormat.writeGeometry(features[0].getGeometry()));
             self.exit();

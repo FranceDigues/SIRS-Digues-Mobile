@@ -145,66 +145,63 @@
                                         </div>
                                     </div>
 
-                                    <div class="sirs-field-inline"
-                                         ng-if="c.isDependance() && c.objDependanceType === 'polygon'">
-                                        <span class="sirs-field-title">Dessiner un polygone</span>
-                                        <span class="sirs-field-value"></span>
+                                    <div>
+                                        <div class="sirs-field-inline"
+                                             ng-if="c.isDependance() && c.objDependanceType === 'polygon'">
+                                            <span class="sirs-field-title">Dessiner un polygone</span>
+                                            <span class="sirs-field-value"></span>
+                                        </div>
+
+                                        <div class="sirs-field-inline"
+                                             ng-if="c.isDependance() && c.objDependanceType === 'point'">
+                                            <span class="sirs-field-title">Position : </span>
+                                            <span class="sirs-field-value">{{c.getStartPosDependance() | lonlat:'à définir'}}</span>
+                                        </div>
+
+                                        <div class="sirs-field-inline"
+                                             ng-if="c.isDependance() && c.objDependanceType === 'line'">
+                                            <span class="sirs-field-title">Position de début : </span>
+                                            <span class="sirs-field-value">{{c.getStartPosDependance() | lonlat:'à définir'}}</span>
+                                        </div>
+
+
+                                        <div class="position-action" ng-if="c.isDependance()">
+                                            <button class="btn waves-effect waves-light"
+                                                    on-tap="c.locateMe()"
+                                                    ng-if="c.objDependanceType !== 'polygon'">
+                                                <i class="material-icons center">gps_fixed</i>
+                                            </button>
+                                            <button class="btn waves-effect waves-light"
+                                                    on-tap="c.selectPos()"
+                                                    ng-if="c.objDependanceType !== 'polygon'">
+                                                <i class="material-icons center">edit</i>
+                                            </button>
+                                            <button class="btn waves-effect waves-light"
+                                                    on-tap="c.drawPolygon()"
+                                                    ng-if="c.objDependanceType === 'polygon'">
+                                                <i class="material-icons center">format_shapes</i>
+                                            </button>
+                                        </div>
+
                                     </div>
 
+                                    <div ng-if="c.isDependance() && c.objDependanceType === 'line' && c.doc.geometry">
+                                        <div class="sirs-field-inline"
+                                             ng-if="c.isDependance() && c.objDependanceType === 'line'">
+                                            <span class="sirs-field-title">Position de fin : </span>
+                                            <span class="sirs-field-value">{{c.getEndPosDependance() | lonlat:'à définir'}}</span>
+                                        </div>
 
-                                    <div class="sirs-field-inline"
-                                         ng-if="c.isDependance() && c.objDependanceType === 'point'">
-                                        <span class="sirs-field-title">Position : </span>
-                                        <span class="sirs-field-value">{{c.getStartPosDependance() | lonlat:'à définir'}}</span>
-                                    </div>
-
-                                    <div class="sirs-field-inline"
-                                         ng-if="c.isDependance() && c.objDependanceType === 'line'">
-                                        <span class="sirs-field-title">Position de début : </span>
-                                        <span class="sirs-field-value">{{c.getStartPosDependance() | lonlat:'à définir'}}</span>
-                                    </div>
-
-
-                                    <div class="position-action" ng-if="c.isDependance()">
-                                        <button class="btn waves-effect waves-light"
-                                                on-tap="c.locateMe()"
-                                                ng-if="c.objDependanceType !== 'polygon'">
-                                            <i class="material-icons center">gps_fixed</i>
-                                        </button>
-                                        <button class="btn waves-effect waves-light"
-                                                on-tap="c.selectPos()"
-                                                ng-if="c.objDependanceType !== 'polygon'">
-                                            <i class="material-icons center">edit</i>
-                                        </button>
-                                        <button class="btn waves-effect waves-light"
-                                                on-tap="c.drawPolygon()"
-                                                ng-if="c.objDependanceType === 'polygon'">
-                                            <i class="material-icons center">format_shapes</i>
-                                        </button>
-                                    </div>
-
-                                    <div class="sirs-field-inline"
-                                         ng-if="c.isDependance() && c.objDependanceType === 'line'">
-                                        <span class="sirs-field-title">Position de fin : </span>
-                                        <span class="sirs-field-value">{{c.getStartPosDependance() | lonlat:'à définir'}}</span>
-                                    </div>
-
-                                    <div class="position-action" ng-if="c.isDependance()">
-                                        <button class="btn waves-effect waves-light"
-                                                on-tap="c.locateMe()"
-                                                ng-if="c.objDependanceType !== 'polygon'">
-                                            <i class="material-icons center">gps_fixed</i>
-                                        </button>
-                                        <button class="btn waves-effect waves-light"
-                                                on-tap="c.selectPos()"
-                                                ng-if="c.objDependanceType !== 'polygon'">
-                                            <i class="material-icons center">edit</i>
-                                        </button>
-                                        <button class="btn waves-effect waves-light"
-                                                on-tap="c.drawPolygon()"
-                                                ng-if="c.objDependanceType === 'polygon'">
-                                            <i class="material-icons center">format_shapes</i>
-                                        </button>
+                                        <div class="position-action" ng-if="c.isDependance()">
+                                            <button class="btn waves-effect waves-light"
+                                                    on-tap="c.locateMeEnd()">
+                                                <i class="material-icons center">gps_fixed</i>
+                                            </button>
+                                            <button class="btn waves-effect waves-light"
+                                                    on-tap="c.selectPosEnd()">
+                                                <i class="material-icons center">edit</i>
+                                            </button>
+                                        </div>
                                     </div>
 
 
@@ -311,6 +308,8 @@
     <!-- Position Map -->
     <div ng-include="'templates/position_edit.html'" ng-if="c.view === 'map'"
          ng-init="save = (c.isDependance() ? c.handlePosDependance : c.handlePos); exit = c.backToForm"></div>
+    <div ng-include="'templates/position_edit.html'" ng-if="c.view === 'mapEnd'"
+         ng-init="save = c.handlePosDependanceEnd; exit = c.backToForm"></div>
     <div ng-include="'templates/draw_polygon.html'" ng-if="c.view === 'drawMap'"
          ng-init="save = c.handleDrawPolygon; exit = c.backToForm"></div>
     <!-- Note -->
