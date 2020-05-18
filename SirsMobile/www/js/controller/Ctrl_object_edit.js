@@ -867,6 +867,7 @@ angular.module('app.controllers.object_edit', [])
                     delete objectDoc.approximatePositionFin;
                     delete objectDoc.approximatePositionDebut;
                 }
+                delete objectDoc.geometry;
             };
 
             self.drawPolygon = function () {
@@ -1005,7 +1006,7 @@ angular.module('app.controllers.object_edit', [])
 
                 var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
                 // Point case
-                if (!self.objDependanceType === 'point') {
+                if (self.objDependanceType === 'point') {
                     objectDoc.geometry = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
                 } else {
                     // Linear case
@@ -1124,9 +1125,8 @@ angular.module('app.controllers.object_edit', [])
             };
 
             function parsePos(position) {
-                var strings = position.substring(position.indexOf('(') + 1, position.length - 1).split(' '),
-                    numbers = [parseFloat(strings[0]), parseFloat(strings[1])];
-                return ol.proj.transform(numbers, dataProjection, 'EPSG:4326');
+                var geometry = wktFormat.readGeometry(position);
+                return ol.proj.transform(geometry.getFirstCoordinate(), dataProjection, 'EPSG:4326');
             }
 
             function parsePosEnd(position) {
