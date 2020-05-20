@@ -805,7 +805,7 @@ angular.module('app.controllers.object_edit', [])
             };
 
             self.save = function () {
-                if (!objectDoc.positionDebut && !objectDoc.borneDebutId && self.isDependance() && !objectDoc.geometry) {
+                if ((!objectDoc.positionDebut && !objectDoc.borneDebutId) || (self.isDependance() && !objectDoc.geometry)) {
                     $cordovaToast
                         .showLongTop("Veuillez choisir une position pour cet objet, avant de continuer");
                     return;
