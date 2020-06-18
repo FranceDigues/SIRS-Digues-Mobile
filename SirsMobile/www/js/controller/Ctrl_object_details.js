@@ -132,6 +132,14 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             }
         };
 
+        self.openDesordreLink = function (id) {
+            window.location.href = "#/object/Desordre/" + id;
+        };
+
+        self.openPrestationLink = function (id) {
+            window.location.href = "#/object/Prestation/" + id;
+        };
+
         self.addDesordre = function (did) {
             if (!self.document.desordreIds) {
                 self.document.desordreIds = [];
@@ -147,6 +155,24 @@ angular.module('app.controllers.object_details', ['app.services.map'])
 
         };
 
+        self.removeDesordre = function (index) {
+            return $ionicPopup.confirm({
+                title: 'Suppression de l\'association',
+                template: 'Voulez vous vraiment supprimer cette association ?'
+            }).then(function (confirmed) {
+                if (confirmed) {
+                    self.document.desordreIds.splice(index, 1);
+                    if (self.document.desordreIds.length === 0) {
+                        delete self.document.desordreIds;
+                    }
+                    EditionService.saveObject(self.document)
+                        .then(function () {
+                        });
+                }
+                return confirmed;
+            });
+        };
+
         self.addPrestation = function (pid) {
             if (!self.document.prestationIds) {
                 self.document.prestationIds = [];
@@ -159,6 +185,24 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             EditionService.saveObject(self.document)
                 .then(function () {
                 });
+        };
+
+        self.removePrestation = function (index) {
+            return $ionicPopup.confirm({
+                title: 'Suppression de l\'association',
+                template: 'Voulez vous vraiment supprimer cette association ?'
+            }).then(function (confirmed) {
+                if (confirmed) {
+                    self.document.prestationIds.splice(index, 1);
+                    if (self.document.prestationIds.length === 0) {
+                        delete self.document.prestationIds;
+                    }
+                    EditionService.saveObject(self.document)
+                        .then(function () {
+                        });
+                }
+                return confirmed;
+            });
         };
 
         self.init = function () {

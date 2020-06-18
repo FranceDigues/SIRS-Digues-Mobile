@@ -87,8 +87,14 @@
         </div>
         <label>La liste des prestations associées</label>
         <ion-list>
-            <ion-item ng-repeat="prestationId in c.document.prestationIds">
+            <ion-item ng-repeat="prestationId in c.document.prestationIds"
+                      style="display:flex;justify-content: space-between;align-items: center;"
+                      on-tap="c.openPrestationLink(prestationId)">
                 <span>{{!c.prestationList ? prestationId : c.prestationMap[prestationId]}}</span>
+                <button type="button" class="btn-floating btn-small waves-effect waves-light pink"
+                        on-tap="c.removePrestation($index);$event.stopPropagation()">
+                    <i class="large material-icons">delete</i>
+                </button>
             </ion-item>
         </ion-list>
     </div>
@@ -113,8 +119,13 @@
         </div>
         <label>La liste des desordres associés</label>
         <ion-list>
-            <ion-item ng-repeat="desordreId in c.document.desordreIds">
+            <ion-item ng-repeat="desordreId in c.document.desordreIds"
+                      on-tap="c.openDesordreLink(desordreId)"
+                      style="display:flex;justify-content: space-between;align-items: center;">
                 <span>{{!c.desordreList ? desordreId : c.desordreMap[desordreId]}}</span>
+                <button type="button" class="btn-floating btn-small waves-effect waves-light pink" on-tap="c.removeDesordre($index);$event.stopPropagation()">
+                    <i class="large material-icons">delete</i>
+                </button>
             </ion-item>
         </ion-list>
     </div>
