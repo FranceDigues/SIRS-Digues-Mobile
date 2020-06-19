@@ -1115,13 +1115,13 @@ angular.module('app.controllers.object_edit', [])
 
             self.getStartPosBorne = function () {
                 return objectDoc.borneDebutId ? 'à ' + objectDoc.borne_debut_distance + ' m de la borne : ' +
-                    objectDoc.borneDebutLibelle + ' en ' + (objectDoc.borne_debut_aval ? 'aval' : 'amont') : 'à definir';
+                    objectDoc.borneDebutLibelle + ' en ' + (objectDoc.borne_debut_aval ? 'amont' : 'aval') : 'à definir';
 
             };
 
             self.getEndPosBorne = function () {
                 return objectDoc.borneFinId ? 'à ' + objectDoc.borne_fin_distance + ' m de la borne : ' +
-                    objectDoc.borneFinLibelle + ' en ' + (objectDoc.borne_fin_aval ? 'aval' : 'amont') : 'à definir';
+                    objectDoc.borneFinLibelle + ' en ' + (objectDoc.borne_fin_aval ? 'amont' : 'aval') : 'à definir';
             };
 
             function parsePos(position) {
