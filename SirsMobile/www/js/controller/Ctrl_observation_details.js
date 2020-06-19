@@ -230,6 +230,31 @@ angular.module('app.controllers.observation_details', [])
             SidePanelService.setTribordView('object_details');
         };
 
+        self.removePhoto = function (photo, index) {
+            $ionicPopup.confirm({
+                title: 'Suppression d\'une photo',
+                template: 'Voulez vous vraiment supprimer cette photo ?'
+            }).then(function (confirmed) {
+                if (confirmed) {
+                    self.doc.photos.splice(index, 1);
+
+                    if (self.objectDoc._attachments) {
+                        delete self.objectDoc._attachments[photo.id];
+                    }
+
+                    self.objectDoc.valid = false;
+
+                    self.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+
+                    self.objectDoc.editMode = true;
+
+                    EditionService.saveObject(self.objectDoc)
+                        .then(function () {
+                        });
+                }
+            });
+        };
+
         self.flagLoading = function () {
             $rootScope.loadingflag = true;
         };

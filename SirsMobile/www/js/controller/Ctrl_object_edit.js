@@ -1387,6 +1387,31 @@ angular.module('app.controllers.object_edit', [])
                 self.doc.date_fin = self.dateWrapper.toISOString().split('T')[0];
             };
 
+            self.removePhoto = function (photo, index) {
+                $ionicPopup.confirm({
+                    title: 'Suppression d\'une photo',
+                    template: 'Voulez vous vraiment supprimer cette photo ?'
+                }).then(function (confirmed) {
+                    if (confirmed) {
+                        self.doc.photos.splice(index, 1);
+
+                        if (self.doc._attachments) {
+                            delete self.doc._attachments[photo.id];
+                        }
+
+                        self.doc.valid = false;
+
+                        self.doc.dateMaj = new Date().toISOString().split('T')[0];
+
+                        self.doc.editMode = true;
+
+                        EditionService.saveObject(self.doc)
+                            .then(function () {
+                            });
+                    }
+                });
+            };
+
             self.getApproximatePosition = function (borneId, borneAval, borneDistance, flag) {
                 var deferred = $q.defer();
                 var troncon = self.troncons.find(function (item) {

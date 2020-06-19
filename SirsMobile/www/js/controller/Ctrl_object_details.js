@@ -149,8 +149,15 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 return !self.document.desordreIds || self.document.desordreIds.indexOf(item.id) === -1;
             });
 
+            self.document.valid = false;
+
+            self.document.dateMaj = new Date().toISOString().split('T')[0];
+
+            self.document.editMode = true;
+
             EditionService.saveObject(self.document)
                 .then(function () {
+                    MapManager.syncAllAppLayer();
                 });
 
         };
@@ -165,6 +172,13 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                     if (self.document.desordreIds.length === 0) {
                         delete self.document.desordreIds;
                     }
+
+                    self.document.valid = false;
+
+                    self.document.dateMaj = new Date().toISOString().split('T')[0];
+
+                    self.document.editMode = true;
+
                     EditionService.saveObject(self.document)
                         .then(function () {
                         });
@@ -182,6 +196,12 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 return !self.document.prestationIds || self.document.prestationIds.indexOf(item.id) === -1;
             });
 
+            self.document.valid = false;
+
+            self.document.dateMaj = new Date().toISOString().split('T')[0];
+
+            self.document.editMode = true;
+
             EditionService.saveObject(self.document)
                 .then(function () {
                 });
@@ -197,6 +217,13 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                     if (self.document.prestationIds.length === 0) {
                         delete self.document.prestationIds;
                     }
+
+                    self.document.valid = false;
+
+                    self.document.dateMaj = new Date().toISOString().split('T')[0];
+
+                    self.document.editMode = true;
+
                     EditionService.saveObject(self.document)
                         .then(function () {
                         });

@@ -20,13 +20,19 @@
             </div>
         </div>
         <div ng-if="c.showContent">
-            <div ng-if="c.mediaPath" ng-init="c.loadImage(photo);" ng-repeat="photo in c.doc.photos track by photo.id">
+            <div ng-if="c.mediaPath" ng-init="c.loadImage(photo);"
+                 ng-repeat="photo in c.doc.photos track by photo.id">
                 <div class="progress" ng-if="!c.loaded[photo.id]">
                     <div class="indeterminate"></div>
                 </div>
                 <img ng-if="c.loaded[photo.id]" on-tap="c.open(photo)" alt="Photo non disponible sur le mobile"
                      ng-src="{{c.getPhotoPath(photo)}}"/>
                 <span style="padding-left: 5px;">{{photo.id}}</span>
+                <button style="margin-left: 15px;" type="button"
+                        class="btn-floating btn-small waves-effect waves-light pink"
+                        on-tap="c.removePhoto(photo,$index);$event.stopPropagation()">
+                    <i class="large material-icons">delete</i>
+                </button>
             </div>
         </div>
     </ion-content>

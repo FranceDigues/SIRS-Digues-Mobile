@@ -274,6 +274,11 @@
                                                      alt="Photo non disponible sur le mobile"
                                                      ng-src="{{c.getPhotoPath(photo)}}"/>
                                             </div>
+                                            <button style="margin-left: 60px;margin-top: 10px;" type="button"
+                                                    class="btn-floating btn-small waves-effect waves-light pink"
+                                                    on-tap="c.removePhoto(photo, index);$event.stopPropagation()">
+                                                <i class="large material-icons">delete</i>
+                                            </button>
                                         </div>
                                     </div>
                                 </ion-scroll>
