@@ -904,3 +904,11 @@ div.fixed-button-bar {
     padding: 4px;
     text-align: center;
 }
+
+.layer-categories {
+    font-size: 12px;
+    color: #AAAAAA;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -171,10 +171,6 @@ angular.module('SirsMobile', [
                     startkey: ['fr.sirs.core.model.RefCote'],
                     endkey: ['fr.sirs.core.model.RefCote', {}]
                 });
-            },
-            listTroncons: function (LocalDocument) {
-                //@hb
-                return LocalDocument.query('TronconDigue/streamLight');
             }
         },
         observationEdit: {

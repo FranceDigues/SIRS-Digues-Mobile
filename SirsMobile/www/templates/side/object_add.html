@@ -26,6 +26,7 @@
             <ion-list>
                 <ion-radio ng-model="c.selectedClosable" ng-value="closable" ng-repeat="closable in c.closable">
                     {{closable.libelle || closable.designation || closable.id || 'temp '+closable._id }}
+                    <div class="layer-categories">{{c.getCategorie(closable)}}</div>
                 </ion-radio>
             </ion-list>
         </div>

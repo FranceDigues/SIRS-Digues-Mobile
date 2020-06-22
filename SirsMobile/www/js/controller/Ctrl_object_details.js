@@ -141,6 +141,9 @@ angular.module('app.controllers.object_details', ['app.services.map'])
         };
 
         self.addDesordre = function (did) {
+            if (!did) {
+                return;
+            }
             if (!self.document.desordreIds) {
                 self.document.desordreIds = [];
             }
@@ -158,6 +161,7 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             EditionService.saveObject(self.document)
                 .then(function () {
                     MapManager.syncAllAppLayer();
+                    MapManager.clearAll();
                 });
 
         };
@@ -181,6 +185,8 @@ angular.module('app.controllers.object_details', ['app.services.map'])
 
                     EditionService.saveObject(self.document)
                         .then(function () {
+                            MapManager.syncAllAppLayer();
+                            MapManager.clearAll();
                         });
                 }
                 return confirmed;
@@ -188,6 +194,10 @@ angular.module('app.controllers.object_details', ['app.services.map'])
         };
 
         self.addPrestation = function (pid) {
+            if (!pid) {
+                return;
+            }
+
             if (!self.document.prestationIds) {
                 self.document.prestationIds = [];
             }
@@ -204,6 +214,8 @@ angular.module('app.controllers.object_details', ['app.services.map'])
 
             EditionService.saveObject(self.document)
                 .then(function () {
+                    MapManager.syncAllAppLayer();
+                    MapManager.clearAll();
                 });
         };
 
@@ -226,6 +238,8 @@ angular.module('app.controllers.object_details', ['app.services.map'])
 
                     EditionService.saveObject(self.document)
                         .then(function () {
+                            MapManager.syncAllAppLayer();
+                            MapManager.clearAll();
                         });
                 }
                 return confirmed;

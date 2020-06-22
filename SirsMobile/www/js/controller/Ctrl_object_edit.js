@@ -598,7 +598,7 @@ angular.module('app.controllers.object_edit', [])
                                                                       $routeParams, GeolocationService, LocalDocument,
                                                                       EditionService, objectDoc, refTypes,
                                                                       uuid4, SirsDoc, $ionicModal, orientationsList, $filter,
-                                                                      cotesList, listTroncons, MapManager, PouchService,
+                                                                      cotesList, MapManager, PouchService,
                                                                       $timeout, GlobalConfig, localStorageService, $q,
                                                                       $ionicPopup, $cordovaToast, BorneService) {
 
@@ -774,13 +774,66 @@ angular.module('app.controllers.object_edit', [])
                 return self.doc && (self.doc.linearId || self.isDependance());
             };
 
+            self.activatedGPSPositionButton = function () {
+                return self.doc;
+            };
+
             self.troncons = [];
+            self.allTroncons = [];
 
             self.initTronconList = function () {
                 self.troncons = localStorageService.get("AppTronconsFavorities");
+                self.allTroncons = localStorageService.get("AppTronconsFavorities");
             };
 
             self.initTronconList();
+
+            function calculateDistanceObjectTroncon(point, liste) {
+                var nearTronconList = [];
+                // geomatryPosition is instance of ol.geom.Point
+                var geomatryPosition = new ol.format.WKT().readGeometry(point, {
+                    dataProjection: SirsDoc.get().epsgCode,
+                    featureProjection: 'EPSG:3857'
+                });
+
+                var positionCoord = geomatryPosition.getCoordinates();
+                var geom, geomTronc;
+                // Get of the LineStrings from the list of Troncons
+                angular.forEach(liste, function (elt) {
+                    try {
+                        geom = new ol.format.WKT().readGeometry(elt.geometry, {
+                            dataProjection: SirsDoc.get().epsgCode,
+                            featureProjection: 'EPSG:3857'
+                        });
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    geomTronc = geom.getClosestPoint(positionCoord);
+                    // Calculate the distance between two point
+
+                    var wgs84Sphere = new ol.Sphere(6378137);
+                    // The distance
+                    var dist = wgs84Sphere.haversineDistance(ol.proj.transform(positionCoord, 'EPSG:3857', 'EPSG:4326'),
+                        ol.proj.transform(geomTronc, 'EPSG:3857', 'EPSG:4326')) / 1000;
+                    if (dist <= 1) {
+                        nearTronconList.push(elt);
+                    }
+                });
+                // The list of the nearest Troncons
+                return nearTronconList;
+            }
+
+            $scope.$watch(function () {
+                return self.doc.positionDebut;
+            }, function (newValue) {
+                if (angular.isDefined(newValue)) {
+                    self.troncons = calculateDistanceObjectTroncon(
+                        newValue,
+                        self.allTroncons);
+                } else {
+                    self.troncons = self.allTroncons;
+                }
+            });
 
             self.setupRef = function (field, defaultRef, isMultiple) {
                 if (angular.isDefined(objectDoc[field])) {
@@ -805,6 +858,12 @@ angular.module('app.controllers.object_edit', [])
             };
 
             self.save = function () {
+                if (!self.isDependance() && !self.doc.linearId) {
+                    $cordovaToast
+                        .showLongTop("Veuillez choisir un tronçon de rattachement pour cet objet");
+                    return;
+                }
+
                 if ((!objectDoc.positionDebut && !objectDoc.borneDebutId) || (self.isDependance() && !objectDoc.geometry)) {
                     $cordovaToast
                         .showLongTop("Veuillez choisir une position pour cet objet, avant de continuer");

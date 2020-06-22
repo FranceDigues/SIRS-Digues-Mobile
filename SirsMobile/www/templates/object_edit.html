@@ -74,12 +74,12 @@
                                     <div class="position-action" ng-if="!c.isLinear && !c.isDependance()">
                                         <button class="btn waves-effect waves-light"
                                                 on-tap="c.locateMe()"
-                                                ng-if="c.activatedPositionButton()">
+                                                ng-if="c.activatedGPSPositionButton()">
                                             <i class="material-icons center">gps_fixed</i>
                                         </button>
                                         <button class="btn waves-effect waves-light"
                                                 on-tap="c.selectPos()"
-                                                ng-if="c.activatedPositionButton()">
+                                                ng-if="c.activatedGPSPositionButton()">
                                             <i class="material-icons center">edit</i>
                                         </button>
                                         <button class="btn waves-effect waves-light"
@@ -100,12 +100,12 @@
                                         <div class="position-action"
                                              style="display: inline;float: right;">
                                             <button class="btn waves-effect waves-light"
-                                                    ng-if="c.activatedPositionButton()"
+                                                    ng-if="c.activatedGPSPositionButton()"
                                                     on-tap="c.linearPosEditionHandler.startPoint = true;c.linearPosEditionHandler.endPoint = false;c.locateMe();">
                                                 <i class="material-icons center">gps_fixed</i>
                                             </button>
                                             <button class="btn waves-effect waves-light"
-                                                    ng-if="c.activatedPositionButton()"
+                                                    ng-if="c.activatedGPSPositionButton()"
                                                     on-tap="c.linearPosEditionHandler.startPoint = true;c.linearPosEditionHandler.endPoint = false;c.selectPos();">
                                                 <i class="material-icons center">edit</i>
                                             </button>
@@ -128,12 +128,12 @@
                                               style="line-height: 37px;">Position de fin via borne : {{c.getEndPosBorne()}}</span>
                                         <div class="position-action" style="display: inline;float: right;">
                                             <button class="btn waves-effect waves-light"
-                                                    ng-if="c.activatedPositionButton()"
+                                                    ng-if="c.activatedGPSPositionButton()"
                                                     on-tap="c.linearPosEditionHandler.endPoint = true;c.linearPosEditionHandler.startPoint = false;c.locateMe();">
                                                 <i class="material-icons center">gps_fixed</i>
                                             </button>
                                             <button class="btn waves-effect waves-light"
-                                                    ng-if="c.activatedPositionButton()"
+                                                    ng-if="c.activatedGPSPositionButton()"
                                                     on-tap="c.linearPosEditionHandler.endPoint = true;c.linearPosEditionHandler.startPoint = false;c.selectPos();">
                                                 <i class="material-icons center">edit</i>
                                             </button>

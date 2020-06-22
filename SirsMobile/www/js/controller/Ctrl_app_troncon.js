@@ -161,6 +161,7 @@ function TronconController($timeout, PouchService, AppTronconsService, localStor
             AppTronconsService.favorites.push({
                 id: troncon.id,
                 libelle: troncon.value.libelle,
+                geometry: troncon.value.geometry,
                 systemeRepDefautId: troncon.value.systemeRepDefautId,
                 borneIds: troncon.value.borneIds
             });

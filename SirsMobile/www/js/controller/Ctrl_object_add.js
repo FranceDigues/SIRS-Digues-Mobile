@@ -70,6 +70,11 @@ angular.module('app.controllers.object_add', ['app.services.dao'])
                 type !== "BorneDigue" && type !== "TronconDigue");
         };
 
+        self.getCategorie = function (obj) {
+            return obj['@class']
+                .substring(obj['@class'].lastIndexOf('.') + 1);
+        };
+
         // Get the closable object for the first time
         getClosable();
     });
