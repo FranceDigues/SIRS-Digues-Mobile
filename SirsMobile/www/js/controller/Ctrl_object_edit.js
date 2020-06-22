@@ -1025,6 +1025,8 @@ angular.module('app.controllers.object_edit', [])
                 delete objectDoc.approximatePositionDebut;
                 delete objectDoc.approximatePositionFin;
 
+                objectDoc.editedGeoCoordinate = true;
+
                 var coordinate = ol.proj.transform([pos.longitude, pos.latitude], 'EPSG:4326', dataProjection);
                 // Point case
                 if (!self.isLinear) {
@@ -1115,6 +1117,8 @@ angular.module('app.controllers.object_edit', [])
                 delete objectDoc.positionDebut;
                 delete objectDoc.positionFin;
                 delete objectDoc.geometry;
+
+                objectDoc.editedGeoCoordinate = false;
 
                 // Point case
                 if (!self.isLinear) {
