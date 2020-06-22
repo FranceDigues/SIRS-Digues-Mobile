@@ -134,7 +134,8 @@
                                         ng-change="c.changeContact()">
                                     <option ng-repeat="contact in c.contactList | orderBy : 'doc.nom'"
                                             ng-selected="contact.id === c.contact"
-                                            value="{{contact.id}}">{{contact.doc.nom}} {{contact.doc.prenom}}
+                                            value="{{contact.id}}">
+                                        {{contact.doc.nom}} {{contact.doc.prenom ? contact.doc.prenom : ''}}
                                     </option>
                                 </select>
                             </div>

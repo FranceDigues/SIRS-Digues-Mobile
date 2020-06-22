@@ -158,9 +158,7 @@ angular.module('app.controllers.observation_edit', [])
             self.setView('form');
         };
 
-        self.contactList = contactList.filter(function (item) {
-            return item.doc.prenom;
-        });
+        self.contactList = contactList;
 
         self.urgenceList = urgenceList.map(function (item) {
             item.value.id = parseInt(item.value.id.substring(item.value.id.lastIndexOf(":") + 1), 10);
