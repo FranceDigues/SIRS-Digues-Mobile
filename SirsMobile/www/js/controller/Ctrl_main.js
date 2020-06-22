@@ -138,10 +138,13 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
 
         self.gpsAccuracy = '-';
 
+        self.coords = null;
+
         self.locateMe = function () {
             $ionicLoading.show({template: 'En attente de localisation...'});
             navigator.geolocation.getCurrentPosition(function (position) {
                 $timeout(function () {
+                    self.coords = position.coords;
                     self.gpsAccuracy = Math.round(position.coords.accuracy);
                     self.lastGPSUpdateDate = moment().format('DD/MM/YYYY à HH:mm:ss');
                     $ionicLoading.hide();
@@ -186,6 +189,14 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
 
         self.refreshMap = function () {
             window.location.reload();
+        };
+
+        self.zoomToLocation = function () {
+            if (self.coords) {
+                var map = olMap.get('main');
+                map.getView().setCenter(ol.proj.transform([self.coords.longitude, self.coords.latitude], 'EPSG:4326', 'EPSG:3857'));
+                map.getView().setZoom(8);
+            }
         };
 
 
