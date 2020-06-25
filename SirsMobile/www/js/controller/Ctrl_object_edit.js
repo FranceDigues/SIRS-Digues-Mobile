@@ -1117,13 +1117,18 @@ angular.module('app.controllers.object_edit', [])
                 delete objectDoc.positionDebut;
                 delete objectDoc.positionFin;
                 delete objectDoc.geometry;
-
+                delete objectDoc.longitudeMin;
+                delete objectDoc.longitudeMax;
+                delete objectDoc.latitudeMin;
+                delete objectDoc.latitudeMax;
+                delete objectDoc.geometryMode;
                 objectDoc.editedGeoCoordinate = false;
+                objectDoc.foreignParentId = self.doc.linearId;
+
 
                 // Point case
                 if (!self.isLinear) {
                     objectDoc.systemeRepId = data.systemeRepId;
-                    objectDoc.foreignParentId = self.doc.linearId;
                     objectDoc.borne_debut_aval = data.borne_aval === 'true';
                     objectDoc.borne_debut_distance = data.borne_distance;
                     objectDoc.borneDebutId = data.borneId;
@@ -1138,7 +1143,6 @@ angular.module('app.controllers.object_edit', [])
                 } else {
                     if (self.linearPosEditionHandler.startPoint || self.isNew) {
                         objectDoc.systemeRepId = data.systemeRepId;
-                        objectDoc.foreignParentId = self.doc.linearId;
                         objectDoc.borne_debut_aval = data.borne_aval === 'true';
                         objectDoc.borne_debut_distance = data.borne_distance;
                         objectDoc.borneDebutId = data.borneId;
