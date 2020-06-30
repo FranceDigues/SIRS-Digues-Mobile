@@ -36,4 +36,36 @@
             </ion-item>
         </ion-list>
     </div>
+    <div ng-switch-when="prestations" style="padding: 5px 10px;">
+        <label for="prestationList" class="active">Ajouter une prestation</label>
+        <div style="display: flex;flex-direction: row;padding:5px;justify-content: center;align-items: center;">
+            <select id="prestationList" class="browser-default" ng-model="c.tempPrestation.v">
+                <option ng-repeat="p in c.prestationList"
+                        ng-value="p.id"
+                        ng-selected="c.tempPrestation.v === p.id">
+                    {{c.prestationMap[p.id]}}
+                </option>
+            </select>
+            <div>
+                <button type="button"
+                        style="margin-left: 10px;"
+                        class="btn-floating btn-large waves-effect waves-light pink"
+                        on-tap="c.addPrestation(c.tempPrestation.v)">
+                    <i class="large material-icons">add</i>
+                </button>
+            </div>
+        </div>
+        <label>La liste des prestations associées</label>
+        <ion-list>
+            <ion-item ng-repeat="prestationId in c.document.prestationIds"
+                      style="display:flex;justify-content: space-between;align-items: center;"
+                      on-tap="c.openPrestationLink(prestationId)">
+                <span>{{!c.prestationList ? prestationId : c.prestationMap[prestationId]}}</span>
+                <button type="button" class="btn-floating btn-small waves-effect waves-light pink"
+                        on-tap="c.removePrestation($index);$event.stopPropagation()">
+                    <i class="large material-icons">delete</i>
+                </button>
+            </ion-item>
+        </ion-list>
+    </div>
 </div>

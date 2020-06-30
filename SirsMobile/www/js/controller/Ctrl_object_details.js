@@ -92,7 +92,8 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 || self.objectType === 'ReseauTelecomEnergie'
                 || self.objectType === 'OuvrageTelecomEnergie'
                 || self.objectType === 'OuvrageParticulier'
-                || self.objectType === 'EchelleLimnimetrique';
+                || self.objectType === 'EchelleLimnimetrique'
+                || self.objectType === 'Desordre';
         };
 
         self.canShowDesordreTab = function () {
@@ -133,10 +134,12 @@ angular.module('app.controllers.object_details', ['app.services.map'])
         };
 
         self.openDesordreLink = function (id) {
+            $rootScope.loadingflag = true;
             window.location.href = "#/object/Desordre/" + id;
         };
 
         self.openPrestationLink = function (id) {
+            $rootScope.loadingflag = true;
             window.location.href = "#/object/Prestation/" + id;
         };
 
@@ -148,9 +151,7 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 self.document.desordreIds = [];
             }
             self.document.desordreIds.push(did);
-            self.desordreList = self.desordreList.filter(function (item) {
-                return !self.document.desordreIds || self.document.desordreIds.indexOf(item.id) === -1;
-            });
+            self.filterDesordreList();
 
             self.document.valid = false;
 
@@ -183,6 +184,8 @@ angular.module('app.controllers.object_details', ['app.services.map'])
 
                     self.document.editMode = true;
 
+                    self.filterDesordreList();
+
                     EditionService.saveObject(self.document)
                         .then(function () {
                             MapManager.syncAllAppLayer();
@@ -191,6 +194,14 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 }
                 return confirmed;
             });
+        };
+
+        self.filterDesordreList = function () {
+            self.desordreList = self.allDesordreList.filter(function (item) {
+                return !self.document.desordreIds || self.document.desordreIds.indexOf(item.id) === -1;
+            });
+
+            console.debug('nombre of desordre : ', self.desordreList.length);
         };
 
         self.addPrestation = function (pid) {
@@ -202,9 +213,7 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 self.document.prestationIds = [];
             }
             self.document.prestationIds.push(pid);
-            self.prestationList = self.prestationList.filter(function (item) {
-                return !self.document.prestationIds || self.document.prestationIds.indexOf(item.id) === -1;
-            });
+            self.filterPrestationList();
 
             self.document.valid = false;
 
@@ -236,6 +245,8 @@ angular.module('app.controllers.object_details', ['app.services.map'])
 
                     self.document.editMode = true;
 
+                    self.filterPrestationList();
+
                     EditionService.saveObject(self.document)
                         .then(function () {
                             MapManager.syncAllAppLayer();
@@ -243,6 +254,12 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                         });
                 }
                 return confirmed;
+            });
+        };
+
+        self.filterPrestationList = function () {
+            self.prestationList = self.allPrestationList.filter(function (item) {
+                return !self.document.prestationIds || self.document.prestationIds.indexOf(item.id) === -1;
             });
         };
 
@@ -262,28 +279,26 @@ angular.module('app.controllers.object_details', ['app.services.map'])
                 endkey: ['fr.sirs.core.model.Prestation', {}]
             }).then(function (response) {
                 self.prestationMap = {};
-                self.prestationList = response.map(function (elt) {
+                self.allPrestationList = response.map(function (elt) {
                     self.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation : (elt.value.libelle ? elt.value.libelle : 'sans designation');
                     return elt.value;
-                }).filter(function (item) {
-                    return !self.document.prestationIds || self.document.prestationIds.indexOf(item.id) === -1;
                 });
+                self.filterPrestationList();
                 self.tempPrestation = {v: null};
             }, function (error) {
                 console.error(error);
             });
 
             LocalDocument.query('Element/byClassAndLinear', {
-                startkey: ['fr.sirs.core.model.Desordre'],
-                endkey: ['fr.sirs.core.model.Desordre', {}]
+                startkey: ['fr.sirs.core.model.Desordre', self.document.linearId],
+                endkey: ['fr.sirs.core.model.Desordre', self.document.linearId, {}]
             }).then(function (response) {
                 self.desordreMap = {};
-                self.desordreList = response.map(function (elt) {
+                self.allDesordreList = response.map(function (elt) {
                     self.desordreMap[elt.value.id] = elt.value.designation ? elt.value.designation : (elt.value.libelle ? elt.value.libelle : 'sans designation');
                     return elt.value;
-                }).filter(function (item) {
-                    return !self.document.desordreIds || self.document.desordreIds.indexOf(item.id) === -1;
                 });
+                self.filterDesordreList();
                 self.tempDesordre = {v: null};
             }, function (error) {
                 console.error(error);

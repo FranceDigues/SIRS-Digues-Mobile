@@ -65,9 +65,9 @@
                                     </div>
 
                                     <div class="sirs-field-inline" ng-if="!c.isLinear && !c.isDependance()">
-                                        <span class="sirs-field-title" ng-if="!c.doc.systemeRepId">Position : </span>
-                                        <span class="sirs-field-value" ng-if="!c.doc.systemeRepId">{{c.getStartPos() | lonlat:'à définir'}}</span>
-                                        <span class="sirs-field-title" ng-if="c.doc.systemeRepId">
+                                        <span class="sirs-field-title" ng-if="!c.doc.systemeRepId || (c.doc.valid && c.doc.positionDebut)">Position : </span>
+                                        <span class="sirs-field-value" ng-if="!c.doc.systemeRepId || (c.doc.valid && c.doc.positionDebut)">{{c.getStartPos() | lonlat:'à définir'}}</span>
+                                        <span class="sirs-field-title" ng-if="c.doc.systemeRepId && !c.doc.positionDebut">
                                             Position via la borne : {{c.getStartPosBorne()}}
                                         </span>
                                     </div>

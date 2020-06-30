@@ -195,7 +195,7 @@ angular.module('app.controllers.main', ['app.services.context', 'app.services.da
             if (self.coords) {
                 var map = olMap.get('main');
                 map.getView().setCenter(ol.proj.transform([self.coords.longitude, self.coords.latitude], 'EPSG:4326', 'EPSG:3857'));
-                map.getView().setZoom(8);
+                map.getView().setZoom(18);
             }
         };
 

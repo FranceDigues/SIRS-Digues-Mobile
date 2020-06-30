@@ -1181,14 +1181,39 @@ angular.module('app.controllers.object_edit', [])
             };
 
             self.getStartPosBorne = function () {
-                return objectDoc.borneDebutId ? 'à ' + objectDoc.borne_debut_distance + ' m de la borne : ' +
-                    objectDoc.borneDebutLibelle + ' en ' + (objectDoc.borne_debut_aval ? 'amont' : 'aval') : 'à definir';
+                if (!self.startPosBorneLabel) {
+                    PouchService.getLocalDB().query('byId', {
+                        key: objectDoc.borneDebutId
+                    }).then(function (results) {
+                        var libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
 
+                        self.startPosBorneLabel = objectDoc.borneDebutId ? 'à ' + objectDoc.borne_debut_distance + ' m de la borne : ' +
+                            libelle + ' en ' + (objectDoc.borne_debut_aval ? 'amont' : 'aval') : 'à definir';
+
+                        $scope.$apply();
+
+                    });
+                } else {
+                    return self.startPosBorneLabel;
+                }
             };
 
             self.getEndPosBorne = function () {
-                return objectDoc.borneFinId ? 'à ' + objectDoc.borne_fin_distance + ' m de la borne : ' +
-                    objectDoc.borneFinLibelle + ' en ' + (objectDoc.borne_fin_aval ? 'amont' : 'aval') : 'à definir';
+                if (!self.endPosBorneLabel) {
+                    PouchService.getLocalDB().query('byId', {
+                        key: objectDoc.borneFinId
+                    }).then(function (results) {
+                        var libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+
+                        self.endPosBorneLabel = objectDoc.borneFinId ? 'à ' + objectDoc.borne_fin_distance + ' m de la borne : ' +
+                            libelle + ' en ' + (objectDoc.borne_fin_aval ? 'amont' : 'aval') : 'à definir';
+
+                        $scope.$apply();
+
+                    });
+                } else {
+                    return self.endPosBorneLabel;
+                }
             };
 
             function parsePos(position) {
@@ -1571,12 +1596,12 @@ angular.module('app.controllers.object_edit', [])
                                 /**
                                  * Hack to calculate the approximate position when the object is aligned with bornes
                                  */
-                                if (objectDoc.borneDebutId && !objectDoc.approximatePositionDebut) {
+                                if (objectDoc.borneDebutId && !objectDoc.approximatePositionDebut && !objectDoc.positionDebut) {
                                     self.getApproximatePosition(objectDoc.borneDebutId,
                                         objectDoc.borne_debut_aval,
                                         objectDoc.borne_debut_distance, 'approximatePositionDebut')
                                         .then(function () {
-                                            if (objectDoc.borneFinId && !objectDoc.approximatePositionFin) {
+                                            if (objectDoc.borneFinId && !objectDoc.approximatePositionFin && !objectDoc.positionFin) {
                                                 self.getApproximatePosition(objectDoc.borneFinId,
                                                     objectDoc.borne_fin_aval,
                                                     objectDoc.borne_fin_distance, 'approximatePositionFin')
