@@ -61,13 +61,16 @@
     <div ng-switch-when="prestations" style="padding: 5px 10px;">
         <label for="prestationList" class="active">Ajouter une prestation</label>
         <div style="display: flex;flex-direction: row;padding:5px;justify-content: center;align-items: center;">
-            <select id="prestationList" class="browser-default" ng-model="c.tempPrestation.v">
-                <option ng-repeat="p in c.prestationList"
-                        ng-value="p.id"
-                        ng-selected="c.tempPrestation.v === p.id">
-                    {{c.prestationMap[p.id]}}
-                </option>
-            </select>
+            <input type="text" name="prestationList" list="prestationList" ng-model="c.tempPrestation.v"/>
+            <datalist id="prestationList">
+                <select id="prestationList" class="browser-default">
+                    <option ng-repeat="p in c.prestationList"
+                            ng-value="c.prestationMap[p.id]"
+                            ng-selected="c.tempPrestation.v === p.id">
+                        {{p.id}}
+                    </option>
+                </select>
+            </datalist>
             <div>
                 <button type="button"
                         style="margin-left: 10px;"
@@ -93,13 +96,16 @@
     <div ng-switch-when="desordres" style="padding: 5px 10px;">
         <label for="desordreList" class="active">Ajouter un desordre</label>
         <div style="display: flex;flex-direction: row;padding:5px;justify-content: center;align-items: center;">
-            <select id="desordreList" class="browser-default" ng-model="c.tempDesordre.v">
-                <option ng-repeat="d in c.desordreList"
-                        ng-value="d.id"
-                        ng-selected="c.tempDesordre.v === d.id">
-                    {{c.desordreMap[d.id]}}
-                </option>
-            </select>
+            <input type="text" name="desordreList" list="desordreList" ng-model="c.tempDesordre.v"/>
+            <datalist id="desordreList">
+                <select id="desordreList" class="browser-default">
+                    <option ng-repeat="d in c.desordreList"
+                            ng-value="c.desordreMap[d.id]"
+                            ng-selected="c.tempDesordre.v === d.id">
+                        {{d.id}}
+                    </option>
+                </select>
+            </datalist>
             <div>
                 <button type="button"
                         style="margin-left: 10px;"

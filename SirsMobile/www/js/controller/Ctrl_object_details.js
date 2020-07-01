@@ -143,10 +143,15 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             window.location.href = "#/object/Prestation/" + id;
         };
 
-        self.addDesordre = function (did) {
-            if (!did) {
+        self.addDesordre = function (v) {
+            if (!v) {
                 return;
             }
+
+            var did = Object.keys(self.desordreMap).filter(function (key) {
+                return self.desordreMap[key] === v;
+            })[0];
+
             if (!self.document.desordreIds) {
                 self.document.desordreIds = [];
             }
@@ -161,6 +166,7 @@ angular.module('app.controllers.object_details', ['app.services.map'])
 
             EditionService.saveObject(self.document)
                 .then(function () {
+                    self.tempDesordre.v = null;
                     MapManager.syncAllAppLayer();
                     MapManager.clearAll();
                 });
@@ -200,14 +206,16 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             self.desordreList = self.allDesordreList.filter(function (item) {
                 return !self.document.desordreIds || self.document.desordreIds.indexOf(item.id) === -1;
             });
-
-            console.debug('nombre of desordre : ', self.desordreList.length);
         };
 
-        self.addPrestation = function (pid) {
-            if (!pid) {
+        self.addPrestation = function (v) {
+            if (!v) {
                 return;
             }
+
+            var pid = Object.keys(self.prestationMap).filter(function (key) {
+                return self.prestationMap[key] === v;
+            })[0];
 
             if (!self.document.prestationIds) {
                 self.document.prestationIds = [];
@@ -220,6 +228,8 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             self.document.dateMaj = new Date().toISOString().split('T')[0];
 
             self.document.editMode = true;
+
+            self.tempPrestation.v = null;
 
             EditionService.saveObject(self.document)
                 .then(function () {
@@ -280,7 +290,7 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             }).then(function (response) {
                 self.prestationMap = {};
                 self.allPrestationList = response.map(function (elt) {
-                    self.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation : (elt.value.libelle ? elt.value.libelle : 'sans designation');
+                    self.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation : elt.value.id;
                     return elt.value;
                 });
                 self.filterPrestationList();
@@ -295,7 +305,7 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             }).then(function (response) {
                 self.desordreMap = {};
                 self.allDesordreList = response.map(function (elt) {
-                    self.desordreMap[elt.value.id] = elt.value.designation ? elt.value.designation : (elt.value.libelle ? elt.value.libelle : 'sans designation');
+                    self.desordreMap[elt.value.id] = elt.value.designation ? elt.value.designation : elt.value.id;
                     return elt.value;
                 });
                 self.filterDesordreList();

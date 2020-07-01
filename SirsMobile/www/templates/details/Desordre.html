@@ -39,13 +39,16 @@
     <div ng-switch-when="prestations" style="padding: 5px 10px;">
         <label for="prestationList" class="active">Ajouter une prestation</label>
         <div style="display: flex;flex-direction: row;padding:5px;justify-content: center;align-items: center;">
-            <select id="prestationList" class="browser-default" ng-model="c.tempPrestation.v">
-                <option ng-repeat="p in c.prestationList"
-                        ng-value="p.id"
-                        ng-selected="c.tempPrestation.v === p.id">
-                    {{c.prestationMap[p.id]}}
-                </option>
-            </select>
+                <input type="text" name="prestationList" list="prestationList" ng-model="c.tempPrestation.v"/>
+                <datalist id="prestationList">
+                        <select id="prestationList" class="browser-default">
+                            <option ng-repeat="p in c.prestationList"
+                                    ng-value="c.prestationMap[p.id]"
+                                    ng-selected="c.tempPrestation.v === p.id">
+                                {{p.id}}
+                            </option>
+                        </select>
+                </datalist>
             <div>
                 <button type="button"
                         style="margin-left: 10px;"
