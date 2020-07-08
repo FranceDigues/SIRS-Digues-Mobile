@@ -81,18 +81,19 @@ Pour plus d'informations : http://ionicframework.com/docs/guide/publishing.html
 
 In the directory SirsMobile/platforms/android/build/outputs/apk :
 
-1- Convert the file android-armv7-release-unsigned.apk to android-armv7-release-unsigned.zip
+1- Convert the file android-armv7-release-unsigned.apk to android-armv7-release-unsigned.zip and unzip the file
 
-2- Open the lib directory in file and you find armeabi-v7a directory
+2- Make a Copy of the directory android-armv7-release-unsigned/lib/armeabi-v7a/ and rename it arm64-v8a/
 
-3- Make copy of the armeabi-v7a directory and rename that to arm64-v8a
+3- Save the modifications and reconvert the file android-armv7-release-unsigned.zip to android-armv7-release-unsigned.apk
 
-4- Save the modifications and reconvert the file android-armv7-release-unsigned.zip to android-armv7-release-unsigned.apk
+4- use the tool zipalign to align the file :
 
-5- use the tool zipalign to align the file :
-`` zipalign -v 4 android-armv7-release-unsigned.apk signed.apk  `` 
+```  
+zipalign -v 4 android-armv7-release-unsigned.apk signed.apk  
+``` 
 
-6- Rebuild the apk from signed.apk file 
+5- Rebuild the apk from signed.apk file 
 ```
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore sirs-mobile.keystore platforms/android/build/outputs/apk/signed.apk SIRS-Mobile
 
