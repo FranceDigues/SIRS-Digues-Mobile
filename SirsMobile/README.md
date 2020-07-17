@@ -90,7 +90,7 @@ In the directory SirsMobile/platforms/android/build/outputs/apk :
 4- use the tool zipalign to align the file :
 
 ```  
-zipalign -v 4 android-armv7-release-unsigned.apk signed.apk  
+$ANDROID_HOME/build-tools/26.0.0/zipalign  -v 4 android-armv7-release-unsigned.apk signed.apk  
 ``` 
 
 5- Rebuild the apk from signed.apk file 
@@ -100,3 +100,7 @@ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore sirs-mobile.key
 $ANDROID_HOME/build-tools/26.0.0/zipalign -v 4 platforms/android/build/outputs/apk/signed.apk SIRS-Mobile.apk
 
 ```
+
+
+JQuery : 3.5.1
+Angular: 1.4.10
