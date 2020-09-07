@@ -885,12 +885,6 @@ angular.module('app.controllers.object_edit', [])
 
                 delete objectDoc.prFin;
 
-                if (objectDoc.borneDebutId) {
-                    delete objectDoc.positionDebut;
-                    delete objectDoc.positionFin;
-                    delete objectDoc.geometry;
-                }
-
                 EditionService.saveObject(objectDoc).then(function () {
                     MapManager.syncAllAppLayer();
                     $location.path('/main');
