@@ -285,8 +285,8 @@ angular.module('app.controllers.object_details', ['app.services.map'])
             })(); // run it
 
             LocalDocument.query('Element/byClassAndLinear', {
-                startkey: ['fr.sirs.core.model.Prestation'],
-                endkey: ['fr.sirs.core.model.Prestation', {}]
+                startkey: ['fr.sirs.core.model.Prestation', self.document.linearId],
+                endkey: ['fr.sirs.core.model.Prestation', self.document.linearId, {}]
             }).then(function (response) {
                 self.prestationMap = {};
                 self.allPrestationList = response.map(function (elt) {

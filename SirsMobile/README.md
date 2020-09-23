@@ -101,6 +101,16 @@ $ANDROID_HOME/build-tools/26.0.0/zipalign -v 4 platforms/android/build/outputs/a
 
 ```
 
+## Issue in project build 
+
+Add these line in the file _/platforms/android/build.gradle_ 
+
+```
+configurations.all {
+  resolutionStrategy.force 'com.android.support:support-v4:26.1.0'
+}
+```
+
 
 JQuery : 3.5.1
 Angular: 1.4.10

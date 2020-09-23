@@ -65,8 +65,8 @@
                                     </div>
 
                                     <div class="sirs-field-inline" ng-if="!c.isLinear && !c.isDependance()">
-                                        <span class="sirs-field-title" ng-if="c.doc.editedGeoCoordinate || (c.doc.valid && c.doc.positionDebut)">Position : </span>
-                                        <span class="sirs-field-value" ng-if="c.doc.editedGeoCoordinate || (c.doc.valid && c.doc.positionDebut)">{{c.getStartPos() | lonlat:'à définir'}}</span>
+                                        <span class="sirs-field-title" ng-if="c.doc.editedGeoCoordinate">Position : </span>
+                                        <span class="sirs-field-value" ng-if="c.doc.editedGeoCoordinate">{{c.getStartPos() | lonlat:'à définir'}}</span>
                                         <span class="sirs-field-title" ng-if="!c.doc.editedGeoCoordinate">
                                             Position via la borne : {{c.getStartPosBorne()}}
                                         </span>

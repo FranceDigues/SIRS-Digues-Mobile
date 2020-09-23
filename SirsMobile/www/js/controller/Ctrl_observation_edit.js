@@ -243,11 +243,13 @@ angular.module('app.controllers.observation_edit', [])
                     var x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
                     var y;
 
-                    if (borneAval) {
+                    if (!borneAval) {
+                        // Aval object
                         y = (index === systemeReperage.value.systemeReperageBornes.length - 1)
                             ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
                             : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
                     } else {
+                        // Amont object
                         y = (index === 0)
                             ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
                             : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
@@ -292,15 +294,7 @@ angular.module('app.controllers.observation_edit', [])
 
             objectDoc.dateMaj = new Date().toISOString().split('T')[0];
 
-            delete objectDoc.prDebut;
-
-            delete objectDoc.prFin;
-
-            if (objectDoc.borneDebutId) {
-                delete objectDoc.positionDebut;
-                delete objectDoc.positionFin;
-                delete objectDoc.geometry;
-
+            if (!objectDoc.editedGeoCoordinate) {
                 /**
                  * Hack to calculate the approximate position when the object is aligned with bornes
                  */

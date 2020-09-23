@@ -864,7 +864,7 @@ angular.module('app.controllers.object_edit', [])
                     return;
                 }
 
-                if ((!objectDoc.positionDebut && !objectDoc.borneDebutId) || (self.isDependance() && !objectDoc.geometry)) {
+                if ((!self.isDependance() && !objectDoc.positionDebut && !objectDoc.borneDebutId) || (self.isDependance() && !objectDoc.geometry)) {
                     $cordovaToast
                         .showLongTop("Veuillez choisir une position pour cet objet, avant de continuer");
                     return;
@@ -1537,11 +1537,13 @@ angular.module('app.controllers.object_edit', [])
                         var x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
                         var y;
 
-                        if (borneAval) {
+                        if (!borneAval) {
+                            // Aval object
                             y = (index === systemeReperage.value.systemeReperageBornes.length - 1)
                                 ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
                                 : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
                         } else {
+                            // Amont object
                             y = (index === 0)
                                 ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
                                 : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
