@@ -38,7 +38,6 @@
                                             Objet linéaire
                                         </label>
                                     </div>
-
                                     <div ng-if="c.isDependance() && (c.isNew || c.isClosed)" class="switch">
                                         <select id="objectType" class="browser-default"
                                                 ng-model="c.objDependanceType"
@@ -63,10 +62,11 @@
                                             </option>
                                         </select>
                                     </div>
-
                                     <div class="sirs-field-inline" ng-if="!c.isLinear && !c.isDependance()">
-                                        <span class="sirs-field-title" ng-if="c.doc.editedGeoCoordinate">Position : </span>
-                                        <span class="sirs-field-value" ng-if="c.doc.editedGeoCoordinate">{{c.getStartPos() | lonlat:'à définir'}}</span>
+                                        <span class="sirs-field-title"
+                                              ng-if="c.doc.editedGeoCoordinate">Position : </span>
+                                        <span class="sirs-field-value"
+                                              ng-if="c.doc.editedGeoCoordinate">{{c.getStartPos() | lonlat:'à définir'}}</span>
                                         <span class="sirs-field-title" ng-if="!c.doc.editedGeoCoordinate">
                                             Position via la borne : {{c.getStartPosBorne()}}
                                         </span>
@@ -144,7 +144,7 @@
                                             </button>
                                         </div>
                                     </div>
-
+                                    <!-- Dependence-->
                                     <div>
                                         <div class="sirs-field-inline"
                                              ng-if="c.isDependance() && c.objDependanceType === 'polygon'">
@@ -184,7 +184,6 @@
                                         </div>
 
                                     </div>
-
                                     <div ng-if="c.isDependance() && c.objDependanceType === 'line' && c.doc.geometry">
                                         <div class="sirs-field-inline"
                                              ng-if="c.isDependance() && c.objDependanceType === 'line'">
@@ -203,8 +202,6 @@
                                             </button>
                                         </div>
                                     </div>
-
-
                                 </div>
                                 <div class="row" ng-if="!c.isDependance()">
                                     <div class="sirs-field col col-100">
@@ -233,8 +230,8 @@
                                                     ng-change="c.doc.dependanceId = d.id"
                                                     ng-selected="c.doc.dependanceId === d.id">
                                                 {{d.doc.libelle ? d.doc.libelle :
-                                                (d.doc.designation ? d.doc.designation
-                                                :d.id)}}
+                                                    (d.doc.designation ? d.doc.designation
+                                                            : d.id)}}
                                             </option>
                                         </select>
                                     </div>
@@ -323,6 +320,7 @@
     <!-- Add Media View -->
     <div ng-include="'templates/media.html'" ng-if="c.view === 'media'"
          ng-controller="MediaController as mdc"></div>
+
 </ion-view>
 
 <script type="text/ng-template" charset="utf-8" id="borne-position.html">

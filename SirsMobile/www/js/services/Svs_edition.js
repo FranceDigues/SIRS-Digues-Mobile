@@ -50,7 +50,8 @@ angular.module('app.services.edition', ['app.services.context'])
                         'author': AuthService.getValue()._id,
                         'valid': false,
                         'linearId': null,
-                        'editMode': true
+                        'editMode': true,
+                        'editedGeoCoordinate': true
                     };
                     if (type !== 'Desordre') {
                         objectDoc.photos = [];

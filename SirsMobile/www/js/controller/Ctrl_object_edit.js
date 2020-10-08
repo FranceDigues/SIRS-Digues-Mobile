@@ -1134,6 +1134,8 @@ angular.module('app.controllers.object_edit', [])
                     // Calculate the approximate position
                     objectDoc.approximatePositionDebut = data.approximatePosition;
                     objectDoc.approximatePositionFin = data.approximatePosition;
+                    self.fillBorneDebutLabel();
+                    self.fillBorneFinLabel();
                 } else {
                     if (self.linearPosEditionHandler.startPoint || self.isNew) {
                         objectDoc.systemeRepId = data.systemeRepId;
@@ -1144,6 +1146,7 @@ angular.module('app.controllers.object_edit', [])
                         objectDoc.borneDebutLibelle = data.borneLibelle;
                         // Calculate the approximate position
                         objectDoc.approximatePositionDebut = data.approximatePosition;
+                        self.fillBorneDebutLabel();
                     }
                     if (self.linearPosEditionHandler.endPoint) {
                         objectDoc.borne_fin_aval = data.borne_aval === 'true';
@@ -1153,6 +1156,7 @@ angular.module('app.controllers.object_edit', [])
                         objectDoc.borneFinLibelle = data.borneLibelle;
                         // Calculate the approximate position
                         objectDoc.approximatePositionFin = data.approximatePosition;
+                        self.fillBorneFinLabel();
                     }
 
                 }
@@ -1174,40 +1178,15 @@ angular.module('app.controllers.object_edit', [])
                 return objectDoc.positionFin ? parsePos(objectDoc.positionFin) : undefined;
             };
 
+            self.startPosBorneLabel = '';
+
             self.getStartPosBorne = function () {
-                if (!self.startPosBorneLabel) {
-                    PouchService.getLocalDB().query('byId', {
-                        key: objectDoc.borneDebutId
-                    }).then(function (results) {
-                        var libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
-
-                        self.startPosBorneLabel = objectDoc.borneDebutId ? 'à ' + objectDoc.borne_debut_distance + ' m de la borne : ' +
-                            libelle + ' en ' + (objectDoc.borne_debut_aval ? 'amont' : 'aval') : 'à definir';
-
-                        $scope.$apply();
-
-                    });
-                } else {
-                    return self.startPosBorneLabel;
-                }
+                return self.startPosBorneLabel;
             };
 
+            self.endPosBorneLabel = '';
             self.getEndPosBorne = function () {
-                if (!self.endPosBorneLabel) {
-                    PouchService.getLocalDB().query('byId', {
-                        key: objectDoc.borneFinId
-                    }).then(function (results) {
-                        var libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
-
-                        self.endPosBorneLabel = objectDoc.borneFinId ? 'à ' + objectDoc.borne_fin_distance + ' m de la borne : ' +
-                            libelle + ' en ' + (objectDoc.borne_fin_aval ? 'amont' : 'aval') : 'à definir';
-
-                        $scope.$apply();
-
-                    });
-                } else {
-                    return self.endPosBorneLabel;
-                }
+                return self.endPosBorneLabel;
             };
 
             function parsePos(position) {
@@ -1568,6 +1547,42 @@ angular.module('app.controllers.object_edit', [])
                 return deferred.promise;
 
             };
+
+            self.fillBorneDebutLabel = function () {
+                if (objectDoc.borneDebutId) {
+                    PouchService.getLocalDB().query('byId', {
+                        key: objectDoc.borneDebutId
+                    }).then(function (results) {
+                        var libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+                        self.startPosBorneLabel = objectDoc.borneDebutId ? 'à ' + objectDoc.borne_debut_distance + ' m de la borne : ' +
+                            libelle + ' en ' + (objectDoc.borne_debut_aval ? 'amont' : 'aval') : 'à definir';
+                        $scope.$apply();
+
+                    }, function (err) {
+                        console.error(err);
+                    });
+                }
+            };
+
+            self.fillBorneDebutLabel();
+
+            self.fillBorneFinLabel = function () {
+                if (objectDoc.borneFinId) {
+                    PouchService.getLocalDB().query('byId', {
+                        key: objectDoc.borneFinId
+                    }).then(function (results) {
+                        var libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+
+                        self.endPosBorneLabel = objectDoc.borneFinId ? 'à ' + objectDoc.borne_fin_distance + ' m de la borne : ' +
+                            libelle + ' en ' + (objectDoc.borne_fin_aval ? 'amont' : 'aval') : 'à definir';
+
+                        $scope.$apply();
+
+                    });
+                }
+            };
+
+            self.fillBorneFinLabel();
 
             $ionicPlatform.ready(function () {
                 // Acquire the medias storage path when the device is ready.

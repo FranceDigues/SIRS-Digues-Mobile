@@ -127,12 +127,13 @@ angular.module('app.services.dao', ['app.services.context'])
 
         self.create = function(doc) {
             var deferred = $q.defer();
-
             PouchService.getLocalDB().post(doc)
                 .then(function(result) {
-                    doc._id = result.id;
-                    doc._rev = result.rev;
-                    deferred.resolve(doc);
+                    PouchService.getLocalDB().query('byId', {
+                        key: result.id
+                    }).then(function (res) {
+                        deferred.resolve(res.rows[0].value);
+                    });
                 })
                 .catch(function(error) {
                     deferred.reject(error);
